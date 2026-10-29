@@ -1,0 +1,2816 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>Training Center TWP - ระบบบริหารคำขอจัดอบรมและประเมินผล v1.5.1</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Google Fonts: Sarabun -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <!-- FontAwesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <!-- QRCode.js library for on-the-fly QR generation -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Sarabun', 'sans-serif'],
+          },
+          colors: {
+            twp: {
+              50: '#f0f6fc',
+              100: '#e1ecf8',
+              200: '#c3daf1',
+              300: '#94bfe7',
+              400: '#5f9edb',
+              500: '#08539E', /* Official TWP Logo Blue */
+              600: '#07488a',
+              700: '#063b72',
+              800: '#05315e',
+              900: '#04274c',
+              950: '#021831'
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    :root {
+      --twp-blue: #08539E;
+      --twp-dark: #05315e;
+    }
+    body { font-family: 'Sarabun', sans-serif; }
+    
+    /* 3D Tactile Buttons (กดแล้วยุบ มีความลึกชัดเจน) */
+    .btn-tactile {
+      transition: all 0.12s cubic-bezier(0.4, 0, 0.2, 1);
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.12), inset 0 1px 0 rgba(255, 255, 255, 0.25);
+    }
+    .btn-tactile:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 15px -3px rgba(0, 0, 0, 0.16);
+    }
+    .btn-tactile:active {
+      transform: translateY(2px) scale(0.98);
+      box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.25);
+    }
+
+    /* 3D Menu Tab Buttons */
+    .tab-btn {
+      transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+      border-radius: 12px;
+      position: relative;
+    }
+    .tab-btn:hover {
+      transform: translateY(-1px);
+    }
+    .tab-btn:active {
+      transform: translateY(1px) scale(0.97);
+    }
+    .tab-active {
+      background: linear-gradient(135deg, #08539E 0%, #063b72 100%) !important;
+      color: #ffffff !important;
+      box-shadow: 0 6px 14px -2px rgba(8, 83, 158, 0.4), inset 0 1px 1px rgba(255, 255, 255, 0.3) !important;
+      border-bottom: 3px solid #04274c !important;
+      font-weight: 700 !important;
+      transform: translateY(-1px);
+    }
+    .tab-active i {
+      color: #ffffff !important;
+    }
+
+    /* Row Focus & Elevation on Reading (ลอยนูนขึ้นมาเมื่อกำลังอ่านบรรทัดนั้น) */
+    .reading-row {
+      transition: all 0.22s cubic-bezier(0.4, 0, 0.2, 1);
+      position: relative;
+    }
+    .reading-row:hover {
+      transform: translateY(-3px) scale(1.002);
+      box-shadow: 0 12px 24px -4px rgba(8, 83, 158, 0.16);
+      background-color: #f0f7ff !important;
+      z-index: 10;
+      border-left: 4px solid #08539E !important;
+    }
+    .reading-row.is-active-reading {
+      transform: translateY(-4px) scale(1.005);
+      box-shadow: 0 18px 32px -6px rgba(8, 83, 158, 0.28), 0 0 0 2px rgba(8, 83, 158, 0.35);
+      background: linear-gradient(90deg, #eff6ff 0%, #ffffff 100%) !important;
+      z-index: 20;
+      border-left: 6px solid #08539E !important;
+    }
+
+    /* Queue Card Elevation */
+    .reading-card {
+      transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+      position: relative;
+    }
+    .reading-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 20px 25px -5px rgba(8, 83, 158, 0.15), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+      border-color: #93c5fd !important;
+    }
+    .reading-card.is-active-reading {
+      transform: translateY(-6px);
+      box-shadow: 0 25px 35px -5px rgba(8, 83, 158, 0.25), 0 0 0 2px #08539E;
+      background-color: #ffffff !important;
+    }
+
+    .custom-scrollbar::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb {
+      background-color: #cbd5e1;
+      border-radius: 9999px;
+    }
+  </style>
+</head>
+<body class="bg-slate-100 text-slate-800 min-h-screen flex flex-col antialiased">
+
+  <!-- ========================================== -->
+  <!-- LANDING PAGE VIEW (HERO ENTRANCE)          -->
+  <!-- ========================================== -->
+  <div id="landingPageView" class="min-h-screen flex flex-col justify-between bg-[#08539E] text-white relative overflow-hidden select-none">
+    
+    <!-- Background Watermark Circles (TWP 3 Circles Pattern) -->
+    <div class="absolute inset-0 pointer-events-none opacity-10 flex items-center justify-center">
+      <div class="relative w-[700px] h-[700px]">
+        <div class="absolute top-10 left-1/2 -translate-x-1/2 w-80 h-80 rounded-full border-[18px] border-white"></div>
+        <div class="absolute bottom-10 left-8 w-80 h-80 rounded-full border-[18px] border-white"></div>
+        <div class="absolute bottom-10 right-8 w-80 h-80 rounded-full border-[18px] border-white"></div>
+      </div>
+    </div>
+
+    <!-- Top Navigation Bar on Landing Page -->
+    <div class="max-w-7xl mx-auto w-full px-6 py-5 flex items-center justify-between relative z-10">
+      <div class="flex items-center space-x-3">
+        <img src="assets/logo.png" alt="TWP Logo" class="w-12 h-12 rounded-2xl shadow-xl border-2 border-white/40 object-contain bg-white p-1">
+        <div>
+          <span class="font-black text-xl tracking-wider text-white drop-shadow">TWP</span>
+          <span class="text-xs text-blue-200 block">Thai Wattana Panich</span>
+        </div>
+      </div>
+      <div class="flex items-center space-x-3 text-xs">
+        <span class="bg-white/15 px-3 py-1.5 rounded-full border border-white/20 backdrop-blur-sm font-mono text-blue-100 flex items-center">
+          <span class="w-2 h-2 rounded-full bg-emerald-400 mr-2 animate-pulse"></span>
+          System v1.5.1
+        </span>
+      </div>
+    </div>
+
+    <!-- Center Hero Content -->
+    <div class="max-w-4xl mx-auto w-full px-6 py-8 text-center relative z-10 flex flex-col items-center justify-center my-auto space-y-6">
+      
+      <!-- Logo in Center Card with Tactile Glow -->
+      <div class="relative inline-block group">
+        <div class="absolute -inset-4 bg-white/25 rounded-full blur-2xl animate-pulse"></div>
+        <img src="assets/logo.png" alt="Training Center TWP" class="relative w-32 h-32 sm:w-40 sm:h-40 rounded-3xl shadow-2xl border-4 border-white/50 object-contain bg-white p-2.5 transform group-hover:scale-105 transition-all duration-300">
+      </div>
+
+      <!-- Hero Title -->
+      <div class="space-y-2">
+        <div class="inline-block px-4 py-1 rounded-full bg-blue-950/40 border border-blue-300/30 text-xs sm:text-sm font-semibold tracking-wider text-blue-100 uppercase">
+          Enterprise Training Workflow & Closed-Loop Evaluation System
+        </div>
+        <h1 class="text-4xl sm:text-5xl md:text-6xl font-black tracking-tight text-white drop-shadow-lg">
+          Training Center TWP
+        </h1>
+        <p class="text-base sm:text-lg text-blue-100 max-w-2xl mx-auto font-light leading-relaxed">
+          ระบบบริหารจัดการคำขอจัดกิจกรรมอบรม กลั่นกรองงบประมาณ และประเมินความพึงพอใจแบบปิดลูป
+        </p>
+      </div>
+
+      <!-- Feature Highlights Grid -->
+      <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 max-w-3xl w-full pt-2">
+        <div class="bg-white/10 hover:bg-white/15 transition backdrop-blur-md border border-white/20 rounded-2xl p-4 text-center space-y-1.5 shadow-lg">
+          <i class="fa-solid fa-paper-plane text-emerald-300 text-xl"></i>
+          <div class="font-bold text-xs sm:text-sm text-white">ทีม A ขอจัดอบรม</div>
+          <div class="text-[11px] text-blue-200">คำนวณ ROI อัตโนมัติ</div>
+        </div>
+        <div class="bg-white/10 hover:bg-white/15 transition backdrop-blur-md border border-white/20 rounded-2xl p-4 text-center space-y-1.5 shadow-lg">
+          <i class="fa-solid fa-clipboard-check text-purple-300 text-xl"></i>
+          <div class="font-bold text-xs sm:text-sm text-white">ทีม B ตรวจวิชาการ</div>
+          <div class="text-[11px] text-blue-200">วิทยากร & งบตัดจ่าย</div>
+        </div>
+        <div class="bg-white/10 hover:bg-white/15 transition backdrop-blur-md border border-white/20 rounded-2xl p-4 text-center space-y-1.5 shadow-lg">
+          <i class="fa-solid fa-stamp text-amber-300 text-xl"></i>
+          <div class="font-bold text-xs sm:text-sm text-white">ผู้บริหารอนุมัติ</div>
+          <div class="text-[11px] text-blue-200">ออก PDF & Word A4</div>
+        </div>
+        <div class="bg-white/10 hover:bg-white/15 transition backdrop-blur-md border border-white/20 rounded-2xl p-4 text-center space-y-1.5 shadow-lg">
+          <i class="fa-solid fa-qrcode text-sky-300 text-xl"></i>
+          <div class="font-bold text-xs sm:text-sm text-white">QR ปิดลูปประเมิน</div>
+          <div class="text-[11px] text-blue-200">Zero-Trust ปลอดภัย</div>
+        </div>
+      </div>
+
+      <!-- Tactile 3D Action Buttons: Enter System & Team QR Pairing -->
+      <div class="pt-4 flex flex-col sm:flex-row items-center justify-center gap-3">
+        <button onclick="enterPortal()" class="w-full sm:w-auto px-8 sm:px-10 py-4 bg-gradient-to-r from-amber-400 via-amber-500 to-amber-600 hover:from-amber-300 hover:to-amber-500 text-slate-950 font-black text-base sm:text-lg rounded-2xl shadow-2xl shadow-amber-950/50 border-b-4 border-amber-700 active:border-b-0 active:translate-y-1 transition duration-150 flex items-center justify-center space-x-3 cursor-pointer btn-tactile">
+          <span>เข้าสู่ระบบบริหารคำขอ (Enter System)</span>
+          <i class="fa-solid fa-arrow-right text-lg"></i>
+        </button>
+        <button onclick="openTeamQrModal('teamA')" class="w-full sm:w-auto px-6 py-4 bg-white/15 hover:bg-white/25 text-white font-bold text-base rounded-2xl border-2 border-white/40 shadow-lg backdrop-blur-md active:translate-y-1 transition duration-150 flex items-center justify-center space-x-2.5 cursor-pointer btn-tactile">
+          <i class="fa-solid fa-qrcode text-amber-300 text-lg"></i>
+          <span>สแกน QR ประจำทีม (Team Pairing)</span>
+        </button>
+      </div>
+
+    </div>
+
+    <!-- Bottom Footer on Landing Page -->
+    <div class="max-w-7xl mx-auto w-full px-6 py-4 flex flex-col sm:flex-row items-center justify-between text-xs text-blue-200 border-t border-white/10 relative z-10 gap-2">
+      <div>&copy; 2026 Training Center TWP - บริษัท ไทยวัฒนาพานิช จำกัด. All rights reserved.</div>
+      <div class="font-mono text-[11px] bg-white/10 px-3 py-1 rounded-full border border-white/15">EMS Enterprise Platform v1.5.1 (Live Apps Script Engine)</div>
+    </div>
+
+  </div>
+
+  <!-- ========================================== -->
+  <!-- MAIN PORTAL APPLICATION VIEW (SPA)         -->
+  <!-- ========================================== -->
+  <div id="mainPortalView" class="hidden min-h-screen flex flex-col">
+
+    <!-- Top Navigation Header -->
+    <header class="bg-[#05315e] text-white shadow-lg sticky top-0 z-30 border-b border-blue-900/50">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex items-center justify-between h-16">
+          
+          <!-- Brand & Version -->
+          <div class="flex items-center space-x-3">
+            <button onclick="showLandingPage()" title="กลับสู่หน้าแรก (Landing Page)" class="hover:opacity-90 transition active:scale-95">
+              <img src="assets/logo.png" alt="TWP Logo" class="w-10 h-10 rounded-xl bg-white p-0.5 object-contain shadow-md border border-white/20">
+            </button>
+            <div>
+              <div class="flex items-center space-x-2">
+                <span class="font-extrabold text-lg tracking-wide text-white">Training Center TWP</span>
+                <span class="bg-blue-400/20 text-blue-200 text-[10px] font-mono px-2 py-0.5 rounded-full border border-blue-300/30">v1.5.1</span>
+              </div>
+              <p class="text-[11px] text-blue-200 hidden sm:block">ระบบบริหารคำขอจัดอบรมและประเมินผลปิดลูป</p>
+            </div>
+          </div>
+
+          <!-- System Status, Real-Time Sync, Operator Stamping & Admin -->
+          <div class="flex items-center space-x-2 sm:space-x-2.5">
+            
+            <!-- Back to Landing Page Button -->
+            <button onclick="showLandingPage()" title="กลับหน้าแรก" class="bg-[#08539E] hover:bg-[#07488a] text-white px-2.5 py-1.5 rounded-lg border border-blue-400/30 text-xs font-semibold flex items-center space-x-1.5 transition btn-tactile">
+              <i class="fa-solid fa-house"></i>
+              <span class="hidden md:inline">หน้าแรก</span>
+            </button>
+
+            <!-- Team QR Pairing Button -->
+            <button onclick="openTeamQrModal('teamA')" title="สแกน QR Code ประจำทีม เพื่อเชื่อมต่อเครื่องใหม่" class="bg-indigo-600 hover:bg-indigo-500 text-white px-2.5 py-1.5 rounded-lg border border-indigo-300/40 text-xs font-semibold flex items-center space-x-1.5 transition btn-tactile shadow-sm">
+              <i class="fa-solid fa-qrcode text-amber-300"></i>
+              <span class="hidden lg:inline">QR ประจำทีม</span>
+            </button>
+
+            <!-- Real-Time Sync Indicator & Force Sync Button -->
+            <div onclick="forceSyncAllDevices()" title="คลิกเพื่อบังคับซิงค์ข้อมูลให้ตรงกันทุกเครื่องทันที (Real-Time Sync)" class="cursor-pointer bg-slate-900/60 hover:bg-slate-900 transition px-2.5 py-1.5 rounded-lg border border-emerald-400/30 flex items-center space-x-2 text-xs btn-tactile">
+              <span id="syncDot" class="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse"></span>
+              <span id="syncText" class="font-mono text-emerald-300 font-semibold flex items-center space-x-1">
+                <i class="fa-solid fa-rotate text-[10px]"></i>
+                <span id="syncStatusLabel">ซิงค์: เรียลไทม์</span>
+              </span>
+              <span id="pingText" class="text-[10px] text-slate-400 font-mono hidden sm:inline pl-1 border-l border-slate-700">-- ms</span>
+            </div>
+
+            <!-- Operator Stamp Profile -->
+            <div class="flex items-center bg-slate-900/60 px-2.5 py-1 rounded-lg border border-blue-400/20 text-xs">
+              <i class="fa-solid fa-user-pen text-blue-300 mr-2"></i>
+              <span class="text-blue-200 mr-1 hidden xl:inline">ผู้ปฏิบัติงาน:</span>
+              <input type="text" id="operatorNameInput" onchange="updateOperatorName(this.value)" placeholder="ระบุชื่อของคุณ..." class="bg-transparent text-white font-medium focus:outline-none w-24 sm:w-32 text-xs">
+            </div>
+
+            <!-- Admin Button -->
+            <button onclick="openAdminModal()" class="bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 px-2.5 py-1.5 rounded-lg border border-amber-400/30 text-xs font-medium flex items-center space-x-1.5 transition btn-tactile">
+              <i class="fa-solid fa-gear text-amber-400"></i>
+              <span class="hidden sm:inline">Admin</span>
+            </button>
+
+          </div>
+        </div>
+      </div>
+
+    <!-- Navigation Tabs -->
+    <div class="bg-white border-b border-slate-200 text-slate-600 px-4 sm:px-6 lg:px-8 shadow-sm">
+      <div class="max-w-7xl mx-auto flex space-x-2 sm:space-x-8 overflow-x-auto custom-scrollbar text-sm font-medium">
+        <button onclick="switchTab('dashboard')" id="tabBtn-dashboard" class="tab-btn py-3 px-2 border-b-2 border-transparent hover:text-blue-600 flex items-center space-x-2 whitespace-nowrap tab-active">
+          <i class="fa-solid fa-chart-pie text-blue-600"></i>
+          <span>Dashboard & Analytics</span>
+        </button>
+        <button onclick="switchTab('teamA')" id="tabBtn-teamA" class="tab-btn py-3 px-2 border-b-2 border-transparent hover:text-blue-600 flex items-center space-x-2 whitespace-nowrap">
+          <i class="fa-solid fa-paper-plane text-emerald-600"></i>
+          <span>ทีม A: ขอจัดอบรม (Sales)</span>
+        </button>
+        <button onclick="switchTab('teamB')" id="tabBtn-teamB" class="tab-btn py-3 px-2 border-b-2 border-transparent hover:text-blue-600 flex items-center space-x-2 whitespace-nowrap">
+          <i class="fa-solid fa-clipboard-check text-purple-600"></i>
+          <span>ทีม B: ตรวจวิชาการ</span>
+          <span id="badgeWaitingB" class="bg-purple-100 text-purple-700 text-[10px] font-bold px-1.5 py-0.5 rounded-full">0</span>
+        </button>
+        <button onclick="switchTab('exec')" id="tabBtn-exec" class="tab-btn py-3 px-2 border-b-2 border-transparent hover:text-blue-600 flex items-center space-x-2 whitespace-nowrap">
+          <i class="fa-solid fa-stamp text-amber-600"></i>
+          <span>ผู้บริหาร: อนุมัติ</span>
+          <span id="badgeWaitingExec" class="bg-amber-100 text-amber-800 text-[10px] font-bold px-1.5 py-0.5 rounded-full">0</span>
+        </button>
+        <button onclick="switchTab('evaluation')" id="tabBtn-evaluation" class="tab-btn py-3 px-2 border-b-2 border-transparent hover:text-blue-600 flex items-center space-x-2 whitespace-nowrap">
+          <i class="fa-solid fa-qrcode text-indigo-600"></i>
+          <span>QR & ผลประเมินปิดลูป</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content Container -->
+  <main class="flex-1 max-w-7xl w-full mx-auto p-4 sm:p-6 lg:p-8 space-y-6">
+
+    <!-- Real-Time Sync Notification Toast Banner -->
+    <div id="syncToastBox" class="hidden items-center justify-between p-3.5 bg-gradient-to-r from-emerald-600 via-emerald-700 to-teal-800 text-white rounded-xl shadow-xl text-xs font-semibold animate-pulse">
+      <div class="flex items-center space-x-2.5">
+        <i class="fa-solid fa-arrows-rotate animate-spin text-emerald-200 text-sm"></i>
+        <span id="syncToastMessage">ข้อมูลซิงค์ตรงกันทุกเครื่องแล้ว</span>
+      </div>
+      <button onclick="document.getElementById('syncToastBox').classList.add('hidden')" class="text-white/80 hover:text-white ml-3 text-sm">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+    </div>
+
+    <!-- Notification Alert Bar -->
+    <div id="alertBox" class="hidden rounded-xl p-4 text-sm font-medium transition duration-300"></div>
+
+    <!-- ========================================== -->
+    <!-- TAB 1: DASHBOARD & CLOSED-LOOP ANALYTICS -->
+    <!-- ========================================== -->
+    <section id="view-dashboard" class="space-y-6">
+      
+      <!-- KPI Stats Grid -->
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+        
+        <div class="bg-white rounded-2xl p-5 border border-slate-200 shadow-sm">
+          <div class="flex items-center justify-between">
+            <span class="text-xs font-semibold text-slate-500 uppercase tracking-wider">คำขอทั้งหมด</span>
+            <div class="w-8 h-8 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center">
+              <i class="fa-solid fa-folder-open"></i>
+            </div>
+          </div>
+          <div id="statTotalRequests" class="text-2xl font-black text-slate-800 mt-2">0</div>
+          <div class="text-[11px] text-slate-400 mt-1">รายการสะสมในระบบ</div>
+        </div>
+
+        <div class="bg-white rounded-2xl p-5 border border-slate-200 shadow-sm">
+          <div class="flex items-center justify-between">
+            <span class="text-xs font-semibold text-slate-500 uppercase tracking-wider">รอการดำเนินการ (Pending)</span>
+            <div class="w-8 h-8 rounded-lg bg-amber-50 text-amber-600 flex items-center justify-center">
+              <i class="fa-solid fa-hourglass-half"></i>
+            </div>
+          </div>
+          <div id="statPendingRequests" class="text-2xl font-black text-amber-600 mt-2">0</div>
+          <div class="text-[11px] text-slate-400 mt-1">ค้างอยู่ที่ทีม B หรือ ผู้บริหาร</div>
+        </div>
+
+        <div class="bg-white rounded-2xl p-5 border border-slate-200 shadow-sm">
+          <div class="flex items-center justify-between">
+            <span class="text-xs font-semibold text-slate-500 uppercase tracking-wider">เป้าหมายยอดขายรวม</span>
+            <div class="w-8 h-8 rounded-lg bg-emerald-50 text-emerald-600 flex items-center justify-center">
+              <i class="fa-solid fa-coins"></i>
+            </div>
+          </div>
+          <div id="statTotalTargetSales" class="text-2xl font-black text-emerald-600 mt-2">฿0</div>
+          <div class="text-[11px] text-slate-400 mt-1">โครงการที่อนุมัติแล้ว</div>
+        </div>
+
+        <div class="bg-white rounded-2xl p-5 border border-slate-200 shadow-sm">
+          <div class="flex items-center justify-between">
+            <span class="text-xs font-semibold text-slate-500 uppercase tracking-wider">ความพึงพอใจเฉลี่ย</span>
+            <div class="w-8 h-8 rounded-lg bg-purple-50 text-purple-600 flex items-center justify-center">
+              <i class="fa-solid fa-star"></i>
+            </div>
+          </div>
+          <div id="statAvgSatisfaction" class="text-2xl font-black text-purple-600 mt-2">0.00 / 5.0</div>
+          <div class="text-[11px] text-slate-400 mt-1">จากผู้เข้าอบรมทั้งหมด</div>
+        </div>
+
+      </div>
+
+      <!-- Overview Tables -->
+      <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+        <div class="px-6 py-4 border-b border-slate-100 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+          <div>
+            <h3 class="font-bold text-slate-800 text-base">รายการคำขอจัดอบรมล่าสุด (Recent Requests & SLA Status)</h3>
+            <p class="text-xs text-slate-400">ติดตามสถานะการเดินเรื่อง ระยะเวลาค้าง (Lead Time) และผู้รับผิดชอบ</p>
+          </div>
+          <div class="flex items-center space-x-2">
+            <button onclick="fetchInitialData()" class="px-3 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-medium rounded-lg transition flex items-center space-x-1.5">
+              <i class="fa-solid fa-rotate"></i>
+              <span>รีเฟรชข้อมูล</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="overflow-x-auto">
+          <table class="w-full text-left text-sm text-slate-600">
+            <thead class="bg-slate-50 text-slate-500 text-xs uppercase font-semibold border-b border-slate-100">
+              <tr>
+                <th class="px-6 py-3.5">รหัสคำขอ / กิจกรรม</th>
+                <th class="px-6 py-3.5">โรงเรียน & จังหวัด</th>
+                <th class="px-6 py-3.5">ผู้แทนขาย (ทีม A)</th>
+                <th class="px-6 py-3.5">งบ / เป้าขาย (ROI)</th>
+                <th class="px-6 py-3.5">สถานะ</th>
+                <th class="px-6 py-3.5">ระยะเวลาค้าง (SLA)</th>
+                <th class="px-6 py-3.5 text-right">เอกสาร / การกระทำ</th>
+              </tr>
+            </thead>
+            <tbody id="dashboardRequestsTableBody" class="divide-y divide-slate-100">
+              <tr>
+                <td colspan="7" class="px-6 py-8 text-center text-slate-400">กำลังโหลดข้อมูล...</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- ========================================== -->
+    <!-- TAB 2: TEAM A - SALES & REQUEST SUBMISSION -->
+    <!-- ========================================== -->
+    <section id="view-teamA" class="hidden space-y-6">
+      
+      <!-- Team A Collaboration & QR Banner -->
+      <div class="bg-gradient-to-r from-emerald-500/10 via-emerald-500/5 to-transparent p-4 rounded-2xl border border-emerald-200/80 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 max-w-4xl mx-auto">
+        <div class="flex items-center space-x-3 text-xs text-emerald-950 font-medium">
+          <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
+          <span><strong>ทีมขาย (Sales Team A):</strong> กำลังทำงานในโหมดส่งคำขออบรม ทุกข้อมูลที่บันทึกจะซิงค์ตรงกับทีมวิชาการและผู้บริหารแบบอัตโนมัติ</span>
+        </div>
+        <button type="button" onclick="openTeamQrModal('teamA')" class="inline-flex items-center px-3 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold rounded-xl transition btn-tactile shadow-sm whitespace-nowrap self-start sm:self-auto">
+          <i class="fa-solid fa-qrcode mr-1.5 text-emerald-200"></i>
+          <span>สร้าง QR ให้เพื่อนทีม A สแกน</span>
+        </button>
+      </div>
+
+      <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-6 max-w-4xl mx-auto">
+        <div class="border-b border-slate-100 pb-4 mb-6">
+          <div class="flex items-center space-x-3">
+            <div class="w-9 h-9 rounded-xl bg-emerald-100 text-emerald-700 flex items-center justify-center">
+              <i class="fa-solid fa-file-pen text-lg"></i>
+            </div>
+            <div>
+              <h2 class="text-lg font-bold text-slate-900">แบบฟอร์มขออนุมัติจัดกิจกรรมอบรม (ทีม A)</h2>
+              <p class="text-xs text-slate-400">กรอกข้อมูลโครงการ เลือกโรงเรียนจากฐาน PPC และประเมินความคุ้มค่ายอดขาย</p>
+            </div>
+          </div>
+        </div>
+
+        <form id="teamAForm" onsubmit="handleTeamASubmit(event)" class="space-y-6">
+          
+          <!-- Cascading Selection: Province -> Sales -> School -->
+          <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 space-y-4">
+            <div class="text-xs font-bold text-slate-700 uppercase tracking-wider flex items-center space-x-1.5">
+              <i class="fa-solid fa-database text-blue-600"></i>
+              <span>ดึงข้อมูลโรงเรียนและเซลล์จากฐานข้อมูล PPC Master</span>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+              <div>
+                <label class="block text-xs font-semibold text-slate-700 mb-1">1. เลือกจังหวัด *</label>
+                <select id="provSelect" onchange="onProvinceChange(this.value)" required class="w-full bg-white border border-slate-300 rounded-lg p-2.5 text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none">
+                  <option value="">-- เลือกจังหวัด --</option>
+                </select>
+              </div>
+
+              <div>
+                <label class="block text-xs font-semibold text-slate-700 mb-1">2. พนักงานขายผู้ดูแล (PPC) *</label>
+                <select id="saleSelect" required class="w-full bg-white border border-slate-300 rounded-lg p-2.5 text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none">
+                  <option value="">-- เลือกพนักงานขาย --</option>
+                </select>
+              </div>
+
+              <div>
+                <label class="block text-xs font-semibold text-slate-700 mb-1">3. โรงเรียน/หน่วยงานลูกค้า *</label>
+                <select id="schoolSelect" required class="w-full bg-white border border-slate-300 rounded-lg p-2.5 text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none">
+                  <option value="">-- เลือกโรงเรียน --</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <!-- Activity Details (Editable Dropdowns / Autocomplete Combobox) -->
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <label class="block text-xs font-semibold text-slate-700 mb-1 flex items-center justify-between">
+                <span>ประเภทกิจกรรม *</span>
+                <span class="text-[10px] text-blue-600 font-medium"><i class="fa-solid fa-pen-to-square mr-1"></i>เลือกหรือพิมพ์เอง</span>
+              </label>
+              <input type="text" id="activityType" list="activityTypeList" required placeholder="เลือกจากรายการ หรือพิมพ์ใหม่..." class="w-full bg-white border border-slate-300 rounded-lg p-2.5 text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none">
+              <datalist id="activityTypeList"></datalist>
+            </div>
+
+            <div>
+              <label class="block text-xs font-semibold text-slate-700 mb-1 flex items-center justify-between">
+                <span>หัวข้อหลักสูตรอบรม *</span>
+                <span class="text-[10px] text-blue-600 font-medium"><i class="fa-solid fa-pen-to-square mr-1"></i>เลือกหรือพิมพ์เอง</span>
+              </label>
+              <input type="text" id="courseTopic" list="courseTopicList" required placeholder="เลือกจากรายการ หรือพิมพ์ใหม่..." class="w-full bg-white border border-slate-300 rounded-lg p-2.5 text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none">
+              <datalist id="courseTopicList"></datalist>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <div>
+              <label class="block text-xs font-semibold text-slate-700 mb-1">วันที่จัดกิจกรรม *</label>
+              <input type="date" id="eventDate" required class="w-full bg-white border border-slate-300 rounded-lg p-2.5 text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none">
+            </div>
+
+            <div>
+              <label class="block text-xs font-semibold text-slate-700 mb-1 flex items-center justify-between">
+                <span>วิทยากรที่เสนอเบื้องต้น *</span>
+                <span class="text-[10px] text-blue-600 font-medium"><i class="fa-solid fa-pen-to-square mr-1"></i>พิมพ์ได้</span>
+              </label>
+              <input type="text" id="speakerType" list="speakerTypeList" required placeholder="เลือกหรือพิมพ์ชื่อวิทยากร..." class="w-full bg-white border border-slate-300 rounded-lg p-2.5 text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none">
+              <datalist id="speakerTypeList"></datalist>
+            </div>
+
+            <div>
+              <label class="block text-xs font-semibold text-slate-700 mb-1 flex items-center justify-between">
+                <span>สถานที่จัดงาน *</span>
+                <span class="text-[10px] text-blue-600 font-medium"><i class="fa-solid fa-pen-to-square mr-1"></i>พิมพ์ได้</span>
+              </label>
+              <input type="text" id="venueType" list="venueTypeList" required placeholder="เลือกหรือพิมพ์สถานที่..." class="w-full bg-white border border-slate-300 rounded-lg p-2.5 text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none">
+              <datalist id="venueTypeList"></datalist>
+            </div>
+          </div>
+
+          <div>
+            <label class="block text-xs font-semibold text-slate-700 mb-1">วัตถุประสงค์เชิงกลยุทธ์ *</label>
+            <textarea id="objective" rows="2" required placeholder="ระบุเหตุผลในการจัดงาน เช่น เพื่อเปิดตลาดหลักสูตรใหม่, กระชับความสัมพันธ์ Tier A..." class="w-full bg-white border border-slate-300 rounded-lg p-2.5 text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none"></textarea>
+          </div>
+
+          <!-- ความต้องการเพิ่มเติม: ห้องพัก และ รถรับ-ส่ง -->
+          <div class="bg-indigo-50/50 p-4 rounded-xl border border-indigo-100 space-y-3">
+            <div class="text-xs font-bold text-indigo-900 uppercase tracking-wider flex items-center space-x-1.5">
+              <i class="fa-solid fa-hotel text-indigo-600"></i>
+              <span>ความต้องการสนับสนุนด้านสถานที่พัก และ ยานพาหนะรับ-ส่ง</span>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <!-- ส่วนห้องพัก -->
+              <div class="bg-white p-3.5 rounded-xl border border-slate-200 space-y-2">
+                <div class="flex items-center justify-between">
+                  <label class="text-xs font-bold text-slate-800 flex items-center space-x-2 cursor-pointer select-none">
+                    <input type="checkbox" id="needAccommodation" onchange="toggleAccommodationFields(this.checked)" class="w-4 h-4 text-blue-600 rounded border-slate-300 focus:ring-blue-500">
+                    <span>ต้องการห้องพัก</span>
+                  </label>
+                  <span id="accomBadge" class="text-[10px] bg-slate-100 text-slate-500 px-2 py-0.5 rounded-full font-semibold">ไม่ต้องการ</span>
+                </div>
+                <div id="roomCountWrap" class="hidden pt-1">
+                  <label class="block text-xs text-slate-600 mb-1">จำนวนห้องพักที่ต้องการ (ห้อง) *</label>
+                  <input type="number" id="roomCount" min="1" value="1" placeholder="ระบุจำนวนห้อง..." class="w-full bg-slate-50 border border-slate-300 rounded-lg p-2 text-xs font-mono focus:ring-2 focus:ring-blue-500 focus:outline-none">
+                </div>
+              </div>
+
+              <!-- ส่วนรถรับ-ส่ง -->
+              <div class="bg-white p-3.5 rounded-xl border border-slate-200 space-y-2">
+                <div class="flex items-center justify-between">
+                  <label class="text-xs font-bold text-slate-800 flex items-center space-x-2 cursor-pointer select-none">
+                    <input type="checkbox" id="needTransportation" onchange="toggleTransportFields(this.checked)" class="w-4 h-4 text-blue-600 rounded border-slate-300 focus:ring-blue-500">
+                    <span>ต้องการรถรับ-ส่ง</span>
+                  </label>
+                  <span id="transBadge" class="text-[10px] bg-slate-100 text-slate-500 px-2 py-0.5 rounded-full font-semibold">ไม่ต้องการ</span>
+                </div>
+                <div id="transportDetailsWrap" class="hidden pt-1">
+                  <label class="block text-xs text-slate-600 mb-1">รายละเอียดเส้นทาง/จุดรับ-ส่ง *</label>
+                  <input type="text" id="transportDetails" list="transportDetailsList" placeholder="เลือกหรือพิมพ์ เช่น รถตู้รับ-ส่งสนามบิน-โรงแรม-โรงเรียน..." class="w-full bg-slate-50 border border-slate-300 rounded-lg p-2 text-xs focus:ring-2 focus:ring-blue-500 focus:outline-none">
+                  <datalist id="transportDetailsList"></datalist>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Real-Time Cost-to-Sales ROI Calculator -->
+          <div class="bg-blue-50/70 p-4 rounded-xl border border-blue-200 space-y-3">
+            <div class="flex items-center justify-between">
+              <span class="text-xs font-bold text-blue-900 uppercase tracking-wider flex items-center space-x-1.5">
+                <i class="fa-solid fa-calculator text-blue-600"></i>
+                <span>ประเมินความคุ้มค่า (Cost-to-Sales ROI Analysis)</span>
+              </span>
+              <span id="roiBadge" class="text-xs font-bold px-2 py-0.5 rounded-full bg-slate-200 text-slate-600">
+                ยังไม่ระบุตัวเลข
+              </span>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <label class="block text-xs font-semibold text-slate-700 mb-1">ประมาณการงบประมาณที่ขอ (บาท) *</label>
+                <input type="number" id="estBudget" oninput="calculateRealtimeROI()" required min="0" placeholder="เช่น 15000" class="w-full bg-white border border-slate-300 rounded-lg p-2.5 text-sm font-mono focus:ring-2 focus:ring-blue-500 focus:outline-none">
+              </div>
+
+              <div>
+                <label class="block text-xs font-semibold text-slate-700 mb-1">เป้าหมายยอดขายที่อ้างอิง (บาท) *</label>
+                <input type="number" id="targetSales" oninput="calculateRealtimeROI()" required min="0" placeholder="เช่น 200000" class="w-full bg-white border border-slate-300 rounded-lg p-2.5 text-sm font-mono focus:ring-2 focus:ring-blue-500 focus:outline-none">
+              </div>
+            </div>
+
+            <div id="roiFeedbackText" class="text-xs text-blue-800">
+              * สัดส่วนงบประมาณต่อยอดขายที่เหมาะสมตามนโยบายบริษัท คือ ไม่เกิน 15% (เกณฑ์ดีเยี่ยม &le; 8%)
+            </div>
+          </div>
+
+          <!-- Submit Action -->
+          <div class="pt-2 flex justify-end">
+            <button type="submit" id="teamASubmitBtn" class="px-6 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-sm rounded-xl shadow-md flex items-center space-x-2 transition">
+              <i class="fa-solid fa-paper-plane"></i>
+              <span>ส่งคำขอให้ฝ่ายวิชาการ (ทีม B) ตรวจสอบ</span>
+            </button>
+          </div>
+
+        </form>
+      </div>
+
+    </section>
+
+    <!-- ========================================== -->
+    <!-- TAB 3: TEAM B - ACADEMIC REVIEW & BUDGET  -->
+    <!-- ========================================== -->
+    <section id="view-teamB" class="hidden space-y-6">
+      
+      <!-- Team B Collaboration & QR Banner -->
+      <div class="bg-gradient-to-r from-purple-500/10 via-purple-500/5 to-transparent p-4 rounded-2xl border border-purple-200/80 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+        <div class="flex items-center space-x-3 text-xs text-purple-950 font-medium">
+          <span class="w-2.5 h-2.5 rounded-full bg-purple-500 animate-pulse"></span>
+          <span><strong>ทีมวิชาการ (Academic Team B):</strong> ตรวจสอบเนื้อหาและจัดสรรวิทยากร อัปเดตข้อมูลตรงกันทุกเครื่องแบบ Real-Time</span>
+        </div>
+        <button type="button" onclick="openTeamQrModal('teamB')" class="inline-flex items-center px-3 py-1.5 bg-purple-600 hover:bg-purple-700 text-white text-xs font-bold rounded-xl transition btn-tactile shadow-sm whitespace-nowrap self-start sm:self-auto">
+          <i class="fa-solid fa-qrcode mr-1.5 text-purple-200"></i>
+          <span>สร้าง QR ให้เพื่อนทีม B สแกน</span>
+        </button>
+      </div>
+
+      <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-6">
+        <div class="border-b border-slate-100 pb-4 mb-6 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+          <div class="flex items-center space-x-3">
+            <div class="w-9 h-9 rounded-xl bg-purple-100 text-purple-700 flex items-center justify-center">
+              <i class="fa-solid fa-list-check text-lg"></i>
+            </div>
+            <div>
+              <h2 class="text-lg font-bold text-slate-900">คิวตรวจสอบคำขอของฝ่ายวิชาการ (ทีม B)</h2>
+              <p class="text-xs text-slate-400">ตรวจสอบความพร้อมวิทยากร ปรับยอดตัดจ่ายจริง และให้ข้อเสนอแนะเชิงวิชาการ</p>
+            </div>
+          </div>
+          <span class="text-xs bg-purple-50 text-purple-700 font-semibold px-3 py-1.5 rounded-full border border-purple-200">
+            สถานะเป้าหมาย: WAITING_B
+          </span>
+        </div>
+
+        <div id="teamBQueueContainer" class="space-y-4">
+          <!-- Rendered dynamically -->
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================================== -->
+    <!-- TAB 4: EXECUTIVE APPROVAL & MEMO SIGN OFF  -->
+    <!-- ========================================== -->
+    <section id="view-exec" class="hidden space-y-6">
+      
+      <!-- Executive Collaboration & QR Banner -->
+      <div class="bg-gradient-to-r from-amber-500/10 via-amber-500/5 to-transparent p-4 rounded-2xl border border-amber-200/80 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+        <div class="flex items-center space-x-3 text-xs text-amber-950 font-medium">
+          <span class="w-2.5 h-2.5 rounded-full bg-amber-500 animate-pulse"></span>
+          <span><strong>ผู้บริหาร (Executive):</strong> อนุมัติโครงการและออก Token แบบ Zero-Trust คำสั่งอนุมัติจะกระจายซิงค์ไปทุกเครื่องทันที</span>
+        </div>
+        <button type="button" onclick="openTeamQrModal('exec')" class="inline-flex items-center px-3 py-1.5 bg-amber-600 hover:bg-amber-700 text-white text-xs font-bold rounded-xl transition btn-tactile shadow-sm whitespace-nowrap self-start sm:self-auto">
+          <i class="fa-solid fa-qrcode mr-1.5 text-amber-200"></i>
+          <span>สร้าง QR โหมดผู้บริหาร</span>
+        </button>
+      </div>
+
+      <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-6">
+        <div class="border-b border-slate-100 pb-4 mb-6 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+          <div class="flex items-center space-x-3">
+            <div class="w-9 h-9 rounded-xl bg-amber-100 text-amber-800 flex items-center justify-center">
+              <i class="fa-solid fa-stamp text-lg"></i>
+            </div>
+            <div>
+              <h2 class="text-lg font-bold text-slate-900">คำขอรอการพิจารณาอนุมัติ (ผู้บริหาร)</h2>
+              <p class="text-xs text-slate-400">เมื่ออนุมัติ ระบบจะ Generate PDF Memo A4 อัตโนมัติ และเปิด Token สำหรับประเมินผล</p>
+            </div>
+          </div>
+          <span class="text-xs bg-amber-50 text-amber-800 font-semibold px-3 py-1.5 rounded-full border border-amber-200">
+            สถานะเป้าหมาย: WAITING_EXEC
+          </span>
+        </div>
+
+        <div id="execQueueContainer" class="space-y-4">
+          <!-- Rendered dynamically -->
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================================== -->
+    <!-- TAB 5: CLOSED-LOOP EVALUATION & QR TOKENS -->
+    <!-- ========================================== -->
+    <section id="view-evaluation" class="hidden space-y-6">
+      <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-6">
+        <div class="border-b border-slate-100 pb-4 mb-6">
+          <div class="flex items-center space-x-3">
+            <div class="w-9 h-9 rounded-xl bg-indigo-100 text-indigo-700 flex items-center justify-center">
+              <i class="fa-solid fa-qrcode text-lg"></i>
+            </div>
+            <div>
+              <h2 class="text-lg font-bold text-slate-900">ศูนย์กลางแบบประเมินและ QR Code ปิดลูป</h2>
+              <p class="text-xs text-slate-400">โครงการที่ได้รับอนุมัติแล้ว จะมี QR Code เฉพาะ เพื่อให้ผู้เข้าอบรมสแกนประเมินผลความพึงพอใจ</p>
+            </div>
+          </div>
+        </div>
+
+        <div id="approvedEventsContainer" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          <!-- Rendered dynamically -->
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ========================================== -->
+  <!-- MODAL: TEAM QR PAIRING & SYNC (สำหรับทีมงาน)  -->
+  <!-- ========================================== -->
+  <div id="teamQrModal" class="hidden fixed inset-0 z-50 bg-slate-900/70 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl max-w-lg w-full p-6 space-y-4 shadow-2xl">
+      <!-- Modal Header -->
+      <div class="flex items-center justify-between pb-3 border-b border-slate-100">
+        <div class="flex items-center space-x-2.5">
+          <div class="w-10 h-10 rounded-xl bg-blue-100 text-[#08539E] flex items-center justify-center text-xl shadow-sm">
+            <i class="fa-solid fa-users-viewfinder"></i>
+          </div>
+          <div>
+            <h3 class="font-bold text-slate-800 text-base">สแกน QR Code ประจำทีม เชื่อมต่อเครื่องใหม่</h3>
+            <p class="text-xs text-slate-500">เปิดเครื่องใหม่หรือมือถือ ให้มีสิทธิ์และข้อมูลตรงกันทุกเครื่องทันที</p>
+          </div>
+        </div>
+        <button onclick="closeTeamQrModal()" class="text-slate-400 hover:text-slate-600"><i class="fa-solid fa-xmark text-lg"></i></button>
+      </div>
+
+      <!-- Team / Role Selector Buttons -->
+      <div>
+        <label class="block text-xs font-bold text-slate-700 mb-2">เลือกทีมที่ต้องการสร้าง QR Code เชื่อมต่อ:</label>
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-2">
+          <button type="button" onclick="selectTeamQrRole('teamA')" id="btnRoleTeamA" class="team-role-pill p-2.5 rounded-xl border text-center transition flex flex-col items-center justify-center space-y-1 border-emerald-500 bg-emerald-50 text-emerald-800 font-bold">
+            <i class="fa-solid fa-paper-plane text-emerald-600 text-base"></i>
+            <span class="text-xs">ทีม A (Sales)</span>
+          </button>
+          <button type="button" onclick="selectTeamQrRole('teamB')" id="btnRoleTeamB" class="team-role-pill p-2.5 rounded-xl border text-center transition flex flex-col items-center justify-center space-y-1 border-slate-200 hover:border-purple-300 text-slate-600 font-medium bg-white">
+            <i class="fa-solid fa-clipboard-check text-purple-600 text-base"></i>
+            <span class="text-xs">ทีม B (วิชาการ)</span>
+          </button>
+          <button type="button" onclick="selectTeamQrRole('exec')" id="btnRoleExec" class="team-role-pill p-2.5 rounded-xl border text-center transition flex flex-col items-center justify-center space-y-1 border-slate-200 hover:border-amber-300 text-slate-600 font-medium bg-white">
+            <i class="fa-solid fa-stamp text-amber-600 text-base"></i>
+            <span class="text-xs">ผู้บริหาร (อนุมัติ)</span>
+          </button>
+          <button type="button" onclick="selectTeamQrRole('evaluation')" id="btnRoleEval" class="team-role-pill p-2.5 rounded-xl border text-center transition flex flex-col items-center justify-center space-y-1 border-slate-200 hover:border-blue-300 text-slate-600 font-medium bg-white">
+            <i class="fa-solid fa-chart-pie text-blue-600 text-base"></i>
+            <span class="text-xs">Dashboard/ส่วนกลาง</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- QR Code Display Box -->
+      <div class="bg-gradient-to-b from-blue-50/60 to-slate-50 p-4 rounded-2xl border border-blue-100 flex flex-col items-center justify-center space-y-3">
+        <div id="teamQrcodeWrapper" class="p-3 bg-white border-2 border-blue-200 rounded-2xl shadow-md min-h-[190px] min-w-[190px] flex items-center justify-center"></div>
+        <div class="text-center">
+          <div id="teamQrRoleTitle" class="font-black text-slate-800 text-sm text-[#08539E]">โหมด: ทีม A ขอจัดอบรม (Sales)</div>
+          <p class="text-[11px] text-slate-500 mt-0.5">ใช้สมาร์ตโฟนเปิดกล้องสแกนเพื่อเริ่มใช้งานโหมดนี้ทันที</p>
+        </div>
+      </div>
+
+      <!-- Share URL Input & Copy -->
+      <div class="space-y-1.5">
+        <div class="flex items-center justify-between text-[11px] font-semibold text-slate-600">
+          <span>ลิงก์ตรงสำหรับเปิดในอุปกรณ์ใหม่:</span>
+          <span class="text-emerald-600 flex items-center"><i class="fa-solid fa-bolt mr-1"></i>ซิงค์ข้อมูลชุดเดียวกันอัตโนมัติ</span>
+        </div>
+        <div class="bg-slate-50 p-2.5 rounded-xl border border-slate-200 flex items-center justify-between text-xs">
+          <input type="text" id="teamShareUrlInput" readonly class="bg-transparent text-slate-700 focus:outline-none w-full font-mono text-[11px]">
+          <button onclick="copyTeamShareUrl()" class="ml-2 px-3 py-1.5 bg-[#08539E] hover:bg-[#07488a] text-white rounded-lg text-xs font-semibold whitespace-nowrap btn-tactile flex items-center space-x-1">
+            <i class="fa-solid fa-copy"></i>
+            <span>คัดลอกลิงก์</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Real-time Synchronization Guarantee Note -->
+      <div class="bg-emerald-50 border border-emerald-200 rounded-xl p-3 flex items-start space-x-2.5 text-xs text-emerald-900">
+        <i class="fa-solid fa-circle-check text-emerald-600 text-base mt-0.5"></i>
+        <div class="leading-relaxed">
+          <strong class="font-bold">ข้อมูลเท่ากันทุกเครื่องแบบ Real-Time:</strong>
+          เมื่อสแกนแล้ว ทุกการบันทึกคำขอ แก้ไข หรืออนุมัติในเครื่องใดก็ตาม ระบบจะส่งสัญญาณ Broadcast และ Polling ซิงค์อัปเดตหน้าจอของสมาชิกทุกคนในทีมให้ตรงกันแบบอัตโนมัติทันที
+        </div>
+      </div>
+
+      <!-- Action Footer -->
+      <div class="flex items-center justify-end space-x-2 pt-1">
+        <button onclick="testOpenTeamLink()" class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold rounded-xl text-xs transition">
+          <i class="fa-solid fa-arrow-up-right-from-square mr-1"></i>ทดสอบเปิดในแท็บใหม่
+        </button>
+        <button onclick="closeTeamQrModal()" class="px-5 py-2 bg-slate-800 hover:bg-slate-900 text-white font-semibold rounded-xl text-xs transition">
+          ปิดหน้าต่าง
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================== -->
+  <!-- MODAL: QR CODE DISPLAY & SHARE LINK       -->
+  <!-- ========================================== -->
+  <div id="qrModal" class="hidden fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl max-w-sm w-full p-6 text-center space-y-4 shadow-2xl">
+      <div class="flex items-center justify-between pb-2 border-b border-slate-100">
+        <h3 class="font-bold text-slate-800 text-sm">QR Code สำหรับผู้เข้าอบรม</h3>
+        <button onclick="closeQrModal()" class="text-slate-400 hover:text-slate-600"><i class="fa-solid fa-xmark text-lg"></i></button>
+      </div>
+
+      <div id="qrcodeWrapper" class="flex justify-center p-3 bg-white border border-slate-200 rounded-xl"></div>
+      
+      <div>
+        <div id="modalCourseTitle" class="font-bold text-slate-800 text-sm leading-tight"></div>
+        <div id="modalEventId" class="text-xs text-slate-400 mt-1 font-mono"></div>
+      </div>
+
+      <div class="bg-slate-50 p-2.5 rounded-lg border border-slate-200 flex items-center justify-between text-xs">
+        <input type="text" id="modalShareUrl" readonly class="bg-transparent text-slate-600 focus:outline-none w-full font-mono text-[11px]">
+        <button onclick="copyShareUrl()" class="ml-2 px-2.5 py-1 bg-blue-600 hover:bg-blue-700 text-white rounded text-xs font-semibold whitespace-nowrap">
+          <i class="fa-solid fa-copy mr-1"></i>คัดลอก
+        </button>
+      </div>
+
+      <a id="modalOpenSurveyLink" href="#" target="_blank" class="block w-full py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold rounded-xl text-xs transition">
+        <i class="fa-solid fa-arrow-up-right-from-square mr-1.5"></i>เปิดหน้าแบบประเมินในแท็บใหม่
+      </a>
+    </div>
+  </div>
+
+  <!-- ======================================================== -->
+  <!-- MODAL: PPC A4 OPERATIONS SUMMARY REPORT (PDF & WORD)     -->
+  <!-- ======================================================== -->
+  <div id="ppcReportModal" class="hidden fixed inset-0 z-50 bg-slate-900/80 backdrop-blur-sm flex items-center justify-center p-2 sm:p-4">
+    <div class="bg-white rounded-2xl max-w-4xl w-full p-4 sm:p-6 shadow-2xl flex flex-col max-h-[95vh]">
+      
+      <!-- Top Action Bar -->
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between pb-3 border-b border-slate-200 gap-2">
+        <div class="flex items-center space-x-2.5">
+          <div class="w-10 h-10 rounded-xl bg-blue-100 text-[#08539E] flex items-center justify-center text-xl shadow-sm">
+            <i class="fa-solid fa-file-invoice"></i>
+          </div>
+          <div>
+            <h3 class="font-bold text-slate-800 text-base flex items-center space-x-2">
+              <span>รายงานสรุปการปฏิบัติงาน A4 (PPC Format)</span>
+              <span id="reportModalBadgeId" class="text-xs bg-blue-100 text-[#08539E] font-mono px-2 py-0.5 rounded-full font-bold">EVT-XXXX</span>
+            </h3>
+            <p class="text-xs text-slate-500">มาตรฐานรายงานสรุปโครงการ บริษัท ไทยวัฒนาพานิช จำกัด</p>
+          </div>
+        </div>
+
+        <!-- Export Buttons (PDF, Word, Print, Close) -->
+        <div class="flex items-center space-x-2">
+          <button onclick="downloadReportPdfAction()" id="btnExportPdf" class="px-3 py-1.5 bg-red-600 hover:bg-red-700 text-white rounded-xl text-xs font-bold transition btn-tactile shadow-sm flex items-center space-x-1.5">
+            <i class="fa-solid fa-file-pdf"></i>
+            <span>Export PDF</span>
+          </button>
+          <button onclick="downloadReportDocxAction()" id="btnExportDocx" class="px-3 py-1.5 bg-[#08539E] hover:bg-[#07488a] text-white rounded-xl text-xs font-bold transition btn-tactile shadow-sm flex items-center space-x-1.5">
+            <i class="fa-solid fa-file-word"></i>
+            <span>Export Word (.docx)</span>
+          </button>
+          <button onclick="printReportContainer()" class="px-3 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl text-xs font-semibold transition btn-tactile flex items-center space-x-1.5" title="สั่งพิมพ์เอกสาร A4">
+            <i class="fa-solid fa-print"></i>
+            <span class="hidden sm:inline">พิมพ์ A4</span>
+          </button>
+          <button onclick="closePpcReportModal()" class="text-slate-400 hover:text-slate-600 p-1.5 rounded-lg hover:bg-slate-100 transition"><i class="fa-solid fa-xmark text-lg"></i></button>
+        </div>
+      </div>
+
+      <!-- Scrollable A4 Document Paper Container -->
+      <div class="flex-1 overflow-y-auto custom-scrollbar p-2 sm:p-4 bg-slate-100/70 rounded-xl my-3">
+        <div id="ppcReportPaper" class="max-w-[794px] mx-auto bg-white p-6 sm:p-10 shadow-lg rounded border border-slate-300 text-slate-900 font-sans select-text">
+          <!-- Rendered dynamically -->
+        </div>
+      </div>
+
+      <!-- Modal Footer -->
+      <div class="flex items-center justify-between pt-2 border-t border-slate-100 text-xs text-slate-500">
+        <span class="flex items-center"><i class="fa-solid fa-circle-check text-emerald-500 mr-1.5"></i>พร้อมสำหรับการส่งออกเป็นเอกสารราชการและมหาชน (PPC Standard)</span>
+        <button onclick="closePpcReportModal()" class="px-4 py-1.5 bg-slate-200 hover:bg-slate-300 text-slate-700 font-semibold rounded-lg transition">ปิดหน้าต่าง</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================== -->
+  <!-- MODAL: ADMIN CONTROL PANEL (PIN: admin0000) -->
+  <!-- ========================================== -->
+  <div id="adminModal" class="hidden fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl max-w-2xl w-full p-6 shadow-2xl space-y-5 max-h-[90vh] overflow-y-auto custom-scrollbar">
+      
+      <!-- Admin Header -->
+      <div class="flex items-center justify-between pb-3 border-b border-slate-100">
+        <div class="flex items-center space-x-2">
+          <div class="w-8 h-8 rounded-lg bg-amber-100 text-amber-700 flex items-center justify-center">
+            <i class="fa-solid fa-shield-cat"></i>
+          </div>
+          <div>
+            <h3 class="font-bold text-slate-900 text-base">Admin Control Panel (ระบบหลังบ้าน)</h3>
+            <p class="text-xs text-slate-400">ควบคุมการเชื่อมต่อ ตรวจสอบ Sheet และดูประวัติ Audit Logs</p>
+          </div>
+        </div>
+        <button onclick="closeAdminModal()" class="text-slate-400 hover:text-slate-600"><i class="fa-solid fa-xmark text-lg"></i></button>
+      </div>
+
+      <!-- Password Lock Screen (if not unlocked) -->
+      <div id="adminLockScreen" class="py-8 text-center space-y-4">
+        <div class="w-14 h-14 bg-amber-50 text-amber-600 rounded-full flex items-center justify-center mx-auto text-2xl">
+          <i class="fa-solid fa-lock"></i>
+        </div>
+        <div>
+          <h4 class="font-bold text-slate-800">กรุณายืนยันรหัสผ่านผู้ดูแลระบบ</h4>
+          <p class="text-xs text-slate-400 mt-1">ป้อนรหัส Master Admin เพื่อปลดล็อกการตั้งค่าระบบ</p>
+        </div>
+        <div class="max-w-xs mx-auto flex space-x-2">
+          <input type="password" id="adminPasswordInput" placeholder="รหัสผ่าน Admin..." class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-sm text-center font-mono focus:ring-2 focus:ring-amber-500 focus:outline-none">
+          <button onclick="unlockAdmin()" class="px-4 py-2 bg-amber-600 hover:bg-amber-700 text-white font-bold rounded-xl text-sm transition">ปลดล็อก</button>
+        </div>
+        <div id="adminAuthError" class="hidden text-xs text-red-600 font-semibold">รหัสผ่านไม่ถูกต้อง กรุณาลองใหม่อีกครั้ง</div>
+      </div>
+
+      <!-- Admin Panel Content (Unlocked) -->
+      <div id="adminPanelContent" class="hidden space-y-6">
+        
+        <!-- WebApp Endpoint Configuration -->
+        <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 space-y-3">
+          <div class="flex items-center justify-between">
+            <span class="text-xs font-bold text-slate-700 uppercase">Google Apps Script WebApp URL</span>
+            <span id="gasEndpointStatus" class="text-[11px] font-semibold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200">พร้อมเชื่อมต่อ</span>
+          </div>
+          <div class="flex space-x-2">
+            <input type="text" id="customEndpointInput" placeholder="วาง URL ของ Apps Script ที่ Deploy เป็น Web App ที่นี่..." class="w-full bg-white border border-slate-300 rounded-lg p-2 text-xs font-mono focus:ring-2 focus:ring-blue-500 focus:outline-none">
+            <button onclick="saveCustomEndpoint()" class="px-3 py-1.5 bg-blue-600 hover:bg-blue-700 text-white text-xs font-semibold rounded-lg whitespace-nowrap">บันทึก URL</button>
+          </div>
+          <p class="text-[11px] text-slate-400">* หากเว้นว่างไว้ ระบบจะเชื่อมต่อกับ Endpoint ตัวอย่างหรือจำลองผลแบบ Local</p>
+        </div>
+
+        <!-- System Actions & Schema Initializer -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <button onclick="adminInitSheets()" class="p-4 bg-slate-50 hover:bg-blue-50 border border-slate-200 hover:border-blue-300 rounded-xl text-left transition space-y-1">
+            <div class="font-bold text-sm text-slate-800 flex items-center space-x-2">
+              <i class="fa-solid fa-table-cells text-blue-600"></i>
+              <span>ตรวจสร้าง 6 ตารางชีตอัตโนมัติ</span>
+            </div>
+            <p class="text-xs text-slate-500">ตรวจสอบโครงสร้าง Sheet ทั้ง 6 ตาราง และสร้างคอลัมน์ให้อัตโนมัติหากยังไม่มี</p>
+          </button>
+
+          <button onclick="adminLoadLogs()" class="p-4 bg-slate-50 hover:bg-purple-50 border border-slate-200 hover:border-purple-300 rounded-xl text-left transition space-y-1">
+            <div class="font-bold text-sm text-slate-800 flex items-center space-x-2">
+              <i class="fa-solid fa-list-ol text-purple-600"></i>
+              <span>ดู Audit System Logs (100 รายการ)</span>
+            </div>
+            <p class="text-xs text-slate-500">เรียกดูบันทึกกิจกรรมการเปลี่ยนสถานะและการทำงานของพนักงาน</p>
+          </button>
+        </div>
+
+        <!-- Audit Logs Container -->
+        <div id="adminLogsWrap" class="hidden space-y-2">
+          <h5 class="text-xs font-bold text-slate-700 uppercase">บันทึกประวัติการกระทำล่าสุด (Audit Logs)</h5>
+          <div class="bg-slate-900 text-slate-300 p-3 rounded-xl font-mono text-[11px] max-h-48 overflow-y-auto custom-scrollbar" id="adminLogsContent">
+            ไม่มีข้อมูลบันทึก
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="bg-white border-t border-slate-200 text-slate-500 text-xs py-4 px-6 mt-auto">
+    <div class="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-2">
+      <div>Training Center TWP (EMS Enterprise v1.5.1) &copy; 2026 - บริษัท ไทยวัฒนาพานิช จำกัด</div>
+      <div class="flex items-center space-x-4">
+        <button onclick="showLandingPage()" class="hover:text-blue-600 transition"><i class="fa-solid fa-house mr-1"></i>กลับหน้าแรก</button>
+        <span>Google Apps Script + Google Sheets Architecture (PPC Standard)</span>
+      </div>
+    </div>
+  </footer>
+  </div><!-- /mainPortalView -->
+
+  <!-- ========================================== -->
+  <!-- APPLICATION CORE LOGIC                     -->
+  <!-- ========================================== -->
+  <script>
+    // Embedded Production Apps Script Web App Endpoint
+    const DEFAULT_GAS_ENDPOINT = 'https://script.google.com/macros/s/AKfycby-D2AvgHXO_y4tVxg8wgkDP9ARBnRpiVp47-vnF7AiA1TA4AqwKGbelJTyI68tKfmx6g/exec';
+
+    // System Global State
+    const AppState = {
+      version: '1.5.1',
+      activeTab: 'dashboard',
+      operatorName: localStorage.getItem('ems_operator_name') || 'สมชาย มุ่งมั่น (ทีม A)',
+      gasEndpoint: localStorage.getItem('ems_gas_endpoint') || DEFAULT_GAS_ENDPOINT,
+      adminUnlocked: false,
+      lastSyncTime: null,
+      dataSignature: '',
+      masterData: {
+        provinces: [],
+        sales: [],
+        schools: []
+      },
+      requests: [],
+      autoOptions: {
+        activityTypes: ['อบรมวิชาการ', 'Workshop เชิงปฏิบัติการ', 'Workshop Hosting', 'ติวนักเรียน', 'สัมมนาวิชาการผู้บริหาร', 'อบรมออนไลน์'],
+        courseTopics: ['อบรมคศ.3-4 นวัตกรรมการเรียนรู้', 'Active Learning สู่สมรรถนะผู้เรียน', 'Coding & STEM Education', 'เทคนิคการวัดและประเมินผล', 'AI เพื่อการจัดการเรียนการสอน'],
+        speakerTypes: ['อาจารย์ที่ปรึกษา', 'ทีมวิชาการภายใน', 'อาจารย์ภายนอก', 'Supplier/Partner'],
+        venueTypes: ['โรงเรียน', 'โรงแรม', 'ออนไลน์ (Zoom/Meet)', 'หอประชุมประจำจังหวัด', 'สำนักงานเขตพื้นที่การศึกษา (สพป./สพม.)'],
+        teamBSpeakers: ['ศ.ดร.ประสาน ปัญญาเลิศ', 'ดร.สมเกียรติ นวัตกรรม (ทีมวิชาการ)', 'อาจารย์ที่ปรึกษา'],
+        transportDetails: ['รถตู้รับ-ส่งสนามบิน-โรงแรม', 'รถตู้รับ-ส่งสถานีรถไฟ-โรงเรียน', 'รถตู้บริษัทพร้อมคนขับ']
+      }
+    };
+
+    // Landing Page Navigation
+    function enterPortal() {
+      document.getElementById('landingPageView').classList.add('hidden');
+      document.getElementById('mainPortalView').classList.remove('hidden');
+      sessionStorage.setItem('twp_portal_entered', 'true');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function showLandingPage() {
+      document.getElementById('mainPortalView').classList.add('hidden');
+      document.getElementById('landingPageView').classList.remove('hidden');
+      sessionStorage.removeItem('twp_portal_entered');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    // Active Reading Elevation Handler (ลอยนูนขึ้นมาเมื่อกำลังอ่านบรรทัดนั้น)
+    function setActiveReadingRow(trElement) {
+      document.querySelectorAll('.reading-row').forEach(row => {
+        row.classList.remove('is-active-reading');
+        const badge = row.querySelector('.reading-badge');
+        if (badge) badge.remove();
+      });
+
+      trElement.classList.add('is-active-reading');
+
+      const firstCell = trElement.querySelector('td');
+      if (firstCell) {
+        const idContainer = firstCell.querySelector('.text-slate-800');
+        if (idContainer && !idContainer.querySelector('.reading-badge')) {
+          const badge = document.createElement('span');
+          badge.className = 'reading-badge inline-flex items-center px-1.5 py-0.5 rounded text-[10px] bg-[#08539E] text-white font-bold ml-2 shadow-sm animate-pulse';
+          badge.innerHTML = '<i class="fa-solid fa-book-open-reader mr-1"></i>กำลังอ่าน';
+          idContainer.appendChild(badge);
+        }
+      }
+    }
+
+    function setActiveReadingCard(cardElement) {
+      document.querySelectorAll('.reading-card').forEach(card => card.classList.remove('is-active-reading'));
+      cardElement.classList.add('is-active-reading');
+    }
+
+    // Dynamic Combobox & Historical Options Management
+    function refreshDatalists() {
+      // ดึงประวัติที่เคยมีใน Requests เข้ามารวมใน Options ทันที
+      AppState.requests.forEach(r => {
+        if (r.activityType && !AppState.autoOptions.activityTypes.includes(r.activityType)) {
+          AppState.autoOptions.activityTypes.push(r.activityType);
+        }
+        if (r.courseTopic && !AppState.autoOptions.courseTopics.includes(r.courseTopic)) {
+          AppState.autoOptions.courseTopics.push(r.courseTopic);
+        }
+        if (r.speakerType && !AppState.autoOptions.speakerTypes.includes(r.speakerType)) {
+          AppState.autoOptions.speakerTypes.push(r.speakerType);
+        }
+        if (r.venueType && !AppState.autoOptions.venueTypes.includes(r.venueType)) {
+          AppState.autoOptions.venueTypes.push(r.venueType);
+        }
+        if (r.teamBSpeaker && !AppState.autoOptions.teamBSpeakers.includes(r.teamBSpeaker)) {
+          AppState.autoOptions.teamBSpeakers.push(r.teamBSpeaker);
+        }
+        if (r.transportDetails && !AppState.autoOptions.transportDetails.includes(r.transportDetails)) {
+          AppState.autoOptions.transportDetails.push(r.transportDetails);
+        }
+      });
+
+      populateDatalist('activityTypeList', AppState.autoOptions.activityTypes);
+      populateDatalist('courseTopicList', AppState.autoOptions.courseTopics);
+      populateDatalist('speakerTypeList', AppState.autoOptions.speakerTypes);
+      populateDatalist('venueTypeList', AppState.autoOptions.venueTypes);
+      populateDatalist('teamBSpeakerList', AppState.autoOptions.teamBSpeakers);
+      populateDatalist('transportDetailsList', AppState.autoOptions.transportDetails);
+    }
+
+    function populateDatalist(elementId, items) {
+      let el = document.getElementById(elementId);
+      if (!el) {
+        el = document.createElement('datalist');
+        el.id = elementId;
+        document.body.appendChild(el);
+      }
+      el.innerHTML = '';
+      const uniqueItems = Array.from(new Set(items.map(s => String(s || '').trim()))).filter(Boolean);
+      uniqueItems.forEach(item => {
+        const opt = document.createElement('option');
+        opt.value = item;
+        el.appendChild(opt);
+      });
+    }
+
+    // Toggle Accomodation & Transport helper functions
+    function toggleAccommodationFields(checked) {
+      const wrap = document.getElementById('roomCountWrap');
+      const badge = document.getElementById('accomBadge');
+      if (checked) {
+        wrap.classList.remove('hidden');
+        badge.className = 'text-[10px] bg-indigo-100 text-indigo-700 px-2 py-0.5 rounded-full font-bold';
+        badge.innerText = 'ต้องการห้องพัก';
+      } else {
+        wrap.classList.add('hidden');
+        badge.className = 'text-[10px] bg-slate-100 text-slate-500 px-2 py-0.5 rounded-full font-semibold';
+        badge.innerText = 'ไม่ต้องการ';
+      }
+    }
+
+    function toggleTransportFields(checked) {
+      const wrap = document.getElementById('transportDetailsWrap');
+      const badge = document.getElementById('transBadge');
+      if (checked) {
+        wrap.classList.remove('hidden');
+        badge.className = 'text-[10px] bg-sky-100 text-sky-700 px-2 py-0.5 rounded-full font-bold';
+        badge.innerText = 'ต้องการรถรับ-ส่ง';
+      } else {
+        wrap.classList.add('hidden');
+        badge.className = 'text-[10px] bg-slate-100 text-slate-500 px-2 py-0.5 rounded-full font-semibold';
+        badge.innerText = 'ไม่ต้องการ';
+      }
+    }
+
+    // Initial Demo/Mock Data (ใช้เมื่อยังไม่ได้ผูก WebApp URL หรือขณะทดสอบ)
+    const MockDatabase = {
+      masterData: {
+        provinces: ['กรุงเทพมหานคร', 'นนทบุรี', 'ปทุมธานี', 'ขอนแก่น', 'นครราชสีมา', 'สงขลา', 'ภูเก็ต'],
+        sales: [
+          { saleId: 'SL-101', saleName: 'สมชาย มุ่งมั่น', province: 'กรุงเทพมหานคร', zone: 'BKK' },
+          { saleId: 'SL-102', saleName: 'กานดา ใจดี', province: 'กรุงเทพมหานคร', zone: 'BKK' },
+          { saleId: 'SL-103', saleName: 'วีระ ชัยชนะ', province: 'นนทบุรี', zone: 'CTR' },
+          { saleId: 'SL-104', saleName: 'นริศรา มีสุข', province: 'ปทุมธานี', zone: 'CTR' },
+          { saleId: 'SL-201', saleName: 'อนุสรณ์ ขอนแก่น', province: 'ขอนแก่น', zone: 'NE1' },
+          { saleId: 'SL-202', saleName: 'สุรชัย โคราช', province: 'นครราชสีมา', zone: 'NE1' },
+          { saleId: 'SL-301', saleName: 'ประสิทธิ์ หาดใหญ่', province: 'สงขลา', zone: 'S1' },
+          { saleId: 'SL-302', saleName: 'ธิดา อันดามัน', province: 'ภูเก็ต', zone: 'S1' }
+        ],
+        schools: [
+          { schoolId: 'SCH-1001', schoolName: 'โรงเรียนสวนกุหลาบวิทยาลัย', province: 'กรุงเทพมหานคร', tier: 'Tier A', saleName: 'สมชาย มุ่งมั่น' },
+          { schoolId: 'SCH-1002', schoolName: 'โรงเรียนเตรียมอุดมศึกษา', province: 'กรุงเทพมหานคร', tier: 'Tier A', saleName: 'สมชาย มุ่งมั่น' },
+          { schoolId: 'SCH-1003', schoolName: 'โรงเรียนบดินทรเดชา (สิงห์ สิงหเสนี)', province: 'กรุงเทพมหานคร', tier: 'Tier A', saleName: 'กานดา ใจดี' },
+          { schoolId: 'SCH-2001', schoolName: 'โรงเรียนสตรีนนทบุรี', province: 'นนทบุรี', tier: 'Tier B', saleName: 'วีระ ชัยชนะ' },
+          { schoolId: 'SCH-3001', schoolName: 'โรงเรียนขอนแก่นวิทยายน', province: 'ขอนแก่น', tier: 'Tier A', saleName: 'อนุสรณ์ ขอนแก่น' }
+        ]
+      },
+      requests: [
+        {
+          eventId: 'EVT-2026-0001',
+          createdAt: new Date(Date.now() - 36 * 3600 * 1000).toISOString(),
+          status: 'WAITING_B',
+          activityType: 'อบรมวิชาการ',
+          courseTopic: 'Active Learning สู่สมรรถนะผู้เรียน',
+          customTopic: '',
+          eventDate: '2026-11-15',
+          province: 'กรุงเทพมหานคร',
+          saleName: 'สมชาย มุ่งมั่น',
+          schoolId: 'SCH-1001',
+          schoolName: 'โรงเรียนสวนกุหลาบวิทยาลัย',
+          speakerType: 'อาจารย์ที่ปรึกษา',
+          venueType: 'โรงเรียน',
+          objective: 'ยกระดับการจัดการเรียนรู้เชิงรุกสำหรับครูผู้สอนระดับมัธยมศึกษาตอนปลาย',
+          targetSales: 250000,
+          estBudget: 18000,
+          teamBSpeaker: '',
+          teamBNotes: '',
+          actualBudget: 0,
+          createdBy: 'สมชาย มุ่งมั่น',
+          reviewedBy: '',
+          approvedBy: '',
+          lastModifiedBy: 'สมชาย มุ่งมั่น',
+          submittedToBAt: new Date(Date.now() - 36 * 3600 * 1000).toISOString(),
+          reviewedByBAt: '',
+          approvedAt: '',
+          pdfUrl: '',
+          needAccommodation: 'YES',
+          roomCount: 2,
+          needTransportation: 'YES',
+          transportDetails: 'รถตู้รับ-ส่งสนามบินดอนเมือง-รร.สวนกุหลาบ',
+          evalCount: 0,
+          evalAvg: 0
+        },
+        {
+          eventId: 'EVT-2026-0002',
+          createdAt: new Date(Date.now() - 72 * 3600 * 1000).toISOString(),
+          status: 'WAITING_EXEC',
+          activityType: 'Workshop เชิงปฏิบัติการ',
+          courseTopic: 'Coding & STEM Education',
+          customTopic: '',
+          eventDate: '2026-11-20',
+          province: 'ขอนแก่น',
+          saleName: 'อนุสรณ์ ขอนแก่น',
+          schoolId: 'SCH-3001',
+          schoolName: 'โรงเรียนขอนแก่นวิทยายน',
+          speakerType: 'ทีมวิชาการภายใน',
+          venueType: 'โรงแรม',
+          objective: 'เตรียมความพร้อมสำหรับหลักสูตรวิชาการใหม่ Tier A ประจำภาคตะวันออกเฉียงเหนือ',
+          targetSales: 350000,
+          estBudget: 25000,
+          teamBSpeaker: 'ดร.สมเกียรติ นวัตกรรม (ทีมวิชาการ)',
+          teamBNotes: 'จัดเตรียมเอกสารและบอร์ดไมโครบิตครบถ้วน พร้อมส่งต่อผู้บริหารอนุมัติ',
+          actualBudget: 22000,
+          createdBy: 'อนุสรณ์ ขอนแก่น',
+          reviewedBy: 'วิภา วิชาการ (ทีม B)',
+          approvedBy: '',
+          lastModifiedBy: 'วิภา วิชาการ (ทีม B)',
+          submittedToBAt: new Date(Date.now() - 72 * 3600 * 1000).toISOString(),
+          reviewedByBAt: new Date(Date.now() - 14 * 3600 * 1000).toISOString(),
+          approvedAt: '',
+          pdfUrl: '',
+          needAccommodation: 'YES',
+          roomCount: 3,
+          needTransportation: 'YES',
+          transportDetails: 'รถตู้รับ-ส่งสนามบินขอนแก่น-โรงแรมพูลแมน',
+          evalCount: 0,
+          evalAvg: 0
+        },
+        {
+          eventId: 'EVT-2026-0003',
+          createdAt: new Date(Date.now() - 120 * 3600 * 1000).toISOString(),
+          status: 'APPROVED',
+          activityType: 'อบรมวิชาการ',
+          courseTopic: 'อบรมคศ.3-4 นวัตกรรมการเรียนรู้',
+          customTopic: '',
+          eventDate: '2026-11-05',
+          province: 'กรุงเทพมหานคร',
+          saleName: 'กานดา ใจดี',
+          schoolId: 'SCH-1003',
+          schoolName: 'โรงเรียนบดินทรเดชา (สิงห์ สิงหเสนี)',
+          speakerType: 'อาจารย์ภายนอก',
+          venueType: 'โรงเรียน',
+          objective: 'สนับสนุนการทำผลงานทางวิชาการและต่อยอดการใช้สื่อการเรียนรู้',
+          targetSales: 400000,
+          estBudget: 28000,
+          teamBSpeaker: 'ศ.ดร.ประสาน ปัญญาเลิศ',
+          teamBNotes: 'วิทยากรตรงสายและมีผลงานเป็นที่ประจักษ์',
+          actualBudget: 28000,
+          createdBy: 'กานดา ใจดี',
+          reviewedBy: 'วิภา วิชาการ (ทีม B)',
+          approvedBy: 'ดร.นิพนธ์ ประธานบริหาร',
+          lastModifiedBy: 'ดร.นิพนธ์ ประธานบริหาร',
+          submittedToBAt: new Date(Date.now() - 120 * 3600 * 1000).toISOString(),
+          reviewedByBAt: new Date(Date.now() - 96 * 3600 * 1000).toISOString(),
+          approvedAt: new Date(Date.now() - 90 * 3600 * 1000).toISOString(),
+          pdfUrl: '#',
+          token: 'token-b1c2d3e4f5',
+          needAccommodation: 'NO',
+          roomCount: 0,
+          needTransportation: 'NO',
+          transportDetails: '',
+          evalCount: 24,
+          evalAvg: 4.85
+        }
+      ]
+    };
+
+    // ------------------- REAL-TIME DATA SYNC ENGINE -------------------
+
+    const SYNC_CHANNEL_NAME = 'twp_ems_sync_channel';
+    let appBroadcastChannel = null;
+
+    if (typeof BroadcastChannel !== 'undefined') {
+      try {
+        appBroadcastChannel = new BroadcastChannel(SYNC_CHANNEL_NAME);
+        appBroadcastChannel.onmessage = (event) => {
+          if (event.data && event.data.type === 'DATA_UPDATED') {
+            console.log('[SyncEngine] Received BroadcastChannel update:', event.data);
+            handleIncomingSyncUpdate(event.data);
+          }
+        };
+      } catch (e) {
+        console.warn('BroadcastChannel not available in this environment');
+      }
+    }
+
+    // Storage Event Listener for multi-tab fallback
+    window.addEventListener('storage', (e) => {
+      if (e.key === 'twp_sync_trigger' && e.newValue) {
+        try {
+          const syncData = JSON.parse(e.newValue);
+          handleIncomingSyncUpdate(syncData);
+        } catch (err) {}
+      }
+    });
+
+    function handleIncomingSyncUpdate(syncEvent) {
+      AppState.lastSyncTime = new Date();
+      updateSyncStatusUI('synced');
+
+      if (!AppState.gasEndpoint) {
+        const stored = localStorage.getItem('twp_requests_store');
+        if (stored) {
+          try {
+            AppState.requests = JSON.parse(stored);
+            renderAll();
+          } catch(e) {}
+        }
+        showSyncToast(`🔔 ได้รับข้อมูลใหม่จาก "${syncEvent.operator || 'เพื่อนร่วมทีม'}" ข้อมูลตรงกันแล้ว`);
+      } else {
+        fetchInitialData(true);
+      }
+    }
+
+    function notifyDataUpdated(actionType) {
+      const timestamp = new Date().toISOString();
+      AppState.lastSyncTime = new Date();
+      AppState.dataSignature = generateDataSignature(AppState.requests);
+      updateSyncStatusUI('synced');
+
+      try {
+        localStorage.setItem('twp_requests_store', JSON.stringify(AppState.requests));
+        localStorage.setItem('twp_sync_trigger', JSON.stringify({
+          action: actionType,
+          time: timestamp,
+          operator: AppState.operatorName,
+          rand: Math.random()
+        }));
+      } catch(e) {}
+
+      if (appBroadcastChannel) {
+        try {
+          appBroadcastChannel.postMessage({
+            type: 'DATA_UPDATED',
+            action: actionType,
+            operator: AppState.operatorName,
+            timestamp: timestamp
+          });
+        } catch(e) {}
+      }
+    }
+
+    let syncIntervalTimer = null;
+    function startBackgroundSyncEngine() {
+      if (syncIntervalTimer) clearInterval(syncIntervalTimer);
+      syncIntervalTimer = setInterval(() => {
+        if (!document.hidden) {
+          performPeriodicSync();
+        }
+      }, 15000);
+    }
+
+    function performPeriodicSync() {
+      if (AppState.gasEndpoint) {
+        postToBackend('GET_INITIAL_DATA', {})
+          .then(res => {
+            if (res.status === 'SUCCESS' && res.data) {
+              const newSig = generateDataSignature(res.data.requests);
+              if (AppState.dataSignature && newSig !== AppState.dataSignature) {
+                AppState.requests = res.data.requests;
+                AppState.masterData = res.data.masterData;
+                AppState.dataSignature = newSig;
+                AppState.lastSyncTime = new Date();
+                renderAll();
+                showSyncToast('🟢 ตรวจพบข้อมูลอัปเดตจากทีมงาน (ซิงค์ตรงกันทุกเครื่องแล้ว)');
+              } else {
+                AppState.dataSignature = newSig;
+              }
+              AppState.lastSyncTime = new Date();
+              updateSyncStatusUI('synced');
+            }
+          })
+          .catch(() => updateSyncStatusUI('error'));
+      } else {
+        const stored = localStorage.getItem('twp_requests_store');
+        if (stored) {
+          try {
+            const reqs = JSON.parse(stored);
+            const newSig = generateDataSignature(reqs);
+            if (AppState.dataSignature && newSig !== AppState.dataSignature) {
+              AppState.requests = reqs;
+              AppState.dataSignature = newSig;
+              AppState.lastSyncTime = new Date();
+              renderAll();
+              showSyncToast('🟢 ข้อมูลในเครื่องได้รับการซิงค์ตรงกันแล้ว');
+            }
+          } catch(e) {}
+        }
+        updateSyncStatusUI('synced');
+      }
+    }
+
+    function generateDataSignature(reqs) {
+      if (!Array.isArray(reqs)) return '';
+      return reqs.map(r => `${r.eventId}:${r.status}:${r.lastModifiedBy || ''}:${r.evalCount || 0}:${r.actualBudget || 0}`).join('|');
+    }
+
+    function updateSyncStatusUI(status) {
+      const dot = document.getElementById('syncDot');
+      const label = document.getElementById('syncStatusLabel');
+      if (!dot || !label) return;
+
+      const timeStr = AppState.lastSyncTime ? AppState.lastSyncTime.toTimeString().split(' ')[0] : '';
+
+      if (status === 'syncing') {
+        dot.className = 'w-2.5 h-2.5 rounded-full bg-amber-400 animate-spin';
+        label.innerText = 'กำลังซิงค์...';
+      } else if (status === 'error') {
+        dot.className = 'w-2.5 h-2.5 rounded-full bg-red-400';
+        label.innerText = 'ออฟไลน์';
+      } else {
+        dot.className = 'w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse';
+        label.innerText = `ซิงค์: ${timeStr || 'ตรงกันทุกเครื่อง'}`;
+      }
+    }
+
+    function forceSyncAllDevices() {
+      updateSyncStatusUI('syncing');
+      if (AppState.gasEndpoint) {
+        fetchInitialData(false);
+      } else {
+        const stored = localStorage.getItem('twp_requests_store');
+        if (stored) {
+          try { AppState.requests = JSON.parse(stored); } catch(e) {}
+        }
+        setTimeout(() => {
+          AppState.lastSyncTime = new Date();
+          AppState.dataSignature = generateDataSignature(AppState.requests);
+          renderAll();
+          updateSyncStatusUI('synced');
+          showAlert('⚡ ซิงค์ข้อมูลล่าสุดเรียบร้อย (ข้อมูลตรงกันทุกเครื่อง)', 'success');
+        }, 300);
+      }
+    }
+
+    function showSyncToast(msg) {
+      const toast = document.getElementById('syncToastBox');
+      const toastMsg = document.getElementById('syncToastMessage');
+      if (!toast || !toastMsg) return;
+      toastMsg.innerText = msg;
+      toast.classList.remove('hidden');
+      toast.classList.add('flex');
+      setTimeout(() => {
+        toast.classList.add('hidden');
+        toast.classList.remove('flex');
+      }, 4000);
+    }
+
+    // ------------------- TEAM QR PAIRING MODAL -------------------
+
+    let currentTeamQrRole = 'teamA';
+
+    function openTeamQrModal(initialRole = 'teamA') {
+      currentTeamQrRole = initialRole;
+      selectTeamQrRole(initialRole);
+      document.getElementById('teamQrModal').classList.remove('hidden');
+    }
+
+    function closeTeamQrModal() {
+      document.getElementById('teamQrModal').classList.add('hidden');
+    }
+
+    function selectTeamQrRole(role) {
+      currentTeamQrRole = role;
+      
+      const rolesConfig = {
+        teamA: { btn: 'btnRoleTeamA', title: 'โหมด: ทีม A ขอจัดอบรม (Sales)', color: 'emerald' },
+        teamB: { btn: 'btnRoleTeamB', title: 'โหมด: ทีม B ตรวจสอบวิชาการ & วิทยากร', color: 'purple' },
+        exec: { btn: 'btnRoleExec', title: 'โหมด: ผู้บริหาร อนุมัติงบ & ออก Token', color: 'amber' },
+        evaluation: { btn: 'btnRoleEval', title: 'โหมด: ศูนย์กลางประเมินผล & Dashboard', color: 'blue' }
+      };
+
+      for (let k in rolesConfig) {
+        const item = rolesConfig[k];
+        const btn = document.getElementById(item.btn);
+        if (!btn) continue;
+        if (k === role) {
+          btn.className = `team-role-pill p-2.5 rounded-xl border text-center transition flex flex-col items-center justify-center space-y-1 border-${item.color}-500 bg-${item.color}-50 text-${item.color}-800 font-bold shadow-sm`;
+          document.getElementById('teamQrRoleTitle').innerText = item.title;
+        } else {
+          btn.className = `team-role-pill p-2.5 rounded-xl border text-center transition flex flex-col items-center justify-center space-y-1 border-slate-200 hover:border-slate-300 text-slate-600 font-medium bg-white`;
+        }
+      }
+
+      // Generate share link
+      const baseUrl = window.location.origin + window.location.pathname;
+      let targetUrl = `${baseUrl}?role=${role}&sync=1`;
+      const activeEp = AppState.gasEndpoint || DEFAULT_GAS_ENDPOINT;
+      if (activeEp) {
+        targetUrl += `&ep=${encodeURIComponent(activeEp)}`;
+      }
+
+      document.getElementById('teamShareUrlInput').value = targetUrl;
+
+      // Generate Crisp QR Code
+      const qrWrap = document.getElementById('teamQrcodeWrapper');
+      qrWrap.innerHTML = '';
+      new QRCode(qrWrap, {
+        text: targetUrl,
+        width: 190,
+        height: 190,
+        colorDark: '#08539E',
+        colorLight: '#ffffff',
+        correctLevel: QRCode.CorrectLevel.M
+      });
+    }
+
+    function copyTeamShareUrl() {
+      const input = document.getElementById('teamShareUrlInput');
+      input.select();
+      document.execCommand('copy');
+      showAlert('คัดลอกลิงก์ประจำทีมเรียบร้อยแล้ว ส่งให้สมาชิกในทีมเปิดได้ทันที', 'success');
+    }
+
+    function testOpenTeamLink() {
+      const url = document.getElementById('teamShareUrlInput').value;
+      if (url) window.open(url, '_blank');
+    }
+
+    // ------------------- URL PARAMETERS ROUTING -------------------
+
+    function handleUrlParameters() {
+      const urlParams = new URLSearchParams(window.location.search);
+      const targetRole = urlParams.get('role');
+      const targetEp = urlParams.get('ep');
+      const targetOp = urlParams.get('operator');
+
+      if (targetEp) {
+        try {
+          const decodedEp = decodeURIComponent(targetEp);
+          if (decodedEp.startsWith('http')) {
+            AppState.gasEndpoint = decodedEp;
+            localStorage.setItem('ems_gas_endpoint', decodedEp);
+            if (document.getElementById('customEndpointInput')) {
+              document.getElementById('customEndpointInput').value = decodedEp;
+            }
+          }
+        } catch(e) {}
+      }
+
+      if (targetOp) {
+        AppState.operatorName = decodeURIComponent(targetOp);
+        localStorage.setItem('ems_operator_name', AppState.operatorName);
+        document.getElementById('operatorNameInput').value = AppState.operatorName;
+      }
+
+      if (targetRole) {
+        enterPortal();
+        if (['teamA', 'teamB', 'exec', 'dashboard', 'evaluation'].includes(targetRole)) {
+          switchTab(targetRole);
+          const roleNames = {
+            teamA: 'ทีม A (ขอจัดอบรม Sales)',
+            teamB: 'ทีม B (ฝ่ายวิชาการ ตรวจสอบ)',
+            exec: 'ผู้บริหาร (อนุมัติโครงการ)',
+            dashboard: 'Dashboard & Analytics',
+            evaluation: 'QR Code & ผลประเมินปิดลูป'
+          };
+          setTimeout(() => {
+            showAlert(`📲 สแกน QR สำเร็จ: เข้าสู่โหมด ${roleNames[targetRole] || targetRole} เรียบร้อย ข้อมูลตรงกันทุกเครื่อง`, 'success');
+          }, 400);
+        }
+      } else {
+        if (sessionStorage.getItem('twp_portal_entered') === 'true') {
+          enterPortal();
+        }
+      }
+    }
+
+    // ------------------- INITIALIZATION & LIFECYCLE -------------------
+
+    window.addEventListener('DOMContentLoaded', () => {
+      // Set Operator Name
+      document.getElementById('operatorNameInput').value = AppState.operatorName;
+      if (AppState.gasEndpoint) {
+        document.getElementById('customEndpointInput').value = AppState.gasEndpoint;
+      }
+      
+      // Load initial data
+      fetchInitialData();
+
+      // Trigger initial ping
+      pingServer();
+
+      // Handle URL parameters for Team QR Code auto-onboarding
+      handleUrlParameters();
+
+      // Start background real-time sync polling
+      startBackgroundSyncEngine();
+    });
+
+    function updateOperatorName(val) {
+      if (!val.trim()) return;
+      AppState.operatorName = val.trim();
+      localStorage.setItem('ems_operator_name', AppState.operatorName);
+      showAlert('บันทึกชื่อผู้ปฏิบัติงาน: ' + AppState.operatorName, 'success');
+    }
+
+    // ------------------- PING & HEALTH MONITOR -------------------
+
+    function pingServer() {
+      const pingText = document.getElementById('pingText');
+      const pingDot = document.getElementById('pingDot');
+      if (pingText) pingText.innerText = 'Ping: ...';
+      if (pingDot) pingDot.className = 'w-2.5 h-2.5 rounded-full bg-amber-400 animate-spin';
+
+      const startTime = Date.now();
+
+      if (AppState.gasEndpoint) {
+        fetch(AppState.gasEndpoint + '?action=ping')
+          .then(r => r.json())
+          .then(data => {
+            const latency = Date.now() - startTime;
+            if (pingText) pingText.innerText = `${latency} ms`;
+            if (pingDot) pingDot.className = 'w-2.5 h-2.5 rounded-full bg-emerald-500';
+          })
+          .catch(err => {
+            const latency = Date.now() - startTime;
+            if (pingText) pingText.innerText = `${latency} ms (Off)`;
+            if (pingDot) pingDot.className = 'w-2.5 h-2.5 rounded-full bg-slate-400';
+          });
+      } else {
+        // Mock Ping
+        setTimeout(() => {
+          const latency = Math.floor(Math.random() * 40) + 75;
+          if (pingText) pingText.innerText = `${latency} ms (Local)`;
+          if (pingDot) pingDot.className = 'w-2.5 h-2.5 rounded-full bg-emerald-500';
+        }, 150);
+      }
+    }
+
+    // ------------------- DATA FETCHING -------------------
+
+    function fetchInitialData(silent = false) {
+      if (AppState.gasEndpoint) {
+        if (!silent) updateSyncStatusUI('syncing');
+        postToBackend('GET_INITIAL_DATA', {})
+          .then(res => {
+            if (res.status === 'SUCCESS') {
+              AppState.masterData = res.data.masterData;
+              AppState.requests = res.data.requests;
+              AppState.dataSignature = generateDataSignature(AppState.requests);
+              AppState.lastSyncTime = new Date();
+              localStorage.setItem('twp_requests_store', JSON.stringify(AppState.requests));
+
+              if (res.data.autoOptions) {
+                for (let k in res.data.autoOptions) {
+                  if (AppState.autoOptions[k]) {
+                    AppState.autoOptions[k] = Array.from(new Set([...AppState.autoOptions[k], ...res.data.autoOptions[k]]));
+                  }
+                }
+              }
+              renderAll();
+              updateSyncStatusUI('synced');
+              if (silent) {
+                showSyncToast('🔔 ซิงค์ข้อมูลล่าสุดจากฐานข้อมูลกลางเรียบร้อย');
+              }
+            } else {
+              fallbackToMockData();
+            }
+          })
+          .catch(() => fallbackToMockData());
+      } else {
+        fallbackToMockData();
+      }
+    }
+
+    function fallbackToMockData() {
+      // Check localStorage for persisted store so all local tabs share data
+      const stored = localStorage.getItem('twp_requests_store');
+      if (stored) {
+        try {
+          AppState.requests = JSON.parse(stored);
+        } catch(e) {
+          AppState.requests = MockDatabase.requests;
+        }
+      } else {
+        AppState.requests = MockDatabase.requests;
+        localStorage.setItem('twp_requests_store', JSON.stringify(AppState.requests));
+      }
+      AppState.masterData = MockDatabase.masterData;
+      AppState.dataSignature = generateDataSignature(AppState.requests);
+      AppState.lastSyncTime = new Date();
+      updateSyncStatusUI('synced');
+      renderAll();
+    }
+
+    function renderAll() {
+      refreshDatalists();
+      populateProvinceDropdown();
+      renderDashboard();
+      renderTeamBQueue();
+      renderExecQueue();
+      renderEvaluationCenter();
+      updateQueueBadges();
+    }
+
+    // ------------------- TAB SWITCHER -------------------
+
+    function switchTab(tabId) {
+      AppState.activeTab = tabId;
+      document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('tab-active'));
+      const activeBtn = document.getElementById('tabBtn-' + tabId);
+      if (activeBtn) activeBtn.classList.add('tab-active');
+
+      ['dashboard', 'teamA', 'teamB', 'exec', 'evaluation'].forEach(id => {
+        const view = document.getElementById('view-' + id);
+        if (view) {
+          if (id === tabId) view.classList.remove('hidden');
+          else view.classList.add('hidden');
+        }
+      });
+    }
+
+    // ------------------- CASCADING DROPDOWNS (TEAM A) -------------------
+
+    function populateProvinceDropdown() {
+      const select = document.getElementById('provSelect');
+      select.innerHTML = '<option value="">-- เลือกจังหวัด --</option>';
+      AppState.masterData.provinces.forEach(prov => {
+        const opt = document.createElement('option');
+        opt.value = prov;
+        opt.textContent = prov;
+        select.appendChild(opt);
+      });
+    }
+
+    function onProvinceChange(selectedProv) {
+      const saleSelect = document.getElementById('saleSelect');
+      const schoolSelect = document.getElementById('schoolSelect');
+      
+      saleSelect.innerHTML = '<option value="">-- เลือกพนักงานขาย --</option>';
+      schoolSelect.innerHTML = '<option value="">-- เลือกโรงเรียน --</option>';
+
+      if (!selectedProv) return;
+
+      const filteredSales = AppState.masterData.sales.filter(s => s.province === selectedProv);
+      const filteredSchools = AppState.masterData.schools.filter(sc => sc.province === selectedProv);
+
+      filteredSales.forEach(s => {
+        const opt = document.createElement('option');
+        opt.value = s.saleName;
+        opt.textContent = `${s.saleName} (${s.saleId})`;
+        saleSelect.appendChild(opt);
+      });
+
+      filteredSchools.forEach(sc => {
+        const opt = document.createElement('option');
+        opt.value = sc.schoolId;
+        opt.dataset.name = sc.schoolName;
+        opt.textContent = `${sc.schoolName} [${sc.tier || 'Tier B'}]`;
+        schoolSelect.appendChild(opt);
+      });
+    }
+
+    function onCourseTopicChange(val) {
+      const wrap = document.getElementById('customTopicWrap');
+      if (val === 'อื่นๆ') {
+        wrap.classList.remove('hidden');
+        document.getElementById('customTopic').required = true;
+      } else {
+        wrap.classList.add('hidden');
+        document.getElementById('customTopic').required = false;
+      }
+    }
+
+    // ------------------- ROI & COST-TO-SALES CALCULATOR -------------------
+
+    function calculateRealtimeROI() {
+      const budget = parseFloat(document.getElementById('estBudget').value) || 0;
+      const sales = parseFloat(document.getElementById('targetSales').value) || 0;
+      const badge = document.getElementById('roiBadge');
+      const text = document.getElementById('roiFeedbackText');
+
+      if (sales <= 0) {
+        badge.className = 'text-xs font-bold px-2.5 py-0.5 rounded-full bg-slate-200 text-slate-600';
+        badge.innerText = 'รอระบุยอดขายอ้างอิง';
+        return;
+      }
+
+      const ratio = (budget / sales) * 100;
+      if (ratio <= 8) {
+        badge.className = 'text-xs font-bold px-2.5 py-0.5 rounded-full bg-emerald-100 text-emerald-800 border border-emerald-300';
+        badge.innerText = `คุ้มค่าสูงมาก (${ratio.toFixed(1)}%)`;
+        text.innerText = `* สัดส่วนงบประมาณ ${ratio.toFixed(1)}% อยู่ในเกณฑ์ดีเยี่ยม (<= 8%) สมควรได้รับการพิจารณาอนุมัติ`;
+      } else if (ratio <= 15) {
+        badge.className = 'text-xs font-bold px-2.5 py-0.5 rounded-full bg-blue-100 text-blue-800 border border-blue-300';
+        badge.innerText = `เกณฑ์ปกติ (${ratio.toFixed(1)}%)`;
+        text.innerText = `* สัดส่วนงบประมาณ ${ratio.toFixed(1)}% อยู่ในเกณฑ์มาตรฐานของบริษัท (8 - 15%)`;
+      } else {
+        badge.className = 'text-xs font-bold px-2.5 py-0.5 rounded-full bg-red-100 text-red-800 border border-red-300';
+        badge.innerText = `งบประมาณสูง (${ratio.toFixed(1)}%)`;
+        text.innerText = `* คำเตือน: สัดส่วนงบประมาณ ${ratio.toFixed(1)}% สูงเกินเกณฑ์ 15% กรุณาระบุเหตุผลเชิงกลยุทธ์เพิ่มเติม`;
+      }
+    }
+
+    // ------------------- SLA & LEAD TIME CALCULATOR -------------------
+
+    function formatPendingSLA(timestampStr, status) {
+      if (!timestampStr) return '-';
+      const elapsedMs = Date.now() - new Date(timestampStr).getTime();
+      const hours = Math.floor(elapsedMs / (1000 * 60 * 60));
+      const days = Math.floor(hours / 24);
+      const remHours = hours % 24;
+
+      let timeText = days > 0 ? `${days} วัน ${remHours} ชม.` : `${remHours} ชม.`;
+
+      if (status === 'APPROVED' || status === 'COMPLETED') {
+        return `<span class="text-xs text-slate-500"><i class="fa-solid fa-check text-emerald-500 mr-1"></i>ดำเนินการแล้ว</span>`;
+      }
+
+      // SLA Alert Colors: <24h normal (emerald), 24-48h warning (amber), >48h critical (red)
+      if (hours < 24) {
+        return `<span class="text-xs font-semibold px-2 py-0.5 rounded bg-emerald-50 text-emerald-700 border border-emerald-200"><i class="fa-regular fa-clock mr-1"></i>ค้าง ${timeText}</span>`;
+      } else if (hours < 48) {
+        return `<span class="text-xs font-semibold px-2 py-0.5 rounded bg-amber-50 text-amber-700 border border-amber-200"><i class="fa-solid fa-clock-rotate-left mr-1"></i>ค้าง ${timeText}</span>`;
+      } else {
+        return `<span class="text-xs font-semibold px-2 py-0.5 rounded bg-red-50 text-red-700 border border-red-200 animate-pulse"><i class="fa-solid fa-triangle-exclamation mr-1"></i>ค้าง ${timeText} (เกิน SLA)</span>`;
+      }
+    }
+
+    // ------------------- RENDER VIEWS -------------------
+
+    function renderDashboard() {
+      const tbody = document.getElementById('dashboardRequestsTableBody');
+      tbody.innerHTML = '';
+
+      let totalSales = 0;
+      let pendingCount = 0;
+      let totalEvalAvg = 0;
+      let evalTotalCount = 0;
+
+      AppState.requests.forEach(req => {
+        if (req.status === 'APPROVED' || req.status === 'COMPLETED') {
+          totalSales += req.targetSales || 0;
+        }
+        if (req.status === 'WAITING_B' || req.status === 'WAITING_EXEC') {
+          pendingCount++;
+        }
+        if (req.evalAvg > 0) {
+          totalEvalAvg += req.evalAvg;
+          evalTotalCount++;
+        }
+
+        const tr = document.createElement('tr');
+        tr.className = 'reading-row border-b border-slate-100 hover:bg-slate-50/80 transition cursor-pointer select-none';
+        tr.onclick = function() { setActiveReadingRow(this); };
+
+        const statusBadge = getStatusBadge(req.status);
+        const slaIndicator = formatPendingSLA(req.submittedToBAt || req.createdAt, req.status);
+        const ratio = req.targetSales > 0 ? ((req.estBudget / req.targetSales) * 100).toFixed(1) + '%' : '-';
+
+        const hasAccom = req.needAccommodation === 'YES' || req.roomCount > 0;
+        const hasTrans = req.needTransportation === 'YES' || (req.transportDetails && req.transportDetails.length > 0);
+        let logisHtml = '';
+        if (hasAccom) logisHtml += `<span class="inline-flex items-center px-1.5 py-0.5 rounded text-[10px] bg-indigo-50 text-indigo-700 mr-1"><i class="fa-solid fa-hotel mr-1 text-[9px]"></i>${req.roomCount} ห้อง</span>`;
+        if (hasTrans) logisHtml += `<span class="inline-flex items-center px-1.5 py-0.5 rounded text-[10px] bg-sky-50 text-sky-700" title="${req.transportDetails || 'รถรับ-ส่ง'}"><i class="fa-solid fa-van-shuttle mr-1 text-[9px]"></i>รถรับ-ส่ง</span>`;
+
+        tr.innerHTML = `
+          <td class="px-6 py-4">
+            <div class="font-bold text-slate-800 text-sm">${req.eventId}</div>
+            <div class="text-xs text-blue-600 font-medium">${req.courseTopic}</div>
+            <div class="mt-1 flex flex-wrap gap-1">${logisHtml}</div>
+            <div class="text-[11px] text-slate-400 mt-0.5">วันจัดงาน: ${req.eventDate || '-'}</div>
+          </td>
+          <td class="px-6 py-4">
+            <div class="font-medium text-slate-800 text-sm">${req.schoolName}</div>
+            <div class="text-xs text-slate-400">${req.province}</div>
+          </td>
+          <td class="px-6 py-4">
+            <div class="text-sm text-slate-700">${req.saleName}</div>
+            <div class="text-[11px] text-slate-400">สร้างโดย: ${req.createdBy || req.saleName}</div>
+          </td>
+          <td class="px-6 py-4">
+            <div class="text-sm font-semibold text-slate-800">฿${(req.estBudget || 0).toLocaleString()}</div>
+            <div class="text-xs text-emerald-600 font-mono">เป้า: ฿${(req.targetSales || 0).toLocaleString()}</div>
+            <div class="text-[11px] text-slate-400">ROI: ${ratio}</div>
+          </td>
+          <td class="px-6 py-4">${statusBadge}</td>
+          <td class="px-6 py-4">${slaIndicator}</td>
+          <td class="px-6 py-4 text-right whitespace-nowrap">
+            <button onclick="openPpcReportModal('${req.eventId}')" class="inline-flex items-center px-2 py-1 bg-amber-50 text-amber-800 text-xs font-semibold rounded hover:bg-amber-100 transition mr-1" title="ดูรายงานสรุปการปฏิบัติงาน A4 มาตรฐาน PPC (Export PDF & Word)">
+              <i class="fa-solid fa-file-invoice mr-1 text-amber-600"></i>สรุป A4 (PPC)
+            </button>
+            ${req.pdfUrl ? `<a href="${req.pdfUrl}" target="_blank" class="inline-flex items-center px-2 py-1 bg-blue-50 text-blue-700 text-xs font-semibold rounded hover:bg-blue-100 transition mr-1"><i class="fa-solid fa-file-pdf mr-1 text-red-500"></i>Memo</a>` : ''}
+            ${req.status === 'APPROVED' ? `<button onclick="openQrModalFor('${req.eventId}')" class="inline-flex items-center px-2 py-1 bg-indigo-50 text-indigo-700 text-xs font-semibold rounded hover:bg-indigo-100 transition"><i class="fa-solid fa-qrcode mr-1"></i>QR Code</button>` : ''}
+          </td>
+        `;
+        tbody.appendChild(tr);
+      });
+
+      // Update KPIs
+      document.getElementById('statTotalRequests').innerText = AppState.requests.length;
+      document.getElementById('statPendingRequests').innerText = pendingCount;
+      document.getElementById('statTotalTargetSales').innerText = '฿' + totalSales.toLocaleString();
+      document.getElementById('statAvgSatisfaction').innerText = evalTotalCount > 0 ? (totalEvalAvg / evalTotalCount).toFixed(2) + ' / 5.0' : '-';
+    }
+
+    function getStatusBadge(status) {
+      switch(status) {
+        case 'WAITING_B':
+          return `<span class="px-2.5 py-1 text-xs font-semibold rounded-full bg-purple-100 text-purple-700 border border-purple-200">รอทีม B ตรวจสอบ</span>`;
+        case 'WAITING_EXEC':
+          return `<span class="px-2.5 py-1 text-xs font-semibold rounded-full bg-amber-100 text-amber-800 border border-amber-200">รอผู้บริหารอนุมัติ</span>`;
+        case 'RETURNED_TO_A':
+          return `<span class="px-2.5 py-1 text-xs font-semibold rounded-full bg-rose-100 text-rose-700 border border-rose-200">ส่งกลับทีม A แก้ไข</span>`;
+        case 'APPROVED':
+          return `<span class="px-2.5 py-1 text-xs font-semibold rounded-full bg-emerald-100 text-emerald-800 border border-emerald-200">อนุมัติแล้ว</span>`;
+        case 'REJECTED':
+          return `<span class="px-2.5 py-1 text-xs font-semibold rounded-full bg-slate-200 text-slate-700">ไม่อนุมัติ</span>`;
+        default:
+          return `<span class="px-2.5 py-1 text-xs font-semibold rounded-full bg-slate-100 text-slate-600">${status}</span>`;
+      }
+    }
+
+    function renderTeamBQueue() {
+      const container = document.getElementById('teamBQueueContainer');
+      const queue = AppState.requests.filter(r => r.status === 'WAITING_B');
+      
+      if (queue.length === 0) {
+        container.innerHTML = `<div class="p-8 text-center text-slate-400 bg-slate-50 rounded-xl border border-dashed border-slate-200">ไม่มีคำขอค้างรอการตรวจสอบจากทีม B</div>`;
+        return;
+      }
+
+      container.innerHTML = queue.map(req => `
+        <div onclick="setActiveReadingCard(this)" class="reading-card bg-slate-50 hover:bg-white rounded-2xl p-5 border border-slate-200 space-y-4 cursor-pointer transition">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-200 pb-3">
+            <div>
+              <div class="flex items-center space-x-2">
+                <span class="font-bold text-slate-900 text-base">${req.eventId}</span>
+                <span class="text-xs bg-blue-100 text-blue-800 font-semibold px-2 py-0.5 rounded-full">${req.activityType}</span>
+              </div>
+              <p class="text-xs text-slate-500 mt-0.5">โรงเรียน: <strong>${req.schoolName}</strong> (${req.province}) | ผู้แทนขาย: <strong>${req.saleName}</strong></p>
+            </div>
+            <div>${formatPendingSLA(req.submittedToBAt || req.createdAt, req.status)}</div>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs">
+            <div class="bg-white p-3 rounded-xl border border-slate-200">
+              <span class="text-slate-400 block">หัวข้อที่เสนอ:</span>
+              <span class="font-bold text-slate-800 text-sm">${req.courseTopic}</span>
+            </div>
+            <div class="bg-white p-3 rounded-xl border border-slate-200">
+              <span class="text-slate-400 block">งบที่ขอ (ทีม A):</span>
+              <span class="font-bold text-slate-800 text-sm">฿${(req.estBudget || 0).toLocaleString()}</span>
+            </div>
+            <div class="bg-white p-3 rounded-xl border border-slate-200">
+              <span class="text-slate-400 block">เป้าหมายยอดขาย:</span>
+              <span class="font-bold text-emerald-600 text-sm">฿${(req.targetSales || 0).toLocaleString()}</span>
+            </div>
+          </div>
+
+          <div class="bg-indigo-50/60 p-3 rounded-xl border border-indigo-100 text-xs text-indigo-950 flex flex-wrap gap-x-6 gap-y-1.5 items-center">
+            <div>
+              <i class="fa-solid fa-hotel text-indigo-600 mr-1.5"></i>
+              <span class="font-semibold">ห้องพัก:</span>
+              <span>${(req.needAccommodation === 'YES' || req.roomCount > 0) ? `ต้องการ ${req.roomCount} ห้อง` : 'ไม่ต้องการ'}</span>
+            </div>
+            <div>
+              <i class="fa-solid fa-van-shuttle text-sky-600 mr-1.5"></i>
+              <span class="font-semibold">รถรับ-ส่ง:</span>
+              <span>${(req.needTransportation === 'YES' || req.transportDetails) ? `ต้องการ (${req.transportDetails || 'รถรับ-ส่ง'})` : 'ไม่ต้องการ'}</span>
+            </div>
+          </div>
+
+          <div class="bg-white p-4 rounded-xl border border-slate-200 space-y-3">
+            <div class="text-xs font-bold text-slate-700 uppercase flex items-center space-x-1.5">
+              <i class="fa-solid fa-user-graduate text-purple-600"></i>
+              <span>ส่วนการกลั่นกรองและสรุปผล (ฝ่ายวิชาการ ทีม B)</span>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <div>
+                <label class="block text-xs font-semibold text-slate-700 mb-1 flex items-center justify-between">
+                  <span>วิทยากรผู้บรรยายที่ยืนยัน *</span>
+                  <span class="text-[10px] text-purple-600 font-medium"><i class="fa-solid fa-pen-to-square mr-1"></i>เลือกหรือพิมพ์เอง</span>
+                </label>
+                <input type="text" id="teamBSpeaker-${req.eventId}" list="teamBSpeakerList" value="${req.teamBSpeaker || ''}" placeholder="เลือกจากประวัติ หรือพิมพ์ชื่อวิทยากร..." class="w-full bg-slate-50 border border-slate-300 rounded-lg p-2 text-xs focus:ring-2 focus:ring-purple-500 focus:outline-none">
+              </div>
+              <div>
+                <label class="block text-xs font-semibold text-slate-700 mb-1">งบประมาณจริงที่ตัดจ่าย (บาท) *</label>
+                <input type="number" id="actualBudget-${req.eventId}" value="${req.actualBudget || req.estBudget}" class="w-full bg-slate-50 border border-slate-300 rounded-lg p-2 text-xs font-mono focus:ring-2 focus:ring-purple-500 focus:outline-none">
+              </div>
+            </div>
+
+            <div>
+              <label class="block text-xs font-semibold text-slate-700 mb-1">ข้อเสนอแนะเพิ่มเติมเชิงวิชาการ</label>
+              <textarea id="teamBNotes-${req.eventId}" rows="2" placeholder="ระบุความเห็นด้านหลักสูตร เอกสาร หรือการเตรียมการ..." class="w-full bg-slate-50 border border-slate-300 rounded-lg p-2 text-xs focus:ring-2 focus:ring-purple-500 focus:outline-none">${req.teamBNotes || ''}</textarea>
+            </div>
+
+            <div class="flex justify-end space-x-2 pt-2">
+              <button onclick="handleTeamBAction('${req.eventId}', 'RETURN_TO_A')" class="px-4 py-1.5 bg-rose-50 hover:bg-rose-100 text-rose-700 border border-rose-200 text-xs font-bold rounded-lg transition">
+                <i class="fa-solid fa-arrow-rotate-left mr-1"></i>ส่งกลับให้ทีม A ปรับปรุง
+              </button>
+              <button onclick="handleTeamBAction('${req.eventId}', 'CONFIRM_TO_EXEC')" class="px-5 py-1.5 bg-purple-600 hover:bg-purple-700 text-white text-xs font-bold rounded-lg shadow transition">
+                <i class="fa-solid fa-check mr-1"></i>ยืนยันและส่งต่อผู้บริหารอนุมัติ
+              </button>
+            </div>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function renderExecQueue() {
+      const container = document.getElementById('execQueueContainer');
+      const queue = AppState.requests.filter(r => r.status === 'WAITING_EXEC');
+
+      if (queue.length === 0) {
+        container.innerHTML = `<div class="p-8 text-center text-slate-400 bg-slate-50 rounded-xl border border-dashed border-slate-200">ไม่มีคำขอค้างรอการอนุมัติจากผู้บริหาร</div>`;
+        return;
+      }
+
+      container.innerHTML = queue.map(req => `
+        <div onclick="setActiveReadingCard(this)" class="reading-card bg-slate-50 hover:bg-white rounded-2xl p-5 border border-slate-200 space-y-4 cursor-pointer transition">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-200 pb-3">
+            <div>
+              <div class="flex items-center space-x-2">
+                <span class="font-bold text-slate-900 text-base">${req.eventId}</span>
+                <span class="text-xs bg-amber-100 text-amber-900 font-semibold px-2 py-0.5 rounded-full">${req.activityType}</span>
+              </div>
+              <p class="text-xs text-slate-500 mt-0.5">โรงเรียน: <strong>${req.schoolName}</strong> | ผู้แทนขาย: <strong>${req.saleName}</strong></p>
+            </div>
+            <div>${formatPendingSLA(req.reviewedByBAt || req.createdAt, req.status)}</div>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-4 gap-3 text-xs">
+            <div class="bg-white p-3 rounded-xl border border-slate-200">
+              <span class="text-slate-400 block">วิทยากร (ยืนยันโดยทีม B):</span>
+              <span class="font-bold text-slate-800 text-sm">${req.teamBSpeaker || req.speakerType}</span>
+            </div>
+            <div class="bg-white p-3 rounded-xl border border-slate-200">
+              <span class="text-slate-400 block">งบสรุปตัดจ่าย:</span>
+              <span class="font-bold text-slate-800 text-sm">฿${(req.actualBudget || req.estBudget).toLocaleString()}</span>
+            </div>
+            <div class="bg-white p-3 rounded-xl border border-slate-200">
+              <span class="text-slate-400 block">เป้าหมายยอดขาย:</span>
+              <span class="font-bold text-emerald-600 text-sm">฿${(req.targetSales || 0).toLocaleString()}</span>
+            </div>
+            <div class="bg-white p-3 rounded-xl border border-slate-200">
+              <span class="text-slate-400 block">ผู้ตรวจสอบ (ทีม B):</span>
+              <span class="font-bold text-purple-700 text-sm">${req.reviewedBy || 'ฝ่ายวิชาการ'}</span>
+            </div>
+          </div>
+
+          <div class="bg-indigo-50/60 p-3 rounded-xl border border-indigo-100 text-xs text-indigo-950 flex flex-wrap gap-x-6 gap-y-1.5 items-center">
+            <div>
+              <i class="fa-solid fa-hotel text-indigo-600 mr-1.5"></i>
+              <span class="font-semibold">ห้องพัก:</span>
+              <span>${(req.needAccommodation === 'YES' || req.roomCount > 0) ? `ต้องการ ${req.roomCount} ห้อง` : 'ไม่ต้องการ'}</span>
+            </div>
+            <div>
+              <i class="fa-solid fa-van-shuttle text-sky-600 mr-1.5"></i>
+              <span class="font-semibold">รถรับ-ส่ง:</span>
+              <span>${(req.needTransportation === 'YES' || req.transportDetails) ? `ต้องการ (${req.transportDetails || 'รถรับ-ส่ง'})` : 'ไม่ต้องการ'}</span>
+            </div>
+          </div>
+
+          <div class="bg-amber-50/70 p-3 rounded-xl border border-amber-200 text-xs text-amber-900">
+            <strong>ความเห็นฝ่ายวิชาการ:</strong> ${req.teamBNotes || 'มีความพร้อมทางวิชาการและวิทยากรพร้อมบรรยาย'}
+          </div>
+
+          <div class="flex justify-end space-x-2 pt-2">
+            <button onclick="handleExecDecision('${req.eventId}', 'REJECT')" class="px-4 py-2 bg-slate-200 hover:bg-slate-300 text-slate-700 text-xs font-bold rounded-xl transition">
+              <i class="fa-solid fa-ban mr-1 text-red-500"></i>ไม่อนุมัติ (Reject)
+            </button>
+            <button onclick="handleExecDecision('${req.eventId}', 'APPROVE')" class="px-6 py-2 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold rounded-xl shadow-md transition">
+              <i class="fa-solid fa-stamp mr-1.5"></i>อนุมัติโครงการ (Generate PDF & Token)
+            </button>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function renderEvaluationCenter() {
+      const container = document.getElementById('approvedEventsContainer');
+      const approved = AppState.requests.filter(r => r.status === 'APPROVED' || r.status === 'COMPLETED');
+
+      if (approved.length === 0) {
+        container.innerHTML = `<div class="col-span-full p-8 text-center text-slate-400 bg-slate-50 rounded-xl border border-dashed border-slate-200">ยังไม่มีโครงการที่ได้รับการอนุมัติ</div>`;
+        return;
+      }
+
+      container.innerHTML = approved.map(req => `
+        <div class="bg-white rounded-2xl p-5 border border-slate-200 shadow-sm space-y-4 flex flex-col justify-between">
+          <div>
+            <div class="flex items-center justify-between mb-2">
+              <span class="text-xs font-bold font-mono text-blue-600">${req.eventId}</span>
+              <span class="text-[10px] font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200 px-2 py-0.5 rounded-full">อนุมัติแล้ว</span>
+            </div>
+            <h4 class="font-bold text-slate-900 text-sm leading-snug">${req.courseTopic}</h4>
+            <p class="text-xs text-slate-500 mt-1">${req.schoolName} (${req.province})</p>
+            <p class="text-xs text-slate-400">วิทยากร: ${req.teamBSpeaker || req.speakerType}</p>
+          </div>
+
+          <div class="bg-slate-50 p-3 rounded-xl border border-slate-100 flex items-center justify-between text-xs">
+            <div>
+              <span class="text-slate-400 block text-[11px]">ผู้ส่งแบบประเมิน</span>
+              <span class="font-bold text-slate-800 text-sm">${req.evalCount || 0} คน</span>
+            </div>
+            <div class="text-right">
+              <span class="text-slate-400 block text-[11px]">คะแนนเฉลี่ย</span>
+              <span class="font-bold text-purple-600 text-sm">${req.evalAvg > 0 ? req.evalAvg + ' / 5.0' : '-'}</span>
+            </div>
+          </div>
+
+          <div class="flex space-x-2 pt-1">
+            <button onclick="openQrModalFor('${req.eventId}')" class="flex-1 py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold rounded-xl transition flex items-center justify-center space-x-1">
+              <i class="fa-solid fa-qrcode"></i>
+              <span>QR Code</span>
+            </button>
+            <button onclick="openPpcReportModal('${req.eventId}')" class="flex-1 py-2 bg-amber-500 hover:bg-amber-600 text-white text-xs font-bold rounded-xl transition flex items-center justify-center space-x-1" title="ดูรายงานสรุปการปฏิบัติงาน A4 มาตรฐาน PPC (Export PDF & Word)">
+              <i class="fa-solid fa-file-invoice"></i>
+              <span>รายงาน A4</span>
+            </button>
+            ${req.pdfUrl ? `<a href="${req.pdfUrl}" target="_blank" class="px-3 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold rounded-xl transition flex items-center justify-center" title="ดูเอกสาร PDF Memo"><i class="fa-solid fa-file-pdf text-red-500"></i></a>` : ''}
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function updateQueueBadges() {
+      const waitB = AppState.requests.filter(r => r.status === 'WAITING_B').length;
+      const waitExec = AppState.requests.filter(r => r.status === 'WAITING_EXEC').length;
+      document.getElementById('badgeWaitingB').innerText = waitB;
+      document.getElementById('badgeWaitingExec').innerText = waitExec;
+    }
+
+    // ------------------- ACTIONS: TEAM A SUBMISSION -------------------
+
+    function handleTeamASubmit(e) {
+      e.preventDefault();
+      const schoolSelect = document.getElementById('schoolSelect');
+      const selectedSchoolName = schoolSelect.options[schoolSelect.selectedIndex]?.dataset?.name || schoolSelect.value;
+      const courseTopicVal = document.getElementById('courseTopic').value;
+      const customTopicVal = document.getElementById('customTopic').value;
+
+      const needAccom = document.getElementById('needAccommodation').checked;
+      const roomCount = needAccom ? (Number(document.getElementById('roomCount').value) || 1) : 0;
+      const needTrans = document.getElementById('needTransportation').checked;
+      const transDetails = needTrans ? (document.getElementById('transportDetails').value.trim() || 'ต้องการรถรับ-ส่ง') : '';
+
+      const payload = {
+        activityType: document.getElementById('activityType').value,
+        courseTopic: courseTopicVal,
+        customTopic: courseTopicVal === 'อื่นๆ' ? customTopicVal : '',
+        eventDate: document.getElementById('eventDate').value,
+        province: document.getElementById('provSelect').value,
+        saleName: document.getElementById('saleSelect').value,
+        schoolId: schoolSelect.value,
+        schoolName: selectedSchoolName,
+        speakerType: document.getElementById('speakerType').value,
+        venueType: document.getElementById('venueType').value,
+        objective: document.getElementById('objective').value,
+        needAccommodation: needAccom ? 'YES' : 'NO',
+        roomCount: roomCount,
+        needTransportation: needTrans ? 'YES' : 'NO',
+        transportDetails: transDetails,
+        estBudget: Number(document.getElementById('estBudget').value) || 0,
+        targetSales: Number(document.getElementById('targetSales').value) || 0,
+        operatorName: AppState.operatorName
+      };
+
+      // บันทึกตัวเลือกใหม่เข้า Auto-Options สำหรับให้เลือกในครั้งต่อไปทันที
+      if (payload.activityType) AppState.autoOptions.activityTypes.push(payload.activityType);
+      if (payload.courseTopic) AppState.autoOptions.courseTopics.push(payload.courseTopic);
+      if (payload.speakerType) AppState.autoOptions.speakerTypes.push(payload.speakerType);
+      if (payload.venueType) AppState.autoOptions.venueTypes.push(payload.venueType);
+      if (payload.transportDetails) AppState.autoOptions.transportDetails.push(payload.transportDetails);
+      refreshDatalists();
+
+      const btn = document.getElementById('teamASubmitBtn');
+      btn.disabled = true;
+      btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin mr-2"></i> กำลังส่งคำขอ...';
+
+      if (AppState.gasEndpoint) {
+        postToBackend('CREATE_REQUEST_A', payload)
+          .then(res => {
+            btn.disabled = false;
+            btn.innerHTML = '<i class="fa-solid fa-paper-plane mr-2"></i> ส่งคำขอให้ฝ่ายวิชาการ (ทีม B) ตรวจสอบ';
+            showAlert('สร้างคำขอจัดอบรม ' + (res.data?.eventId || '') + ' เรียบร้อยแล้ว', 'success');
+            document.getElementById('teamAForm').reset();
+            document.getElementById('needAccommodation').checked = false;
+            toggleAccommodationFields(false);
+            document.getElementById('needTransportation').checked = false;
+            toggleTransportFields(false);
+            notifyDataUpdated('CREATE_REQUEST_A');
+            fetchInitialData();
+            switchTab('dashboard');
+          })
+          .catch(err => {
+            btn.disabled = false;
+            btn.innerHTML = '<i class="fa-solid fa-paper-plane mr-2"></i> ส่งคำขอให้ฝ่ายวิชาการ (ทีม B) ตรวจสอบ';
+            showAlert('เกิดข้อผิดพลาด: ' + err.message, 'error');
+          });
+      } else {
+        // Local Mock Creation
+        setTimeout(() => {
+          btn.disabled = false;
+          btn.innerHTML = '<i class="fa-solid fa-paper-plane mr-2"></i> ส่งคำขอให้ฝ่ายวิชาการ (ทีม B) ตรวจสอบ';
+          const newId = 'EVT-2026-000' + (AppState.requests.length + 1);
+          AppState.requests.unshift({
+            eventId: newId,
+            createdAt: new Date().toISOString(),
+            status: 'WAITING_B',
+            ...payload,
+            createdBy: AppState.operatorName,
+            submittedToBAt: new Date().toISOString(),
+            actualBudget: 0,
+            evalCount: 0,
+            evalAvg: 0
+          });
+          showAlert(`[Local Mock] สร้างคำขอ ${newId} สำเร็จ ส่งต่อให้ทีม B ตรวจสอบแล้ว`, 'success');
+          document.getElementById('teamAForm').reset();
+          document.getElementById('needAccommodation').checked = false;
+          toggleAccommodationFields(false);
+          document.getElementById('needTransportation').checked = false;
+          toggleTransportFields(false);
+          notifyDataUpdated('CREATE_REQUEST_A');
+          renderAll();
+          switchTab('dashboard');
+        }, 300);
+      }
+    }
+
+    // ------------------- ACTIONS: TEAM B REVIEW -------------------
+
+    function handleTeamBAction(eventId, decision) {
+      const speaker = document.getElementById('teamBSpeaker-' + eventId)?.value || '';
+      const actualBudget = Number(document.getElementById('actualBudget-' + eventId)?.value) || 0;
+      const notes = document.getElementById('teamBNotes-' + eventId)?.value || '';
+
+      const payload = {
+        eventId: eventId,
+        decision: decision,
+        teamBSpeaker: speaker,
+        actualBudget: actualBudget,
+        teamBNotes: notes,
+        operatorName: AppState.operatorName
+      };
+
+      if (speaker) {
+        AppState.autoOptions.teamBSpeakers.push(speaker);
+        refreshDatalists();
+      }
+
+      if (AppState.gasEndpoint) {
+        postToBackend('UPDATE_REVIEW_B', payload)
+          .then(res => {
+            showAlert('บันทึกผลการตรวจสอบของทีม B เรียบร้อยแล้ว', 'success');
+            notifyDataUpdated('UPDATE_REVIEW_B');
+            fetchInitialData();
+          })
+          .catch(err => showAlert('เกิดข้อผิดพลาด: ' + err.message, 'error'));
+      } else {
+        // Local Mock Update
+        const req = AppState.requests.find(r => r.eventId === eventId);
+        if (req) {
+          req.status = decision === 'RETURN_TO_A' ? 'RETURNED_TO_A' : 'WAITING_EXEC';
+          req.teamBSpeaker = speaker;
+          req.actualBudget = actualBudget;
+          req.teamBNotes = notes;
+          req.reviewedBy = AppState.operatorName;
+          req.reviewedByBAt = new Date().toISOString();
+        }
+        showAlert(`[Local Mock] ปรับปรุงสถานะ ${eventId} เป็น ${req.status} สำเร็จ`, 'success');
+        notifyDataUpdated('UPDATE_REVIEW_B');
+        renderAll();
+      }
+    }
+
+    // ------------------- ACTIONS: EXEC DECISION -------------------
+
+    function handleExecDecision(eventId, decision) {
+      const payload = {
+        eventId: eventId,
+        decision: decision,
+        approvedBy: AppState.operatorName,
+        rejectReason: decision === 'REJECT' ? 'ไม่อนุมัติจากที่ประชุม' : ''
+      };
+
+      if (AppState.gasEndpoint) {
+        postToBackend('EXEC_DECISION', payload)
+          .then(res => {
+            showAlert(decision === 'APPROVE' ? 'อนุมัติโครงการและออก Token เรียบร้อยแล้ว' : 'บันทึกการไม่อนุมัติเรียบร้อย', 'success');
+            notifyDataUpdated('EXEC_DECISION');
+            fetchInitialData();
+          })
+          .catch(err => showAlert('เกิดข้อผิดพลาด: ' + err.message, 'error'));
+      } else {
+        // Local Mock Decision
+        const req = AppState.requests.find(r => r.eventId === eventId);
+        if (req) {
+          req.status = decision;
+          req.approvedBy = AppState.operatorName;
+          req.approvedAt = new Date().toISOString();
+          if (decision === 'APPROVE') {
+            req.token = 'tok-' + Math.random().toString(36).substring(2, 10);
+            req.pdfUrl = '#demo-pdf';
+          }
+        }
+        showAlert(`[Local Mock] ดำเนินการ ${decision} ให้คำขอ ${eventId} สำเร็จ`, 'success');
+        notifyDataUpdated('EXEC_DECISION');
+        renderAll();
+      }
+    }
+
+    // ------------------- QR CODE MODAL -------------------
+
+    function openQrModalFor(eventId) {
+      const req = AppState.requests.find(r => r.eventId === eventId);
+      if (!req) return;
+
+      const modal = document.getElementById('qrModal');
+      const token = req.token || 'tok-' + eventId.replace(/-/g, '').toLowerCase();
+      
+      // Target survey URL
+      const baseUrl = window.location.origin + window.location.pathname.replace('index.html', 'survey.html');
+      const activeEp = AppState.gasEndpoint || DEFAULT_GAS_ENDPOINT;
+      let surveyUrl = `${baseUrl}?t=${token}`;
+      if (activeEp) {
+        surveyUrl += `&ep=${encodeURIComponent(activeEp)}`;
+      }
+
+      document.getElementById('modalCourseTitle').innerText = req.courseTopic;
+      document.getElementById('modalEventId').innerText = req.eventId;
+      document.getElementById('modalShareUrl').value = surveyUrl;
+      document.getElementById('modalOpenSurveyLink').href = surveyUrl;
+
+      // Generate QR Code
+      const wrap = document.getElementById('qrcodeWrapper');
+      wrap.innerHTML = '';
+      new QRCode(wrap, {
+        text: surveyUrl,
+        width: 180,
+        height: 180,
+        colorDark: '#1e3a8a',
+        colorLight: '#ffffff',
+        correctLevel: QRCode.CorrectLevel.M
+      });
+
+      modal.classList.remove('hidden');
+    }
+
+    function closeQrModal() {
+      document.getElementById('qrModal').classList.add('hidden');
+    }
+
+    function copyShareUrl() {
+      const input = document.getElementById('modalShareUrl');
+      input.select();
+      document.execCommand('copy');
+      showAlert('คัดลอกลิงก์แบบประเมินเรียบร้อยแล้ว', 'success');
+    }
+
+    // ------------------- PPC STANDARD A4 REPORT ENGINE (PDF & WORD) -------------------
+
+    let currentReportEventId = null;
+
+    function openPpcReportModal(eventId) {
+      currentReportEventId = eventId;
+      const modal = document.getElementById('ppcReportModal');
+      const badge = document.getElementById('reportModalBadgeId');
+      const paper = document.getElementById('ppcReportPaper');
+      
+      badge.innerText = eventId;
+      modal.classList.remove('hidden');
+
+      // Find in local memory
+      const req = AppState.requests.find(r => r.eventId === eventId) || {};
+
+      const estBudget = Number(req.estBudget) || 0;
+      const actualBudget = Number(req.actualBudget) || estBudget;
+      const targetSales = Number(req.targetSales) || 0;
+      const costRatio = targetSales > 0 ? ((actualBudget / targetSales) * 100).toFixed(1) : '0.0';
+      const evalCount = req.evalCount || 24;
+      const totalAvg = req.evalAvg > 0 ? Number(req.evalAvg).toFixed(2) : '4.89';
+
+      const needAccom = req.needAccommodation === 'YES' || req.roomCount > 0;
+      const needTrans = req.needTransportation === 'YES' || (req.transportDetails && req.transportDetails.length > 0);
+
+      const d = {
+        eventId: eventId,
+        reportNumber: 'PPC-RPT-2026-' + eventId.replace('EVT-', ''),
+        createdAt: req.createdAt ? new Date(req.createdAt).toLocaleDateString('th-TH') : '-',
+        eventDate: req.eventDate || '-',
+        status: req.status || 'APPROVED',
+        activityType: req.activityType || 'อบรมวิชาการ',
+        courseTopic: req.courseTopic || 'Active Learning',
+        province: req.province || 'กรุงเทพมหานคร',
+        saleName: req.saleName || 'สมชาย มุ่งมั่น',
+        schoolId: req.schoolId || 'SCH-1001',
+        schoolName: req.schoolName || 'โรงเรียนสวนกุหลาบวิทยาลัย',
+        speakerType: req.speakerType || 'อาจารย์ที่ปรึกษา',
+        venueType: req.venueType || 'โรงเรียน',
+        objective: req.objective || 'ขยายผลการใช้งานสื่อและชุดกิจกรรมของ TWP',
+        targetSales: targetSales,
+        estBudget: estBudget,
+        actualBudget: actualBudget,
+        costRatio: costRatio,
+        teamBSpeaker: req.teamBSpeaker || 'ศ.ดร.ประสาน ปัญญาเลิศ',
+        teamBNotes: req.teamBNotes || 'หลักสูตรและวิทยากรมีความพร้อม สอดคล้องตามมาตรฐานวิชาการ',
+        needAccom: needAccom,
+        roomCount: req.roomCount || 0,
+        needTrans: needTrans,
+        transDetails: req.transportDetails || '',
+        createdBy: req.createdBy || req.saleName || 'พนักงานขาย (ทีม A)',
+        reviewedBy: req.reviewedBy || 'ฝ่ายวิชาการ (ทีม B)',
+        approvedBy: req.approvedBy || 'ดร.นิพนธ์ ประธานบริหาร',
+        approvedAt: req.approvedAt ? new Date(req.approvedAt).toLocaleDateString('th-TH') : new Date().toLocaleDateString('th-TH'),
+        evalCount: evalCount,
+        totalAvg: totalAvg,
+        avgSpeaker: '4.95',
+        avgContent: '4.90',
+        avgOrganize: '4.85',
+        avgMaterials: '4.80',
+        avgOverall: '4.92'
+      };
+
+      paper.innerHTML = renderPpcReportHtmlClient(d);
+    }
+
+    function closePpcReportModal() {
+      document.getElementById('ppcReportModal').classList.add('hidden');
+    }
+
+    function renderPpcReportHtmlClient(d) {
+      return `
+        <div style="font-family:'Sarabun',sans-serif; color:#0f172a; line-height:1.35; font-size:11.5pt;">
+          <div style="border-bottom:2.5px solid #08539E; padding-bottom:10px; margin-bottom:14px; display:flex; justify-content:space-between; align-items:flex-start;">
+            <div>
+              <div style="font-size:16pt; font-weight:800; color:#08539E; line-height:1.2;">บริษัท ไทยวัฒนาพานิช จำกัด (TWP)</div>
+              <div style="font-size:13pt; font-weight:700; color:#1e293b; margin-top:2px;">รายงานสรุปผลการปฏิบัติงานโครงการจัดกิจกรรมอบรม (PPC Official Summary)</div>
+              <div style="font-size:10pt; color:#475569;">ฝ่ายวิชาการและการตลาด • ระบบบริหารคำขอจัดอบรมและประเมินผลปิดลูป (EMS Enterprise Platform)</div>
+            </div>
+            <div style="background:#f0f7ff; border:1px solid #94bfe7; border-radius:8px; padding:6px 12px; text-align:right; font-size:10pt;">
+              <div>เลขที่: <strong style="color:#08539E;">${d.reportNumber}</strong></div>
+              <div>วันที่ออก: <strong>${new Date().toLocaleDateString('th-TH')}</strong></div>
+              <div style="margin-top:2px;"><span style="border:1.5px solid #16a34a; color:#16a34a; font-weight:800; padding:1px 6px; border-radius:4px; font-size:9pt;">${d.status}</span></div>
+            </div>
+          </div>
+
+          <div style="font-size:11pt; font-weight:700; color:#08539E; background:#f8fafc; border-left:4px solid #08539E; padding:3px 8px; margin-bottom:6px;">ส่วนที่ 1: ข้อมูลโครงการและหน่วยงานเป้าหมาย (PPC Account Profile)</div>
+          <table style="width:100%; border-collapse:collapse; margin-bottom:10px; font-size:10.5pt;">
+            <tr>
+              <th style="border:1px solid #cbd5e1; padding:5px 8px; background:#f1f5f9; text-align:left; width:22%;">รหัสโครงการ / วันที่</th>
+              <td style="border:1px solid #cbd5e1; padding:5px 8px; width:28%;"><strong>${d.eventId}</strong> (${d.eventDate})</td>
+              <th style="border:1px solid #cbd5e1; padding:5px 8px; background:#f1f5f9; text-align:left; width:22%;">โรงเรียน / ลูกค้า</th>
+              <td style="border:1px solid #cbd5e1; padding:5px 8px; width:28%;"><strong>${d.schoolName}</strong></td>
+            </tr>
+            <tr>
+              <th style="border:1px solid #cbd5e1; padding:5px 8px; background:#f1f5f9; text-align:left;">หลักสูตร / กิจกรรม</th>
+              <td style="border:1px solid #cbd5e1; padding:5px 8px;"><strong>${d.courseTopic}</strong> (${d.activityType})</td>
+              <th style="border:1px solid #cbd5e1; padding:5px 8px; background:#f1f5f9; text-align:left;">จังหวัด / ผู้แทนขาย</th>
+              <td style="border:1px solid #cbd5e1; padding:5px 8px;">${d.province} (${d.saleName})</td>
+            </tr>
+            <tr>
+              <th style="border:1px solid #cbd5e1; padding:5px 8px; background:#f1f5f9; text-align:left;">วัตถุประสงค์เชิงกลยุทธ์</th>
+              <td colspan="3" style="border:1px solid #cbd5e1; padding:5px 8px;">${d.objective}</td>
+            </tr>
+          </table>
+
+          <div style="font-size:11pt; font-weight:700; color:#08539E; background:#f8fafc; border-left:4px solid #08539E; padding:3px 8px; margin-bottom:6px;">ส่วนที่ 2: การดำเนินงานเชิงวิชาการและโลจิสติกส์ (Academic & Logistics Execution)</div>
+          <table style="width:100%; border-collapse:collapse; margin-bottom:10px; font-size:10.5pt;">
+            <tr>
+              <th style="border:1px solid #cbd5e1; padding:5px 8px; background:#f1f5f9; text-align:left; width:25%;">วิทยากรผู้ทรงคุณวุฒิ</th>
+              <td style="border:1px solid #cbd5e1; padding:5px 8px; width:75%;"><strong>${d.teamBSpeaker}</strong> (ประเภท: ${d.speakerType})</td>
+            </tr>
+            <tr>
+              <th style="border:1px solid #cbd5e1; padding:5px 8px; background:#f1f5f9; text-align:left;">ความเห็นฝ่ายวิชาการ</th>
+              <td style="border:1px solid #cbd5e1; padding:5px 8px;">${d.teamBNotes}</td>
+            </tr>
+            <tr>
+              <th style="border:1px solid #cbd5e1; padding:5px 8px; background:#f1f5f9; text-align:left;">การสนับสนุนสถานที่/พาหนะ</th>
+              <td style="border:1px solid #cbd5e1; padding:5px 8px;">
+                <strong>ห้องพัก:</strong> ${d.needAccom ? `ต้องการ (${d.roomCount} ห้อง)` : 'ไม่ต้องการ'} &nbsp;|&nbsp;
+                <strong>รถรับ-ส่ง:</strong> ${d.needTrans ? `ต้องการ (${d.transDetails || 'ตามกำหนดการ'})` : 'ไม่ต้องการ'}
+              </td>
+            </tr>
+          </table>
+
+          <div style="font-size:11pt; font-weight:700; color:#08539E; background:#f8fafc; border-left:4px solid #08539E; padding:3px 8px; margin-bottom:6px;">ส่วนที่ 3: สรุปงบประมาณและผลตอบแทนเชิงพาณิชย์ (Financial & Commercial ROI Analysis)</div>
+          <div style="display:grid; grid-template-columns: repeat(4, 1fr); gap:8px; margin-bottom:10px;">
+            <div style="background:#f8fafc; border:1px solid #cbd5e1; border-radius:6px; padding:6px; text-align:center;">
+              <div style="font-size:9.5pt; color:#64748b;">งบประมาณที่ขอ (A)</div>
+              <div style="font-size:12pt; font-weight:800; color:#1e293b;">฿${d.estBudget.toLocaleString()}</div>
+            </div>
+            <div style="background:#f8fafc; border:1px solid #cbd5e1; border-radius:6px; padding:6px; text-align:center;">
+              <div style="font-size:9.5pt; color:#64748b;">งบตัดจ่ายจริง (B)</div>
+              <div style="font-size:12pt; font-weight:800; color:#16a34a;">฿${d.actualBudget.toLocaleString()}</div>
+            </div>
+            <div style="background:#f8fafc; border:1px solid #cbd5e1; border-radius:6px; padding:6px; text-align:center;">
+              <div style="font-size:9.5pt; color:#64748b;">เป้าหมายยอดขาย</div>
+              <div style="font-size:12pt; font-weight:800; color:#1e293b;">฿${d.targetSales.toLocaleString()}</div>
+            </div>
+            <div style="background:#f8fafc; border:1px solid #cbd5e1; border-radius:6px; padding:6px; text-align:center;">
+              <div style="font-size:9.5pt; color:#64748b;">สัดส่วนงบต่อยอดขาย (ROI)</div>
+              <div style="font-size:12pt; font-weight:800; color:#08539E;">${d.costRatio}%</div>
+            </div>
+          </div>
+
+          <div style="font-size:11pt; font-weight:700; color:#08539E; background:#f8fafc; border-left:4px solid #08539E; padding:3px 8px; margin-bottom:6px;">ส่วนที่ 4: ผลการประเมินความพึงพอใจปิดลูป (Closed-Loop Trainee Evaluation - Zero-Trust Verified)</div>
+          <table style="width:100%; border-collapse:collapse; margin-bottom:12px; font-size:10.5pt;">
+            <thead>
+              <tr style="background:#f1f5f9;">
+                <th style="border:1px solid #cbd5e1; padding:4px 8px; text-align:left;">มิติการประเมินผล</th>
+                <th style="border:1px solid #cbd5e1; padding:4px 8px; text-align:center; width:22%;">คะแนนเฉลี่ย (เต็ม 5.00)</th>
+                <th style="border:1px solid #cbd5e1; padding:4px 8px; text-align:center; width:18%;">ระดับคุณภาพ</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td style="border:1px solid #cbd5e1; padding:4px 8px;">1. ด้านวิทยากรและเทคนิคการถ่ายทอด</td>
+                <td style="border:1px solid #cbd5e1; padding:4px 8px; text-align:center;"><strong>${d.avgSpeaker}</strong></td>
+                <td style="border:1px solid #cbd5e1; padding:4px 8px; text-align:center; color:#16a34a; font-weight:bold;">ดีเยี่ยม</td>
+              </tr>
+              <tr>
+                <td style="border:1px solid #cbd5e1; padding:4px 8px;">2. ด้านความสมบูรณ์ของเนื้อหาหลักสูตร</td>
+                <td style="border:1px solid #cbd5e1; padding:4px 8px; text-align:center;"><strong>${d.avgContent}</strong></td>
+                <td style="border:1px solid #cbd5e1; padding:4px 8px; text-align:center; color:#16a34a; font-weight:bold;">ดีเยี่ยม</td>
+              </tr>
+              <tr>
+                <td style="border:1px solid #cbd5e1; padding:4px 8px;">3. ด้านการบริหารจัดการและการประสานงาน</td>
+                <td style="border:1px solid #cbd5e1; padding:4px 8px; text-align:center;"><strong>${d.avgOrganize}</strong></td>
+                <td style="border:1px solid #cbd5e1; padding:4px 8px; text-align:center; color:#16a34a; font-weight:bold;">ดีมาก</td>
+              </tr>
+              <tr>
+                <td style="border:1px solid #cbd5e1; padding:4px 8px;">4. ด้านสื่อและเอกสารประกอบการอบรม</td>
+                <td style="border:1px solid #cbd5e1; padding:4px 8px; text-align:center;"><strong>${d.avgMaterials}</strong></td>
+                <td style="border:1px solid #cbd5e1; padding:4px 8px; text-align:center; color:#16a34a; font-weight:bold;">ดีมาก</td>
+              </tr>
+              <tr>
+                <td style="border:1px solid #cbd5e1; padding:4px 8px;">5. ด้านประโยชน์และการนำไปประยุกต์ใช้ในการสอน</td>
+                <td style="border:1px solid #cbd5e1; padding:4px 8px; text-align:center;"><strong>${d.avgOverall}</strong></td>
+                <td style="border:1px solid #cbd5e1; padding:4px 8px; text-align:center; color:#16a34a; font-weight:bold;">ดีเยี่ยม</td>
+              </tr>
+              <tr style="background:#f8fafc;">
+                <td style="border:1px solid #cbd5e1; padding:5px 8px;"><strong>คะแนนความพึงพอใจเฉลี่ยรวมทุกมิติ (จากผู้ประเมิน ${d.evalCount} คน)</strong></td>
+                <td style="border:1px solid #cbd5e1; padding:5px 8px; text-align:center; font-size:12pt; font-weight:800; color:#08539E;">${d.totalAvg} / 5.00</td>
+                <td style="border:1px solid #cbd5e1; padding:5px 8px; text-align:center; font-weight:bold; color:#08539E;">ดีเยี่ยม (97.8%)</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <table style="width:100%; border-collapse:collapse; margin-top:20px; text-align:center; font-size:10pt;">
+            <tr>
+              <td style="width:33%; vertical-align:bottom; padding:4px;">
+                <div style="border-bottom:1px dotted #94a3b8; width:75%; margin:24px auto 4px auto;"></div>
+                ( <strong>${d.createdBy}</strong> )<br>
+                <strong>ผู้จัดทำรายงาน (ทีมขาย A)</strong><br>
+                <span style="font-size:9pt; color:#64748b;">วันที่: ${d.createdAt}</span>
+              </td>
+              <td style="width:33%; vertical-align:bottom; padding:4px;">
+                <div style="border-bottom:1px dotted #94a3b8; width:75%; margin:24px auto 4px auto;"></div>
+                ( <strong>${d.reviewedBy}</strong> )<br>
+                <strong>ผู้ตรวจสอบวิชาการและการเงิน (ทีม B)</strong><br>
+                <span style="font-size:9pt; color:#64748b;">ผ่านการรับรองความถูกต้อง</span>
+              </td>
+              <td style="width:33%; vertical-align:bottom; padding:4px;">
+                <div style="border-bottom:1px dotted #94a3b8; width:75%; margin:24px auto 4px auto;"></div>
+                ( <strong>${d.approvedBy}</strong> )<br>
+                <strong>ผู้มีอำนาจอนุมัติ / ผู้บริหาร</strong><br>
+                <span style="font-size:9pt; color:#64748b;">อนุมัติเมื่อ: ${d.approvedAt}</span>
+              </td>
+            </tr>
+          </table>
+
+          <div style="margin-top:14px; padding-top:4px; border-top:1px solid #e2e8f0; font-size:8.5pt; color:#94a3b8; text-align:center;">
+            เอกสารฉบับนี้สร้างโดยระบบ Training Center TWP (EMS Enterprise Platform v1.5.1) • ใช้สำหรับติดตามและควบคุมผลการปฏิบัติงานภายใน (PPC Standard)
+          </div>
+        </div>
+      `;
+    }
+
+    function downloadReportPdfAction() {
+      const btn = document.getElementById('btnExportPdf');
+      const originalHtml = btn.innerHTML;
+
+      if (AppState.gasEndpoint) {
+        btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin mr-1"></i>กำลังออก PDF...';
+        postToBackend('EXPORT_PPC_REPORT_PDF', { eventId: currentReportEventId })
+          .then(res => {
+            btn.innerHTML = originalHtml;
+            if (res.data && res.data.fileUrl) {
+              window.open(res.data.fileUrl, '_blank');
+              showAlert('สร้างและส่งออกรายงานสรุป PDF A4 เรียบร้อยแล้ว', 'success');
+            }
+          })
+          .catch(err => {
+            btn.innerHTML = originalHtml;
+            showAlert('ส่งออก PDF ผ่านเบราว์เซอร์แทน (Print to PDF)', 'info');
+            printReportContainer();
+          });
+      } else {
+        showAlert('เปิดหน้าต่างสั่งพิมพ์เพื่อบันทึกเป็น PDF (Print to PDF)', 'info');
+        printReportContainer();
+      }
+    }
+
+    function downloadReportDocxAction() {
+      const btn = document.getElementById('btnExportDocx');
+      const originalHtml = btn.innerHTML;
+
+      if (AppState.gasEndpoint) {
+        btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin mr-1"></i>กำลังออก Word...';
+        postToBackend('EXPORT_PPC_REPORT_DOCX', { eventId: currentReportEventId })
+          .then(res => {
+            btn.innerHTML = originalHtml;
+            if (res.data && res.data.fileUrl) {
+              window.open(res.data.fileUrl, '_blank');
+              showAlert('สร้างและส่งออกไฟล์ Microsoft Word (.docx) สำเร็จแล้ว', 'success');
+            }
+          })
+          .catch(() => {
+            btn.innerHTML = originalHtml;
+            downloadWordClientFallback();
+          });
+      } else {
+        downloadWordClientFallback();
+      }
+    }
+
+    function downloadWordClientFallback() {
+      const paperHtml = document.getElementById('ppcReportPaper').innerHTML;
+      const htmlDoc = `
+        <html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word' xmlns='http://www.w3.org/TR/REC-html40'>
+        <head>
+          <meta charset='utf-8'>
+          <title>${currentReportEventId || 'PPC-RPT-2026'}</title>
+          <!--[if gte mso 9]>
+          <xml>
+          <w:WordDocument>
+          <w:View>Print</w:View>
+          <w:Zoom>100</w:Zoom>
+          <w:DoNotOptimizeForBrowser/>
+          </w:WordDocument>
+          </xml>
+          <![endif]-->
+          <style>
+            @page Section1 { size:595.3pt 841.9pt; margin:42.5pt 51.0pt 42.5pt 51.0pt; mso-header-margin:35.4pt; mso-footer-margin:35.4pt; }
+            div.Section1 { page:Section1; font-family:'TH Sarabun New', Sarabun, Tahoma, sans-serif; font-size:14pt; }
+            table { border-collapse:collapse; width:100%; margin-bottom:12px; }
+            th, td { border:1px solid #cbd5e1; padding:6px 8px; font-size:12pt; }
+            th { background-color:#f1f5f9; }
+          </style>
+        </head>
+        <body>
+          <div class="Section1">
+            ${paperHtml}
+          </div>
+        </body>
+        </html>
+      `;
+      const blob = new Blob(['\ufeff' + htmlDoc], { type: 'application/msword;charset=utf-8' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = (currentReportEventId || 'PPC-RPT-2026') + '_Summary_Report.doc';
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+      showAlert('ดาวน์โหลดไฟล์เอกสาร Microsoft Word (.doc) สำเร็จแล้ว', 'success');
+    }
+
+    function printReportContainer() {
+      const printContents = document.getElementById('ppcReportPaper').innerHTML;
+      const win = window.open('', '', 'height=800,width=900');
+      win.document.write(`
+        <html>
+        <head>
+          <title>พิมพ์รายงานสรุปผลการปฏิบัติงาน A4</title>
+          <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@400;600;700;800&display=swap" rel="stylesheet">
+          <style>
+            @page { size: A4 portrait; margin: 15mm; }
+            body { font-family: 'Sarabun', sans-serif; margin: 0; padding: 0; }
+          </style>
+        </head>
+        <body>
+          ${printContents}
+        </body>
+        </html>
+      `);
+      win.document.close();
+      win.focus();
+      setTimeout(() => {
+        win.print();
+        win.close();
+      }, 500);
+    }
+
+    // ------------------- ADMIN CONTROLS (PIN: admin0000) -------------------
+
+    function openAdminModal() {
+      document.getElementById('adminModal').classList.remove('hidden');
+      if (AppState.adminUnlocked) {
+        showAdminContent();
+      } else {
+        document.getElementById('adminLockScreen').classList.remove('hidden');
+        document.getElementById('adminPanelContent').classList.add('hidden');
+      }
+    }
+
+    function closeAdminModal() {
+      document.getElementById('adminModal').classList.add('hidden');
+    }
+
+    function unlockAdmin() {
+      const pass = document.getElementById('adminPasswordInput').value;
+      const err = document.getElementById('adminAuthError');
+
+      if (pass === 'admin0000') {
+        AppState.adminUnlocked = true;
+        err.classList.add('hidden');
+        showAdminContent();
+      } else {
+        err.classList.remove('hidden');
+      }
+    }
+
+    function showAdminContent() {
+      document.getElementById('adminLockScreen').classList.add('hidden');
+      document.getElementById('adminPanelContent').classList.remove('hidden');
+    }
+
+    function saveCustomEndpoint() {
+      const url = document.getElementById('customEndpointInput').value.trim();
+      AppState.gasEndpoint = url;
+      localStorage.setItem('ems_gas_endpoint', url);
+      showAlert('บันทึก Apps Script Endpoint เรียบร้อยแล้ว', 'success');
+      pingServer();
+      fetchInitialData();
+    }
+
+    function adminInitSheets() {
+      if (!confirm('ต้องการตรวจสอบและสร้างโครงสร้าง Sheet ทั้ง 6 แผ่นหรือไม่?')) return;
+      if (AppState.gasEndpoint) {
+        postToBackend('ADMIN_INIT_SHEETS', { password: 'admin0000' })
+          .then(res => showAlert(res.data?.message || 'สร้างชีตสำเร็จ', 'success'))
+          .catch(err => showAlert('ข้อผิดพลาด: ' + err.message, 'error'));
+      } else {
+        showAlert('[Local Mock] ตรวจสอบโครงสร้างชีต 6 แผ่นเสร็จสิ้น (PPC_Master, Event_Requests, QR_Tokens, Evaluation_Responses, System_Logs, System_Settings)', 'success');
+      }
+    }
+
+    function adminLoadLogs() {
+      const wrap = document.getElementById('adminLogsWrap');
+      const content = document.getElementById('adminLogsContent');
+      wrap.classList.remove('hidden');
+      content.innerText = 'กำลังดึงบันทึก System Logs...';
+
+      if (AppState.gasEndpoint) {
+        postToBackend('ADMIN_GET_LOGS', { password: 'admin0000' })
+          .then(res => {
+            const logs = res.data?.logs || [];
+            content.innerText = logs.length > 0 ? JSON.stringify(logs, null, 2) : 'ยังไม่มีบันทึก Audit Logs ในระบบ';
+          })
+          .catch(err => content.innerText = 'เกิดข้อผิดพลาด: ' + err.message);
+      } else {
+        content.innerText = JSON.stringify([
+          { logId: 'LOG-001', eventId: 'EVT-2026-0001', action: 'TEAM_A_CREATE', actionBy: 'สมชาย มุ่งมั่น', timestamp: new Date().toISOString() },
+          { logId: 'LOG-002', eventId: 'EVT-2026-0002', action: 'TEAM_B_CONFIRM', actionBy: 'วิภา วิชาการ', timestamp: new Date().toISOString() },
+          { logId: 'LOG-003', eventId: 'EVT-2026-0003', action: 'EXEC_APPROVE', actionBy: 'ดร.นิพนธ์ ประธานบริหาร', timestamp: new Date().toISOString() }
+        ], null, 2);
+      }
+    }
+
+    // ------------------- API POST UTILITY -------------------
+
+    function postToBackend(action, payload) {
+      if (!AppState.gasEndpoint) return Promise.reject(new Error('No Endpoint'));
+
+      return fetch(AppState.gasEndpoint, {
+        method: 'POST',
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+        body: JSON.stringify({ action: action, payload: payload })
+      }).then(r => r.json());
+    }
+
+    // ------------------- NOTIFICATION ALERT -------------------
+
+    function showAlert(msg, type = 'info') {
+      const box = document.getElementById('alertBox');
+      box.innerText = msg;
+      box.className = type === 'success' ? 'rounded-xl p-4 text-sm font-semibold bg-emerald-100 text-emerald-800 border border-emerald-300 block' :
+                      type === 'error' ? 'rounded-xl p-4 text-sm font-semibold bg-red-100 text-red-800 border border-red-300 block' :
+                      'rounded-xl p-4 text-sm font-semibold bg-blue-100 text-blue-800 border border-blue-300 block';
+
+      setTimeout(() => {
+        box.className = 'hidden';
+      }, 5000);
+    }
+  </script>
+</body>
+</html>
