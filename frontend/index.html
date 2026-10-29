@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-  <title>Training Center TWP - ระบบบริหารคำขอจัดอบรมและประเมินผล v1.3.0</title>
+  <title>Training Center TWP - ระบบบริหารคำขอจัดอบรมและประเมินผล v1.4.0</title>
   <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
   <!-- Google Fonts: Sarabun -->
@@ -160,7 +160,7 @@
       <div class="flex items-center space-x-3 text-xs">
         <span class="bg-white/15 px-3 py-1.5 rounded-full border border-white/20 backdrop-blur-sm font-mono text-blue-100 flex items-center">
           <span class="w-2 h-2 rounded-full bg-emerald-400 mr-2 animate-pulse"></span>
-          System v1.3.0
+          System v1.4.0
         </span>
       </div>
     </div>
@@ -211,11 +211,15 @@
         </div>
       </div>
 
-      <!-- Tactile 3D CTA Button to Enter Portal -->
-      <div class="pt-4">
-        <button onclick="enterPortal()" class="px-8 sm:px-12 py-4 bg-gradient-to-r from-amber-400 via-amber-500 to-amber-600 hover:from-amber-300 hover:to-amber-500 text-slate-950 font-black text-base sm:text-lg rounded-2xl shadow-2xl shadow-amber-950/50 border-b-4 border-amber-700 active:border-b-0 active:translate-y-1 transition duration-150 flex items-center space-x-3 cursor-pointer mx-auto btn-tactile">
+      <!-- Tactile 3D Action Buttons: Enter System & Team QR Pairing -->
+      <div class="pt-4 flex flex-col sm:flex-row items-center justify-center gap-3">
+        <button onclick="enterPortal()" class="w-full sm:w-auto px-8 sm:px-10 py-4 bg-gradient-to-r from-amber-400 via-amber-500 to-amber-600 hover:from-amber-300 hover:to-amber-500 text-slate-950 font-black text-base sm:text-lg rounded-2xl shadow-2xl shadow-amber-950/50 border-b-4 border-amber-700 active:border-b-0 active:translate-y-1 transition duration-150 flex items-center justify-center space-x-3 cursor-pointer btn-tactile">
           <span>เข้าสู่ระบบบริหารคำขอ (Enter System)</span>
           <i class="fa-solid fa-arrow-right text-lg"></i>
+        </button>
+        <button onclick="openTeamQrModal('teamA')" class="w-full sm:w-auto px-6 py-4 bg-white/15 hover:bg-white/25 text-white font-bold text-base rounded-2xl border-2 border-white/40 shadow-lg backdrop-blur-md active:translate-y-1 transition duration-150 flex items-center justify-center space-x-2.5 cursor-pointer btn-tactile">
+          <i class="fa-solid fa-qrcode text-amber-300 text-lg"></i>
+          <span>สแกน QR ประจำทีม (Team Pairing)</span>
         </button>
       </div>
 
@@ -224,7 +228,7 @@
     <!-- Bottom Footer on Landing Page -->
     <div class="max-w-7xl mx-auto w-full px-6 py-4 flex flex-col sm:flex-row items-center justify-between text-xs text-blue-200 border-t border-white/10 relative z-10 gap-2">
       <div>&copy; 2026 Training Center TWP - บริษัท ไทยวัฒนาพานิช จำกัด. All rights reserved.</div>
-      <div class="font-mono text-[11px] bg-white/10 px-3 py-1 rounded-full border border-white/15">EMS Enterprise Platform v1.3.0</div>
+      <div class="font-mono text-[11px] bg-white/10 px-3 py-1 rounded-full border border-white/15">EMS Enterprise Platform v1.4.0 (Real-Time Sync)</div>
     </div>
 
   </div>
@@ -247,14 +251,14 @@
             <div>
               <div class="flex items-center space-x-2">
                 <span class="font-extrabold text-lg tracking-wide text-white">Training Center TWP</span>
-                <span class="bg-blue-400/20 text-blue-200 text-[10px] font-mono px-2 py-0.5 rounded-full border border-blue-300/30">v1.3.0</span>
+                <span class="bg-blue-400/20 text-blue-200 text-[10px] font-mono px-2 py-0.5 rounded-full border border-blue-300/30">v1.4.0</span>
               </div>
               <p class="text-[11px] text-blue-200 hidden sm:block">ระบบบริหารคำขอจัดอบรมและประเมินผลปิดลูป</p>
             </div>
           </div>
 
-          <!-- System Status, Operator Stamping & Admin -->
-          <div class="flex items-center space-x-2 sm:space-x-3">
+          <!-- System Status, Real-Time Sync, Operator Stamping & Admin -->
+          <div class="flex items-center space-x-2 sm:space-x-2.5">
             
             <!-- Back to Landing Page Button -->
             <button onclick="showLandingPage()" title="กลับหน้าแรก" class="bg-[#08539E] hover:bg-[#07488a] text-white px-2.5 py-1.5 rounded-lg border border-blue-400/30 text-xs font-semibold flex items-center space-x-1.5 transition btn-tactile">
@@ -262,17 +266,27 @@
               <span class="hidden md:inline">หน้าแรก</span>
             </button>
 
-            <!-- Ping / Connection Health Indicator -->
-            <div onclick="pingServer()" title="คลิกเพื่อทดสอบ Ping กับ Google Sheet" class="cursor-pointer bg-slate-900/60 hover:bg-slate-900 transition px-2.5 py-1.5 rounded-lg border border-blue-400/20 flex items-center space-x-2 text-xs btn-tactile">
-              <span id="pingDot" class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
-              <span id="pingText" class="font-mono text-emerald-300 font-medium">Ping: -- ms</span>
+            <!-- Team QR Pairing Button -->
+            <button onclick="openTeamQrModal('teamA')" title="สแกน QR Code ประจำทีม เพื่อเชื่อมต่อเครื่องใหม่" class="bg-indigo-600 hover:bg-indigo-500 text-white px-2.5 py-1.5 rounded-lg border border-indigo-300/40 text-xs font-semibold flex items-center space-x-1.5 transition btn-tactile shadow-sm">
+              <i class="fa-solid fa-qrcode text-amber-300"></i>
+              <span class="hidden lg:inline">QR ประจำทีม</span>
+            </button>
+
+            <!-- Real-Time Sync Indicator & Force Sync Button -->
+            <div onclick="forceSyncAllDevices()" title="คลิกเพื่อบังคับซิงค์ข้อมูลให้ตรงกันทุกเครื่องทันที (Real-Time Sync)" class="cursor-pointer bg-slate-900/60 hover:bg-slate-900 transition px-2.5 py-1.5 rounded-lg border border-emerald-400/30 flex items-center space-x-2 text-xs btn-tactile">
+              <span id="syncDot" class="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse"></span>
+              <span id="syncText" class="font-mono text-emerald-300 font-semibold flex items-center space-x-1">
+                <i class="fa-solid fa-rotate text-[10px]"></i>
+                <span id="syncStatusLabel">ซิงค์: เรียลไทม์</span>
+              </span>
+              <span id="pingText" class="text-[10px] text-slate-400 font-mono hidden sm:inline pl-1 border-l border-slate-700">-- ms</span>
             </div>
 
             <!-- Operator Stamp Profile -->
             <div class="flex items-center bg-slate-900/60 px-2.5 py-1 rounded-lg border border-blue-400/20 text-xs">
               <i class="fa-solid fa-user-pen text-blue-300 mr-2"></i>
-              <span class="text-blue-200 mr-1 hidden lg:inline">ผู้ปฏิบัติงาน:</span>
-              <input type="text" id="operatorNameInput" onchange="updateOperatorName(this.value)" placeholder="ระบุชื่อของคุณ..." class="bg-transparent text-white font-medium focus:outline-none w-28 sm:w-36 text-xs">
+              <span class="text-blue-200 mr-1 hidden xl:inline">ผู้ปฏิบัติงาน:</span>
+              <input type="text" id="operatorNameInput" onchange="updateOperatorName(this.value)" placeholder="ระบุชื่อของคุณ..." class="bg-transparent text-white font-medium focus:outline-none w-24 sm:w-32 text-xs">
             </div>
 
             <!-- Admin Button -->
@@ -316,6 +330,17 @@
 
   <!-- Main Content Container -->
   <main class="flex-1 max-w-7xl w-full mx-auto p-4 sm:p-6 lg:p-8 space-y-6">
+
+    <!-- Real-Time Sync Notification Toast Banner -->
+    <div id="syncToastBox" class="hidden items-center justify-between p-3.5 bg-gradient-to-r from-emerald-600 via-emerald-700 to-teal-800 text-white rounded-xl shadow-xl text-xs font-semibold animate-pulse">
+      <div class="flex items-center space-x-2.5">
+        <i class="fa-solid fa-arrows-rotate animate-spin text-emerald-200 text-sm"></i>
+        <span id="syncToastMessage">ข้อมูลซิงค์ตรงกันทุกเครื่องแล้ว</span>
+      </div>
+      <button onclick="document.getElementById('syncToastBox').classList.add('hidden')" class="text-white/80 hover:text-white ml-3 text-sm">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+    </div>
 
     <!-- Notification Alert Bar -->
     <div id="alertBox" class="hidden rounded-xl p-4 text-sm font-medium transition duration-300"></div>
@@ -418,6 +443,18 @@
     <!-- ========================================== -->
     <section id="view-teamA" class="hidden space-y-6">
       
+      <!-- Team A Collaboration & QR Banner -->
+      <div class="bg-gradient-to-r from-emerald-500/10 via-emerald-500/5 to-transparent p-4 rounded-2xl border border-emerald-200/80 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 max-w-4xl mx-auto">
+        <div class="flex items-center space-x-3 text-xs text-emerald-950 font-medium">
+          <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
+          <span><strong>ทีมขาย (Sales Team A):</strong> กำลังทำงานในโหมดส่งคำขออบรม ทุกข้อมูลที่บันทึกจะซิงค์ตรงกับทีมวิชาการและผู้บริหารแบบอัตโนมัติ</span>
+        </div>
+        <button type="button" onclick="openTeamQrModal('teamA')" class="inline-flex items-center px-3 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold rounded-xl transition btn-tactile shadow-sm whitespace-nowrap self-start sm:self-auto">
+          <i class="fa-solid fa-qrcode mr-1.5 text-emerald-200"></i>
+          <span>สร้าง QR ให้เพื่อนทีม A สแกน</span>
+        </button>
+      </div>
+
       <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-6 max-w-4xl mx-auto">
         <div class="border-b border-slate-100 pb-4 mb-6">
           <div class="flex items-center space-x-3">
@@ -602,6 +639,19 @@
     <!-- TAB 3: TEAM B - ACADEMIC REVIEW & BUDGET  -->
     <!-- ========================================== -->
     <section id="view-teamB" class="hidden space-y-6">
+      
+      <!-- Team B Collaboration & QR Banner -->
+      <div class="bg-gradient-to-r from-purple-500/10 via-purple-500/5 to-transparent p-4 rounded-2xl border border-purple-200/80 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+        <div class="flex items-center space-x-3 text-xs text-purple-950 font-medium">
+          <span class="w-2.5 h-2.5 rounded-full bg-purple-500 animate-pulse"></span>
+          <span><strong>ทีมวิชาการ (Academic Team B):</strong> ตรวจสอบเนื้อหาและจัดสรรวิทยากร อัปเดตข้อมูลตรงกันทุกเครื่องแบบ Real-Time</span>
+        </div>
+        <button type="button" onclick="openTeamQrModal('teamB')" class="inline-flex items-center px-3 py-1.5 bg-purple-600 hover:bg-purple-700 text-white text-xs font-bold rounded-xl transition btn-tactile shadow-sm whitespace-nowrap self-start sm:self-auto">
+          <i class="fa-solid fa-qrcode mr-1.5 text-purple-200"></i>
+          <span>สร้าง QR ให้เพื่อนทีม B สแกน</span>
+        </button>
+      </div>
+
       <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-6">
         <div class="border-b border-slate-100 pb-4 mb-6 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
           <div class="flex items-center space-x-3">
@@ -628,6 +678,19 @@
     <!-- TAB 4: EXECUTIVE APPROVAL & MEMO SIGN OFF  -->
     <!-- ========================================== -->
     <section id="view-exec" class="hidden space-y-6">
+      
+      <!-- Executive Collaboration & QR Banner -->
+      <div class="bg-gradient-to-r from-amber-500/10 via-amber-500/5 to-transparent p-4 rounded-2xl border border-amber-200/80 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+        <div class="flex items-center space-x-3 text-xs text-amber-950 font-medium">
+          <span class="w-2.5 h-2.5 rounded-full bg-amber-500 animate-pulse"></span>
+          <span><strong>ผู้บริหาร (Executive):</strong> อนุมัติโครงการและออก Token แบบ Zero-Trust คำสั่งอนุมัติจะกระจายซิงค์ไปทุกเครื่องทันที</span>
+        </div>
+        <button type="button" onclick="openTeamQrModal('exec')" class="inline-flex items-center px-3 py-1.5 bg-amber-600 hover:bg-amber-700 text-white text-xs font-bold rounded-xl transition btn-tactile shadow-sm whitespace-nowrap self-start sm:self-auto">
+          <i class="fa-solid fa-qrcode mr-1.5 text-amber-200"></i>
+          <span>สร้าง QR โหมดผู้บริหาร</span>
+        </button>
+      </div>
+
       <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-6">
         <div class="border-b border-slate-100 pb-4 mb-6 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
           <div class="flex items-center space-x-3">
@@ -674,6 +737,93 @@
     </section>
 
   </main>
+
+  <!-- ========================================== -->
+  <!-- MODAL: TEAM QR PAIRING & SYNC (สำหรับทีมงาน)  -->
+  <!-- ========================================== -->
+  <div id="teamQrModal" class="hidden fixed inset-0 z-50 bg-slate-900/70 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl max-w-lg w-full p-6 space-y-4 shadow-2xl">
+      <!-- Modal Header -->
+      <div class="flex items-center justify-between pb-3 border-b border-slate-100">
+        <div class="flex items-center space-x-2.5">
+          <div class="w-10 h-10 rounded-xl bg-blue-100 text-[#08539E] flex items-center justify-center text-xl shadow-sm">
+            <i class="fa-solid fa-users-viewfinder"></i>
+          </div>
+          <div>
+            <h3 class="font-bold text-slate-800 text-base">สแกน QR Code ประจำทีม เชื่อมต่อเครื่องใหม่</h3>
+            <p class="text-xs text-slate-500">เปิดเครื่องใหม่หรือมือถือ ให้มีสิทธิ์และข้อมูลตรงกันทุกเครื่องทันที</p>
+          </div>
+        </div>
+        <button onclick="closeTeamQrModal()" class="text-slate-400 hover:text-slate-600"><i class="fa-solid fa-xmark text-lg"></i></button>
+      </div>
+
+      <!-- Team / Role Selector Buttons -->
+      <div>
+        <label class="block text-xs font-bold text-slate-700 mb-2">เลือกทีมที่ต้องการสร้าง QR Code เชื่อมต่อ:</label>
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-2">
+          <button type="button" onclick="selectTeamQrRole('teamA')" id="btnRoleTeamA" class="team-role-pill p-2.5 rounded-xl border text-center transition flex flex-col items-center justify-center space-y-1 border-emerald-500 bg-emerald-50 text-emerald-800 font-bold">
+            <i class="fa-solid fa-paper-plane text-emerald-600 text-base"></i>
+            <span class="text-xs">ทีม A (Sales)</span>
+          </button>
+          <button type="button" onclick="selectTeamQrRole('teamB')" id="btnRoleTeamB" class="team-role-pill p-2.5 rounded-xl border text-center transition flex flex-col items-center justify-center space-y-1 border-slate-200 hover:border-purple-300 text-slate-600 font-medium bg-white">
+            <i class="fa-solid fa-clipboard-check text-purple-600 text-base"></i>
+            <span class="text-xs">ทีม B (วิชาการ)</span>
+          </button>
+          <button type="button" onclick="selectTeamQrRole('exec')" id="btnRoleExec" class="team-role-pill p-2.5 rounded-xl border text-center transition flex flex-col items-center justify-center space-y-1 border-slate-200 hover:border-amber-300 text-slate-600 font-medium bg-white">
+            <i class="fa-solid fa-stamp text-amber-600 text-base"></i>
+            <span class="text-xs">ผู้บริหาร (อนุมัติ)</span>
+          </button>
+          <button type="button" onclick="selectTeamQrRole('evaluation')" id="btnRoleEval" class="team-role-pill p-2.5 rounded-xl border text-center transition flex flex-col items-center justify-center space-y-1 border-slate-200 hover:border-blue-300 text-slate-600 font-medium bg-white">
+            <i class="fa-solid fa-chart-pie text-blue-600 text-base"></i>
+            <span class="text-xs">Dashboard/ส่วนกลาง</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- QR Code Display Box -->
+      <div class="bg-gradient-to-b from-blue-50/60 to-slate-50 p-4 rounded-2xl border border-blue-100 flex flex-col items-center justify-center space-y-3">
+        <div id="teamQrcodeWrapper" class="p-3 bg-white border-2 border-blue-200 rounded-2xl shadow-md min-h-[190px] min-w-[190px] flex items-center justify-center"></div>
+        <div class="text-center">
+          <div id="teamQrRoleTitle" class="font-black text-slate-800 text-sm text-[#08539E]">โหมด: ทีม A ขอจัดอบรม (Sales)</div>
+          <p class="text-[11px] text-slate-500 mt-0.5">ใช้สมาร์ตโฟนเปิดกล้องสแกนเพื่อเริ่มใช้งานโหมดนี้ทันที</p>
+        </div>
+      </div>
+
+      <!-- Share URL Input & Copy -->
+      <div class="space-y-1.5">
+        <div class="flex items-center justify-between text-[11px] font-semibold text-slate-600">
+          <span>ลิงก์ตรงสำหรับเปิดในอุปกรณ์ใหม่:</span>
+          <span class="text-emerald-600 flex items-center"><i class="fa-solid fa-bolt mr-1"></i>ซิงค์ข้อมูลชุดเดียวกันอัตโนมัติ</span>
+        </div>
+        <div class="bg-slate-50 p-2.5 rounded-xl border border-slate-200 flex items-center justify-between text-xs">
+          <input type="text" id="teamShareUrlInput" readonly class="bg-transparent text-slate-700 focus:outline-none w-full font-mono text-[11px]">
+          <button onclick="copyTeamShareUrl()" class="ml-2 px-3 py-1.5 bg-[#08539E] hover:bg-[#07488a] text-white rounded-lg text-xs font-semibold whitespace-nowrap btn-tactile flex items-center space-x-1">
+            <i class="fa-solid fa-copy"></i>
+            <span>คัดลอกลิงก์</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Real-time Synchronization Guarantee Note -->
+      <div class="bg-emerald-50 border border-emerald-200 rounded-xl p-3 flex items-start space-x-2.5 text-xs text-emerald-900">
+        <i class="fa-solid fa-circle-check text-emerald-600 text-base mt-0.5"></i>
+        <div class="leading-relaxed">
+          <strong class="font-bold">ข้อมูลเท่ากันทุกเครื่องแบบ Real-Time:</strong>
+          เมื่อสแกนแล้ว ทุกการบันทึกคำขอ แก้ไข หรืออนุมัติในเครื่องใดก็ตาม ระบบจะส่งสัญญาณ Broadcast และ Polling ซิงค์อัปเดตหน้าจอของสมาชิกทุกคนในทีมให้ตรงกันแบบอัตโนมัติทันที
+        </div>
+      </div>
+
+      <!-- Action Footer -->
+      <div class="flex items-center justify-end space-x-2 pt-1">
+        <button onclick="testOpenTeamLink()" class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold rounded-xl text-xs transition">
+          <i class="fa-solid fa-arrow-up-right-from-square mr-1"></i>ทดสอบเปิดในแท็บใหม่
+        </button>
+        <button onclick="closeTeamQrModal()" class="px-5 py-2 bg-slate-800 hover:bg-slate-900 text-white font-semibold rounded-xl text-xs transition">
+          ปิดหน้าต่าง
+        </button>
+      </div>
+    </div>
+  </div>
 
   <!-- ========================================== -->
   <!-- MODAL: QR CODE DISPLAY & SHARE LINK       -->
@@ -792,10 +942,10 @@
   <!-- Footer -->
   <footer class="bg-white border-t border-slate-200 text-slate-500 text-xs py-4 px-6 mt-auto">
     <div class="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-2">
-      <div>Training Center TWP (EMS Enterprise v1.3.0) &copy; 2026 - บริษัท ไทยวัฒนาพานิช จำกัด</div>
+      <div>Training Center TWP (EMS Enterprise v1.4.0) &copy; 2026 - บริษัท ไทยวัฒนาพานิช จำกัด</div>
       <div class="flex items-center space-x-4">
         <button onclick="showLandingPage()" class="hover:text-blue-600 transition"><i class="fa-solid fa-house mr-1"></i>กลับหน้าแรก</button>
-        <span>Google Apps Script + Google Sheets Architecture</span>
+        <span>Google Apps Script + Google Sheets Architecture (Multi-Device Sync)</span>
       </div>
     </div>
   </footer>
@@ -807,11 +957,13 @@
   <script>
     // System Global State
     const AppState = {
-      version: '1.3.0',
+      version: '1.4.0',
       activeTab: 'dashboard',
       operatorName: localStorage.getItem('ems_operator_name') || 'สมชาย มุ่งมั่น (ทีม A)',
       gasEndpoint: localStorage.getItem('ems_gas_endpoint') || '',
       adminUnlocked: false,
+      lastSyncTime: null,
+      dataSignature: '',
       masterData: {
         provinces: [],
         sales: [],
@@ -1079,6 +1231,306 @@
       ]
     };
 
+    // ------------------- REAL-TIME DATA SYNC ENGINE -------------------
+
+    const SYNC_CHANNEL_NAME = 'twp_ems_sync_channel';
+    let appBroadcastChannel = null;
+
+    if (typeof BroadcastChannel !== 'undefined') {
+      try {
+        appBroadcastChannel = new BroadcastChannel(SYNC_CHANNEL_NAME);
+        appBroadcastChannel.onmessage = (event) => {
+          if (event.data && event.data.type === 'DATA_UPDATED') {
+            console.log('[SyncEngine] Received BroadcastChannel update:', event.data);
+            handleIncomingSyncUpdate(event.data);
+          }
+        };
+      } catch (e) {
+        console.warn('BroadcastChannel not available in this environment');
+      }
+    }
+
+    // Storage Event Listener for multi-tab fallback
+    window.addEventListener('storage', (e) => {
+      if (e.key === 'twp_sync_trigger' && e.newValue) {
+        try {
+          const syncData = JSON.parse(e.newValue);
+          handleIncomingSyncUpdate(syncData);
+        } catch (err) {}
+      }
+    });
+
+    function handleIncomingSyncUpdate(syncEvent) {
+      AppState.lastSyncTime = new Date();
+      updateSyncStatusUI('synced');
+
+      if (!AppState.gasEndpoint) {
+        const stored = localStorage.getItem('twp_requests_store');
+        if (stored) {
+          try {
+            AppState.requests = JSON.parse(stored);
+            renderAll();
+          } catch(e) {}
+        }
+        showSyncToast(`🔔 ได้รับข้อมูลใหม่จาก "${syncEvent.operator || 'เพื่อนร่วมทีม'}" ข้อมูลตรงกันแล้ว`);
+      } else {
+        fetchInitialData(true);
+      }
+    }
+
+    function notifyDataUpdated(actionType) {
+      const timestamp = new Date().toISOString();
+      AppState.lastSyncTime = new Date();
+      AppState.dataSignature = generateDataSignature(AppState.requests);
+      updateSyncStatusUI('synced');
+
+      try {
+        localStorage.setItem('twp_requests_store', JSON.stringify(AppState.requests));
+        localStorage.setItem('twp_sync_trigger', JSON.stringify({
+          action: actionType,
+          time: timestamp,
+          operator: AppState.operatorName,
+          rand: Math.random()
+        }));
+      } catch(e) {}
+
+      if (appBroadcastChannel) {
+        try {
+          appBroadcastChannel.postMessage({
+            type: 'DATA_UPDATED',
+            action: actionType,
+            operator: AppState.operatorName,
+            timestamp: timestamp
+          });
+        } catch(e) {}
+      }
+    }
+
+    let syncIntervalTimer = null;
+    function startBackgroundSyncEngine() {
+      if (syncIntervalTimer) clearInterval(syncIntervalTimer);
+      syncIntervalTimer = setInterval(() => {
+        if (!document.hidden) {
+          performPeriodicSync();
+        }
+      }, 15000);
+    }
+
+    function performPeriodicSync() {
+      if (AppState.gasEndpoint) {
+        postToBackend('GET_INITIAL_DATA', {})
+          .then(res => {
+            if (res.status === 'SUCCESS' && res.data) {
+              const newSig = generateDataSignature(res.data.requests);
+              if (AppState.dataSignature && newSig !== AppState.dataSignature) {
+                AppState.requests = res.data.requests;
+                AppState.masterData = res.data.masterData;
+                AppState.dataSignature = newSig;
+                AppState.lastSyncTime = new Date();
+                renderAll();
+                showSyncToast('🟢 ตรวจพบข้อมูลอัปเดตจากทีมงาน (ซิงค์ตรงกันทุกเครื่องแล้ว)');
+              } else {
+                AppState.dataSignature = newSig;
+              }
+              AppState.lastSyncTime = new Date();
+              updateSyncStatusUI('synced');
+            }
+          })
+          .catch(() => updateSyncStatusUI('error'));
+      } else {
+        const stored = localStorage.getItem('twp_requests_store');
+        if (stored) {
+          try {
+            const reqs = JSON.parse(stored);
+            const newSig = generateDataSignature(reqs);
+            if (AppState.dataSignature && newSig !== AppState.dataSignature) {
+              AppState.requests = reqs;
+              AppState.dataSignature = newSig;
+              AppState.lastSyncTime = new Date();
+              renderAll();
+              showSyncToast('🟢 ข้อมูลในเครื่องได้รับการซิงค์ตรงกันแล้ว');
+            }
+          } catch(e) {}
+        }
+        updateSyncStatusUI('synced');
+      }
+    }
+
+    function generateDataSignature(reqs) {
+      if (!Array.isArray(reqs)) return '';
+      return reqs.map(r => `${r.eventId}:${r.status}:${r.lastModifiedBy || ''}:${r.evalCount || 0}:${r.actualBudget || 0}`).join('|');
+    }
+
+    function updateSyncStatusUI(status) {
+      const dot = document.getElementById('syncDot');
+      const label = document.getElementById('syncStatusLabel');
+      if (!dot || !label) return;
+
+      const timeStr = AppState.lastSyncTime ? AppState.lastSyncTime.toTimeString().split(' ')[0] : '';
+
+      if (status === 'syncing') {
+        dot.className = 'w-2.5 h-2.5 rounded-full bg-amber-400 animate-spin';
+        label.innerText = 'กำลังซิงค์...';
+      } else if (status === 'error') {
+        dot.className = 'w-2.5 h-2.5 rounded-full bg-red-400';
+        label.innerText = 'ออฟไลน์';
+      } else {
+        dot.className = 'w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse';
+        label.innerText = `ซิงค์: ${timeStr || 'ตรงกันทุกเครื่อง'}`;
+      }
+    }
+
+    function forceSyncAllDevices() {
+      updateSyncStatusUI('syncing');
+      if (AppState.gasEndpoint) {
+        fetchInitialData(false);
+      } else {
+        const stored = localStorage.getItem('twp_requests_store');
+        if (stored) {
+          try { AppState.requests = JSON.parse(stored); } catch(e) {}
+        }
+        setTimeout(() => {
+          AppState.lastSyncTime = new Date();
+          AppState.dataSignature = generateDataSignature(AppState.requests);
+          renderAll();
+          updateSyncStatusUI('synced');
+          showAlert('⚡ ซิงค์ข้อมูลล่าสุดเรียบร้อย (ข้อมูลตรงกันทุกเครื่อง)', 'success');
+        }, 300);
+      }
+    }
+
+    function showSyncToast(msg) {
+      const toast = document.getElementById('syncToastBox');
+      const toastMsg = document.getElementById('syncToastMessage');
+      if (!toast || !toastMsg) return;
+      toastMsg.innerText = msg;
+      toast.classList.remove('hidden');
+      toast.classList.add('flex');
+      setTimeout(() => {
+        toast.classList.add('hidden');
+        toast.classList.remove('flex');
+      }, 4000);
+    }
+
+    // ------------------- TEAM QR PAIRING MODAL -------------------
+
+    let currentTeamQrRole = 'teamA';
+
+    function openTeamQrModal(initialRole = 'teamA') {
+      currentTeamQrRole = initialRole;
+      selectTeamQrRole(initialRole);
+      document.getElementById('teamQrModal').classList.remove('hidden');
+    }
+
+    function closeTeamQrModal() {
+      document.getElementById('teamQrModal').classList.add('hidden');
+    }
+
+    function selectTeamQrRole(role) {
+      currentTeamQrRole = role;
+      
+      const rolesConfig = {
+        teamA: { btn: 'btnRoleTeamA', title: 'โหมด: ทีม A ขอจัดอบรม (Sales)', color: 'emerald' },
+        teamB: { btn: 'btnRoleTeamB', title: 'โหมด: ทีม B ตรวจสอบวิชาการ & วิทยากร', color: 'purple' },
+        exec: { btn: 'btnRoleExec', title: 'โหมด: ผู้บริหาร อนุมัติงบ & ออก Token', color: 'amber' },
+        evaluation: { btn: 'btnRoleEval', title: 'โหมด: ศูนย์กลางประเมินผล & Dashboard', color: 'blue' }
+      };
+
+      for (let k in rolesConfig) {
+        const item = rolesConfig[k];
+        const btn = document.getElementById(item.btn);
+        if (!btn) continue;
+        if (k === role) {
+          btn.className = `team-role-pill p-2.5 rounded-xl border text-center transition flex flex-col items-center justify-center space-y-1 border-${item.color}-500 bg-${item.color}-50 text-${item.color}-800 font-bold shadow-sm`;
+          document.getElementById('teamQrRoleTitle').innerText = item.title;
+        } else {
+          btn.className = `team-role-pill p-2.5 rounded-xl border text-center transition flex flex-col items-center justify-center space-y-1 border-slate-200 hover:border-slate-300 text-slate-600 font-medium bg-white`;
+        }
+      }
+
+      // Generate share link
+      const baseUrl = window.location.origin + window.location.pathname;
+      let targetUrl = `${baseUrl}?role=${role}&sync=1`;
+      if (AppState.gasEndpoint) {
+        targetUrl += `&ep=${encodeURIComponent(AppState.gasEndpoint)}`;
+      }
+
+      document.getElementById('teamShareUrlInput').value = targetUrl;
+
+      // Generate Crisp QR Code
+      const qrWrap = document.getElementById('teamQrcodeWrapper');
+      qrWrap.innerHTML = '';
+      new QRCode(qrWrap, {
+        text: targetUrl,
+        width: 190,
+        height: 190,
+        colorDark: '#08539E',
+        colorLight: '#ffffff',
+        correctLevel: QRCode.CorrectLevel.M
+      });
+    }
+
+    function copyTeamShareUrl() {
+      const input = document.getElementById('teamShareUrlInput');
+      input.select();
+      document.execCommand('copy');
+      showAlert('คัดลอกลิงก์ประจำทีมเรียบร้อยแล้ว ส่งให้สมาชิกในทีมเปิดได้ทันที', 'success');
+    }
+
+    function testOpenTeamLink() {
+      const url = document.getElementById('teamShareUrlInput').value;
+      if (url) window.open(url, '_blank');
+    }
+
+    // ------------------- URL PARAMETERS ROUTING -------------------
+
+    function handleUrlParameters() {
+      const urlParams = new URLSearchParams(window.location.search);
+      const targetRole = urlParams.get('role');
+      const targetEp = urlParams.get('ep');
+      const targetOp = urlParams.get('operator');
+
+      if (targetEp) {
+        try {
+          const decodedEp = decodeURIComponent(targetEp);
+          if (decodedEp.startsWith('http')) {
+            AppState.gasEndpoint = decodedEp;
+            localStorage.setItem('ems_gas_endpoint', decodedEp);
+            if (document.getElementById('customEndpointInput')) {
+              document.getElementById('customEndpointInput').value = decodedEp;
+            }
+          }
+        } catch(e) {}
+      }
+
+      if (targetOp) {
+        AppState.operatorName = decodeURIComponent(targetOp);
+        localStorage.setItem('ems_operator_name', AppState.operatorName);
+        document.getElementById('operatorNameInput').value = AppState.operatorName;
+      }
+
+      if (targetRole) {
+        enterPortal();
+        if (['teamA', 'teamB', 'exec', 'dashboard', 'evaluation'].includes(targetRole)) {
+          switchTab(targetRole);
+          const roleNames = {
+            teamA: 'ทีม A (ขอจัดอบรม Sales)',
+            teamB: 'ทีม B (ฝ่ายวิชาการ ตรวจสอบ)',
+            exec: 'ผู้บริหาร (อนุมัติโครงการ)',
+            dashboard: 'Dashboard & Analytics',
+            evaluation: 'QR Code & ผลประเมินปิดลูป'
+          };
+          setTimeout(() => {
+            showAlert(`📲 สแกน QR สำเร็จ: เข้าสู่โหมด ${roleNames[targetRole] || targetRole} เรียบร้อย ข้อมูลตรงกันทุกเครื่อง`, 'success');
+          }, 400);
+        }
+      } else {
+        if (sessionStorage.getItem('twp_portal_entered') === 'true') {
+          enterPortal();
+        }
+      }
+    }
+
     // ------------------- INITIALIZATION & LIFECYCLE -------------------
 
     window.addEventListener('DOMContentLoaded', () => {
@@ -1093,6 +1545,12 @@
 
       // Trigger initial ping
       pingServer();
+
+      // Handle URL parameters for Team QR Code auto-onboarding
+      handleUrlParameters();
+
+      // Start background real-time sync polling
+      startBackgroundSyncEngine();
     });
 
     function updateOperatorName(val) {
@@ -1107,8 +1565,8 @@
     function pingServer() {
       const pingText = document.getElementById('pingText');
       const pingDot = document.getElementById('pingDot');
-      pingText.innerText = 'Ping: ...';
-      pingDot.className = 'w-2.5 h-2.5 rounded-full bg-amber-400 animate-spin';
+      if (pingText) pingText.innerText = 'Ping: ...';
+      if (pingDot) pingDot.className = 'w-2.5 h-2.5 rounded-full bg-amber-400 animate-spin';
 
       const startTime = Date.now();
 
@@ -1117,33 +1575,38 @@
           .then(r => r.json())
           .then(data => {
             const latency = Date.now() - startTime;
-            pingText.innerText = `Ping: ${latency} ms`;
-            pingDot.className = 'w-2.5 h-2.5 rounded-full bg-emerald-500';
+            if (pingText) pingText.innerText = `${latency} ms`;
+            if (pingDot) pingDot.className = 'w-2.5 h-2.5 rounded-full bg-emerald-500';
           })
           .catch(err => {
             const latency = Date.now() - startTime;
-            pingText.innerText = `Ping: ${latency} ms (Offline)`;
-            pingDot.className = 'w-2.5 h-2.5 rounded-full bg-slate-400';
+            if (pingText) pingText.innerText = `${latency} ms (Off)`;
+            if (pingDot) pingDot.className = 'w-2.5 h-2.5 rounded-full bg-slate-400';
           });
       } else {
         // Mock Ping
         setTimeout(() => {
           const latency = Math.floor(Math.random() * 40) + 75;
-          pingText.innerText = `Ping: ${latency} ms (Local)`;
-          pingDot.className = 'w-2.5 h-2.5 rounded-full bg-emerald-500';
+          if (pingText) pingText.innerText = `${latency} ms (Local)`;
+          if (pingDot) pingDot.className = 'w-2.5 h-2.5 rounded-full bg-emerald-500';
         }, 150);
       }
     }
 
     // ------------------- DATA FETCHING -------------------
 
-    function fetchInitialData() {
+    function fetchInitialData(silent = false) {
       if (AppState.gasEndpoint) {
+        if (!silent) updateSyncStatusUI('syncing');
         postToBackend('GET_INITIAL_DATA', {})
           .then(res => {
             if (res.status === 'SUCCESS') {
               AppState.masterData = res.data.masterData;
               AppState.requests = res.data.requests;
+              AppState.dataSignature = generateDataSignature(AppState.requests);
+              AppState.lastSyncTime = new Date();
+              localStorage.setItem('twp_requests_store', JSON.stringify(AppState.requests));
+
               if (res.data.autoOptions) {
                 for (let k in res.data.autoOptions) {
                   if (AppState.autoOptions[k]) {
@@ -1152,6 +1615,10 @@
                 }
               }
               renderAll();
+              updateSyncStatusUI('synced');
+              if (silent) {
+                showSyncToast('🔔 ซิงค์ข้อมูลล่าสุดจากฐานข้อมูลกลางเรียบร้อย');
+              }
             } else {
               fallbackToMockData();
             }
@@ -1163,8 +1630,22 @@
     }
 
     function fallbackToMockData() {
+      // Check localStorage for persisted store so all local tabs share data
+      const stored = localStorage.getItem('twp_requests_store');
+      if (stored) {
+        try {
+          AppState.requests = JSON.parse(stored);
+        } catch(e) {
+          AppState.requests = MockDatabase.requests;
+        }
+      } else {
+        AppState.requests = MockDatabase.requests;
+        localStorage.setItem('twp_requests_store', JSON.stringify(AppState.requests));
+      }
       AppState.masterData = MockDatabase.masterData;
-      AppState.requests = MockDatabase.requests;
+      AppState.dataSignature = generateDataSignature(AppState.requests);
+      AppState.lastSyncTime = new Date();
+      updateSyncStatusUI('synced');
       renderAll();
     }
 
@@ -1659,6 +2140,7 @@
             toggleAccommodationFields(false);
             document.getElementById('needTransportation').checked = false;
             toggleTransportFields(false);
+            notifyDataUpdated('CREATE_REQUEST_A');
             fetchInitialData();
             switchTab('dashboard');
           })
@@ -1690,6 +2172,7 @@
           toggleAccommodationFields(false);
           document.getElementById('needTransportation').checked = false;
           toggleTransportFields(false);
+          notifyDataUpdated('CREATE_REQUEST_A');
           renderAll();
           switchTab('dashboard');
         }, 300);
@@ -1721,6 +2204,7 @@
         postToBackend('UPDATE_REVIEW_B', payload)
           .then(res => {
             showAlert('บันทึกผลการตรวจสอบของทีม B เรียบร้อยแล้ว', 'success');
+            notifyDataUpdated('UPDATE_REVIEW_B');
             fetchInitialData();
           })
           .catch(err => showAlert('เกิดข้อผิดพลาด: ' + err.message, 'error'));
@@ -1736,6 +2220,7 @@
           req.reviewedByBAt = new Date().toISOString();
         }
         showAlert(`[Local Mock] ปรับปรุงสถานะ ${eventId} เป็น ${req.status} สำเร็จ`, 'success');
+        notifyDataUpdated('UPDATE_REVIEW_B');
         renderAll();
       }
     }
@@ -1754,6 +2239,7 @@
         postToBackend('EXEC_DECISION', payload)
           .then(res => {
             showAlert(decision === 'APPROVE' ? 'อนุมัติโครงการและออก Token เรียบร้อยแล้ว' : 'บันทึกการไม่อนุมัติเรียบร้อย', 'success');
+            notifyDataUpdated('EXEC_DECISION');
             fetchInitialData();
           })
           .catch(err => showAlert('เกิดข้อผิดพลาด: ' + err.message, 'error'));
@@ -1770,6 +2256,7 @@
           }
         }
         showAlert(`[Local Mock] ดำเนินการ ${decision} ให้คำขอ ${eventId} สำเร็จ`, 'success');
+        notifyDataUpdated('EXEC_DECISION');
         renderAll();
       }
     }

@@ -1,11 +1,11 @@
 # Training Center TWP (EMS Enterprise Platform)
 
-[![Version](https://img.shields.io/badge/version-1.3.0-blue.svg)](VERSION)
+[![Version](https://img.shields.io/badge/version-1.4.0-blue.svg)](VERSION)
 [![Runtime](https://img.shields.io/badge/runtime-Google%20Apps%20Script%20V8-green.svg)](https://developers.google.com/apps-script)
 [![Database](https://img.shields.io/badge/database-Google%20Sheets-success.svg)](data/Database_Schema.md)
 [![License](https://img.shields.io/badge/license-MIT-lightgrey.svg)](LICENSE)
 
-> ระบบบริหารจัดการคำขอจัดกิจกรรมอบรม และประเมินผลความพึงพอใจแบบปิดลูป (Training Center TWP / EMS Enterprise) ขับเคลื่อนด้วยสถาปัตยกรรม Serverless บน Google Apps Script และ Google Sheets มาพร้อมหน้า Landing Page โลโก้ TWP ทางการ และ Modernized Tactile UX/UI Design
+> ระบบบริหารจัดการคำขอจัดกิจกรรมอบรม และประเมินผลความพึงพอใจแบบปิดลูป (Training Center TWP / EMS Enterprise) ขับเคลื่อนด้วยสถาปัตยกรรม Serverless บน Google Apps Script และ Google Sheets มาพร้อมหน้า Landing Page โลโก้ TWP ทางการ, Modernized Tactile UX/UI Design, ระบบสแกน **QR Code ประจำทีม (Team Pairing)** และระบบ **Real-Time Multi-Device Data Sync** ให้ข้อมูลเท่ากันทุกเครื่องแบบอัตโนมัติ
 
 ---
 
@@ -15,17 +15,22 @@
    - **ต้นน้ำ:** ทีมขาย (ทีม A) สร้างคำขอจัดกิจกรรม โดยผูกกับข้อมูลโรงเรียนและพนักงานขายจากฐาน `PPC_Master` อัตโนมัติ พร้อมคำนวณสัดส่วนงบประมาณเทียบเป้าขาย (Cost-to-Sales ROI %) แบบเรียลไทม์
    - **กลางน้ำ:** ฝ่ายวิชาการ (ทีม B) ตรวจสอบความพร้อมของวิทยากรและยืนยันงบประมาณตัดจ่ายจริง ส่งต่อให้ผู้บริหาร (Management) อนุมัติ
    - **ปลายน้ำ:** เมื่ออนุมัติ ระบบจะสร้างเอกสาร **A4 Memo PDF (ฟอนต์ Sarabun)** ลง Google Drive อัตโนมัติ พร้อมออก **QR Code Token** ให้ผู้เข้าอบรมสแกนประเมินผลความพึงพอใจ 5 มิติ
-2. **Ping & Latency Health Monitor:**
+2. **Team QR Code Pairing & Auto-Onboarding (v1.4.0):**
+   - ผู้ใช้งานใหม่ในแต่ละทีมเพียงใช้สมาร์ตโฟนสแกน QR Code ประจำทีม (ทีม A, ทีม B, ผู้บริหาร, หรือส่วนกลาง) จะเข้าสู่ระบบพร้อมโหมดการทำงานและข้อมูลชุดเดียวกันทันทีโดยไม่ต้องตั้งค่าใหม่
+3. **Multi-Device Real-Time Data Sync (ข้อมูลเท่ากันทุกเครื่อง):**
+   - รองรับ **BroadcastChannel Engine** สำหรับส่งต่อข้อมูลระหว่างแท็บ/หน้าต่างในระดับเสี้ยววินาที
+   - Background Polling อัปเดตข้อมูลอัตโนมัติทุก 15 วินาที พร้อมแถบสถานะ `🟢 ซิงค์: เรียลไทม์` และปุ่มบังคับซิงค์ทันที (Force Sync)
+4. **Ping & Latency Health Monitor:**
    - แถบแสดงสถานะการเชื่อมต่อแบบเรียลไทม์ พร้อมตรวจวัด Ping (ms) กับ Google Sheet เพื่อความมั่นใจก่อนบันทึกรายการ
-3. **SLA & Pending Lead Time Tracking:**
+5. **SLA & Pending Lead Time Tracking:**
    - ติดตามระยะเวลาตกค้างของคำขอเป็น **จำนวนวันและชั่วโมง** พร้อมแถบสีแจ้งเตือน (เขียว < 24 ชม., ส้ม 24-48 ชม., แดง > 48 ชม.) เพื่อการวัด KPI อย่างโปร่งใส
-4. **Multi-Operator Stamping & Audit Trail:**
+6. **Multi-Operator Stamping & Audit Trail:**
    - แสตมป์ชื่อผู้ปฏิบัติงานในทุกขั้นตอน (`Created_By`, `Reviewed_By`, `Approved_By`, `Last_Modified_By`) รองรับทีมที่มีสมาชิกมากกว่า 1 คน
    - บันทึกประวัติกิจกรรมแบบละเอียดลงในชีต `System_Logs`
-5. **Zero-Trust Security & Data Isolation:**
+7. **Zero-Trust Security & Data Isolation:**
    - หน้าทำแบบประเมินสำหรับบุคคลภายนอก (`SurveyView`) จะเข้าถึงได้เฉพาะหัวข้ออบรม, ชื่อวิทยากร และวันที่จัดงาน โดย**ไม่มีการส่งข้อมูลยอดขาย งบประมาณ หรือข้อมูลโรงเรียนหลุดออกไปภายนอกเด็ดขาด**
    - มีระบบตรวจจับและป้องกันการส่งผลประเมินซ้ำด้วย Client Fingerprint Hash
-6. **Admin Backoffice Control (รหัสผ่าน: `admin0000`):**
+8. **Admin Backoffice Control (รหัสผ่าน: `admin0000`):**
    - แผงควบคุมระบบหลังบ้านสำหรับผู้ดูแลระบบ: ตรวจสอบและสร้างโครงสร้าง Sheet 6 ตารางอัตโนมัติ (Auto-Schema Initializer), ตรวจสอบ Latency, และเรียกดู Audit Trail
 
 ---

@@ -1,13 +1,14 @@
 /**
  * ============================================================================
  * EMS Enterprise - Training Center TWP
- * Version: 1.3.0
+ * Version: 1.4.0
  * Architecture: Google Apps Script Backend (Serverless) + Google Sheets Database
  * Security: Zero-Trust Data Isolation + Multi-Operator Stamping + Concurrency Lock
+ * Features: Multi-Device Real-Time Data Sync + Team QR Code Pairing (v1.4.0)
  * ============================================================================
  */
 
-const SYSTEM_VERSION = '1.3.0';
+const SYSTEM_VERSION = '1.4.0';
 const DEFAULT_ADMIN_PASS = 'admin0000';
 
 function getSpreadsheet() {

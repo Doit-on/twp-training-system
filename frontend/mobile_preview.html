@@ -40,18 +40,21 @@
     </div>
     
     <!-- Screen Switcher Tabs -->
-    <div class="grid grid-cols-4 gap-1.5 bg-slate-800 p-1.5 rounded-2xl border border-slate-700 text-xs">
+    <div class="grid grid-cols-5 gap-1 bg-slate-800 p-1.5 rounded-2xl border border-slate-700 text-[11px]">
       <button onclick="setScreen('landing')" id="btn-landing" class="screen-btn py-2 px-1 rounded-xl font-bold bg-[#08539E] text-white shadow transition">
         1. Landing
       </button>
       <button onclick="setScreen('teamA')" id="btn-teamA" class="screen-btn py-2 px-1 rounded-xl font-medium text-slate-400 hover:text-white transition">
-        2. ขอจัดอบรม
+        2. ขอจัด
       </button>
       <button onclick="setScreen('dashboard')" id="btn-dashboard" class="screen-btn py-2 px-1 rounded-xl font-medium text-slate-400 hover:text-white transition">
-        3. Dashboard
+        3. บอร์ด
       </button>
       <button onclick="setScreen('survey')" id="btn-survey" class="screen-btn py-2 px-1 rounded-xl font-medium text-slate-400 hover:text-white transition">
-        4. แบบประเมิน
+        4. ประเมิน
+      </button>
+      <button onclick="setScreen('teamQr')" id="btn-teamQr" class="screen-btn py-2 px-1 rounded-xl font-medium text-slate-400 hover:text-white transition">
+        5. QR ทีม
       </button>
     </div>
   </div>
@@ -463,6 +466,72 @@
         </div>
       </div>
 
+      <!-- ============================================== -->
+      <!-- SCREEN 5: TEAM QR CODE PAIRING & SYNC PREVIEW  -->
+      <!-- ============================================== -->
+      <div id="screen-teamQr" class="screen-view hidden flex-1 flex flex-col bg-slate-50 overflow-y-auto phone-screen p-4 space-y-3.5">
+        
+        <!-- Header -->
+        <div class="bg-white p-3.5 rounded-2xl border border-slate-200 shadow-sm flex items-center space-x-2.5">
+          <div class="w-9 h-9 rounded-xl bg-blue-100 text-[#08539E] flex items-center justify-center text-lg">
+            <i class="fa-solid fa-users-viewfinder"></i>
+          </div>
+          <div>
+            <div class="font-bold text-xs text-slate-800">สแกน QR ประจำทีม</div>
+            <div class="text-[10px] text-slate-400">เชื่อมต่อเครื่องใหม่ ข้อมูลตรงกันทุกเครื่อง</div>
+          </div>
+        </div>
+
+        <!-- Role Select Grid -->
+        <div class="space-y-1.5">
+          <span class="text-[10px] font-bold text-slate-500 uppercase tracking-wider">เลือกทีมที่ต้องการแชร์:</span>
+          <div class="grid grid-cols-2 gap-1.5">
+            <button class="p-2 rounded-xl border border-emerald-500 bg-emerald-50 text-emerald-800 text-left flex items-center space-x-1.5 text-[11px] font-bold">
+              <i class="fa-solid fa-paper-plane text-emerald-600"></i>
+              <span>ทีม A (Sales)</span>
+            </button>
+            <button class="p-2 rounded-xl border border-slate-200 bg-white text-slate-600 text-left flex items-center space-x-1.5 text-[11px]">
+              <i class="fa-solid fa-clipboard-check text-purple-600"></i>
+              <span>ทีม B (วิชาการ)</span>
+            </button>
+            <button class="p-2 rounded-xl border border-slate-200 bg-white text-slate-600 text-left flex items-center space-x-1.5 text-[11px]">
+              <i class="fa-solid fa-stamp text-amber-600"></i>
+              <span>ผู้บริหาร</span>
+            </button>
+            <button class="p-2 rounded-xl border border-slate-200 bg-white text-slate-600 text-left flex items-center space-x-1.5 text-[11px]">
+              <i class="fa-solid fa-chart-pie text-blue-600"></i>
+              <span>Dashboard</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- QR Display -->
+        <div class="bg-gradient-to-b from-blue-50/70 to-white p-4 rounded-2xl border border-blue-200 text-center space-y-2 shadow-sm">
+          <div class="inline-block p-3 bg-white border-2 border-blue-300 rounded-2xl shadow-md">
+            <img src="https://api.qrserver.com/v1/create-qr-code/?size=160x160&data=https://twp.training/index.html?role=teamA&color=08539E" alt="Team QR" class="w-32 h-32 mx-auto">
+          </div>
+          <div>
+            <div class="font-bold text-xs text-[#08539E]">โหมด: ทีม A ขอจัดอบรม (Sales)</div>
+            <div class="text-[10px] text-slate-500 mt-0.5">ใช้สมาร์ตโฟนเครื่องใหม่สแกนเพื่อโหลดข้อมูล</div>
+          </div>
+        </div>
+
+        <!-- Sync Indicator Guarantee -->
+        <div class="bg-emerald-50 border border-emerald-200 rounded-xl p-2.5 flex items-center space-x-2 text-[11px] text-emerald-900">
+          <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
+          <span class="font-medium"><strong>Real-Time Sync:</strong> ทุกเครื่องได้รับข้อมูลชุดเดียวกันอัตโนมัติ</span>
+        </div>
+
+        <!-- Copy Link Box -->
+        <div class="bg-white p-2.5 rounded-xl border border-slate-200 flex items-center justify-between text-[11px]">
+          <span class="text-slate-500 font-mono truncate mr-2">...?role=teamA&sync=1</span>
+          <button class="px-2.5 py-1 bg-[#08539E] text-white rounded-lg font-bold text-[10px] whitespace-nowrap btn-3d">
+            <i class="fa-solid fa-copy mr-1"></i>คัดลอก
+          </button>
+        </div>
+
+      </div>
+
       <!-- Phone Bottom Gesture Home Bar -->
       <div class="bg-white/80 backdrop-blur-md py-2.5 flex justify-center border-t border-slate-200 select-none">
         <div class="w-32 h-1 bg-slate-400 rounded-full"></div>
@@ -473,7 +542,7 @@
   </div>
 
   <div class="text-center mt-4 text-xs text-slate-400">
-    แตะปุ่ม 1-4 ด้านบนเพื่อสลับดูหน้าต่างต่างๆ หรือแตะใบงานในหน้า Dashboard เพื่อทดสอบการลอยนูน 3D
+    แตะปุ่ม 1-5 ด้านบนเพื่อสลับดูหน้าต่างต่างๆ หรือแตะใบงานในหน้า Dashboard เพื่อทดสอบการลอยนูน 3D
   </div>
 
   <script>
