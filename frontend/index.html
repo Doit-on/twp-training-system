@@ -70,7 +70,7 @@
           <div>
             <div class="flex items-center space-x-2">
               <span class="font-extrabold text-lg tracking-wide text-white">EMS Enterprise</span>
-              <span class="bg-blue-500/30 text-blue-300 text-[10px] font-mono px-2 py-0.5 rounded-full border border-blue-400/30">v1.1.0</span>
+              <span class="bg-blue-500/30 text-blue-300 text-[10px] font-mono px-2 py-0.5 rounded-full border border-blue-400/30">v1.2.0</span>
             </div>
             <p class="text-xs text-slate-400 hidden sm:block">Enterprise Training Workflow & Closed-Loop Evaluation</p>
           </div>
@@ -281,35 +281,25 @@
             </div>
           </div>
 
-          <!-- Activity Details -->
+          <!-- Activity Details (Editable Dropdowns / Autocomplete Combobox) -->
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
-              <label class="block text-xs font-semibold text-slate-700 mb-1">ประเภทกิจกรรม *</label>
-              <select id="activityType" required class="w-full bg-white border border-slate-300 rounded-lg p-2.5 text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none">
-                <option value="อบรมวิชาการ">อบรมวิชาการ</option>
-                <option value="Workshop เชิงปฏิบัติการ">Workshop เชิงปฏิบัติการ</option>
-                <option value="Workshop Hosting">Workshop Hosting</option>
-                <option value="ติวนักเรียน">ติวนักเรียน</option>
-                <option value="อื่นๆ">อื่นๆ</option>
-              </select>
+              <label class="block text-xs font-semibold text-slate-700 mb-1 flex items-center justify-between">
+                <span>ประเภทกิจกรรม *</span>
+                <span class="text-[10px] text-blue-600 font-medium"><i class="fa-solid fa-pen-to-square mr-1"></i>เลือกหรือพิมพ์เอง</span>
+              </label>
+              <input type="text" id="activityType" list="activityTypeList" required placeholder="เลือกจากรายการ หรือพิมพ์ใหม่..." class="w-full bg-white border border-slate-300 rounded-lg p-2.5 text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none">
+              <datalist id="activityTypeList"></datalist>
             </div>
 
             <div>
-              <label class="block text-xs font-semibold text-slate-700 mb-1">หัวข้อหลักสูตรอบรม *</label>
-              <select id="courseTopic" onchange="onCourseTopicChange(this.value)" required class="w-full bg-white border border-slate-300 rounded-lg p-2.5 text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none">
-                <option value="อบรมคศ.3-4 นวัตกรรมการเรียนรู้">อบรมคศ.3-4 นวัตกรรมการเรียนรู้</option>
-                <option value="Active Learning สู่สมรรถนะผู้เรียน">Active Learning สู่สมรรถนะผู้เรียน</option>
-                <option value="Coding & STEM Education">Coding & STEM Education</option>
-                <option value="เทคนิคการวัดและประเมินผล">เทคนิคการวัดและประเมินผล</option>
-                <option value="อื่นๆ">อื่นๆ (ระบุเอง)</option>
-              </select>
+              <label class="block text-xs font-semibold text-slate-700 mb-1 flex items-center justify-between">
+                <span>หัวข้อหลักสูตรอบรม *</span>
+                <span class="text-[10px] text-blue-600 font-medium"><i class="fa-solid fa-pen-to-square mr-1"></i>เลือกหรือพิมพ์เอง</span>
+              </label>
+              <input type="text" id="courseTopic" list="courseTopicList" required placeholder="เลือกจากรายการ หรือพิมพ์ใหม่..." class="w-full bg-white border border-slate-300 rounded-lg p-2.5 text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none">
+              <datalist id="courseTopicList"></datalist>
             </div>
-          </div>
-
-          <!-- Custom Topic Input (Hidden by default) -->
-          <div id="customTopicWrap" class="hidden">
-            <label class="block text-xs font-semibold text-slate-700 mb-1">ระบุชื่อหัวข้อหลักสูตรเพิ่มเติม *</label>
-            <input type="text" id="customTopic" placeholder="พิมพ์ชื่อหัวข้อที่ต้องการ..." class="w-full bg-white border border-slate-300 rounded-lg p-2.5 text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none">
           </div>
 
           <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
@@ -319,23 +309,21 @@
             </div>
 
             <div>
-              <label class="block text-xs font-semibold text-slate-700 mb-1">วิทยากรที่เสนอเบื้องต้น *</label>
-              <select id="speakerType" required class="w-full bg-white border border-slate-300 rounded-lg p-2.5 text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none">
-                <option value="อาจารย์ที่ปรึกษา">อาจารย์ที่ปรึกษา</option>
-                <option value="ทีมวิชาการภายใน">ทีมวิชาการภายใน</option>
-                <option value="อาจารย์ภายนอก">อาจารย์ภายนอก</option>
-                <option value="Supplier/Partner">Supplier/Partner</option>
-              </select>
+              <label class="block text-xs font-semibold text-slate-700 mb-1 flex items-center justify-between">
+                <span>วิทยากรที่เสนอเบื้องต้น *</span>
+                <span class="text-[10px] text-blue-600 font-medium"><i class="fa-solid fa-pen-to-square mr-1"></i>พิมพ์ได้</span>
+              </label>
+              <input type="text" id="speakerType" list="speakerTypeList" required placeholder="เลือกหรือพิมพ์ชื่อวิทยากร..." class="w-full bg-white border border-slate-300 rounded-lg p-2.5 text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none">
+              <datalist id="speakerTypeList"></datalist>
             </div>
 
             <div>
-              <label class="block text-xs font-semibold text-slate-700 mb-1">สถานที่จัดงาน *</label>
-              <select id="venueType" required class="w-full bg-white border border-slate-300 rounded-lg p-2.5 text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none">
-                <option value="โรงเรียน">โรงเรียน</option>
-                <option value="โรงแรม">โรงแรม</option>
-                <option value="ออนไลน์ (Zoom/Meet)">ออนไลน์ (Zoom/Meet)</option>
-                <option value="อื่นๆ">อื่นๆ</option>
-              </select>
+              <label class="block text-xs font-semibold text-slate-700 mb-1 flex items-center justify-between">
+                <span>สถานที่จัดงาน *</span>
+                <span class="text-[10px] text-blue-600 font-medium"><i class="fa-solid fa-pen-to-square mr-1"></i>พิมพ์ได้</span>
+              </label>
+              <input type="text" id="venueType" list="venueTypeList" required placeholder="เลือกหรือพิมพ์สถานที่..." class="w-full bg-white border border-slate-300 rounded-lg p-2.5 text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none">
+              <datalist id="venueTypeList"></datalist>
             </div>
           </div>
 
@@ -378,7 +366,8 @@
                 </div>
                 <div id="transportDetailsWrap" class="hidden pt-1">
                   <label class="block text-xs text-slate-600 mb-1">รายละเอียดเส้นทาง/จุดรับ-ส่ง *</label>
-                  <input type="text" id="transportDetails" placeholder="เช่น รถตู้รับ-ส่งสนามบิน-โรงแรม-โรงเรียน..." class="w-full bg-slate-50 border border-slate-300 rounded-lg p-2 text-xs focus:ring-2 focus:ring-blue-500 focus:outline-none">
+                  <input type="text" id="transportDetails" list="transportDetailsList" placeholder="เลือกหรือพิมพ์ เช่น รถตู้รับ-ส่งสนามบิน-โรงแรม-โรงเรียน..." class="w-full bg-slate-50 border border-slate-300 rounded-lg p-2 text-xs focus:ring-2 focus:ring-blue-500 focus:outline-none">
+                  <datalist id="transportDetailsList"></datalist>
                 </div>
               </div>
             </div>
@@ -620,7 +609,7 @@
   <!-- Footer -->
   <footer class="bg-white border-t border-slate-200 text-slate-500 text-xs py-4 px-6 mt-auto">
     <div class="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-2">
-      <div>EMS Enterprise v1.1.0 &copy; 2026 - Training Workflow & Closed-Loop Evaluation System</div>
+      <div>EMS Enterprise v1.2.0 &copy; 2026 - Training Workflow & Closed-Loop Evaluation System</div>
       <div class="flex items-center space-x-4">
         <span>Google Apps Script + Google Sheets Architecture</span>
       </div>
@@ -633,7 +622,7 @@
   <script>
     // System Global State
     const AppState = {
-      version: '1.1.0',
+      version: '1.2.0',
       activeTab: 'dashboard',
       operatorName: localStorage.getItem('ems_operator_name') || 'สมชาย มุ่งมั่น (ทีม A)',
       gasEndpoint: localStorage.getItem('ems_gas_endpoint') || '',
@@ -643,8 +632,64 @@
         sales: [],
         schools: []
       },
-      requests: []
+      requests: [],
+      autoOptions: {
+        activityTypes: ['อบรมวิชาการ', 'Workshop เชิงปฏิบัติการ', 'Workshop Hosting', 'ติวนักเรียน', 'สัมมนาวิชาการผู้บริหาร', 'อบรมออนไลน์'],
+        courseTopics: ['อบรมคศ.3-4 นวัตกรรมการเรียนรู้', 'Active Learning สู่สมรรถนะผู้เรียน', 'Coding & STEM Education', 'เทคนิคการวัดและประเมินผล', 'AI เพื่อการจัดการเรียนการสอน'],
+        speakerTypes: ['อาจารย์ที่ปรึกษา', 'ทีมวิชาการภายใน', 'อาจารย์ภายนอก', 'Supplier/Partner'],
+        venueTypes: ['โรงเรียน', 'โรงแรม', 'ออนไลน์ (Zoom/Meet)', 'หอประชุมประจำจังหวัด', 'สำนักงานเขตพื้นที่การศึกษา (สพป./สพม.)'],
+        teamBSpeakers: ['ศ.ดร.ประสาน ปัญญาเลิศ', 'ดร.สมเกียรติ นวัตกรรม (ทีมวิชาการ)', 'อาจารย์ที่ปรึกษา'],
+        transportDetails: ['รถตู้รับ-ส่งสนามบิน-โรงแรม', 'รถตู้รับ-ส่งสถานีรถไฟ-โรงเรียน', 'รถตู้บริษัทพร้อมคนขับ']
+      }
     };
+
+    // Dynamic Combobox & Historical Options Management
+    function refreshDatalists() {
+      // ดึงประวัติที่เคยมีใน Requests เข้ามารวมใน Options ทันที
+      AppState.requests.forEach(r => {
+        if (r.activityType && !AppState.autoOptions.activityTypes.includes(r.activityType)) {
+          AppState.autoOptions.activityTypes.push(r.activityType);
+        }
+        if (r.courseTopic && !AppState.autoOptions.courseTopics.includes(r.courseTopic)) {
+          AppState.autoOptions.courseTopics.push(r.courseTopic);
+        }
+        if (r.speakerType && !AppState.autoOptions.speakerTypes.includes(r.speakerType)) {
+          AppState.autoOptions.speakerTypes.push(r.speakerType);
+        }
+        if (r.venueType && !AppState.autoOptions.venueTypes.includes(r.venueType)) {
+          AppState.autoOptions.venueTypes.push(r.venueType);
+        }
+        if (r.teamBSpeaker && !AppState.autoOptions.teamBSpeakers.includes(r.teamBSpeaker)) {
+          AppState.autoOptions.teamBSpeakers.push(r.teamBSpeaker);
+        }
+        if (r.transportDetails && !AppState.autoOptions.transportDetails.includes(r.transportDetails)) {
+          AppState.autoOptions.transportDetails.push(r.transportDetails);
+        }
+      });
+
+      populateDatalist('activityTypeList', AppState.autoOptions.activityTypes);
+      populateDatalist('courseTopicList', AppState.autoOptions.courseTopics);
+      populateDatalist('speakerTypeList', AppState.autoOptions.speakerTypes);
+      populateDatalist('venueTypeList', AppState.autoOptions.venueTypes);
+      populateDatalist('teamBSpeakerList', AppState.autoOptions.teamBSpeakers);
+      populateDatalist('transportDetailsList', AppState.autoOptions.transportDetails);
+    }
+
+    function populateDatalist(elementId, items) {
+      let el = document.getElementById(elementId);
+      if (!el) {
+        el = document.createElement('datalist');
+        el.id = elementId;
+        document.body.appendChild(el);
+      }
+      el.innerHTML = '';
+      const uniqueItems = Array.from(new Set(items.map(s => String(s || '').trim()))).filter(Boolean);
+      uniqueItems.forEach(item => {
+        const opt = document.createElement('option');
+        opt.value = item;
+        el.appendChild(opt);
+      });
+    }
 
     // Toggle Accomodation & Transport helper functions
     function toggleAccommodationFields(checked) {
@@ -872,6 +917,13 @@
             if (res.status === 'SUCCESS') {
               AppState.masterData = res.data.masterData;
               AppState.requests = res.data.requests;
+              if (res.data.autoOptions) {
+                for (let k in res.data.autoOptions) {
+                  if (AppState.autoOptions[k]) {
+                    AppState.autoOptions[k] = Array.from(new Set([...AppState.autoOptions[k], ...res.data.autoOptions[k]]));
+                  }
+                }
+              }
               renderAll();
             } else {
               fallbackToMockData();
@@ -890,6 +942,7 @@
     }
 
     function renderAll() {
+      refreshDatalists();
       populateProvinceDropdown();
       renderDashboard();
       renderTeamBQueue();
@@ -1170,8 +1223,11 @@
 
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
               <div>
-                <label class="block text-xs font-semibold text-slate-700 mb-1">วิทยากรผู้บรรยายที่ยืนยัน *</label>
-                <input type="text" id="teamBSpeaker-${req.eventId}" value="${req.teamBSpeaker || ''}" placeholder="ระบุชื่อวิทยากรทางการ..." class="w-full bg-slate-50 border border-slate-300 rounded-lg p-2 text-xs focus:ring-2 focus:ring-purple-500 focus:outline-none">
+                <label class="block text-xs font-semibold text-slate-700 mb-1 flex items-center justify-between">
+                  <span>วิทยากรผู้บรรยายที่ยืนยัน *</span>
+                  <span class="text-[10px] text-purple-600 font-medium"><i class="fa-solid fa-pen-to-square mr-1"></i>เลือกหรือพิมพ์เอง</span>
+                </label>
+                <input type="text" id="teamBSpeaker-${req.eventId}" list="teamBSpeakerList" value="${req.teamBSpeaker || ''}" placeholder="เลือกจากประวัติ หรือพิมพ์ชื่อวิทยากร..." class="w-full bg-slate-50 border border-slate-300 rounded-lg p-2 text-xs focus:ring-2 focus:ring-purple-500 focus:outline-none">
               </div>
               <div>
                 <label class="block text-xs font-semibold text-slate-700 mb-1">งบประมาณจริงที่ตัดจ่าย (บาท) *</label>
@@ -1352,6 +1408,14 @@
         operatorName: AppState.operatorName
       };
 
+      // บันทึกตัวเลือกใหม่เข้า Auto-Options สำหรับให้เลือกในครั้งต่อไปทันที
+      if (payload.activityType) AppState.autoOptions.activityTypes.push(payload.activityType);
+      if (payload.courseTopic) AppState.autoOptions.courseTopics.push(payload.courseTopic);
+      if (payload.speakerType) AppState.autoOptions.speakerTypes.push(payload.speakerType);
+      if (payload.venueType) AppState.autoOptions.venueTypes.push(payload.venueType);
+      if (payload.transportDetails) AppState.autoOptions.transportDetails.push(payload.transportDetails);
+      refreshDatalists();
+
       const btn = document.getElementById('teamASubmitBtn');
       btn.disabled = true;
       btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin mr-2"></i> กำลังส่งคำขอ...';
@@ -1419,6 +1483,11 @@
         teamBNotes: notes,
         operatorName: AppState.operatorName
       };
+
+      if (speaker) {
+        AppState.autoOptions.teamBSpeakers.push(speaker);
+        refreshDatalists();
+      }
 
       if (AppState.gasEndpoint) {
         postToBackend('UPDATE_REVIEW_B', payload)

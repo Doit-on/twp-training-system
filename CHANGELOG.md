@@ -7,6 +7,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [1.2.0] - 2026-10-29
+
+### Added
+- **Editable Combobox & Auto-Learning Dropdowns (พิมพ์ได้อิสระ พร้อมจำตัวเลือกให้อัตโนมัติ):**
+  - **Free-Text & Combobox Support:** เปลี่ยนช่องประเภทกิจกรรม (`activityType`), หัวข้อหลักสูตร (`courseTopic`), วิทยากร (`speakerType`), สถานที่ (`venueType`), และวิทยากรทีม B (`teamBSpeaker`) ให้สามารถคลิกเลือกจากรายการ หรือพิมพ์ค่าใหม่ได้ทันที
+  - **Dynamic Historical Auto-Options:** ระบบรวบรวมประวัติข้อมูลจากคำขอที่เคยบันทึกไว้ใน Google Sheets และนำมาเป็นตัวเลือก (Datalist Options) ให้อัตโนมัติสำหรับผู้ใช้งานคนอื่นและรอบถัดไป
+  - **Instant Real-Time Caching:** เมื่อผู้ใช้พิมพ์ค่าใหม่และกดส่งคำขอ ตัวเลือกนั้นจะถูกเพิ่มเข้าไปใน Datalist ทันทีโดยไม่ต้องรีโหลดหน้าเว็บ
+  - **Backend Aggregation API:** ใน `getInitialData`, Backend จะสรุปรายการตัวเลือกที่ไม่ซ้ำ (`autoOptions`) ส่งกลับมาให้หน้าบ้านใช้งานร่วมกันแบบรวมศูนย์
+
+---
+
 ## [1.1.0] - 2026-10-29
 
 ### Added

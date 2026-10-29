@@ -7,7 +7,7 @@
  * ============================================================================
  */
 
-const SYSTEM_VERSION = '1.1.0';
+const SYSTEM_VERSION = '1.2.0';
 const DEFAULT_ADMIN_PASS = 'admin0000';
 
 function getSpreadsheet() {
@@ -253,9 +253,38 @@ function getInitialData() {
     }
   });
 
+  // รวมตัวเลือกอัตโนมัติ (Auto-Learned Options จากประวัติที่เคยบันทึก)
+  const optionSets = {
+    activityTypes: new Set(['อบรมวิชาการ', 'Workshop เชิงปฏิบัติการ', 'Workshop Hosting', 'ติวนักเรียน', 'สัมมนาวิชาการผู้บริหาร', 'อบรมออนไลน์']),
+    courseTopics: new Set(['อบรมคศ.3-4 นวัตกรรมการเรียนรู้', 'Active Learning สู่สมรรถนะผู้เรียน', 'Coding & STEM Education', 'เทคนิคการวัดและประเมินผล', 'AI เพื่อการจัดการเรียนการสอน']),
+    speakerTypes: new Set(['อาจารย์ที่ปรึกษา', 'ทีมวิชาการภายใน', 'อาจารย์ภายนอก', 'Supplier/Partner']),
+    venueTypes: new Set(['โรงเรียน', 'โรงแรม', 'ออนไลน์ (Zoom/Meet)', 'หอประชุมประจำจังหวัด']),
+    teamBSpeakers: new Set(['ศ.ดร.ประสาน ปัญญาเลิศ', 'ดร.สมเกียรติ นวัตกรรม']),
+    transportDetails: new Set(['รถตู้รับ-ส่งสนามบิน-โรงแรม', 'รถตู้รับ-ส่งสถานีรถไฟ-โรงเรียน', 'รถตู้บริษัทพร้อมคนขับ'])
+  };
+
+  requests.forEach(function(req) {
+    if (req.activityType) optionSets.activityTypes.add(req.activityType);
+    if (req.courseTopic) optionSets.courseTopics.add(req.courseTopic);
+    if (req.speakerType) optionSets.speakerTypes.add(req.speakerType);
+    if (req.venueType) optionSets.venueTypes.add(req.venueType);
+    if (req.teamBSpeaker) optionSets.teamBSpeakers.add(req.teamBSpeaker);
+    if (req.transportDetails) optionSets.transportDetails.add(req.transportDetails);
+  });
+
+  const autoOptions = {
+    activityTypes: Array.from(optionSets.activityTypes),
+    courseTopics: Array.from(optionSets.courseTopics),
+    speakerTypes: Array.from(optionSets.speakerTypes),
+    venueTypes: Array.from(optionSets.venueTypes),
+    teamBSpeakers: Array.from(optionSets.teamBSpeakers),
+    transportDetails: Array.from(optionSets.transportDetails)
+  };
+
   return {
     masterData: masterData,
     requests: requests.reverse(), // คำขอล่าสุดขึ้นก่อน
+    autoOptions: autoOptions,
     systemVersion: SYSTEM_VERSION
   };
 }
