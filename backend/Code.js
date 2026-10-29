@@ -7,7 +7,7 @@
  * ============================================================================
  */
 
-const SYSTEM_VERSION = '1.0.0';
+const SYSTEM_VERSION = '1.1.0';
 const DEFAULT_ADMIN_PASS = 'admin0000';
 
 function getSpreadsheet() {
@@ -214,6 +214,10 @@ function getInitialData() {
       reviewedByBAt: r[24] || '',
       approvedAt: r[25] || '',
       pdfUrl: r[26] || '',
+      needAccommodation: r[27] || 'NO',
+      roomCount: Number(r[28]) || 0,
+      needTransportation: r[29] || 'NO',
+      transportDetails: r[30] || '',
       rowIndex: i + 1
     });
   }
@@ -293,7 +297,11 @@ function createRequestTeamA(payload) {
     now,      // Submitted_To_B_At
     '',       // Reviewed_By_B_At
     '',       // Approved_At
-    ''        // A4_PDF_Url
+    '',       // A4_PDF_Url
+    payload.needAccommodation ? 'YES' : 'NO',
+    Number(payload.roomCount) || 0,
+    payload.needTransportation ? 'YES' : 'NO',
+    payload.transportDetails || ''
   ];
 
   sheet.appendRow(rowData);
@@ -534,6 +542,14 @@ function generateA4MemoPDF(eventRow, approvedBy) {
 
   const costRatio = targetSalesNum > 0 ? ((actualBudgetNum / targetSalesNum) * 100).toFixed(1) : 'N/A';
 
+  const needAccom = eventRow[27] === 'YES' || eventRow[27] === 'ต้องการ';
+  const roomCount = Number(eventRow[28]) || 0;
+  const accomDisplay = needAccom ? `ต้องการห้องพัก (${roomCount} ห้อง)` : 'ไม่ต้องการห้องพัก';
+
+  const needTrans = eventRow[29] === 'YES' || eventRow[29] === 'ต้องการ';
+  const transDetails = eventRow[30] || '';
+  const transDisplay = needTrans ? `ต้องการรถรับ-ส่ง ${transDetails ? '(' + transDetails + ')' : ''}` : 'ไม่ต้องการรถรับ-ส่ง';
+
   const html = `
     <!DOCTYPE html>
     <html>
@@ -583,6 +599,10 @@ function generateA4MemoPDF(eventRow, approvedBy) {
         <tr>
           <th>วัตถุประสงค์เชิงกลยุทธ์</th>
           <td>${eventRow[13] || '-'}</td>
+        </tr>
+        <tr>
+          <th>ที่พักและยานพาหนะ</th>
+          <td><strong>ห้องพัก:</strong> ${accomDisplay} &nbsp;|&nbsp; <strong>รถรับ-ส่ง:</strong> ${transDisplay}</td>
         </tr>
       </table>
 
@@ -736,7 +756,8 @@ function ensureRequiredSheets(ss) {
         'Event_Date', 'Province', 'Sale_Name', 'School_ID', 'School_Name', 'Speaker_Type',
         'Venue_Type', 'Objective', 'Target_Sales', 'Est_Budget', 'TeamB_Speaker', 'TeamB_Notes',
         'Actual_Budget', 'Created_By', 'Reviewed_By', 'Approved_By', 'Last_Modified_By',
-        'Submitted_To_B_At', 'Reviewed_By_B_At', 'Approved_At', 'A4_PDF_Url'
+        'Submitted_To_B_At', 'Reviewed_By_B_At', 'Approved_At', 'A4_PDF_Url',
+        'Need_Accommodation', 'Room_Count', 'Need_Transportation', 'Transport_Details'
       ]
     },
     {
@@ -767,6 +788,17 @@ function ensureRequiredSheets(ss) {
         .setBackground('#1e3a8a')
         .setFontColor('#ffffff')
         .setFontWeight('bold');
+    } else {
+      // ตรวจสอบและอัปเกรดคอลัมน์ใหม่หากชีตเดิมมีคอลัมน์ไม่ครบ
+      const lastCol = sheet.getLastColumn();
+      if (lastCol < item.headers.length) {
+        for (let c = lastCol; c < item.headers.length; c++) {
+          sheet.getRange(1, c + 1).setValue(item.headers[c])
+            .setBackground('#1e3a8a')
+            .setFontColor('#ffffff')
+            .setFontWeight('bold');
+        }
+      }
     }
   });
 }

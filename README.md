@@ -1,6 +1,6 @@
 # EMS Enterprise: Training Workflow & Closed-Loop Evaluation System
 
-[![Version](https://img.shields.io/badge/version-1.0.0-blue.svg)](VERSION)
+[![Version](https://img.shields.io/badge/version-1.1.0-blue.svg)](VERSION)
 [![Runtime](https://img.shields.io/badge/runtime-Google%20Apps%20Script%20V8-green.svg)](https://developers.google.com/apps-script)
 [![Database](https://img.shields.io/badge/database-Google%20Sheets-success.svg)](data/Database_Schema.md)
 [![License](https://img.shields.io/badge/license-MIT-lightgrey.svg)](LICENSE)

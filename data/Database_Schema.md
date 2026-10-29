@@ -51,6 +51,10 @@
 | Y | `Reviewed_By_B_At` | ISO 8601 | เวลาที่ทีม B ตรวจสอบเสร็จและส่งต่อ |
 | Z | `Approved_At` | ISO 8601 | เวลาที่ผู้บริหารอนุมัติ |
 | AA | `A4_PDF_Url` | URL String | ลิงก์ไฟล์ PDF สรุปคำขอใน Google Drive |
+| AB | `Need_Accommodation` | Enum (`YES`/`NO`) | ต้องการห้องพักสำหรับทีมงาน/วิทยากรหรือไม่ |
+| AC | `Room_Count` | Integer | จำนวนห้องพักที่ต้องการ (ห้อง) |
+| AD | `Need_Transportation` | Enum (`YES`/`NO`) | ต้องการรถรับ-ส่งหรือไม่ |
+| AE | `Transport_Details` | Text | รายละเอียดจุดรับ-ส่ง และประเภทยานพาหนะ |
 
 ---
 

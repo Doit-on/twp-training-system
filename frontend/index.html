@@ -70,7 +70,7 @@
           <div>
             <div class="flex items-center space-x-2">
               <span class="font-extrabold text-lg tracking-wide text-white">EMS Enterprise</span>
-              <span class="bg-blue-500/30 text-blue-300 text-[10px] font-mono px-2 py-0.5 rounded-full border border-blue-400/30">v1.0.0</span>
+              <span class="bg-blue-500/30 text-blue-300 text-[10px] font-mono px-2 py-0.5 rounded-full border border-blue-400/30">v1.1.0</span>
             </div>
             <p class="text-xs text-slate-400 hidden sm:block">Enterprise Training Workflow & Closed-Loop Evaluation</p>
           </div>
@@ -344,6 +344,46 @@
             <textarea id="objective" rows="2" required placeholder="ระบุเหตุผลในการจัดงาน เช่น เพื่อเปิดตลาดหลักสูตรใหม่, กระชับความสัมพันธ์ Tier A..." class="w-full bg-white border border-slate-300 rounded-lg p-2.5 text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none"></textarea>
           </div>
 
+          <!-- ความต้องการเพิ่มเติม: ห้องพัก และ รถรับ-ส่ง -->
+          <div class="bg-indigo-50/50 p-4 rounded-xl border border-indigo-100 space-y-3">
+            <div class="text-xs font-bold text-indigo-900 uppercase tracking-wider flex items-center space-x-1.5">
+              <i class="fa-solid fa-hotel text-indigo-600"></i>
+              <span>ความต้องการสนับสนุนด้านสถานที่พัก และ ยานพาหนะรับ-ส่ง</span>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <!-- ส่วนห้องพัก -->
+              <div class="bg-white p-3.5 rounded-xl border border-slate-200 space-y-2">
+                <div class="flex items-center justify-between">
+                  <label class="text-xs font-bold text-slate-800 flex items-center space-x-2 cursor-pointer select-none">
+                    <input type="checkbox" id="needAccommodation" onchange="toggleAccommodationFields(this.checked)" class="w-4 h-4 text-blue-600 rounded border-slate-300 focus:ring-blue-500">
+                    <span>ต้องการห้องพัก</span>
+                  </label>
+                  <span id="accomBadge" class="text-[10px] bg-slate-100 text-slate-500 px-2 py-0.5 rounded-full font-semibold">ไม่ต้องการ</span>
+                </div>
+                <div id="roomCountWrap" class="hidden pt-1">
+                  <label class="block text-xs text-slate-600 mb-1">จำนวนห้องพักที่ต้องการ (ห้อง) *</label>
+                  <input type="number" id="roomCount" min="1" value="1" placeholder="ระบุจำนวนห้อง..." class="w-full bg-slate-50 border border-slate-300 rounded-lg p-2 text-xs font-mono focus:ring-2 focus:ring-blue-500 focus:outline-none">
+                </div>
+              </div>
+
+              <!-- ส่วนรถรับ-ส่ง -->
+              <div class="bg-white p-3.5 rounded-xl border border-slate-200 space-y-2">
+                <div class="flex items-center justify-between">
+                  <label class="text-xs font-bold text-slate-800 flex items-center space-x-2 cursor-pointer select-none">
+                    <input type="checkbox" id="needTransportation" onchange="toggleTransportFields(this.checked)" class="w-4 h-4 text-blue-600 rounded border-slate-300 focus:ring-blue-500">
+                    <span>ต้องการรถรับ-ส่ง</span>
+                  </label>
+                  <span id="transBadge" class="text-[10px] bg-slate-100 text-slate-500 px-2 py-0.5 rounded-full font-semibold">ไม่ต้องการ</span>
+                </div>
+                <div id="transportDetailsWrap" class="hidden pt-1">
+                  <label class="block text-xs text-slate-600 mb-1">รายละเอียดเส้นทาง/จุดรับ-ส่ง *</label>
+                  <input type="text" id="transportDetails" placeholder="เช่น รถตู้รับ-ส่งสนามบิน-โรงแรม-โรงเรียน..." class="w-full bg-slate-50 border border-slate-300 rounded-lg p-2 text-xs focus:ring-2 focus:ring-blue-500 focus:outline-none">
+                </div>
+              </div>
+            </div>
+          </div>
+
           <!-- Real-Time Cost-to-Sales ROI Calculator -->
           <div class="bg-blue-50/70 p-4 rounded-xl border border-blue-200 space-y-3">
             <div class="flex items-center justify-between">
@@ -580,7 +620,7 @@
   <!-- Footer -->
   <footer class="bg-white border-t border-slate-200 text-slate-500 text-xs py-4 px-6 mt-auto">
     <div class="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-2">
-      <div>EMS Enterprise v1.0.0 &copy; 2026 - Training Workflow & Closed-Loop Evaluation System</div>
+      <div>EMS Enterprise v1.1.0 &copy; 2026 - Training Workflow & Closed-Loop Evaluation System</div>
       <div class="flex items-center space-x-4">
         <span>Google Apps Script + Google Sheets Architecture</span>
       </div>
@@ -593,7 +633,7 @@
   <script>
     // System Global State
     const AppState = {
-      version: '1.0.0',
+      version: '1.1.0',
       activeTab: 'dashboard',
       operatorName: localStorage.getItem('ems_operator_name') || 'สมชาย มุ่งมั่น (ทีม A)',
       gasEndpoint: localStorage.getItem('ems_gas_endpoint') || '',
@@ -605,6 +645,35 @@
       },
       requests: []
     };
+
+    // Toggle Accomodation & Transport helper functions
+    function toggleAccommodationFields(checked) {
+      const wrap = document.getElementById('roomCountWrap');
+      const badge = document.getElementById('accomBadge');
+      if (checked) {
+        wrap.classList.remove('hidden');
+        badge.className = 'text-[10px] bg-indigo-100 text-indigo-700 px-2 py-0.5 rounded-full font-bold';
+        badge.innerText = 'ต้องการห้องพัก';
+      } else {
+        wrap.classList.add('hidden');
+        badge.className = 'text-[10px] bg-slate-100 text-slate-500 px-2 py-0.5 rounded-full font-semibold';
+        badge.innerText = 'ไม่ต้องการ';
+      }
+    }
+
+    function toggleTransportFields(checked) {
+      const wrap = document.getElementById('transportDetailsWrap');
+      const badge = document.getElementById('transBadge');
+      if (checked) {
+        wrap.classList.remove('hidden');
+        badge.className = 'text-[10px] bg-sky-100 text-sky-700 px-2 py-0.5 rounded-full font-bold';
+        badge.innerText = 'ต้องการรถรับ-ส่ง';
+      } else {
+        wrap.classList.add('hidden');
+        badge.className = 'text-[10px] bg-slate-100 text-slate-500 px-2 py-0.5 rounded-full font-semibold';
+        badge.innerText = 'ไม่ต้องการ';
+      }
+    }
 
     // Initial Demo/Mock Data (ใช้เมื่อยังไม่ได้ผูก WebApp URL หรือขณะทดสอบ)
     const MockDatabase = {
@@ -657,6 +726,10 @@
           reviewedByBAt: '',
           approvedAt: '',
           pdfUrl: '',
+          needAccommodation: 'YES',
+          roomCount: 2,
+          needTransportation: 'YES',
+          transportDetails: 'รถตู้รับ-ส่งสนามบินดอนเมือง-รร.สวนกุหลาบ',
           evalCount: 0,
           evalAvg: 0
         },
@@ -688,6 +761,10 @@
           reviewedByBAt: new Date(Date.now() - 14 * 3600 * 1000).toISOString(),
           approvedAt: '',
           pdfUrl: '',
+          needAccommodation: 'YES',
+          roomCount: 3,
+          needTransportation: 'YES',
+          transportDetails: 'รถตู้รับ-ส่งสนามบินขอนแก่น-โรงแรมพูลแมน',
           evalCount: 0,
           evalAvg: 0
         },
@@ -720,6 +797,10 @@
           approvedAt: new Date(Date.now() - 90 * 3600 * 1000).toISOString(),
           pdfUrl: '#',
           token: 'token-b1c2d3e4f5',
+          needAccommodation: 'NO',
+          roomCount: 0,
+          needTransportation: 'NO',
+          transportDetails: '',
           evalCount: 24,
           evalAvg: 4.85
         }
@@ -971,11 +1052,18 @@
         const slaIndicator = formatPendingSLA(req.submittedToBAt || req.createdAt, req.status);
         const ratio = req.targetSales > 0 ? ((req.estBudget / req.targetSales) * 100).toFixed(1) + '%' : '-';
 
+        const hasAccom = req.needAccommodation === 'YES' || req.roomCount > 0;
+        const hasTrans = req.needTransportation === 'YES' || (req.transportDetails && req.transportDetails.length > 0);
+        let logisHtml = '';
+        if (hasAccom) logisHtml += `<span class="inline-flex items-center px-1.5 py-0.5 rounded text-[10px] bg-indigo-50 text-indigo-700 mr-1"><i class="fa-solid fa-hotel mr-1 text-[9px]"></i>${req.roomCount} ห้อง</span>`;
+        if (hasTrans) logisHtml += `<span class="inline-flex items-center px-1.5 py-0.5 rounded text-[10px] bg-sky-50 text-sky-700" title="${req.transportDetails || 'รถรับ-ส่ง'}"><i class="fa-solid fa-van-shuttle mr-1 text-[9px]"></i>รถรับ-ส่ง</span>`;
+
         tr.innerHTML = `
           <td class="px-6 py-4">
             <div class="font-bold text-slate-800 text-sm">${req.eventId}</div>
             <div class="text-xs text-blue-600 font-medium">${req.courseTopic}</div>
-            <div class="text-[11px] text-slate-400">วันจัดงาน: ${req.eventDate || '-'}</div>
+            <div class="mt-1 flex flex-wrap gap-1">${logisHtml}</div>
+            <div class="text-[11px] text-slate-400 mt-0.5">วันจัดงาน: ${req.eventDate || '-'}</div>
           </td>
           <td class="px-6 py-4">
             <div class="font-medium text-slate-800 text-sm">${req.schoolName}</div>
@@ -1061,6 +1149,19 @@
             </div>
           </div>
 
+          <div class="bg-indigo-50/60 p-3 rounded-xl border border-indigo-100 text-xs text-indigo-950 flex flex-wrap gap-x-6 gap-y-1.5 items-center">
+            <div>
+              <i class="fa-solid fa-hotel text-indigo-600 mr-1.5"></i>
+              <span class="font-semibold">ห้องพัก:</span>
+              <span>${(req.needAccommodation === 'YES' || req.roomCount > 0) ? `ต้องการ ${req.roomCount} ห้อง` : 'ไม่ต้องการ'}</span>
+            </div>
+            <div>
+              <i class="fa-solid fa-van-shuttle text-sky-600 mr-1.5"></i>
+              <span class="font-semibold">รถรับ-ส่ง:</span>
+              <span>${(req.needTransportation === 'YES' || req.transportDetails) ? `ต้องการ (${req.transportDetails || 'รถรับ-ส่ง'})` : 'ไม่ต้องการ'}</span>
+            </div>
+          </div>
+
           <div class="bg-white p-4 rounded-xl border border-slate-200 space-y-3">
             <div class="text-xs font-bold text-slate-700 uppercase flex items-center space-x-1.5">
               <i class="fa-solid fa-user-graduate text-purple-600"></i>
@@ -1134,6 +1235,19 @@
             <div class="bg-white p-3 rounded-xl border border-slate-200">
               <span class="text-slate-400 block">ผู้ตรวจสอบ (ทีม B):</span>
               <span class="font-bold text-purple-700 text-sm">${req.reviewedBy || 'ฝ่ายวิชาการ'}</span>
+            </div>
+          </div>
+
+          <div class="bg-indigo-50/60 p-3 rounded-xl border border-indigo-100 text-xs text-indigo-950 flex flex-wrap gap-x-6 gap-y-1.5 items-center">
+            <div>
+              <i class="fa-solid fa-hotel text-indigo-600 mr-1.5"></i>
+              <span class="font-semibold">ห้องพัก:</span>
+              <span>${(req.needAccommodation === 'YES' || req.roomCount > 0) ? `ต้องการ ${req.roomCount} ห้อง` : 'ไม่ต้องการ'}</span>
+            </div>
+            <div>
+              <i class="fa-solid fa-van-shuttle text-sky-600 mr-1.5"></i>
+              <span class="font-semibold">รถรับ-ส่ง:</span>
+              <span>${(req.needTransportation === 'YES' || req.transportDetails) ? `ต้องการ (${req.transportDetails || 'รถรับ-ส่ง'})` : 'ไม่ต้องการ'}</span>
             </div>
           </div>
 
@@ -1212,6 +1326,11 @@
       const courseTopicVal = document.getElementById('courseTopic').value;
       const customTopicVal = document.getElementById('customTopic').value;
 
+      const needAccom = document.getElementById('needAccommodation').checked;
+      const roomCount = needAccom ? (Number(document.getElementById('roomCount').value) || 1) : 0;
+      const needTrans = document.getElementById('needTransportation').checked;
+      const transDetails = needTrans ? (document.getElementById('transportDetails').value.trim() || 'ต้องการรถรับ-ส่ง') : '';
+
       const payload = {
         activityType: document.getElementById('activityType').value,
         courseTopic: courseTopicVal,
@@ -1224,6 +1343,10 @@
         speakerType: document.getElementById('speakerType').value,
         venueType: document.getElementById('venueType').value,
         objective: document.getElementById('objective').value,
+        needAccommodation: needAccom ? 'YES' : 'NO',
+        roomCount: roomCount,
+        needTransportation: needTrans ? 'YES' : 'NO',
+        transportDetails: transDetails,
         estBudget: Number(document.getElementById('estBudget').value) || 0,
         targetSales: Number(document.getElementById('targetSales').value) || 0,
         operatorName: AppState.operatorName
@@ -1240,6 +1363,10 @@
             btn.innerHTML = '<i class="fa-solid fa-paper-plane mr-2"></i> ส่งคำขอให้ฝ่ายวิชาการ (ทีม B) ตรวจสอบ';
             showAlert('สร้างคำขอจัดอบรม ' + (res.data?.eventId || '') + ' เรียบร้อยแล้ว', 'success');
             document.getElementById('teamAForm').reset();
+            document.getElementById('needAccommodation').checked = false;
+            toggleAccommodationFields(false);
+            document.getElementById('needTransportation').checked = false;
+            toggleTransportFields(false);
             fetchInitialData();
             switchTab('dashboard');
           })
@@ -1267,6 +1394,10 @@
           });
           showAlert(`[Local Mock] สร้างคำขอ ${newId} สำเร็จ ส่งต่อให้ทีม B ตรวจสอบแล้ว`, 'success');
           document.getElementById('teamAForm').reset();
+          document.getElementById('needAccommodation').checked = false;
+          toggleAccommodationFields(false);
+          document.getElementById('needTransportation').checked = false;
+          toggleTransportFields(false);
           renderAll();
           switchTab('dashboard');
         }, 300);

@@ -7,6 +7,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [1.1.0] - 2026-10-29
+
+### Added
+- **Logistics & Facility Requirements (ห้องพัก และ รถรับ-ส่ง):**
+  - **Hotel Accommodation Support:** Added fields `Need_Accommodation` and `Room_Count` to track hotel room requirements for trainers and staff.
+  - **Transportation Support:** Added fields `Need_Transportation` and `Transport_Details` for shuttle van / airport pickup-dropoff coordination.
+  - **Frontend Form Controls:** Dynamic toggle checkboxes with real-time badges in Team A request form.
+  - **Review & Approval Badges:** Rendered logistics badges in Dashboard, Team B Review Queue, and Executive Approval Queue.
+  - **A4 PDF Memo Integration:** Displays hotel room count and transportation details clearly in the official approval memo.
+  - **Database Schema Auto-Upgrade:** In `backend/Code.js`, `ensureRequiredSheets` automatically detects and adds missing columns (`Need_Accommodation`, `Room_Count`, `Need_Transportation`, `Transport_Details`) to existing sheets.
+
+---
+
 ## [1.0.0] - 2026-10-29
 
 ### Initial Production Release
