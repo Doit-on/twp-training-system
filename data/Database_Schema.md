@@ -1,6 +1,6 @@
 # โครงสร้างฐานข้อมูล Google Sheets (Database Schema Specification)
 
-ระบบ **EMS Enterprise** ขับเคลื่อนด้วย Google Sheets ทั้งหมด 6 ชีต (Sheets) ดังนี้:
+ระบบ **EMS Enterprise (Training Center TWP)** ขับเคลื่อนด้วย Google Sheets ทั้งหมด 7 ชีต (Sheets) ตามมาตรฐานโปรแกรม PPC:
 
 ---
 
@@ -55,6 +55,7 @@
 | AC | `Room_Count` | Integer | จำนวนห้องพักที่ต้องการ (ห้อง) |
 | AD | `Need_Transportation` | Enum (`YES`/`NO`) | ต้องการรถรับ-ส่งหรือไม่ |
 | AE | `Transport_Details` | Text | รายละเอียดจุดรับ-ส่ง และประเภทยานพาหนะ |
+| AF | `A4_Docx_Url` | URL String | ลิงก์ไฟล์ Microsoft Word (.docx) รายงานสรุปใน Google Drive |
 
 ---
 
@@ -114,3 +115,20 @@
 | B | `Setting_Value` | String | `admin0000` | ค่าของการตั้งค่า |
 | C | `Description` | String | รหัสผ่านผู้ดูแลระบบ | คำอธิบาย |
 | D | `Updated_At` | ISO 8601 | วันเวลาอัปเดตล่าสุด | วันเวลา |
+
+---
+
+### Sheet 7: `PPC_Performance_Summary`
+ตารางสรุปภาพรวมผู้บริหารและแดชบอร์ด KPI ในตัว พร้อมสูตรคำนวณอัตโนมัติ
+
+| Cell Range | Metric / Description | Formula / Source |
+| :---: | :--- | :--- |
+| `A1:G1` | หัวตารางรายงานและแบรนด์ TWP Blue `#08539E` | ข้อความคงที่ |
+| `A3:A5` | จำนวนคำขอจัดอบรมทั้งหมด (Total Requests) | `=COUNTA(Event_Requests!A2:A)` |
+| `B3:B5` | คำขอรอตรวจสอบฝ่ายวิชาการ (Waiting Team B) | `=COUNTIF(Event_Requests!C2:C, "WAITING_B")` |
+| `C3:C5` | คำขอรอผู้บริหารอนุมัติ (Waiting Exec) | `=COUNTIF(Event_Requests!C2:C, "WAITING_EXEC")` |
+| `D3:D5` | คำขอที่ได้รับอนุมัติแล้ว (Approved Requests) | `=COUNTIF(Event_Requests!C2:C, "APPROVED")` |
+| `E3:E5` | งบประมาณตัดจ่ายจริงสะสม (Total Actual Budget) | `=SUM(Event_Requests!S2:S)` |
+| `F3:F5` | เป้าหมายยอดขายรวมสะสม (Total Target Sales) | `=SUM(Event_Requests!O2:O)` |
+| `G3:G5` | สัดส่วนต้นทุนเฉลี่ย (Overall Cost-to-Sales ROI %) | `=IF(E3>0, (E3/F3)*100, 0)` |
+| `A8:G` | ตารางโครงการที่อนุมัติแล้วและพร้อมออกรายงาน A4 | `=FILTER({Event_Requests!...}, Event_Requests!C2:C="APPROVED")` |

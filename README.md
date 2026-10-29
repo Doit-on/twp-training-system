@@ -1,11 +1,11 @@
 # Training Center TWP (EMS Enterprise Platform)
 
-[![Version](https://img.shields.io/badge/version-1.4.0-blue.svg)](VERSION)
+[![Version](https://img.shields.io/badge/version-1.5.0-blue.svg)](VERSION)
 [![Runtime](https://img.shields.io/badge/runtime-Google%20Apps%20Script%20V8-green.svg)](https://developers.google.com/apps-script)
 [![Database](https://img.shields.io/badge/database-Google%20Sheets-success.svg)](data/Database_Schema.md)
 [![License](https://img.shields.io/badge/license-MIT-lightgrey.svg)](LICENSE)
 
-> ระบบบริหารจัดการคำขอจัดกิจกรรมอบรม และประเมินผลความพึงพอใจแบบปิดลูป (Training Center TWP / EMS Enterprise) ขับเคลื่อนด้วยสถาปัตยกรรม Serverless บน Google Apps Script และ Google Sheets มาพร้อมหน้า Landing Page โลโก้ TWP ทางการ, Modernized Tactile UX/UI Design, ระบบสแกน **QR Code ประจำทีม (Team Pairing)** และระบบ **Real-Time Multi-Device Data Sync** ให้ข้อมูลเท่ากันทุกเครื่องแบบอัตโนมัติ
+> ระบบบริหารจัดการคำขอจัดกิจกรรมอบรม และประเมินผลความพึงพอใจแบบปิดลูป (Training Center TWP / EMS Enterprise) ขับเคลื่อนด้วยสถาปัตยกรรม Serverless บน Google Apps Script และ Google Sheets มาพร้อมหน้า Landing Page โลโก้ TWP ทางการ, Modernized Tactile UX/UI Design, ระบบสแกน **QR Code ประจำทีม**, ระบบ **Real-Time Multi-Device Data Sync**, และ **ระบบสร้างรายงานสรุปการปฏิบัติงาน A4 มาตรฐาน PPC ที่ส่งออกได้ทั้ง PDF และ Microsoft Word (.docx)**
 
 ---
 
@@ -15,23 +15,25 @@
    - **ต้นน้ำ:** ทีมขาย (ทีม A) สร้างคำขอจัดกิจกรรม โดยผูกกับข้อมูลโรงเรียนและพนักงานขายจากฐาน `PPC_Master` อัตโนมัติ พร้อมคำนวณสัดส่วนงบประมาณเทียบเป้าขาย (Cost-to-Sales ROI %) แบบเรียลไทม์
    - **กลางน้ำ:** ฝ่ายวิชาการ (ทีม B) ตรวจสอบความพร้อมของวิทยากรและยืนยันงบประมาณตัดจ่ายจริง ส่งต่อให้ผู้บริหาร (Management) อนุมัติ
    - **ปลายน้ำ:** เมื่ออนุมัติ ระบบจะสร้างเอกสาร **A4 Memo PDF (ฟอนต์ Sarabun)** ลง Google Drive อัตโนมัติ พร้อมออก **QR Code Token** ให้ผู้เข้าอบรมสแกนประเมินผลความพึงพอใจ 5 มิติ
-2. **Team QR Code Pairing & Auto-Onboarding (v1.4.0):**
-   - ผู้ใช้งานใหม่ในแต่ละทีมเพียงใช้สมาร์ตโฟนสแกน QR Code ประจำทีม (ทีม A, ทีม B, ผู้บริหาร, หรือส่วนกลาง) จะเข้าสู่ระบบพร้อมโหมดการทำงานและข้อมูลชุดเดียวกันทันทีโดยไม่ต้องตั้งค่าใหม่
-3. **Multi-Device Real-Time Data Sync (ข้อมูลเท่ากันทุกเครื่อง):**
-   - รองรับ **BroadcastChannel Engine** สำหรับส่งต่อข้อมูลระหว่างแท็บ/หน้าต่างในระดับเสี้ยววินาที
-   - Background Polling อัปเดตข้อมูลอัตโนมัติทุก 15 วินาที พร้อมแถบสถานะ `🟢 ซิงค์: เรียลไทม์` และปุ่มบังคับซิงค์ทันที (Force Sync)
-4. **Ping & Latency Health Monitor:**
+2. **PPC Standard A4 Operations Summary Report (PDF & Word .docx) (v1.5.0):**
+   - ออกรายงานสรุปผลการปฏิบัติงานตามแบบมาตรฐาน **PPC (Performance & Project Control)** ครบ 5 ส่วน (ข้อมูลโรงเรียน, งานวิชาการ/ที่พัก/รถรับส่ง, สรุปงบและ ROI, ผลประเมินปิดลูป 5 ด้าน, ลายมือชื่อ 3 ฝ่าย)
+   - สามารถส่งออกเป็น **PDF** (จัดหน้า Sarabun สวยงาม) และ **Microsoft Word (.docx)** นำไปแก้ไขต่อได้ทันที
+3. **Google Sheets Database Setup & Custom Menu (v1.5.0):**
+   - เมนูอัตโนมัติ `📊 PPC Training Center` บน Google Spreadsheet ช่วยสร้าง/ตรวจสอบ 7 ตารางฐานข้อมูล และสร้างชีตสรุปแดชบอร์ด (`PPC_Performance_Summary`) พร้อมสูตรคำนวณยอดรวมให้อัตโนมัติ
+4. **Team QR Code Pairing & Auto-Onboarding:**
+   - ผู้ใช้งานใหม่ในแต่ละทีมเพียงใช้สมาร์ตโฟนสแกน QR Code ประจำทีม จะเข้าสู่ระบบพร้อมโหมดการทำงานและข้อมูลชุดเดียวกันทันทีโดยไม่ต้องตั้งค่าใหม่
+5. **Multi-Device Real-Time Data Sync (ข้อมูลเท่ากันทุกเครื่อง):**
+   - รองรับ **BroadcastChannel Engine** สำหรับส่งต่อข้อมูลระหว่างแท็บ/หน้าต่างในระดับเสี้ยววินาที และ Background Cloud Polling ทุก 15 วินาที
+6. **Ping & Latency Health Monitor:**
    - แถบแสดงสถานะการเชื่อมต่อแบบเรียลไทม์ พร้อมตรวจวัด Ping (ms) กับ Google Sheet เพื่อความมั่นใจก่อนบันทึกรายการ
-5. **SLA & Pending Lead Time Tracking:**
-   - ติดตามระยะเวลาตกค้างของคำขอเป็น **จำนวนวันและชั่วโมง** พร้อมแถบสีแจ้งเตือน (เขียว < 24 ชม., ส้ม 24-48 ชม., แดง > 48 ชม.) เพื่อการวัด KPI อย่างโปร่งใส
-6. **Multi-Operator Stamping & Audit Trail:**
-   - แสตมป์ชื่อผู้ปฏิบัติงานในทุกขั้นตอน (`Created_By`, `Reviewed_By`, `Approved_By`, `Last_Modified_By`) รองรับทีมที่มีสมาชิกมากกว่า 1 คน
-   - บันทึกประวัติกิจกรรมแบบละเอียดลงในชีต `System_Logs`
-7. **Zero-Trust Security & Data Isolation:**
-   - หน้าทำแบบประเมินสำหรับบุคคลภายนอก (`SurveyView`) จะเข้าถึงได้เฉพาะหัวข้ออบรม, ชื่อวิทยากร และวันที่จัดงาน โดย**ไม่มีการส่งข้อมูลยอดขาย งบประมาณ หรือข้อมูลโรงเรียนหลุดออกไปภายนอกเด็ดขาด**
-   - มีระบบตรวจจับและป้องกันการส่งผลประเมินซ้ำด้วย Client Fingerprint Hash
-8. **Admin Backoffice Control (รหัสผ่าน: `admin0000`):**
-   - แผงควบคุมระบบหลังบ้านสำหรับผู้ดูแลระบบ: ตรวจสอบและสร้างโครงสร้าง Sheet 6 ตารางอัตโนมัติ (Auto-Schema Initializer), ตรวจสอบ Latency, และเรียกดู Audit Trail
+7. **SLA & Pending Lead Time Tracking:**
+   - ติดตามระยะเวลาตกค้างของคำขอเป็น **จำนวนวันและชั่วโมง** พร้อมแถบสีแจ้งเตือน (เขียว < 24 ชม., ส้ม 24-48 ชม., แดง > 48 ชม.)
+8. **Multi-Operator Stamping & Audit Trail:**
+   - แสตมป์ชื่อผู้ปฏิบัติงานในทุกขั้นตอน (`Created_By`, `Reviewed_By`, `Approved_By`, `Last_Modified_By`) พร้อมบันทึก `System_Logs`
+9. **Zero-Trust Security & Data Isolation:**
+   - หน้าทำแบบประเมินสำหรับบุคคลภายนอก (`SurveyView`) จะไม่มีการส่งข้อมูลยอดขาย งบประมาณ หรือข้อมูลโรงเรียนหลุดออกไปภายนอกเด็ดขาด
+10. **Admin Backoffice Control (รหัสผ่าน: `admin0000`):**
+    - แผงควบคุมระบบหลังบ้านสำหรับผู้ดูแลระบบ ตรวจสอบและจัดการโครงสร้างฐานข้อมูลทั้งหมด
 
 ---
 
@@ -64,18 +66,20 @@
 
 ```text
 ├── backend/
-│   ├── Code.js              # Backend Controller หลักสำหรับวางใน Google Apps Script
-│   └── appsscript.json      # ค่าคอนฟิก Manifest และขอบเขตสิทธิ์ (OAuth Scopes)
+│   ├── Code.js                   # Backend Controller หลักสำหรับ Web App
+│   ├── PPC_Setup_And_Reports.js  # ตัวสร้าง 7 ตารางฐานข้อมูล และออกรายงาน A4 (PDF & Word .docx)
+│   └── appsscript.json           # ค่าคอนฟิก Manifest และขอบเขตสิทธิ์ (OAuth Scopes)
 ├── frontend/
-│   ├── index.html           # SPA Portal หลัก (Dashboard, Team A, Team B, Exec, Evaluation, Admin)
-│   └── survey.html          # หน้าแบบประเมิน Mobile-First ป้องกันข้อมูลรั่วไหล (Zero-Trust)
+│   ├── index.html                # SPA Portal หลัก (Dashboard, Team A/B, Exec, A4 Preview & Export)
+│   ├── survey.html               # หน้าแบบประเมิน Mobile-First ป้องกันข้อมูลรั่วไหล (Zero-Trust)
+│   └── mobile_preview.html       # Simulator จำลองการแสดงผลบนสมาร์ตโฟน
 ├── data/
-│   ├── Database_Schema.md   # รายละเอียดฟิลด์และคอลัมน์ของชีตทั้ง 6 แผ่น
-│   └── PPC_Master_Sample.csv # ข้อมูลตัวอย่างสำหรับนำเข้า Sheet PPC_Master
-├── CHANGELOG.md             # บันทึกประวัติการปรับปรุงแต่ละเวอร์ชัน
-├── MANUAL.md                # คู่มือการใช้งานระบบสำหรับผู้ใช้ทุกระดับ
-├── README.md                # ภาพรวมระบบและการติดตั้ง
-└── VERSION                  # หมายเลขเวอร์ชันปัจจุบัน (1.0.0)
+│   ├── Database_Schema.md        # รายละเอียดฟิลด์และคอลัมน์ของชีตทั้ง 7 แผ่น
+│   └── PPC_Master_Sample.csv     # ข้อมูลตัวอย่างสำหรับนำเข้า Sheet PPC_Master
+├── CHANGELOG.md                  # บันทึกประวัติการปรับปรุงแต่ละเวอร์ชัน
+├── MANUAL.md                     # คู่มือการใช้งานระบบสำหรับผู้ใช้ทุกระดับ
+├── README.md                     # ภาพรวมระบบและการติดตั้ง
+└── VERSION                       # หมายเลขเวอร์ชันปัจจุบัน (1.5.0)
 ```
 
 ---
@@ -87,10 +91,11 @@
 2. ไปที่เมนู **ส่วนขยาย (Extensions)** $\rightarrow$ **Apps Script**
 
 ### ขั้นตอนที่ 2: ติดตั้งโค้ดลงใน Apps Script
-1. คัดลอกโค้ดจากไฟล์ [`backend/Code.js`](backend/Code.js) ไปวางแทนที่ในไฟล์ `Code.gs` บน Apps Script
-2. คัดลอกเนื้อหาจากไฟล์ [`frontend/index.html`](frontend/index.html) ไปสร้างไฟล์ HTML ใหม่ใน Apps Script ตั้งชื่อว่า `Index.html`
-3. คัดลอกเนื้อหาจากไฟล์ [`frontend/survey.html`](frontend/survey.html) ไปสร้างไฟล์ HTML ใหม่ใน Apps Script ตั้งชื่อว่า `SurveyView.html`
-4. กดบันทึก (Save)
+1. คัดลอกโค้ดจากไฟล์ [`backend/Code.js`](backend/Code.js) ไปวางในไฟล์ `Code.gs`
+2. สร้างไฟล์สคริปต์ใหม่ใน Apps Script ตั้งชื่อว่า `PPC_Setup_And_Reports.gs` แล้วคัดลอกโค้ดจาก [`backend/PPC_Setup_And_Reports.js`](backend/PPC_Setup_And_Reports.js) ไปวาง
+3. คัดลอกเนื้อหาจากไฟล์ [`frontend/index.html`](frontend/index.html) ไปสร้างไฟล์ HTML ใหม่ใน Apps Script ตั้งชื่อว่า `Index.html`
+4. คัดลอกเนื้อหาจากไฟล์ [`frontend/survey.html`](frontend/survey.html) ไปสร้างไฟล์ HTML ใหม่ใน Apps Script ตั้งชื่อว่า `SurveyView.html`
+5. กดบันทึก (Save) โครงการ Apps Script
 
 ### ขั้นตอนที่ 3: สั่งสร้างหัวตารางอัตโนมัติ (Auto-Init Database)
 1. ในหน้า Apps Script ให้เลือกฟังก์ชัน `handleAdminInitSheets` หรือรันผ่านเมนู Admin ภายในเว็บ

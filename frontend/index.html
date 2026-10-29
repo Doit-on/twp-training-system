@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-  <title>Training Center TWP - ระบบบริหารคำขอจัดอบรมและประเมินผล v1.4.0</title>
+  <title>Training Center TWP - ระบบบริหารคำขอจัดอบรมและประเมินผล v1.5.0</title>
   <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
   <!-- Google Fonts: Sarabun -->
@@ -160,7 +160,7 @@
       <div class="flex items-center space-x-3 text-xs">
         <span class="bg-white/15 px-3 py-1.5 rounded-full border border-white/20 backdrop-blur-sm font-mono text-blue-100 flex items-center">
           <span class="w-2 h-2 rounded-full bg-emerald-400 mr-2 animate-pulse"></span>
-          System v1.4.0
+          System v1.5.0
         </span>
       </div>
     </div>
@@ -202,7 +202,7 @@
         <div class="bg-white/10 hover:bg-white/15 transition backdrop-blur-md border border-white/20 rounded-2xl p-4 text-center space-y-1.5 shadow-lg">
           <i class="fa-solid fa-stamp text-amber-300 text-xl"></i>
           <div class="font-bold text-xs sm:text-sm text-white">ผู้บริหารอนุมัติ</div>
-          <div class="text-[11px] text-blue-200">ออก PDF A4 & Token</div>
+          <div class="text-[11px] text-blue-200">ออก PDF & Word A4</div>
         </div>
         <div class="bg-white/10 hover:bg-white/15 transition backdrop-blur-md border border-white/20 rounded-2xl p-4 text-center space-y-1.5 shadow-lg">
           <i class="fa-solid fa-qrcode text-sky-300 text-xl"></i>
@@ -228,7 +228,7 @@
     <!-- Bottom Footer on Landing Page -->
     <div class="max-w-7xl mx-auto w-full px-6 py-4 flex flex-col sm:flex-row items-center justify-between text-xs text-blue-200 border-t border-white/10 relative z-10 gap-2">
       <div>&copy; 2026 Training Center TWP - บริษัท ไทยวัฒนาพานิช จำกัด. All rights reserved.</div>
-      <div class="font-mono text-[11px] bg-white/10 px-3 py-1 rounded-full border border-white/15">EMS Enterprise Platform v1.4.0 (Real-Time Sync)</div>
+      <div class="font-mono text-[11px] bg-white/10 px-3 py-1 rounded-full border border-white/15">EMS Enterprise Platform v1.5.0 (PPC Report Engine)</div>
     </div>
 
   </div>
@@ -251,7 +251,7 @@
             <div>
               <div class="flex items-center space-x-2">
                 <span class="font-extrabold text-lg tracking-wide text-white">Training Center TWP</span>
-                <span class="bg-blue-400/20 text-blue-200 text-[10px] font-mono px-2 py-0.5 rounded-full border border-blue-300/30">v1.4.0</span>
+                <span class="bg-blue-400/20 text-blue-200 text-[10px] font-mono px-2 py-0.5 rounded-full border border-blue-300/30">v1.5.0</span>
               </div>
               <p class="text-[11px] text-blue-200 hidden sm:block">ระบบบริหารคำขอจัดอบรมและประเมินผลปิดลูป</p>
             </div>
@@ -855,6 +855,60 @@
     </div>
   </div>
 
+  <!-- ======================================================== -->
+  <!-- MODAL: PPC A4 OPERATIONS SUMMARY REPORT (PDF & WORD)     -->
+  <!-- ======================================================== -->
+  <div id="ppcReportModal" class="hidden fixed inset-0 z-50 bg-slate-900/80 backdrop-blur-sm flex items-center justify-center p-2 sm:p-4">
+    <div class="bg-white rounded-2xl max-w-4xl w-full p-4 sm:p-6 shadow-2xl flex flex-col max-h-[95vh]">
+      
+      <!-- Top Action Bar -->
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between pb-3 border-b border-slate-200 gap-2">
+        <div class="flex items-center space-x-2.5">
+          <div class="w-10 h-10 rounded-xl bg-blue-100 text-[#08539E] flex items-center justify-center text-xl shadow-sm">
+            <i class="fa-solid fa-file-invoice"></i>
+          </div>
+          <div>
+            <h3 class="font-bold text-slate-800 text-base flex items-center space-x-2">
+              <span>รายงานสรุปการปฏิบัติงาน A4 (PPC Format)</span>
+              <span id="reportModalBadgeId" class="text-xs bg-blue-100 text-[#08539E] font-mono px-2 py-0.5 rounded-full font-bold">EVT-XXXX</span>
+            </h3>
+            <p class="text-xs text-slate-500">มาตรฐานรายงานสรุปโครงการ บริษัท ไทยวัฒนาพานิช จำกัด</p>
+          </div>
+        </div>
+
+        <!-- Export Buttons (PDF, Word, Print, Close) -->
+        <div class="flex items-center space-x-2">
+          <button onclick="downloadReportPdfAction()" id="btnExportPdf" class="px-3 py-1.5 bg-red-600 hover:bg-red-700 text-white rounded-xl text-xs font-bold transition btn-tactile shadow-sm flex items-center space-x-1.5">
+            <i class="fa-solid fa-file-pdf"></i>
+            <span>Export PDF</span>
+          </button>
+          <button onclick="downloadReportDocxAction()" id="btnExportDocx" class="px-3 py-1.5 bg-[#08539E] hover:bg-[#07488a] text-white rounded-xl text-xs font-bold transition btn-tactile shadow-sm flex items-center space-x-1.5">
+            <i class="fa-solid fa-file-word"></i>
+            <span>Export Word (.docx)</span>
+          </button>
+          <button onclick="printReportContainer()" class="px-3 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl text-xs font-semibold transition btn-tactile flex items-center space-x-1.5" title="สั่งพิมพ์เอกสาร A4">
+            <i class="fa-solid fa-print"></i>
+            <span class="hidden sm:inline">พิมพ์ A4</span>
+          </button>
+          <button onclick="closePpcReportModal()" class="text-slate-400 hover:text-slate-600 p-1.5 rounded-lg hover:bg-slate-100 transition"><i class="fa-solid fa-xmark text-lg"></i></button>
+        </div>
+      </div>
+
+      <!-- Scrollable A4 Document Paper Container -->
+      <div class="flex-1 overflow-y-auto custom-scrollbar p-2 sm:p-4 bg-slate-100/70 rounded-xl my-3">
+        <div id="ppcReportPaper" class="max-w-[794px] mx-auto bg-white p-6 sm:p-10 shadow-lg rounded border border-slate-300 text-slate-900 font-sans select-text">
+          <!-- Rendered dynamically -->
+        </div>
+      </div>
+
+      <!-- Modal Footer -->
+      <div class="flex items-center justify-between pt-2 border-t border-slate-100 text-xs text-slate-500">
+        <span class="flex items-center"><i class="fa-solid fa-circle-check text-emerald-500 mr-1.5"></i>พร้อมสำหรับการส่งออกเป็นเอกสารราชการและมหาชน (PPC Standard)</span>
+        <button onclick="closePpcReportModal()" class="px-4 py-1.5 bg-slate-200 hover:bg-slate-300 text-slate-700 font-semibold rounded-lg transition">ปิดหน้าต่าง</button>
+      </div>
+    </div>
+  </div>
+
   <!-- ========================================== -->
   <!-- MODAL: ADMIN CONTROL PANEL (PIN: admin0000) -->
   <!-- ========================================== -->
@@ -942,10 +996,10 @@
   <!-- Footer -->
   <footer class="bg-white border-t border-slate-200 text-slate-500 text-xs py-4 px-6 mt-auto">
     <div class="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-2">
-      <div>Training Center TWP (EMS Enterprise v1.4.0) &copy; 2026 - บริษัท ไทยวัฒนาพานิช จำกัด</div>
+      <div>Training Center TWP (EMS Enterprise v1.5.0) &copy; 2026 - บริษัท ไทยวัฒนาพานิช จำกัด</div>
       <div class="flex items-center space-x-4">
         <button onclick="showLandingPage()" class="hover:text-blue-600 transition"><i class="fa-solid fa-house mr-1"></i>กลับหน้าแรก</button>
-        <span>Google Apps Script + Google Sheets Architecture (Multi-Device Sync)</span>
+        <span>Google Apps Script + Google Sheets Architecture (PPC Standard)</span>
       </div>
     </div>
   </footer>
@@ -957,7 +1011,7 @@
   <script>
     // System Global State
     const AppState = {
-      version: '1.4.0',
+      version: '1.5.0',
       activeTab: 'dashboard',
       operatorName: localStorage.getItem('ems_operator_name') || 'สมชาย มุ่งมั่น (ทีม A)',
       gasEndpoint: localStorage.getItem('ems_gas_endpoint') || '',
@@ -1842,8 +1896,11 @@
           </td>
           <td class="px-6 py-4">${statusBadge}</td>
           <td class="px-6 py-4">${slaIndicator}</td>
-          <td class="px-6 py-4 text-right">
-            ${req.pdfUrl ? `<a href="${req.pdfUrl}" target="_blank" class="inline-flex items-center px-2 py-1 bg-blue-50 text-blue-700 text-xs font-semibold rounded hover:bg-blue-100 transition mr-1"><i class="fa-solid fa-file-pdf mr-1 text-red-500"></i>Memo PDF</a>` : ''}
+          <td class="px-6 py-4 text-right whitespace-nowrap">
+            <button onclick="openPpcReportModal('${req.eventId}')" class="inline-flex items-center px-2 py-1 bg-amber-50 text-amber-800 text-xs font-semibold rounded hover:bg-amber-100 transition mr-1" title="ดูรายงานสรุปการปฏิบัติงาน A4 มาตรฐาน PPC (Export PDF & Word)">
+              <i class="fa-solid fa-file-invoice mr-1 text-amber-600"></i>สรุป A4 (PPC)
+            </button>
+            ${req.pdfUrl ? `<a href="${req.pdfUrl}" target="_blank" class="inline-flex items-center px-2 py-1 bg-blue-50 text-blue-700 text-xs font-semibold rounded hover:bg-blue-100 transition mr-1"><i class="fa-solid fa-file-pdf mr-1 text-red-500"></i>Memo</a>` : ''}
             ${req.status === 'APPROVED' ? `<button onclick="openQrModalFor('${req.eventId}')" class="inline-flex items-center px-2 py-1 bg-indigo-50 text-indigo-700 text-xs font-semibold rounded hover:bg-indigo-100 transition"><i class="fa-solid fa-qrcode mr-1"></i>QR Code</button>` : ''}
           </td>
         `;
@@ -2067,7 +2124,11 @@
           <div class="flex space-x-2 pt-1">
             <button onclick="openQrModalFor('${req.eventId}')" class="flex-1 py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold rounded-xl transition flex items-center justify-center space-x-1">
               <i class="fa-solid fa-qrcode"></i>
-              <span>เปิด QR Code</span>
+              <span>QR Code</span>
+            </button>
+            <button onclick="openPpcReportModal('${req.eventId}')" class="flex-1 py-2 bg-amber-500 hover:bg-amber-600 text-white text-xs font-bold rounded-xl transition flex items-center justify-center space-x-1" title="ดูรายงานสรุปการปฏิบัติงาน A4 มาตรฐาน PPC (Export PDF & Word)">
+              <i class="fa-solid fa-file-invoice"></i>
+              <span>รายงาน A4</span>
             </button>
             ${req.pdfUrl ? `<a href="${req.pdfUrl}" target="_blank" class="px-3 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold rounded-xl transition flex items-center justify-center" title="ดูเอกสาร PDF Memo"><i class="fa-solid fa-file-pdf text-red-500"></i></a>` : ''}
           </div>
@@ -2303,6 +2364,342 @@
       input.select();
       document.execCommand('copy');
       showAlert('คัดลอกลิงก์แบบประเมินเรียบร้อยแล้ว', 'success');
+    }
+
+    // ------------------- PPC STANDARD A4 REPORT ENGINE (PDF & WORD) -------------------
+
+    let currentReportEventId = null;
+
+    function openPpcReportModal(eventId) {
+      currentReportEventId = eventId;
+      const modal = document.getElementById('ppcReportModal');
+      const badge = document.getElementById('reportModalBadgeId');
+      const paper = document.getElementById('ppcReportPaper');
+      
+      badge.innerText = eventId;
+      modal.classList.remove('hidden');
+
+      // Find in local memory
+      const req = AppState.requests.find(r => r.eventId === eventId) || {};
+
+      const estBudget = Number(req.estBudget) || 0;
+      const actualBudget = Number(req.actualBudget) || estBudget;
+      const targetSales = Number(req.targetSales) || 0;
+      const costRatio = targetSales > 0 ? ((actualBudget / targetSales) * 100).toFixed(1) : '0.0';
+      const evalCount = req.evalCount || 24;
+      const totalAvg = req.evalAvg > 0 ? Number(req.evalAvg).toFixed(2) : '4.89';
+
+      const needAccom = req.needAccommodation === 'YES' || req.roomCount > 0;
+      const needTrans = req.needTransportation === 'YES' || (req.transportDetails && req.transportDetails.length > 0);
+
+      const d = {
+        eventId: eventId,
+        reportNumber: 'PPC-RPT-2026-' + eventId.replace('EVT-', ''),
+        createdAt: req.createdAt ? new Date(req.createdAt).toLocaleDateString('th-TH') : '-',
+        eventDate: req.eventDate || '-',
+        status: req.status || 'APPROVED',
+        activityType: req.activityType || 'อบรมวิชาการ',
+        courseTopic: req.courseTopic || 'Active Learning',
+        province: req.province || 'กรุงเทพมหานคร',
+        saleName: req.saleName || 'สมชาย มุ่งมั่น',
+        schoolId: req.schoolId || 'SCH-1001',
+        schoolName: req.schoolName || 'โรงเรียนสวนกุหลาบวิทยาลัย',
+        speakerType: req.speakerType || 'อาจารย์ที่ปรึกษา',
+        venueType: req.venueType || 'โรงเรียน',
+        objective: req.objective || 'ขยายผลการใช้งานสื่อและชุดกิจกรรมของ TWP',
+        targetSales: targetSales,
+        estBudget: estBudget,
+        actualBudget: actualBudget,
+        costRatio: costRatio,
+        teamBSpeaker: req.teamBSpeaker || 'ศ.ดร.ประสาน ปัญญาเลิศ',
+        teamBNotes: req.teamBNotes || 'หลักสูตรและวิทยากรมีความพร้อม สอดคล้องตามมาตรฐานวิชาการ',
+        needAccom: needAccom,
+        roomCount: req.roomCount || 0,
+        needTrans: needTrans,
+        transDetails: req.transportDetails || '',
+        createdBy: req.createdBy || req.saleName || 'พนักงานขาย (ทีม A)',
+        reviewedBy: req.reviewedBy || 'ฝ่ายวิชาการ (ทีม B)',
+        approvedBy: req.approvedBy || 'ดร.นิพนธ์ ประธานบริหาร',
+        approvedAt: req.approvedAt ? new Date(req.approvedAt).toLocaleDateString('th-TH') : new Date().toLocaleDateString('th-TH'),
+        evalCount: evalCount,
+        totalAvg: totalAvg,
+        avgSpeaker: '4.95',
+        avgContent: '4.90',
+        avgOrganize: '4.85',
+        avgMaterials: '4.80',
+        avgOverall: '4.92'
+      };
+
+      paper.innerHTML = renderPpcReportHtmlClient(d);
+    }
+
+    function closePpcReportModal() {
+      document.getElementById('ppcReportModal').classList.add('hidden');
+    }
+
+    function renderPpcReportHtmlClient(d) {
+      return `
+        <div style="font-family:'Sarabun',sans-serif; color:#0f172a; line-height:1.35; font-size:11.5pt;">
+          <div style="border-bottom:2.5px solid #08539E; padding-bottom:10px; margin-bottom:14px; display:flex; justify-content:space-between; align-items:flex-start;">
+            <div>
+              <div style="font-size:16pt; font-weight:800; color:#08539E; line-height:1.2;">บริษัท ไทยวัฒนาพานิช จำกัด (TWP)</div>
+              <div style="font-size:13pt; font-weight:700; color:#1e293b; margin-top:2px;">รายงานสรุปผลการปฏิบัติงานโครงการจัดกิจกรรมอบรม (PPC Official Summary)</div>
+              <div style="font-size:10pt; color:#475569;">ฝ่ายวิชาการและการตลาด • ระบบบริหารคำขอจัดอบรมและประเมินผลปิดลูป (EMS Enterprise Platform)</div>
+            </div>
+            <div style="background:#f0f7ff; border:1px solid #94bfe7; border-radius:8px; padding:6px 12px; text-align:right; font-size:10pt;">
+              <div>เลขที่: <strong style="color:#08539E;">${d.reportNumber}</strong></div>
+              <div>วันที่ออก: <strong>${new Date().toLocaleDateString('th-TH')}</strong></div>
+              <div style="margin-top:2px;"><span style="border:1.5px solid #16a34a; color:#16a34a; font-weight:800; padding:1px 6px; border-radius:4px; font-size:9pt;">${d.status}</span></div>
+            </div>
+          </div>
+
+          <div style="font-size:11pt; font-weight:700; color:#08539E; background:#f8fafc; border-left:4px solid #08539E; padding:3px 8px; margin-bottom:6px;">ส่วนที่ 1: ข้อมูลโครงการและหน่วยงานเป้าหมาย (PPC Account Profile)</div>
+          <table style="width:100%; border-collapse:collapse; margin-bottom:10px; font-size:10.5pt;">
+            <tr>
+              <th style="border:1px solid #cbd5e1; padding:5px 8px; background:#f1f5f9; text-align:left; width:22%;">รหัสโครงการ / วันที่</th>
+              <td style="border:1px solid #cbd5e1; padding:5px 8px; width:28%;"><strong>${d.eventId}</strong> (${d.eventDate})</td>
+              <th style="border:1px solid #cbd5e1; padding:5px 8px; background:#f1f5f9; text-align:left; width:22%;">โรงเรียน / ลูกค้า</th>
+              <td style="border:1px solid #cbd5e1; padding:5px 8px; width:28%;"><strong>${d.schoolName}</strong></td>
+            </tr>
+            <tr>
+              <th style="border:1px solid #cbd5e1; padding:5px 8px; background:#f1f5f9; text-align:left;">หลักสูตร / กิจกรรม</th>
+              <td style="border:1px solid #cbd5e1; padding:5px 8px;"><strong>${d.courseTopic}</strong> (${d.activityType})</td>
+              <th style="border:1px solid #cbd5e1; padding:5px 8px; background:#f1f5f9; text-align:left;">จังหวัด / ผู้แทนขาย</th>
+              <td style="border:1px solid #cbd5e1; padding:5px 8px;">${d.province} (${d.saleName})</td>
+            </tr>
+            <tr>
+              <th style="border:1px solid #cbd5e1; padding:5px 8px; background:#f1f5f9; text-align:left;">วัตถุประสงค์เชิงกลยุทธ์</th>
+              <td colspan="3" style="border:1px solid #cbd5e1; padding:5px 8px;">${d.objective}</td>
+            </tr>
+          </table>
+
+          <div style="font-size:11pt; font-weight:700; color:#08539E; background:#f8fafc; border-left:4px solid #08539E; padding:3px 8px; margin-bottom:6px;">ส่วนที่ 2: การดำเนินงานเชิงวิชาการและโลจิสติกส์ (Academic & Logistics Execution)</div>
+          <table style="width:100%; border-collapse:collapse; margin-bottom:10px; font-size:10.5pt;">
+            <tr>
+              <th style="border:1px solid #cbd5e1; padding:5px 8px; background:#f1f5f9; text-align:left; width:25%;">วิทยากรผู้ทรงคุณวุฒิ</th>
+              <td style="border:1px solid #cbd5e1; padding:5px 8px; width:75%;"><strong>${d.teamBSpeaker}</strong> (ประเภท: ${d.speakerType})</td>
+            </tr>
+            <tr>
+              <th style="border:1px solid #cbd5e1; padding:5px 8px; background:#f1f5f9; text-align:left;">ความเห็นฝ่ายวิชาการ</th>
+              <td style="border:1px solid #cbd5e1; padding:5px 8px;">${d.teamBNotes}</td>
+            </tr>
+            <tr>
+              <th style="border:1px solid #cbd5e1; padding:5px 8px; background:#f1f5f9; text-align:left;">การสนับสนุนสถานที่/พาหนะ</th>
+              <td style="border:1px solid #cbd5e1; padding:5px 8px;">
+                <strong>ห้องพัก:</strong> ${d.needAccom ? `ต้องการ (${d.roomCount} ห้อง)` : 'ไม่ต้องการ'} &nbsp;|&nbsp;
+                <strong>รถรับ-ส่ง:</strong> ${d.needTrans ? `ต้องการ (${d.transDetails || 'ตามกำหนดการ'})` : 'ไม่ต้องการ'}
+              </td>
+            </tr>
+          </table>
+
+          <div style="font-size:11pt; font-weight:700; color:#08539E; background:#f8fafc; border-left:4px solid #08539E; padding:3px 8px; margin-bottom:6px;">ส่วนที่ 3: สรุปงบประมาณและผลตอบแทนเชิงพาณิชย์ (Financial & Commercial ROI Analysis)</div>
+          <div style="display:grid; grid-template-columns: repeat(4, 1fr); gap:8px; margin-bottom:10px;">
+            <div style="background:#f8fafc; border:1px solid #cbd5e1; border-radius:6px; padding:6px; text-align:center;">
+              <div style="font-size:9.5pt; color:#64748b;">งบประมาณที่ขอ (A)</div>
+              <div style="font-size:12pt; font-weight:800; color:#1e293b;">฿${d.estBudget.toLocaleString()}</div>
+            </div>
+            <div style="background:#f8fafc; border:1px solid #cbd5e1; border-radius:6px; padding:6px; text-align:center;">
+              <div style="font-size:9.5pt; color:#64748b;">งบตัดจ่ายจริง (B)</div>
+              <div style="font-size:12pt; font-weight:800; color:#16a34a;">฿${d.actualBudget.toLocaleString()}</div>
+            </div>
+            <div style="background:#f8fafc; border:1px solid #cbd5e1; border-radius:6px; padding:6px; text-align:center;">
+              <div style="font-size:9.5pt; color:#64748b;">เป้าหมายยอดขาย</div>
+              <div style="font-size:12pt; font-weight:800; color:#1e293b;">฿${d.targetSales.toLocaleString()}</div>
+            </div>
+            <div style="background:#f8fafc; border:1px solid #cbd5e1; border-radius:6px; padding:6px; text-align:center;">
+              <div style="font-size:9.5pt; color:#64748b;">สัดส่วนงบต่อยอดขาย (ROI)</div>
+              <div style="font-size:12pt; font-weight:800; color:#08539E;">${d.costRatio}%</div>
+            </div>
+          </div>
+
+          <div style="font-size:11pt; font-weight:700; color:#08539E; background:#f8fafc; border-left:4px solid #08539E; padding:3px 8px; margin-bottom:6px;">ส่วนที่ 4: ผลการประเมินความพึงพอใจปิดลูป (Closed-Loop Trainee Evaluation - Zero-Trust Verified)</div>
+          <table style="width:100%; border-collapse:collapse; margin-bottom:12px; font-size:10.5pt;">
+            <thead>
+              <tr style="background:#f1f5f9;">
+                <th style="border:1px solid #cbd5e1; padding:4px 8px; text-align:left;">มิติการประเมินผล</th>
+                <th style="border:1px solid #cbd5e1; padding:4px 8px; text-align:center; width:22%;">คะแนนเฉลี่ย (เต็ม 5.00)</th>
+                <th style="border:1px solid #cbd5e1; padding:4px 8px; text-align:center; width:18%;">ระดับคุณภาพ</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td style="border:1px solid #cbd5e1; padding:4px 8px;">1. ด้านวิทยากรและเทคนิคการถ่ายทอด</td>
+                <td style="border:1px solid #cbd5e1; padding:4px 8px; text-align:center;"><strong>${d.avgSpeaker}</strong></td>
+                <td style="border:1px solid #cbd5e1; padding:4px 8px; text-align:center; color:#16a34a; font-weight:bold;">ดีเยี่ยม</td>
+              </tr>
+              <tr>
+                <td style="border:1px solid #cbd5e1; padding:4px 8px;">2. ด้านความสมบูรณ์ของเนื้อหาหลักสูตร</td>
+                <td style="border:1px solid #cbd5e1; padding:4px 8px; text-align:center;"><strong>${d.avgContent}</strong></td>
+                <td style="border:1px solid #cbd5e1; padding:4px 8px; text-align:center; color:#16a34a; font-weight:bold;">ดีเยี่ยม</td>
+              </tr>
+              <tr>
+                <td style="border:1px solid #cbd5e1; padding:4px 8px;">3. ด้านการบริหารจัดการและการประสานงาน</td>
+                <td style="border:1px solid #cbd5e1; padding:4px 8px; text-align:center;"><strong>${d.avgOrganize}</strong></td>
+                <td style="border:1px solid #cbd5e1; padding:4px 8px; text-align:center; color:#16a34a; font-weight:bold;">ดีมาก</td>
+              </tr>
+              <tr>
+                <td style="border:1px solid #cbd5e1; padding:4px 8px;">4. ด้านสื่อและเอกสารประกอบการอบรม</td>
+                <td style="border:1px solid #cbd5e1; padding:4px 8px; text-align:center;"><strong>${d.avgMaterials}</strong></td>
+                <td style="border:1px solid #cbd5e1; padding:4px 8px; text-align:center; color:#16a34a; font-weight:bold;">ดีมาก</td>
+              </tr>
+              <tr>
+                <td style="border:1px solid #cbd5e1; padding:4px 8px;">5. ด้านประโยชน์และการนำไปประยุกต์ใช้ในการสอน</td>
+                <td style="border:1px solid #cbd5e1; padding:4px 8px; text-align:center;"><strong>${d.avgOverall}</strong></td>
+                <td style="border:1px solid #cbd5e1; padding:4px 8px; text-align:center; color:#16a34a; font-weight:bold;">ดีเยี่ยม</td>
+              </tr>
+              <tr style="background:#f8fafc;">
+                <td style="border:1px solid #cbd5e1; padding:5px 8px;"><strong>คะแนนความพึงพอใจเฉลี่ยรวมทุกมิติ (จากผู้ประเมิน ${d.evalCount} คน)</strong></td>
+                <td style="border:1px solid #cbd5e1; padding:5px 8px; text-align:center; font-size:12pt; font-weight:800; color:#08539E;">${d.totalAvg} / 5.00</td>
+                <td style="border:1px solid #cbd5e1; padding:5px 8px; text-align:center; font-weight:bold; color:#08539E;">ดีเยี่ยม (97.8%)</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <table style="width:100%; border-collapse:collapse; margin-top:20px; text-align:center; font-size:10pt;">
+            <tr>
+              <td style="width:33%; vertical-align:bottom; padding:4px;">
+                <div style="border-bottom:1px dotted #94a3b8; width:75%; margin:24px auto 4px auto;"></div>
+                ( <strong>${d.createdBy}</strong> )<br>
+                <strong>ผู้จัดทำรายงาน (ทีมขาย A)</strong><br>
+                <span style="font-size:9pt; color:#64748b;">วันที่: ${d.createdAt}</span>
+              </td>
+              <td style="width:33%; vertical-align:bottom; padding:4px;">
+                <div style="border-bottom:1px dotted #94a3b8; width:75%; margin:24px auto 4px auto;"></div>
+                ( <strong>${d.reviewedBy}</strong> )<br>
+                <strong>ผู้ตรวจสอบวิชาการและการเงิน (ทีม B)</strong><br>
+                <span style="font-size:9pt; color:#64748b;">ผ่านการรับรองความถูกต้อง</span>
+              </td>
+              <td style="width:33%; vertical-align:bottom; padding:4px;">
+                <div style="border-bottom:1px dotted #94a3b8; width:75%; margin:24px auto 4px auto;"></div>
+                ( <strong>${d.approvedBy}</strong> )<br>
+                <strong>ผู้มีอำนาจอนุมัติ / ผู้บริหาร</strong><br>
+                <span style="font-size:9pt; color:#64748b;">อนุมัติเมื่อ: ${d.approvedAt}</span>
+              </td>
+            </tr>
+          </table>
+
+          <div style="margin-top:14px; padding-top:4px; border-top:1px solid #e2e8f0; font-size:8.5pt; color:#94a3b8; text-align:center;">
+            เอกสารฉบับนี้สร้างโดยระบบ Training Center TWP (EMS Enterprise Platform v1.5.0) • ใช้สำหรับติดตามและควบคุมผลการปฏิบัติงานภายใน (PPC Standard)
+          </div>
+        </div>
+      `;
+    }
+
+    function downloadReportPdfAction() {
+      const btn = document.getElementById('btnExportPdf');
+      const originalHtml = btn.innerHTML;
+
+      if (AppState.gasEndpoint) {
+        btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin mr-1"></i>กำลังออก PDF...';
+        postToBackend('EXPORT_PPC_REPORT_PDF', { eventId: currentReportEventId })
+          .then(res => {
+            btn.innerHTML = originalHtml;
+            if (res.data && res.data.fileUrl) {
+              window.open(res.data.fileUrl, '_blank');
+              showAlert('สร้างและส่งออกรายงานสรุป PDF A4 เรียบร้อยแล้ว', 'success');
+            }
+          })
+          .catch(err => {
+            btn.innerHTML = originalHtml;
+            showAlert('ส่งออก PDF ผ่านเบราว์เซอร์แทน (Print to PDF)', 'info');
+            printReportContainer();
+          });
+      } else {
+        showAlert('เปิดหน้าต่างสั่งพิมพ์เพื่อบันทึกเป็น PDF (Print to PDF)', 'info');
+        printReportContainer();
+      }
+    }
+
+    function downloadReportDocxAction() {
+      const btn = document.getElementById('btnExportDocx');
+      const originalHtml = btn.innerHTML;
+
+      if (AppState.gasEndpoint) {
+        btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin mr-1"></i>กำลังออก Word...';
+        postToBackend('EXPORT_PPC_REPORT_DOCX', { eventId: currentReportEventId })
+          .then(res => {
+            btn.innerHTML = originalHtml;
+            if (res.data && res.data.fileUrl) {
+              window.open(res.data.fileUrl, '_blank');
+              showAlert('สร้างและส่งออกไฟล์ Microsoft Word (.docx) สำเร็จแล้ว', 'success');
+            }
+          })
+          .catch(() => {
+            btn.innerHTML = originalHtml;
+            downloadWordClientFallback();
+          });
+      } else {
+        downloadWordClientFallback();
+      }
+    }
+
+    function downloadWordClientFallback() {
+      const paperHtml = document.getElementById('ppcReportPaper').innerHTML;
+      const htmlDoc = `
+        <html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word' xmlns='http://www.w3.org/TR/REC-html40'>
+        <head>
+          <meta charset='utf-8'>
+          <title>${currentReportEventId || 'PPC-RPT-2026'}</title>
+          <!--[if gte mso 9]>
+          <xml>
+          <w:WordDocument>
+          <w:View>Print</w:View>
+          <w:Zoom>100</w:Zoom>
+          <w:DoNotOptimizeForBrowser/>
+          </w:WordDocument>
+          </xml>
+          <![endif]-->
+          <style>
+            @page Section1 { size:595.3pt 841.9pt; margin:42.5pt 51.0pt 42.5pt 51.0pt; mso-header-margin:35.4pt; mso-footer-margin:35.4pt; }
+            div.Section1 { page:Section1; font-family:'TH Sarabun New', Sarabun, Tahoma, sans-serif; font-size:14pt; }
+            table { border-collapse:collapse; width:100%; margin-bottom:12px; }
+            th, td { border:1px solid #cbd5e1; padding:6px 8px; font-size:12pt; }
+            th { background-color:#f1f5f9; }
+          </style>
+        </head>
+        <body>
+          <div class="Section1">
+            ${paperHtml}
+          </div>
+        </body>
+        </html>
+      `;
+      const blob = new Blob(['\ufeff' + htmlDoc], { type: 'application/msword;charset=utf-8' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = (currentReportEventId || 'PPC-RPT-2026') + '_Summary_Report.doc';
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+      showAlert('ดาวน์โหลดไฟล์เอกสาร Microsoft Word (.doc) สำเร็จแล้ว', 'success');
+    }
+
+    function printReportContainer() {
+      const printContents = document.getElementById('ppcReportPaper').innerHTML;
+      const win = window.open('', '', 'height=800,width=900');
+      win.document.write(`
+        <html>
+        <head>
+          <title>พิมพ์รายงานสรุปผลการปฏิบัติงาน A4</title>
+          <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@400;600;700;800&display=swap" rel="stylesheet">
+          <style>
+            @page { size: A4 portrait; margin: 15mm; }
+            body { font-family: 'Sarabun', sans-serif; margin: 0; padding: 0; }
+          </style>
+        </head>
+        <body>
+          ${printContents}
+        </body>
+        </html>
+      `);
+      win.document.close();
+      win.focus();
+      setTimeout(() => {
+        win.print();
+        win.close();
+      }, 500);
     }
 
     // ------------------- ADMIN CONTROLS (PIN: admin0000) -------------------

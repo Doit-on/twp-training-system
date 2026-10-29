@@ -7,6 +7,34 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [1.5.0] - 2026-10-29
+
+### Added
+- **PPC Database Setup & Google Sheets Auto-Connector (`backend/PPC_Setup_And_Reports.js`):**
+  - **Custom Menu ใน Google Sheets (`📊 PPC Training Center`):** ติดตั้งเมนูคำสั่งอัตโนมัติบน Google Spreadsheet สำหรับกดสร้างโครงสร้างชีต 7 ตาราง, สร้างรายงานสรุป, และ Export PDF/Word
+  - **โครงสร้าง 7 ตารางฐานข้อมูลมาตรฐาน PPC:**
+    1. `PPC_Master` (ข้อมูลโรงเรียน, โซน, พนักงานขาย, Tier ลูกค้า, ข้อมูลติดต่อ)
+    2. `Event_Requests` (คอลัมน์คำขอครบวงจร รวมที่พัก รถรับส่ง ลิงก์ PDF และ Word)
+    3. `QR_Tokens` (Token แบบประเมิน Zero-Trust)
+    4. `Evaluation_Responses` (ผลประเมิน 5 มิติจากผู้เข้าอบรม)
+    5. `System_Logs` (Audit Trail ตรวจสอบย้อนหลัง)
+    6. `System_Settings` (พารามิเตอร์ระบบและรหัสผ่าน Admin)
+    7. `PPC_Performance_Summary` (แผ่นสรุปแดชบอร์ด KPI ในชีต พร้อมสูตรคำนวณอัตโนมัติ)
+- **รายงานสรุปการปฏิบัติงาน A4 มาตรฐานโปรแกรม PPC (PPC Operations & Performance Report):**
+  - จัดหน้าแบบฟอร์ม A4 มาตรฐานราชการ/บริษัทมหาชน (TH Sarabun PSK 16pt / 14pt)
+  - แบ่งรายงานเป็น 5 ส่วนสมบูรณ์:
+    - ส่วนที่ 1: ข้อมูลโครงการและหน่วยงานเป้าหมาย (PPC Account Profile)
+    - ส่วนที่ 2: การดำเนินงานเชิงวิชาการและโลจิสติกส์ (Academic & Logistics Execution)
+    - ส่วนที่ 3: สรุปงบประมาณและผลตอบแทนเชิงพาณิชย์ (Financial & Commercial ROI Analysis)
+    - ส่วนที่ 4: ผลการประเมินความพึงพอใจปิดลูป 5 มิติ (Closed-Loop Trainee Evaluation)
+    - ส่วนที่ 5: การลงนามรับรองผลการปฏิบัติงาน 3 ฝ่าย (Tri-Party Certification Signatures)
+- **Dual Export Engine: PDF และ Microsoft Word (.docx):**
+  - **Export PDF:** สร้างไฟล์ PDF A4 Sarabun บันทึกลง Google Drive พร้อมลิงก์เปิดอ่าน และฟังก์ชัน Print to PDF
+  - **Export Word (.docx):** สร้างไฟล์เอกสาร Word ผ่าน Google Docs Drive Export Feed และสร้างไฟล์ `.doc/.docx` จากเบราว์เซอร์ได้ทันที
+  - เพิ่มหน้าต่างพรีวิวรายงาน A4 บน WebApp (`#ppcReportModal`) พร้อมปุ่มกดดูได้จากตาราง Dashboard และการ์ดประเมินผล
+
+---
+
 ## [1.4.0] - 2026-10-29
 
 ### Added

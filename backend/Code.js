@@ -1,14 +1,14 @@
 /**
  * ============================================================================
  * EMS Enterprise - Training Center TWP
- * Version: 1.4.0
+ * Version: 1.5.0
  * Architecture: Google Apps Script Backend (Serverless) + Google Sheets Database
  * Security: Zero-Trust Data Isolation + Multi-Operator Stamping + Concurrency Lock
- * Features: Multi-Device Real-Time Data Sync + Team QR Code Pairing (v1.4.0)
+ * Features: Multi-Device Sync + Team QR Pairing + PPC Standard A4 Report Engine (PDF & Word .docx)
  * ============================================================================
  */
 
-const SYSTEM_VERSION = '1.4.0';
+const SYSTEM_VERSION = '1.5.0';
 const DEFAULT_ADMIN_PASS = 'admin0000';
 
 function getSpreadsheet() {
@@ -105,6 +105,18 @@ function doPost(e) {
         break;
       case 'ADMIN_UPDATE_SETTINGS':
         result = handleAdminUpdateSettings(payload);
+        break;
+      case 'SETUP_ALL_PPC_SHEETS':
+        result = setupAllPpcSheets();
+        break;
+      case 'GET_PPC_REPORT_DATA':
+        result = getPpcReportData(payload.eventId);
+        break;
+      case 'EXPORT_PPC_REPORT_PDF':
+        result = exportPpcReportPdf(payload.eventId);
+        break;
+      case 'EXPORT_PPC_REPORT_DOCX':
+        result = exportPpcReportDocx(payload.eventId);
         break;
       default:
         throw new Error('ไม่พบ Action ที่ระบุ: ' + action);
@@ -219,6 +231,7 @@ function getInitialData() {
       roomCount: Number(r[28]) || 0,
       needTransportation: r[29] || 'NO',
       transportDetails: r[30] || '',
+      docxUrl: r[31] || '',
       rowIndex: i + 1
     });
   }
@@ -787,7 +800,7 @@ function ensureRequiredSheets(ss) {
         'Venue_Type', 'Objective', 'Target_Sales', 'Est_Budget', 'TeamB_Speaker', 'TeamB_Notes',
         'Actual_Budget', 'Created_By', 'Reviewed_By', 'Approved_By', 'Last_Modified_By',
         'Submitted_To_B_At', 'Reviewed_By_B_At', 'Approved_At', 'A4_PDF_Url',
-        'Need_Accommodation', 'Room_Count', 'Need_Transportation', 'Transport_Details'
+        'Need_Accommodation', 'Room_Count', 'Need_Transportation', 'Transport_Details', 'A4_Docx_Url'
       ]
     },
     {
@@ -831,4 +844,9 @@ function ensureRequiredSheets(ss) {
       }
     }
   });
+
+  // ตรวจสอบและสร้างชีตสรุปภาพรวม KPI ของ PPC
+  if (typeof createPpcSummarySheet === 'function') {
+    createPpcSummarySheet(ss, '#08539E', '#FFFFFF');
+  }
 }
