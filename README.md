@@ -1,21 +1,27 @@
 # Training Center TWP (EMS Enterprise Platform)
 
-[![Version](https://img.shields.io/badge/version-1.5.0-blue.svg)](VERSION)
+[![Version](https://img.shields.io/badge/version-1.5.1-blue.svg)](VERSION)
 [![Runtime](https://img.shields.io/badge/runtime-Google%20Apps%20Script%20V8-green.svg)](https://developers.google.com/apps-script)
 [![Database](https://img.shields.io/badge/database-Google%20Sheets-success.svg)](data/Database_Schema.md)
 [![License](https://img.shields.io/badge/license-MIT-lightgrey.svg)](LICENSE)
 
-> ระบบบริหารจัดการคำขอจัดกิจกรรมอบรม และประเมินผลความพึงพอใจแบบปิดลูป (Training Center TWP / EMS Enterprise) ขับเคลื่อนด้วยสถาปัตยกรรม Serverless บน Google Apps Script และ Google Sheets มาพร้อมหน้า Landing Page โลโก้ TWP ทางการ, Modernized Tactile UX/UI Design, ระบบสแกน **QR Code ประจำทีม**, ระบบ **Real-Time Multi-Device Data Sync**, และ **ระบบสร้างรายงานสรุปการปฏิบัติงาน A4 มาตรฐาน PPC ที่ส่งออกได้ทั้ง PDF และ Microsoft Word (.docx)**
+> ระบบบริหารจัดการคำขอจัดกิจกรรมอบรม และประเมินผลความพึงพอใจแบบปิดลูป (Training Center TWP / EMS Enterprise) ขับเคลื่อนด้วยสถาปัตยกรรม Serverless บน Google Apps Script และ Google Sheets มาพร้อมหน้า Landing Page โลโก้ TWP ทางการ, Modernized Tactile UX/UI Design, ระบบสแกน **QR Code ประจำทีม**, ระบบ **Real-Time Multi-Device Data Sync**, **ระบบสร้างรายงานสรุปการปฏิบัติงาน A4 มาตรฐาน PPC ที่ส่งออกได้ทั้ง PDF และ Microsoft Word (.docx)** และ **การฝัง Production Apps Script Web App Endpoint อัตโนมัติ** ทำให้สแกนและใช้งานได้ทันทีทั่วทั้งองค์กร
 
 ---
 
 ## 🌟 จุดเด่นและฟีเจอร์สำคัญ (Key Features)
 
-1. **Closed-Loop Workflow เต็มวงจร:**
+1. **Embedded Production Apps Script Endpoint (v1.5.1):**
+   - ฝัง URL ของ Google Apps Script Web App ประจำองค์กรลงในระบบโดยตรง:
+     `https://script.google.com/macros/s/AKfycby-D2AvgHXO_y4tVxg8wgkDP9ARBnRpiVp47-vnF7AiA1TA4AqwKGbelJTyI68tKfmx6g/exec`
+   - เมื่อสร้าง QR Code หรือแชร์ลิงก์ประจำทีม (ทีม A, ทีม B, ผู้บริหาร, แดชบอร์ด) ค่า URL Endpoint นี้จะแนบติดไปในพารามิเตอร์ `&ep=` เสมอ ทำให้ผู้ร่วมงานที่สแกนด้วยโทรศัพท์มือถือเชื่อมต่อและซิงก์ข้อมูลกับ Google Sheet ได้ทันที ไม่ต้องกรอก URL เอง
+   - แบบประเมินผู้เข้าอบรม (`survey.html`) ส่งข้อมูลตรงเข้า Google Apps Script นี้โดยอัตโนมัติ
+
+2. **Closed-Loop Workflow เต็มวงจร:**
    - **ต้นน้ำ:** ทีมขาย (ทีม A) สร้างคำขอจัดกิจกรรม โดยผูกกับข้อมูลโรงเรียนและพนักงานขายจากฐาน `PPC_Master` อัตโนมัติ พร้อมคำนวณสัดส่วนงบประมาณเทียบเป้าขาย (Cost-to-Sales ROI %) แบบเรียลไทม์
    - **กลางน้ำ:** ฝ่ายวิชาการ (ทีม B) ตรวจสอบความพร้อมของวิทยากรและยืนยันงบประมาณตัดจ่ายจริง ส่งต่อให้ผู้บริหาร (Management) อนุมัติ
    - **ปลายน้ำ:** เมื่ออนุมัติ ระบบจะสร้างเอกสาร **A4 Memo PDF (ฟอนต์ Sarabun)** ลง Google Drive อัตโนมัติ พร้อมออก **QR Code Token** ให้ผู้เข้าอบรมสแกนประเมินผลความพึงพอใจ 5 มิติ
-2. **PPC Standard A4 Operations Summary Report (PDF & Word .docx) (v1.5.0):**
+3. **PPC Standard A4 Operations Summary Report (PDF & Word .docx) (v1.5.0):**
    - ออกรายงานสรุปผลการปฏิบัติงานตามแบบมาตรฐาน **PPC (Performance & Project Control)** ครบ 5 ส่วน (ข้อมูลโรงเรียน, งานวิชาการ/ที่พัก/รถรับส่ง, สรุปงบและ ROI, ผลประเมินปิดลูป 5 ด้าน, ลายมือชื่อ 3 ฝ่าย)
    - สามารถส่งออกเป็น **PDF** (จัดหน้า Sarabun สวยงาม) และ **Microsoft Word (.docx)** นำไปแก้ไขต่อได้ทันที
 3. **Google Sheets Database Setup & Custom Menu (v1.5.0):**
@@ -79,7 +85,7 @@
 ├── CHANGELOG.md                  # บันทึกประวัติการปรับปรุงแต่ละเวอร์ชัน
 ├── MANUAL.md                     # คู่มือการใช้งานระบบสำหรับผู้ใช้ทุกระดับ
 ├── README.md                     # ภาพรวมระบบและการติดตั้ง
-└── VERSION                       # หมายเลขเวอร์ชันปัจจุบัน (1.5.0)
+└── VERSION                       # หมายเลขเวอร์ชันปัจจุบัน (1.5.1)
 ```
 
 ---

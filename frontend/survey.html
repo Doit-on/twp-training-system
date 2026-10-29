@@ -227,9 +227,13 @@
   </footer>
 
   <script>
-    // ดึงค่า Token จาก URL
+    // Embedded Production Apps Script Web App Endpoint
+    const DEFAULT_GAS_ENDPOINT = 'https://script.google.com/macros/s/AKfycby-D2AvgHXO_y4tVxg8wgkDP9ARBnRpiVp47-vnF7AiA1TA4AqwKGbelJTyI68tKfmx6g/exec';
+
+    // ดึงค่า Token & Endpoint จาก URL
     const urlParams = new URLSearchParams(window.location.search);
     const surveyToken = urlParams.get('t') || '';
+    const gasEndpoint = urlParams.get('ep') || DEFAULT_GAS_ENDPOINT;
 
     // สร้าง Client Fingerprint เพื่อป้องกันการประเมินซ้ำ
     function getClientHash() {
@@ -294,8 +298,9 @@
           })
           .submitEvaluationResponse(payload);
       } else {
-        // กรณีรันแยกหรือทดสอบ
-        fetch(window.location.href, {
+        // กรณีรันแยกหรือส่งตรงข้ามโดเมนไปยัง Google Apps Script Web App
+        const targetEndpoint = gasEndpoint || DEFAULT_GAS_ENDPOINT;
+        fetch(targetEndpoint, {
           method: 'POST',
           headers: { 'Content-Type': 'text/plain;charset=utf-8' },
           body: JSON.stringify({ action: 'SUBMIT_EVALUATION', payload: payload })

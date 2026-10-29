@@ -7,6 +7,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [1.5.1] - 2026-10-29
+
+### Added
+- **ฝัง Production Google Apps Script Web App Endpoint อัตโนมัติ (`AKfycby...`):**
+  - กำหนดค่า Default Web App URL ในระบบเป็น:
+    `https://script.google.com/macros/s/AKfycby-D2AvgHXO_y4tVxg8wgkDP9ARBnRpiVp47-vnF7AiA1TA4AqwKGbelJTyI68tKfmx6g/exec`
+  - ฝัง Endpoint นี้ลงในระบบ QR Code ประจำทีมทุกประเภท (ทีม A, ทีม B, ผู้บริหาร, Dashboard) ผ่านพารามิเตอร์ `&ep=` อัตโนมัติ
+  - เมื่อผู้ร่วมงานสแกน QR Code เพื่อ Onboard ข้ามเครื่อง ระบบจะดึง URL นี้และบันทึกเข้าสู่เครื่องใหม่อัตโนมัติทันที
+  - อัปเดต `frontend/survey.html` (แบบประเมินผู้เข้าอบรม) ให้ส่งข้อมูลผลประเมินยิงตรงเข้า Google Apps Script Web App นี้ แม้เปิดผ่านเครือข่ายภายนอกหรือ GitHub Pages
+  - ช่องตั้งค่า Apps Script Endpoint ในหน้า Admin Panel (`admin0000`) จะแสดงและใช้งาน Endpoint นี้เป็นค่าเริ่มต้นทันที
+
+---
+
 ## [1.5.0] - 2026-10-29
 
 ### Added
