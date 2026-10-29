@@ -1,0 +1,22 @@
+# Dependencies & Environment
+node_modules/
+.env
+.env.local
+*.log
+
+# Operating System Files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# IDE & Editors
+.vscode/
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# Google Apps Script Clasp (if used)
+.clasp.json
