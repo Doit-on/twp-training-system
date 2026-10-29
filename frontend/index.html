@@ -3,13 +3,13 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-  <title>EMS Enterprise - ระบบบริหารคำขอจัดอบรมและประเมินผล v1.0.0</title>
+  <title>Training Center TWP - ระบบบริหารคำขอจัดอบรมและประเมินผล v1.3.0</title>
   <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
   <!-- Google Fonts: Sarabun -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
   <!-- FontAwesome -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <!-- QRCode.js library for on-the-fly QR generation -->
@@ -23,15 +23,18 @@
             sans: ['Sarabun', 'sans-serif'],
           },
           colors: {
-            brand: {
-              50: '#eff6ff',
-              100: '#dbeafe',
-              200: '#bfdbfe',
-              500: '#3b82f6',
-              600: '#2563eb',
-              700: '#1d4ed8',
-              800: '#1e40af',
-              900: '#1e3a8a',
+            twp: {
+              50: '#f0f6fc',
+              100: '#e1ecf8',
+              200: '#c3daf1',
+              300: '#94bfe7',
+              400: '#5f9edb',
+              500: '#08539E', /* Official TWP Logo Blue */
+              600: '#07488a',
+              700: '#063b72',
+              800: '#05315e',
+              900: '#04274c',
+              950: '#021831'
             }
           }
         }
@@ -39,12 +42,86 @@
     }
   </script>
   <style>
-    body { font-family: 'Sarabun', sans-serif; }
-    .tab-active {
-      border-bottom: 3px solid #2563eb;
-      color: #1d4ed8;
-      font-weight: 700;
+    :root {
+      --twp-blue: #08539E;
+      --twp-dark: #05315e;
     }
+    body { font-family: 'Sarabun', sans-serif; }
+    
+    /* 3D Tactile Buttons (กดแล้วยุบ มีความลึกชัดเจน) */
+    .btn-tactile {
+      transition: all 0.12s cubic-bezier(0.4, 0, 0.2, 1);
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.12), inset 0 1px 0 rgba(255, 255, 255, 0.25);
+    }
+    .btn-tactile:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 15px -3px rgba(0, 0, 0, 0.16);
+    }
+    .btn-tactile:active {
+      transform: translateY(2px) scale(0.98);
+      box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.25);
+    }
+
+    /* 3D Menu Tab Buttons */
+    .tab-btn {
+      transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+      border-radius: 12px;
+      position: relative;
+    }
+    .tab-btn:hover {
+      transform: translateY(-1px);
+    }
+    .tab-btn:active {
+      transform: translateY(1px) scale(0.97);
+    }
+    .tab-active {
+      background: linear-gradient(135deg, #08539E 0%, #063b72 100%) !important;
+      color: #ffffff !important;
+      box-shadow: 0 6px 14px -2px rgba(8, 83, 158, 0.4), inset 0 1px 1px rgba(255, 255, 255, 0.3) !important;
+      border-bottom: 3px solid #04274c !important;
+      font-weight: 700 !important;
+      transform: translateY(-1px);
+    }
+    .tab-active i {
+      color: #ffffff !important;
+    }
+
+    /* Row Focus & Elevation on Reading (ลอยนูนขึ้นมาเมื่อกำลังอ่านบรรทัดนั้น) */
+    .reading-row {
+      transition: all 0.22s cubic-bezier(0.4, 0, 0.2, 1);
+      position: relative;
+    }
+    .reading-row:hover {
+      transform: translateY(-3px) scale(1.002);
+      box-shadow: 0 12px 24px -4px rgba(8, 83, 158, 0.16);
+      background-color: #f0f7ff !important;
+      z-index: 10;
+      border-left: 4px solid #08539E !important;
+    }
+    .reading-row.is-active-reading {
+      transform: translateY(-4px) scale(1.005);
+      box-shadow: 0 18px 32px -6px rgba(8, 83, 158, 0.28), 0 0 0 2px rgba(8, 83, 158, 0.35);
+      background: linear-gradient(90deg, #eff6ff 0%, #ffffff 100%) !important;
+      z-index: 20;
+      border-left: 6px solid #08539E !important;
+    }
+
+    /* Queue Card Elevation */
+    .reading-card {
+      transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+      position: relative;
+    }
+    .reading-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 20px 25px -5px rgba(8, 83, 158, 0.15), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+      border-color: #93c5fd !important;
+    }
+    .reading-card.is-active-reading {
+      transform: translateY(-6px);
+      box-shadow: 0 25px 35px -5px rgba(8, 83, 158, 0.25), 0 0 0 2px #08539E;
+      background-color: #ffffff !important;
+    }
+
     .custom-scrollbar::-webkit-scrollbar {
       width: 6px;
       height: 6px;
@@ -57,50 +134,156 @@
 </head>
 <body class="bg-slate-100 text-slate-800 min-h-screen flex flex-col antialiased">
 
-  <!-- Top Navigation Header -->
-  <header class="bg-slate-900 text-white shadow-lg sticky top-0 z-30">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div class="flex items-center justify-between h-16">
-        
-        <!-- Brand & Version -->
-        <div class="flex items-center space-x-3">
-          <div class="w-10 h-10 rounded-xl bg-blue-600 flex items-center justify-center text-white shadow-md">
-            <i class="fa-solid fa-graduation-cap text-xl"></i>
-          </div>
-          <div>
-            <div class="flex items-center space-x-2">
-              <span class="font-extrabold text-lg tracking-wide text-white">EMS Enterprise</span>
-              <span class="bg-blue-500/30 text-blue-300 text-[10px] font-mono px-2 py-0.5 rounded-full border border-blue-400/30">v1.2.0</span>
-            </div>
-            <p class="text-xs text-slate-400 hidden sm:block">Enterprise Training Workflow & Closed-Loop Evaluation</p>
-          </div>
-        </div>
-
-        <!-- System Status, Operator Stamping & Admin -->
-        <div class="flex items-center space-x-2 sm:space-x-4">
-          
-          <!-- Ping / Connection Health Indicator -->
-          <div onclick="pingServer()" title="คลิกเพื่อทดสอบ Ping กับ Google Sheet" class="cursor-pointer bg-slate-800 hover:bg-slate-700 transition px-2.5 py-1.5 rounded-lg border border-slate-700 flex items-center space-x-2 text-xs">
-            <span id="pingDot" class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
-            <span id="pingText" class="font-mono text-emerald-400 font-medium">Ping: -- ms</span>
-          </div>
-
-          <!-- Operator Stamp Profile -->
-          <div class="flex items-center bg-slate-800/80 px-2.5 py-1 rounded-lg border border-slate-700 text-xs">
-            <i class="fa-solid fa-user-pen text-blue-400 mr-2"></i>
-            <span class="text-slate-400 mr-1 hidden md:inline">ผู้ปฏิบัติงาน:</span>
-            <input type="text" id="operatorNameInput" onchange="updateOperatorName(this.value)" placeholder="ระบุชื่อของคุณ..." class="bg-transparent text-white font-medium focus:outline-none w-28 sm:w-36 text-xs">
-          </div>
-
-          <!-- Admin Button -->
-          <button onclick="openAdminModal()" class="bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white px-2.5 py-1.5 rounded-lg border border-slate-700 text-xs font-medium flex items-center space-x-1.5 transition">
-            <i class="fa-solid fa-gear text-amber-400"></i>
-            <span class="hidden sm:inline">Admin</span>
-          </button>
-
-        </div>
+  <!-- ========================================== -->
+  <!-- LANDING PAGE VIEW (HERO ENTRANCE)          -->
+  <!-- ========================================== -->
+  <div id="landingPageView" class="min-h-screen flex flex-col justify-between bg-[#08539E] text-white relative overflow-hidden select-none">
+    
+    <!-- Background Watermark Circles (TWP 3 Circles Pattern) -->
+    <div class="absolute inset-0 pointer-events-none opacity-10 flex items-center justify-center">
+      <div class="relative w-[700px] h-[700px]">
+        <div class="absolute top-10 left-1/2 -translate-x-1/2 w-80 h-80 rounded-full border-[18px] border-white"></div>
+        <div class="absolute bottom-10 left-8 w-80 h-80 rounded-full border-[18px] border-white"></div>
+        <div class="absolute bottom-10 right-8 w-80 h-80 rounded-full border-[18px] border-white"></div>
       </div>
     </div>
+
+    <!-- Top Navigation Bar on Landing Page -->
+    <div class="max-w-7xl mx-auto w-full px-6 py-5 flex items-center justify-between relative z-10">
+      <div class="flex items-center space-x-3">
+        <img src="assets/logo.png" alt="TWP Logo" class="w-12 h-12 rounded-2xl shadow-xl border-2 border-white/40 object-contain bg-white p-1">
+        <div>
+          <span class="font-black text-xl tracking-wider text-white drop-shadow">TWP</span>
+          <span class="text-xs text-blue-200 block">Thai Wattana Panich</span>
+        </div>
+      </div>
+      <div class="flex items-center space-x-3 text-xs">
+        <span class="bg-white/15 px-3 py-1.5 rounded-full border border-white/20 backdrop-blur-sm font-mono text-blue-100 flex items-center">
+          <span class="w-2 h-2 rounded-full bg-emerald-400 mr-2 animate-pulse"></span>
+          System v1.3.0
+        </span>
+      </div>
+    </div>
+
+    <!-- Center Hero Content -->
+    <div class="max-w-4xl mx-auto w-full px-6 py-8 text-center relative z-10 flex flex-col items-center justify-center my-auto space-y-6">
+      
+      <!-- Logo in Center Card with Tactile Glow -->
+      <div class="relative inline-block group">
+        <div class="absolute -inset-4 bg-white/25 rounded-full blur-2xl animate-pulse"></div>
+        <img src="assets/logo.png" alt="Training Center TWP" class="relative w-32 h-32 sm:w-40 sm:h-40 rounded-3xl shadow-2xl border-4 border-white/50 object-contain bg-white p-2.5 transform group-hover:scale-105 transition-all duration-300">
+      </div>
+
+      <!-- Hero Title -->
+      <div class="space-y-2">
+        <div class="inline-block px-4 py-1 rounded-full bg-blue-950/40 border border-blue-300/30 text-xs sm:text-sm font-semibold tracking-wider text-blue-100 uppercase">
+          Enterprise Training Workflow & Closed-Loop Evaluation System
+        </div>
+        <h1 class="text-4xl sm:text-5xl md:text-6xl font-black tracking-tight text-white drop-shadow-lg">
+          Training Center TWP
+        </h1>
+        <p class="text-base sm:text-lg text-blue-100 max-w-2xl mx-auto font-light leading-relaxed">
+          ระบบบริหารจัดการคำขอจัดกิจกรรมอบรม กลั่นกรองงบประมาณ และประเมินความพึงพอใจแบบปิดลูป
+        </p>
+      </div>
+
+      <!-- Feature Highlights Grid -->
+      <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 max-w-3xl w-full pt-2">
+        <div class="bg-white/10 hover:bg-white/15 transition backdrop-blur-md border border-white/20 rounded-2xl p-4 text-center space-y-1.5 shadow-lg">
+          <i class="fa-solid fa-paper-plane text-emerald-300 text-xl"></i>
+          <div class="font-bold text-xs sm:text-sm text-white">ทีม A ขอจัดอบรม</div>
+          <div class="text-[11px] text-blue-200">คำนวณ ROI อัตโนมัติ</div>
+        </div>
+        <div class="bg-white/10 hover:bg-white/15 transition backdrop-blur-md border border-white/20 rounded-2xl p-4 text-center space-y-1.5 shadow-lg">
+          <i class="fa-solid fa-clipboard-check text-purple-300 text-xl"></i>
+          <div class="font-bold text-xs sm:text-sm text-white">ทีม B ตรวจวิชาการ</div>
+          <div class="text-[11px] text-blue-200">วิทยากร & งบตัดจ่าย</div>
+        </div>
+        <div class="bg-white/10 hover:bg-white/15 transition backdrop-blur-md border border-white/20 rounded-2xl p-4 text-center space-y-1.5 shadow-lg">
+          <i class="fa-solid fa-stamp text-amber-300 text-xl"></i>
+          <div class="font-bold text-xs sm:text-sm text-white">ผู้บริหารอนุมัติ</div>
+          <div class="text-[11px] text-blue-200">ออก PDF A4 & Token</div>
+        </div>
+        <div class="bg-white/10 hover:bg-white/15 transition backdrop-blur-md border border-white/20 rounded-2xl p-4 text-center space-y-1.5 shadow-lg">
+          <i class="fa-solid fa-qrcode text-sky-300 text-xl"></i>
+          <div class="font-bold text-xs sm:text-sm text-white">QR ปิดลูปประเมิน</div>
+          <div class="text-[11px] text-blue-200">Zero-Trust ปลอดภัย</div>
+        </div>
+      </div>
+
+      <!-- Tactile 3D CTA Button to Enter Portal -->
+      <div class="pt-4">
+        <button onclick="enterPortal()" class="px-8 sm:px-12 py-4 bg-gradient-to-r from-amber-400 via-amber-500 to-amber-600 hover:from-amber-300 hover:to-amber-500 text-slate-950 font-black text-base sm:text-lg rounded-2xl shadow-2xl shadow-amber-950/50 border-b-4 border-amber-700 active:border-b-0 active:translate-y-1 transition duration-150 flex items-center space-x-3 cursor-pointer mx-auto btn-tactile">
+          <span>เข้าสู่ระบบบริหารคำขอ (Enter System)</span>
+          <i class="fa-solid fa-arrow-right text-lg"></i>
+        </button>
+      </div>
+
+    </div>
+
+    <!-- Bottom Footer on Landing Page -->
+    <div class="max-w-7xl mx-auto w-full px-6 py-4 flex flex-col sm:flex-row items-center justify-between text-xs text-blue-200 border-t border-white/10 relative z-10 gap-2">
+      <div>&copy; 2026 Training Center TWP - บริษัท ไทยวัฒนาพานิช จำกัด. All rights reserved.</div>
+      <div class="font-mono text-[11px] bg-white/10 px-3 py-1 rounded-full border border-white/15">EMS Enterprise Platform v1.3.0</div>
+    </div>
+
+  </div>
+
+  <!-- ========================================== -->
+  <!-- MAIN PORTAL APPLICATION VIEW (SPA)         -->
+  <!-- ========================================== -->
+  <div id="mainPortalView" class="hidden min-h-screen flex flex-col">
+
+    <!-- Top Navigation Header -->
+    <header class="bg-[#05315e] text-white shadow-lg sticky top-0 z-30 border-b border-blue-900/50">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex items-center justify-between h-16">
+          
+          <!-- Brand & Version -->
+          <div class="flex items-center space-x-3">
+            <button onclick="showLandingPage()" title="กลับสู่หน้าแรก (Landing Page)" class="hover:opacity-90 transition active:scale-95">
+              <img src="assets/logo.png" alt="TWP Logo" class="w-10 h-10 rounded-xl bg-white p-0.5 object-contain shadow-md border border-white/20">
+            </button>
+            <div>
+              <div class="flex items-center space-x-2">
+                <span class="font-extrabold text-lg tracking-wide text-white">Training Center TWP</span>
+                <span class="bg-blue-400/20 text-blue-200 text-[10px] font-mono px-2 py-0.5 rounded-full border border-blue-300/30">v1.3.0</span>
+              </div>
+              <p class="text-[11px] text-blue-200 hidden sm:block">ระบบบริหารคำขอจัดอบรมและประเมินผลปิดลูป</p>
+            </div>
+          </div>
+
+          <!-- System Status, Operator Stamping & Admin -->
+          <div class="flex items-center space-x-2 sm:space-x-3">
+            
+            <!-- Back to Landing Page Button -->
+            <button onclick="showLandingPage()" title="กลับหน้าแรก" class="bg-[#08539E] hover:bg-[#07488a] text-white px-2.5 py-1.5 rounded-lg border border-blue-400/30 text-xs font-semibold flex items-center space-x-1.5 transition btn-tactile">
+              <i class="fa-solid fa-house"></i>
+              <span class="hidden md:inline">หน้าแรก</span>
+            </button>
+
+            <!-- Ping / Connection Health Indicator -->
+            <div onclick="pingServer()" title="คลิกเพื่อทดสอบ Ping กับ Google Sheet" class="cursor-pointer bg-slate-900/60 hover:bg-slate-900 transition px-2.5 py-1.5 rounded-lg border border-blue-400/20 flex items-center space-x-2 text-xs btn-tactile">
+              <span id="pingDot" class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
+              <span id="pingText" class="font-mono text-emerald-300 font-medium">Ping: -- ms</span>
+            </div>
+
+            <!-- Operator Stamp Profile -->
+            <div class="flex items-center bg-slate-900/60 px-2.5 py-1 rounded-lg border border-blue-400/20 text-xs">
+              <i class="fa-solid fa-user-pen text-blue-300 mr-2"></i>
+              <span class="text-blue-200 mr-1 hidden lg:inline">ผู้ปฏิบัติงาน:</span>
+              <input type="text" id="operatorNameInput" onchange="updateOperatorName(this.value)" placeholder="ระบุชื่อของคุณ..." class="bg-transparent text-white font-medium focus:outline-none w-28 sm:w-36 text-xs">
+            </div>
+
+            <!-- Admin Button -->
+            <button onclick="openAdminModal()" class="bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 px-2.5 py-1.5 rounded-lg border border-amber-400/30 text-xs font-medium flex items-center space-x-1.5 transition btn-tactile">
+              <i class="fa-solid fa-gear text-amber-400"></i>
+              <span class="hidden sm:inline">Admin</span>
+            </button>
+
+          </div>
+        </div>
+      </div>
 
     <!-- Navigation Tabs -->
     <div class="bg-white border-b border-slate-200 text-slate-600 px-4 sm:px-6 lg:px-8 shadow-sm">
@@ -609,12 +792,14 @@
   <!-- Footer -->
   <footer class="bg-white border-t border-slate-200 text-slate-500 text-xs py-4 px-6 mt-auto">
     <div class="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-2">
-      <div>EMS Enterprise v1.2.0 &copy; 2026 - Training Workflow & Closed-Loop Evaluation System</div>
+      <div>Training Center TWP (EMS Enterprise v1.3.0) &copy; 2026 - บริษัท ไทยวัฒนาพานิช จำกัด</div>
       <div class="flex items-center space-x-4">
+        <button onclick="showLandingPage()" class="hover:text-blue-600 transition"><i class="fa-solid fa-house mr-1"></i>กลับหน้าแรก</button>
         <span>Google Apps Script + Google Sheets Architecture</span>
       </div>
     </div>
   </footer>
+  </div><!-- /mainPortalView -->
 
   <!-- ========================================== -->
   <!-- APPLICATION CORE LOGIC                     -->
@@ -622,7 +807,7 @@
   <script>
     // System Global State
     const AppState = {
-      version: '1.2.0',
+      version: '1.3.0',
       activeTab: 'dashboard',
       operatorName: localStorage.getItem('ems_operator_name') || 'สมชาย มุ่งมั่น (ทีม A)',
       gasEndpoint: localStorage.getItem('ems_gas_endpoint') || '',
@@ -642,6 +827,48 @@
         transportDetails: ['รถตู้รับ-ส่งสนามบิน-โรงแรม', 'รถตู้รับ-ส่งสถานีรถไฟ-โรงเรียน', 'รถตู้บริษัทพร้อมคนขับ']
       }
     };
+
+    // Landing Page Navigation
+    function enterPortal() {
+      document.getElementById('landingPageView').classList.add('hidden');
+      document.getElementById('mainPortalView').classList.remove('hidden');
+      sessionStorage.setItem('twp_portal_entered', 'true');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function showLandingPage() {
+      document.getElementById('mainPortalView').classList.add('hidden');
+      document.getElementById('landingPageView').classList.remove('hidden');
+      sessionStorage.removeItem('twp_portal_entered');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    // Active Reading Elevation Handler (ลอยนูนขึ้นมาเมื่อกำลังอ่านบรรทัดนั้น)
+    function setActiveReadingRow(trElement) {
+      document.querySelectorAll('.reading-row').forEach(row => {
+        row.classList.remove('is-active-reading');
+        const badge = row.querySelector('.reading-badge');
+        if (badge) badge.remove();
+      });
+
+      trElement.classList.add('is-active-reading');
+
+      const firstCell = trElement.querySelector('td');
+      if (firstCell) {
+        const idContainer = firstCell.querySelector('.text-slate-800');
+        if (idContainer && !idContainer.querySelector('.reading-badge')) {
+          const badge = document.createElement('span');
+          badge.className = 'reading-badge inline-flex items-center px-1.5 py-0.5 rounded text-[10px] bg-[#08539E] text-white font-bold ml-2 shadow-sm animate-pulse';
+          badge.innerHTML = '<i class="fa-solid fa-book-open-reader mr-1"></i>กำลังอ่าน';
+          idContainer.appendChild(badge);
+        }
+      }
+    }
+
+    function setActiveReadingCard(cardElement) {
+      document.querySelectorAll('.reading-card').forEach(card => card.classList.remove('is-active-reading'));
+      cardElement.classList.add('is-active-reading');
+    }
 
     // Dynamic Combobox & Historical Options Management
     function refreshDatalists() {
@@ -1099,7 +1326,8 @@
         }
 
         const tr = document.createElement('tr');
-        tr.className = 'hover:bg-slate-50/80 transition';
+        tr.className = 'reading-row border-b border-slate-100 hover:bg-slate-50/80 transition cursor-pointer select-none';
+        tr.onclick = function() { setActiveReadingRow(this); };
 
         const statusBadge = getStatusBadge(req.status);
         const slaIndicator = formatPendingSLA(req.submittedToBAt || req.createdAt, req.status);
@@ -1175,7 +1403,7 @@
       }
 
       container.innerHTML = queue.map(req => `
-        <div class="bg-slate-50 rounded-2xl p-5 border border-slate-200 space-y-4">
+        <div onclick="setActiveReadingCard(this)" class="reading-card bg-slate-50 hover:bg-white rounded-2xl p-5 border border-slate-200 space-y-4 cursor-pointer transition">
           <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-200 pb-3">
             <div>
               <div class="flex items-center space-x-2">
@@ -1263,7 +1491,7 @@
       }
 
       container.innerHTML = queue.map(req => `
-        <div class="bg-slate-50 rounded-2xl p-5 border border-slate-200 space-y-4">
+        <div onclick="setActiveReadingCard(this)" class="reading-card bg-slate-50 hover:bg-white rounded-2xl p-5 border border-slate-200 space-y-4 cursor-pointer transition">
           <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-200 pb-3">
             <div>
               <div class="flex items-center space-x-2">

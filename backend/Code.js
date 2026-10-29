@@ -1,13 +1,13 @@
 /**
  * ============================================================================
- * EMS Enterprise - Training Workflow & Closed-Loop Evaluation System
- * Version: 1.0.0
+ * EMS Enterprise - Training Center TWP
+ * Version: 1.3.0
  * Architecture: Google Apps Script Backend (Serverless) + Google Sheets Database
  * Security: Zero-Trust Data Isolation + Multi-Operator Stamping + Concurrency Lock
  * ============================================================================
  */
 
-const SYSTEM_VERSION = '1.2.0';
+const SYSTEM_VERSION = '1.3.0';
 const DEFAULT_ADMIN_PASS = 'admin0000';
 
 function getSpreadsheet() {
@@ -37,7 +37,7 @@ function doGet(e) {
     template.eventData = surveyData;
     template.systemVersion = SYSTEM_VERSION;
     return template.evaluate()
-      .setTitle('แบบประเมินความพึงพอใจการจัดอบรม | EMS Enterprise')
+      .setTitle('แบบประเมินความพึงพอใจการจัดอบรม | Training Center TWP')
       .addMetaTag('viewport', 'width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover')
       .setXFrameOptionsMode(HtmlService.XFrameOptionsMode.ALLOWALL);
   }
@@ -46,7 +46,7 @@ function doGet(e) {
   const template = HtmlService.createTemplateFromFile('Index');
   template.systemVersion = SYSTEM_VERSION;
   return template.evaluate()
-    .setTitle('ระบบบริหารคำขอจัดอบรมและประเมินผล (EMS Enterprise v' + SYSTEM_VERSION + ')')
+    .setTitle('Training Center TWP - ระบบบริหารคำขอจัดอบรมและประเมินผล (v' + SYSTEM_VERSION + ')')
     .addMetaTag('viewport', 'width=device-width, initial-scale=1.0, viewport-fit=cover')
     .setXFrameOptionsMode(HtmlService.XFrameOptionsMode.ALLOWALL);
 }
