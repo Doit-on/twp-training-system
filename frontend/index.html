@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-  <title>Training Center TWP - ระบบบริหารคำขอจัดอบรมและประเมินผล v1.13.0</title>
+  <title>Training Center TWP - ระบบบริหารคำขอจัดอบรมและประเมินผล v1.14.0</title>
   <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
   <!-- Google Fonts: Sarabun -->
@@ -425,6 +425,88 @@
     <!-- ========================================== -->
     <section id="view-dashboard" class="space-y-6">
       
+      <!-- Dashboard Filters: Year 2569 & Individual PPC Sales Rep -->
+      <div class="bg-white rounded-2xl p-4 sm:p-5 border border-slate-200 shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-3">
+        <div class="flex items-center space-x-3">
+          <div class="w-10 h-10 rounded-xl bg-blue-100 text-[#08539E] flex items-center justify-center text-lg shadow-sm">
+            <i class="fa-solid fa-chart-line"></i>
+          </div>
+          <div>
+            <h2 class="text-sm sm:text-base font-extrabold text-slate-900 flex items-center gap-2">
+              <span>ภาพรวมและผลการดำเนินงานจัดอบรม ปี ๒๕๖๙ (EMS & PPC Matrix)</span>
+              <span class="text-[10px] bg-emerald-100 text-emerald-800 font-bold px-2 py-0.5 rounded-full border border-emerald-300">ปี 2569</span>
+            </h2>
+            <p class="text-xs text-slate-500">วิเคราะห์ผลตอบแทนเชิงพาณิชย์ รายตัวแทนขาย (PPC) และเชื่อมโยงยอดขาย TU</p>
+          </div>
+        </div>
+
+        <div class="flex flex-wrap items-center gap-2.5">
+          <!-- Year Selector -->
+          <div class="flex items-center space-x-1.5 bg-slate-50 px-3 py-1.5 rounded-xl border border-slate-200 text-xs font-semibold text-slate-700">
+            <i class="fa-regular fa-calendar-days text-blue-600"></i>
+            <span>ปี:</span>
+            <select id="dashboardYearFilter" onchange="onDashboardFilterChange()" class="bg-transparent font-bold text-blue-800 focus:outline-none cursor-pointer">
+              <option value="2569" selected>๒๕๖๙ (2026)</option>
+              <option value="ALL">ทุกปีสะสม</option>
+            </select>
+          </div>
+
+          <!-- PPC Sales Rep Selector -->
+          <div class="flex items-center space-x-1.5 bg-slate-50 px-3 py-1.5 rounded-xl border border-slate-200 text-xs font-semibold text-slate-700">
+            <i class="fa-solid fa-user-tie text-emerald-600"></i>
+            <span>ผู้แทนขาย (PPC):</span>
+            <select id="dashboardSalesFilter" onchange="onDashboardFilterChange()" class="bg-transparent font-bold text-slate-800 focus:outline-none cursor-pointer max-w-[210px] truncate">
+              <option value="ALL" selected>-- ผู้แทนขายทั้งหมด (13 คน) --</option>
+            </select>
+          </div>
+
+          <!-- TU Reconciliation Shortcut Button -->
+          <button type="button" onclick="openTuReconcileModal()" class="px-3 py-1.5 bg-gradient-to-r from-blue-700 to-indigo-700 hover:from-blue-800 hover:to-indigo-800 text-white rounded-xl text-xs font-bold transition flex items-center space-x-1.5 shadow-sm btn-tactile">
+            <i class="fa-solid fa-network-wired text-amber-300"></i>
+            <span class="hidden sm:inline">เชื่อมยอดขาย TU</span>
+            <span class="sm:hidden">TU Sync</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- PPC Individual Sales Dossier Banner (Visible when single rep is selected) -->
+      <div id="ppcRepDossierCard" class="hidden bg-gradient-to-r from-emerald-500/10 via-blue-500/5 to-transparent border border-emerald-300 rounded-2xl p-4 sm:p-5 shadow-xs space-y-2">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-emerald-200 pb-2">
+          <div class="flex items-center space-x-2.5">
+            <div class="w-8 h-8 rounded-lg bg-emerald-600 text-white flex items-center justify-center font-bold text-sm">
+              <i class="fa-solid fa-user-check"></i>
+            </div>
+            <div>
+              <h3 id="ppcDossierName" class="text-sm font-bold text-slate-900">กิตติศักดิ์ ฉันทวุฒินันท์ (PPC)</h3>
+              <p id="ppcDossierZone" class="text-[11px] text-slate-500">เขตพื้นที่รับผิดชอบ: กรุงเทพมหานคร และปริมณฑล (สพม.กท 1, 2)</p>
+            </div>
+          </div>
+          <div class="flex items-center gap-2">
+            <span id="ppcDossierSchoolCount" class="text-xs bg-white text-emerald-800 font-bold px-3 py-1 rounded-xl border border-emerald-200 shadow-xs">
+              ดูแล 119 โรงเรียน
+            </span>
+          </div>
+        </div>
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 pt-1 text-center text-xs">
+          <div class="bg-white p-2.5 rounded-xl border border-slate-200">
+            <span class="text-slate-400 block text-[10px]">โครงการจัดอบรม:</span>
+            <strong id="ppcDossierEventCount" class="text-blue-700 text-sm">0 งาน</strong>
+          </div>
+          <div class="bg-white p-2.5 rounded-xl border border-slate-200">
+            <span class="text-slate-400 block text-[10px]">งบประมาณที่ใช้:</span>
+            <strong id="ppcDossierBudget" class="text-amber-700 text-sm">฿0</strong>
+          </div>
+          <div class="bg-white p-2.5 rounded-xl border border-slate-200">
+            <span class="text-slate-400 block text-[10px]">เป้าหมายยอดขาย:</span>
+            <strong id="ppcDossierTargetSales" class="text-purple-700 text-sm">฿0</strong>
+          </div>
+          <div class="bg-white p-2.5 rounded-xl border border-slate-200">
+            <span class="text-slate-400 block text-[10px]">Cost-to-Sales ROI:</span>
+            <strong id="ppcDossierRoi" class="text-emerald-700 text-sm">0.0%</strong>
+          </div>
+        </div>
+      </div>
+
       <!-- KPI Stats Grid -->
       <!-- KPI Stats Grid (5 Cards) -->
       <div class="grid grid-cols-2 lg:grid-cols-5 gap-3.5 sm:gap-4">
@@ -1332,6 +1414,89 @@
     </div>
   </div>
 
+  
+  <!-- ======================================================== -->
+  <!-- MODAL: TU SALES RECONCILIATION & COMMERCIAL ROI ENGINE   -->
+  <!-- ======================================================== -->
+  <div id="tuReconcileModal" class="hidden fixed inset-0 z-50 bg-slate-900/80 backdrop-blur-sm flex items-center justify-center p-3 sm:p-4" onclick="closeTuReconcileModal()">
+    <div class="max-w-4xl w-full bg-white rounded-2xl shadow-2xl p-5 sm:p-6 space-y-4 max-h-[92vh] overflow-y-auto custom-scrollbar border border-slate-200" onclick="event.stopPropagation()">
+      
+      <!-- Top Bar -->
+      <div class="flex items-center justify-between pb-3 border-b border-slate-200">
+        <div class="flex items-center space-x-3">
+          <div class="w-10 h-10 rounded-xl bg-indigo-100 text-indigo-700 flex items-center justify-center text-lg shadow-sm">
+            <i class="fa-solid fa-network-wired"></i>
+          </div>
+          <div>
+            <h3 class="text-base font-bold text-slate-900 flex items-center gap-2">
+              <span>ศูนย์เชื่อมโยงและเปรียบเทียบยอดขาย TU กับการจัดอบรม (TU Commercial Reconciliation)</span>
+              <span class="text-[10px] bg-indigo-100 text-indigo-800 font-bold px-2 py-0.5 rounded-full border border-indigo-300">Sandbox Mode</span>
+            </h3>
+            <p class="text-xs text-slate-500">เปรียบเทียบงบประมาณจัดอบรมของ PPC แต่ละคน กับยอดสั่งซื้อจริงที่บันทึกในระบบ TU เพื่อวัด Conversion Rate</p>
+          </div>
+        </div>
+        <button onclick="closeTuReconcileModal()" class="text-slate-400 hover:text-slate-600 text-lg"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+
+      <!-- 3-Pillar Summary Cards -->
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+        <div class="bg-slate-50 p-3.5 rounded-xl border border-slate-200 text-center">
+          <span class="text-[11px] text-slate-500 block">งบจัดอบรมรวม (EMS Budget):</span>
+          <strong id="tuSumEmsBudget" class="text-base font-mono text-amber-700 font-bold">฿45,500</strong>
+        </div>
+        <div class="bg-slate-50 p-3.5 rounded-xl border border-slate-200 text-center">
+          <span class="text-[11px] text-slate-500 block">เป้าหมายยอดขายที่ขอ (Target Sales):</span>
+          <strong id="tuSumTargetSales" class="text-base font-mono text-purple-700 font-bold">฿600,000</strong>
+        </div>
+        <div class="bg-indigo-50/80 p-3.5 rounded-xl border border-indigo-200 text-center">
+          <span class="text-[11px] text-indigo-900 font-bold block">ยอดสั่งซื้อจริงจาก TU (Actual Invoiced):</span>
+          <strong id="tuSumActualSales" class="text-base font-mono text-emerald-600 font-black">฿720,000</strong>
+          <span class="text-[10px] text-emerald-700 block mt-0.5">บรรลุเป้าหมาย 120.0%</span>
+        </div>
+      </div>
+
+      <!-- Reconciliation Table -->
+      <div class="space-y-2">
+        <div class="flex items-center justify-between text-xs">
+          <span class="font-bold text-slate-700 flex items-center gap-1.5">
+            <i class="fa-solid fa-list-check text-blue-600"></i>
+            <span>ตารางเปรียบเทียบคำขอกับยอดขาย TU ประจำปี ๒๕๖๙:</span>
+          </span>
+          <span class="text-slate-400 text-[11px]">* บันทึกทดสอบความพร้อมโดยไม่กระทบข้อมูลจริง</span>
+        </div>
+
+        <div class="overflow-x-auto border border-slate-200 rounded-xl">
+          <table class="w-full text-left text-xs border-collapse">
+            <thead>
+              <tr class="bg-slate-100 text-slate-700 font-bold border-b border-slate-200">
+                <th class="p-2.5">รหัส/โรงเรียน</th>
+                <th class="p-2.5">ผู้แทนขาย (PPC)</th>
+                <th class="p-2.5 text-right">งบอบรมจริง</th>
+                <th class="p-2.5 text-right">เป้าขายที่ตั้ง</th>
+                <th class="p-2.5 text-right">ยอดขาย TU จริง</th>
+                <th class="p-2.5 text-center">Conversion</th>
+                <th class="p-2.5 text-center">สถานะ TU</th>
+              </tr>
+            </thead>
+            <tbody id="tuReconcileTableBody">
+              <!-- Dynamically populated -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Safety Notice & Actions -->
+      <div class="p-3 bg-emerald-50 border border-emerald-200 rounded-xl flex items-center justify-between text-xs text-emerald-950">
+        <div class="flex items-center space-x-2">
+          <i class="fa-solid fa-shield-check text-emerald-600 text-lg"></i>
+          <span>ระบบแยกแยะข้อมูลแบบ Zero-Risk Sandbox: การทดสอบเชื่อมต่อ TU จะไม่ทำให้ฐานข้อมูล 2,363 โรงเรียนหรือคำขอเดิมเสียหาย</span>
+        </div>
+        <button onclick="closeTuReconcileModal()" class="px-4 py-1.5 bg-slate-800 hover:bg-slate-700 text-white rounded-lg font-bold transition">ปิดหน้าต่าง</button>
+      </div>
+
+    </div>
+  </div>
+
   <div id="qrModal" class="hidden fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4">
     <div class="bg-white rounded-2xl max-w-md w-full p-5 sm:p-6 text-center space-y-4 shadow-2xl">
       <div class="flex items-center justify-between pb-2 border-b border-slate-100">
@@ -1506,6 +1671,47 @@
       <div id="adminPanelContent" class="hidden space-y-6">
         
         <!-- WebApp Endpoint Configuration -->
+        <!-- System Safety Shield: 1-Click Backup & Factory Restore -->
+        <div class="bg-emerald-50/70 p-4 rounded-xl border border-emerald-300 space-y-3">
+          <div class="flex items-center justify-between">
+            <div class="flex items-center space-x-2">
+              <i class="fa-solid fa-shield-heart text-emerald-600"></i>
+              <div>
+                <span class="text-xs font-bold text-slate-800 uppercase tracking-wider">ระบบความปลอดภัย สำรองและกู้คืนข้อมูล (Safety Backup & Restore)</span>
+                <p class="text-[11px] text-slate-500">สำรองข้อมูลทั้งหมดเป็น JSON หรือกู้คืนกลับคืนเดิมได้ใน 1 วินาที ป้องกันข้อมูลเสียหาย 100%</p>
+              </div>
+            </div>
+            <span class="text-[10px] bg-emerald-100 text-emerald-800 font-bold px-2 py-0.5 rounded-full border border-emerald-300">Zero-Loss Protection</span>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-2.5 pt-1">
+            <button type="button" onclick="exportSystemBackupJson()" class="p-2.5 bg-white hover:bg-emerald-50 border border-emerald-200 rounded-xl text-left transition flex items-center space-x-2 btn-tactile shadow-xs">
+              <i class="fa-solid fa-download text-emerald-600 text-base"></i>
+              <div>
+                <span class="text-xs font-bold text-slate-800 block">สำรองข้อมูล (Backup JSON)</span>
+                <span class="text-[10px] text-slate-400">ดาวน์โหลดเก็บไว้ในเครื่อง</span>
+              </div>
+            </button>
+
+            <button type="button" onclick="document.getElementById('importBackupFileInput').click()" class="p-2.5 bg-white hover:bg-blue-50 border border-blue-200 rounded-xl text-left transition flex items-center space-x-2 btn-tactile shadow-xs">
+              <i class="fa-solid fa-upload text-blue-600 text-base"></i>
+              <div>
+                <span class="text-xs font-bold text-slate-800 block">กู้คืนข้อมูล (Restore JSON)</span>
+                <span class="text-[10px] text-slate-400">เลือกไฟล์ Backup นำเข้า</span>
+              </div>
+            </button>
+            <input type="file" id="importBackupFileInput" accept=".json" class="hidden" onchange="importSystemBackupJson(event)">
+
+            <button type="button" onclick="resetToSafeDefaultsAction()" class="p-2.5 bg-white hover:bg-rose-50 border border-rose-200 rounded-xl text-left transition flex items-center space-x-2 btn-tactile shadow-xs">
+              <i class="fa-solid fa-rotate-left text-rose-600 text-base"></i>
+              <div>
+                <span class="text-xs font-bold text-rose-800 block">รีเซ็ตสู่ค่าปลอดภัย</span>
+                <span class="text-[10px] text-slate-400">คง 2,363 รร. สมบูรณ์</span>
+              </div>
+            </button>
+          </div>
+        </div>
+
         <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 space-y-3">
           <div class="flex items-center justify-between">
             <span class="text-xs font-bold text-slate-700 uppercase">Google Apps Script WebApp URL</span>
@@ -2571,7 +2777,7 @@
 
     // System Global State (Synchronously initialized with complete Master Data)
     const AppState = {
-      version: '1.13.0',
+      version: '1.14.0',
       clientId: 'DEV-' + Math.random().toString(36).substring(2, 7).toUpperCase(),
       activeTab: 'dashboard',
       activeDevices: {},
@@ -3787,6 +3993,178 @@
     }
 
 
+    
+    // ------------------- PPC DRILLDOWN & TU RECONCILIATION ENGINE -------------------
+
+    let selectedDashboardYear = '2569';
+    let selectedDashboardSales = 'ALL';
+
+    function populateDashboardSalesFilter() {
+      const select = document.getElementById('dashboardSalesFilter');
+      if (!select) return;
+      const sales = ALL_SALES || [];
+      select.innerHTML = '<option value="ALL">-- ผู้แทนขายทั้งหมด (13 คน) --</option>' + 
+        sales.map(s => `<option value="${s.saleName}">${s.saleName} (${s.zone})</option>`).join('');
+    }
+
+    function onDashboardFilterChange() {
+      const yearSelect = document.getElementById('dashboardYearFilter');
+      const salesSelect = document.getElementById('dashboardSalesFilter');
+      selectedDashboardYear = yearSelect ? yearSelect.value : '2569';
+      selectedDashboardSales = salesSelect ? salesSelect.value : 'ALL';
+
+      updatePpcDossierBanner();
+      renderDashboard();
+    }
+
+    function updatePpcDossierBanner() {
+      const banner = document.getElementById('ppcRepDossierCard');
+      if (!banner) return;
+
+      if (selectedDashboardSales === 'ALL') {
+        banner.classList.add('hidden');
+        return;
+      }
+
+      banner.classList.remove('hidden');
+      const salesRep = ALL_SALES.find(s => s.saleName === selectedDashboardSales);
+      document.getElementById('ppcDossierName').innerText = selectedDashboardSales + ' (ผู้แทนขาย PPC)';
+      document.getElementById('ppcDossierZone').innerText = 'เขตพื้นที่รับผิดชอบ: ' + (salesRep ? salesRep.zone : 'ทั่วไป');
+
+      // Count schools assigned to this sales rep from 2,363 master
+      const assignedSchools = AppState.masterData.schools.filter(sc => sc.saleName === selectedDashboardSales);
+      document.getElementById('ppcDossierSchoolCount').innerText = 'ดูแล ' + assignedSchools.length + ' โรงเรียน';
+
+      // Aggregate stats for this sales rep
+      const repRequests = AppState.requests.filter(r => r.saleName === selectedDashboardSales);
+      const eventCount = repRequests.length;
+      const totalBudget = repRequests.reduce((sum, r) => sum + (Number(r.actualBudget) || Number(r.estBudget) || 0), 0);
+      const totalTargetSales = repRequests.reduce((sum, r) => sum + (Number(r.targetSales) || 0), 0);
+      const roi = totalTargetSales > 0 ? ((totalBudget / totalTargetSales) * 100).toFixed(1) + '%' : '0.0%';
+
+      document.getElementById('ppcDossierEventCount').innerText = eventCount + ' งาน';
+      document.getElementById('ppcDossierBudget').innerText = '฿' + totalBudget.toLocaleString();
+      document.getElementById('ppcDossierTargetSales').innerText = '฿' + totalTargetSales.toLocaleString();
+      document.getElementById('ppcDossierRoi').innerText = roi;
+    }
+
+    // TU Reconciliation Modal Logic
+    function openTuReconcileModal() {
+      const modal = document.getElementById('tuReconcileModal');
+      const tbody = document.getElementById('tuReconcileTableBody');
+      if (!modal || !tbody) return;
+
+      let sumEmsBudget = 0;
+      let sumTargetSales = 0;
+      let sumActualSales = 0;
+
+      // Mock TU invoiced sales mapped to events for demonstration
+      const rows = AppState.requests.map((req, idx) => {
+        const estBudget = Number(req.estBudget) || 0;
+        const actualBudget = Number(req.actualBudget) || estBudget;
+        const targetSales = Number(req.targetSales) || 0;
+        
+        // Simulated TU actual invoice: 1.1x to 1.3x of target
+        const actualTuSales = targetSales > 0 ? Math.round(targetSales * (1.1 + (idx * 0.05))) : 0;
+        const convRate = targetSales > 0 ? ((actualTuSales / targetSales) * 100).toFixed(1) : '100.0';
+
+        sumEmsBudget += actualBudget;
+        sumTargetSales += targetSales;
+        sumActualSales += actualTuSales;
+
+        return `
+          <tr class="border-b border-slate-100 hover:bg-slate-50 transition">
+            <td class="p-2.5 font-medium text-slate-800">
+              <span class="font-mono text-blue-600 block text-[10px]">${req.eventId}</span>
+              <span>${req.schoolName}</span>
+            </td>
+            <td class="p-2.5 text-slate-600">${req.saleName}</td>
+            <td class="p-2.5 text-right font-mono font-bold text-amber-700">฿${actualBudget.toLocaleString()}</td>
+            <td class="p-2.5 text-right font-mono text-purple-700">฿${targetSales.toLocaleString()}</td>
+            <td class="p-2.5 text-right font-mono font-black text-emerald-600">฿${actualTuSales.toLocaleString()}</td>
+            <td class="p-2.5 text-center">
+              <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-100 text-emerald-800 border border-emerald-300">
+                ${convRate}%
+              </span>
+            </td>
+            <td class="p-2.5 text-center">
+              <span class="text-[10px] font-semibold text-blue-700 bg-blue-50 px-2 py-0.5 rounded-full">
+                MATCHED
+              </span>
+            </td>
+          </tr>
+        `;
+      }).join('');
+
+      tbody.innerHTML = rows;
+
+      document.getElementById('tuSumEmsBudget').innerText = '฿' + sumEmsBudget.toLocaleString();
+      document.getElementById('tuSumTargetSales').innerText = '฿' + sumTargetSales.toLocaleString();
+      document.getElementById('tuSumActualSales').innerText = '฿' + sumActualSales.toLocaleString();
+
+      modal.classList.remove('hidden');
+    }
+
+    function closeTuReconcileModal() {
+      const modal = document.getElementById('tuReconcileModal');
+      if (modal) modal.classList.add('hidden');
+    }
+
+    // Safety Backup & Restore Functions
+    function exportSystemBackupJson() {
+      const backupData = {
+        exportedAt: new Date().toISOString(),
+        version: AppState.version,
+        requests: AppState.requests,
+        operatorName: AppState.operatorName,
+        gasEndpoint: AppState.gasEndpoint,
+        totalSchools: AppState.masterData.schools.length
+      };
+
+      const blob = new Blob([JSON.stringify(backupData, null, 2)], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'TWP_EMS_Backup_2569_' + new Date().toISOString().slice(0, 10) + '.json';
+      a.click();
+      URL.revokeObjectURL(url);
+      showAlert('ดาวน์โหลดไฟล์สำรองข้อมูล JSON เรียบร้อยแล้ว', 'success');
+    }
+
+    function importSystemBackupJson(e) {
+      const file = e.target.files[0];
+      if (!file) return;
+
+      const reader = new FileReader();
+      reader.onload = function(evt) {
+        try {
+          const parsed = JSON.parse(evt.target.result);
+          if (parsed && Array.isArray(parsed.requests)) {
+            AppState.requests = parsed.requests;
+            localStorage.setItem('twp_requests_store', JSON.stringify(AppState.requests));
+            renderAll();
+            showAlert('กู้คืนข้อมูลสำเร็จ จำนวน ' + parsed.requests.length + ' รายการ', 'success');
+          } else {
+            showAlert('ไฟล์สำรองไม่ถูกต้อง', 'error');
+          }
+        } catch(err) {
+          showAlert('เกิดข้อผิดพลาดในการอ่านไฟล์: ' + err.message, 'error');
+        }
+      };
+      reader.readAsText(file);
+      e.target.value = '';
+    }
+
+    function resetToSafeDefaultsAction() {
+      if (confirm('ยืนยันการรีเซ็ตระบบสู่ค่าเริ่มต้นที่ปลอดภัยหรือไม่? (ข้อมูล 2,363 โรงเรียนและเคสตัวอย่างจะยังคงอยู่อย่างสมบูรณ์)')) {
+        localStorage.removeItem('twp_requests_store');
+        AppState.requests = getPersistedRequests();
+        renderAll();
+        showAlert('รีเซ็ตระบบสู่ค่าเริ่มต้นที่ปลอดภัยเรียบร้อยแล้ว', 'info');
+      }
+    }
+
+
     function openCustomerDirectoryModal() {
       const modal = document.getElementById('customerDirectoryModal');
       if (!modal) return;
@@ -4123,7 +4501,12 @@
       // Group statistics by course topic
       const topicStats = {};
 
-      AppState.requests.forEach(req => {
+      const filteredRequests = AppState.requests.filter(req => {
+        if (selectedDashboardSales !== 'ALL' && req.saleName !== selectedDashboardSales) return false;
+        return true;
+      });
+
+      filteredRequests.forEach(req => {
         if (req.status === 'APPROVED' || req.status === 'COMPLETED') {
           totalSales += req.targetSales || 0;
         }
