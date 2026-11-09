@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-  <title>Training Center TWP - ระบบบริหารคำขอจัดอบรมและประเมินผล v1.15.0</title>
+  <title>Training Center TWP - ระบบบริหารคำขอจัดอบรมและประเมินผล v1.15.1</title>
   <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
   <!-- Google Fonts: Sarabun -->
@@ -217,7 +217,7 @@
       <div class="flex items-center space-x-3 text-xs">
         <span class="bg-white/15 px-3 py-1.5 rounded-full border border-white/20 backdrop-blur-sm font-mono text-blue-100 flex items-center">
           <span class="w-2 h-2 rounded-full bg-emerald-400 mr-2 animate-pulse"></span>
-          System v1.15.0
+          System v1.15.1
         </span>
       </div>
     </div>
@@ -245,38 +245,47 @@
       </div>
 
       <!-- Feature Highlights Grid -->
-      <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 max-w-3xl w-full pt-2">
-        <div class="bg-white/10 hover:bg-white/15 transition backdrop-blur-md border border-white/20 rounded-2xl p-4 text-center space-y-1.5 shadow-lg">
-          <i class="fa-solid fa-paper-plane text-emerald-300 text-xl"></i>
-          <div class="font-bold text-xs sm:text-sm text-white">ทีม A ขอจัดอบรม</div>
-          <div class="text-[11px] text-blue-200">คำนวณ ROI อัตโนมัติ</div>
+      <div class="grid grid-cols-2 sm:grid-cols-5 gap-3 max-w-4xl w-full pt-2">
+        <div onclick="enterAnnualPlan()" class="bg-white/10 hover:bg-white/20 transition backdrop-blur-md border border-white/20 rounded-2xl p-3.5 text-center space-y-1.5 shadow-lg cursor-pointer transform hover:-translate-y-1">
+          <i class="fa-solid fa-file-shield text-indigo-300 text-xl"></i>
+          <div class="font-bold text-xs sm:text-sm text-white">1. แผนหลักการปี</div>
+          <div class="text-[11px] text-blue-200">อนุมัติโดย กก.ผจก.</div>
         </div>
-        <div class="bg-white/10 hover:bg-white/15 transition backdrop-blur-md border border-white/20 rounded-2xl p-4 text-center space-y-1.5 shadow-lg">
+        <div onclick="enterPortal(); switchTab('teamA');" class="bg-white/10 hover:bg-white/20 transition backdrop-blur-md border border-white/20 rounded-2xl p-3.5 text-center space-y-1.5 shadow-lg cursor-pointer transform hover:-translate-y-1">
+          <i class="fa-solid fa-paper-plane text-emerald-300 text-xl"></i>
+          <div class="font-bold text-xs sm:text-sm text-white">2. ทีม A ขอจัดอบรม</div>
+          <div class="text-[11px] text-blue-200">ดึงจากแผนหลักการ</div>
+        </div>
+        <div onclick="enterPortal(); switchTab('teamB');" class="bg-white/10 hover:bg-white/20 transition backdrop-blur-md border border-white/20 rounded-2xl p-3.5 text-center space-y-1.5 shadow-lg cursor-pointer transform hover:-translate-y-1">
           <i class="fa-solid fa-clipboard-check text-purple-300 text-xl"></i>
-          <div class="font-bold text-xs sm:text-sm text-white">ทีม B ตรวจวิชาการ</div>
+          <div class="font-bold text-xs sm:text-sm text-white">3. ทีม B ตรวจวิชาการ</div>
           <div class="text-[11px] text-blue-200">วิทยากร & งบตัดจ่าย</div>
         </div>
-        <div class="bg-white/10 hover:bg-white/15 transition backdrop-blur-md border border-white/20 rounded-2xl p-4 text-center space-y-1.5 shadow-lg">
+        <div onclick="enterPortal(); switchTab('exec');" class="bg-white/10 hover:bg-white/20 transition backdrop-blur-md border border-white/20 rounded-2xl p-3.5 text-center space-y-1.5 shadow-lg cursor-pointer transform hover:-translate-y-1">
           <i class="fa-solid fa-stamp text-amber-300 text-xl"></i>
-          <div class="font-bold text-xs sm:text-sm text-white">ผู้บริหารอนุมัติ</div>
+          <div class="font-bold text-xs sm:text-sm text-white">4. ผู้บริหารอนุมัติ</div>
           <div class="text-[11px] text-blue-200">ออก PDF & Word A4</div>
         </div>
-        <div class="bg-white/10 hover:bg-white/15 transition backdrop-blur-md border border-white/20 rounded-2xl p-4 text-center space-y-1.5 shadow-lg">
+        <div onclick="enterPortal(); switchTab('evaluation');" class="bg-white/10 hover:bg-white/20 transition backdrop-blur-md border border-white/20 rounded-2xl p-3.5 text-center space-y-1.5 shadow-lg cursor-pointer transform hover:-translate-y-1">
           <i class="fa-solid fa-qrcode text-sky-300 text-xl"></i>
-          <div class="font-bold text-xs sm:text-sm text-white">QR ปิดลูปประเมิน</div>
+          <div class="font-bold text-xs sm:text-sm text-white">5. QR ปิดลูปประเมิน</div>
           <div class="text-[11px] text-blue-200">Zero-Trust ปลอดภัย</div>
         </div>
       </div>
 
-      <!-- Tactile 3D Action Buttons: Enter System & Executive Direct Dashboard & Team QR Pairing -->
-      <div class="pt-4 flex flex-col sm:flex-row items-center justify-center gap-3">
-        <button onclick="enterPortal()" class="w-full sm:w-auto px-7 py-3.5 bg-gradient-to-r from-amber-400 via-amber-500 to-amber-600 hover:from-amber-300 hover:to-amber-500 text-slate-950 font-black text-sm sm:text-base rounded-2xl shadow-xl shadow-amber-950/40 border-b-4 border-amber-700 active:border-b-0 active:translate-y-1 transition duration-150 flex items-center justify-center space-x-2.5 cursor-pointer btn-tactile">
+      <!-- Tactile 3D Action Buttons: Enter System & Annual Plan & Executive Dashboard & Team QR -->
+      <div class="pt-4 flex flex-wrap items-center justify-center gap-3">
+        <button onclick="enterPortal()" class="w-full sm:w-auto px-6 py-3.5 bg-gradient-to-r from-amber-400 via-amber-500 to-amber-600 hover:from-amber-300 hover:to-amber-500 text-slate-950 font-black text-sm sm:text-base rounded-2xl shadow-xl shadow-amber-950/40 border-b-4 border-amber-700 active:border-b-0 active:translate-y-1 transition duration-150 flex items-center justify-center space-x-2 cursor-pointer btn-tactile">
           <i class="fa-solid fa-arrow-right-to-bracket text-base"></i>
           <span>เข้าสู่ระบบบริหารคำขอ (Enter Portal)</span>
         </button>
-        <button onclick="enterExecutiveDashboard()" class="w-full sm:w-auto px-6 py-3.5 bg-gradient-to-r from-blue-700 via-indigo-600 to-blue-800 hover:from-blue-600 hover:to-indigo-500 text-white font-bold text-sm sm:text-base rounded-2xl shadow-xl shadow-blue-950/50 border border-blue-300/40 active:translate-y-1 transition duration-150 flex items-center justify-center space-x-2.5 cursor-pointer btn-tactile">
+        <button onclick="enterAnnualPlan()" class="w-full sm:w-auto px-6 py-3.5 bg-gradient-to-r from-indigo-600 via-indigo-700 to-blue-800 hover:from-indigo-500 hover:to-blue-700 text-white font-bold text-sm sm:text-base rounded-2xl shadow-xl shadow-indigo-950/50 border border-indigo-300/40 active:translate-y-1 transition duration-150 flex items-center justify-center space-x-2 cursor-pointer btn-tactile">
+          <i class="fa-solid fa-file-shield text-indigo-300 text-base"></i>
+          <span>โครงการอนุมัติหลักการประจำปี</span>
+        </button>
+        <button onclick="enterExecutiveDashboard()" class="w-full sm:w-auto px-6 py-3.5 bg-gradient-to-r from-blue-700 via-indigo-600 to-blue-800 hover:from-blue-600 hover:to-indigo-500 text-white font-bold text-sm sm:text-base rounded-2xl shadow-xl shadow-blue-950/50 border border-blue-300/40 active:translate-y-1 transition duration-150 flex items-center justify-center space-x-2 cursor-pointer btn-tactile">
           <i class="fa-solid fa-chart-line text-amber-300 text-base"></i>
-          <span>สำหรับผู้บริหาร: ดู Dashboard ทันที</span>
+          <span>ผู้บริหาร: ดู Dashboard</span>
         </button>
         <button onclick="openTeamQrModal('teamA')" class="w-full sm:w-auto px-5 py-3.5 bg-white/15 hover:bg-white/25 text-white font-bold text-sm rounded-2xl border-2 border-white/40 shadow-lg backdrop-blur-md active:translate-y-1 transition duration-150 flex items-center justify-center space-x-2 cursor-pointer btn-tactile">
           <i class="fa-solid fa-qrcode text-amber-300 text-base"></i>
@@ -289,7 +298,7 @@
     <!-- Bottom Footer on Landing Page -->
     <div class="max-w-7xl mx-auto w-full px-6 py-4 flex flex-col sm:flex-row items-center justify-between text-xs text-blue-200 border-t border-white/10 relative z-10 gap-2">
       <div>&copy; 2026 Training Center TWP - บริษัท ไทยวัฒนาพานิช จำกัด. All rights reserved.</div>
-      <div class="font-mono text-[11px] bg-white/10 px-3 py-1 rounded-full border border-white/15">EMS Enterprise Platform v1.15.0 (Live Apps Script Engine)</div>
+      <div class="font-mono text-[11px] bg-white/10 px-3 py-1 rounded-full border border-white/15">EMS Enterprise Platform v1.15.1 (Live Apps Script Engine)</div>
     </div>
 
   </div>
@@ -312,7 +321,7 @@
             <div>
               <div class="flex items-center space-x-2">
                 <span class="font-extrabold text-lg tracking-wide text-white">Training Center TWP</span>
-                <span class="bg-blue-400/20 text-blue-200 text-[10px] font-mono px-2 py-0.5 rounded-full border border-blue-300/30">v1.15.0</span>
+                <span class="bg-blue-400/20 text-blue-200 text-[10px] font-mono px-2 py-0.5 rounded-full border border-blue-300/30">v1.15.1</span>
               </div>
               <p class="text-[11px] text-blue-200 hidden sm:block">ระบบบริหารคำขอจัดอบรมและประเมินผลปิดลูป</p>
             </div>
@@ -2579,7 +2588,87 @@
         </table>
       </div>
 
-      <!-- Footer -->
+      <!-- MODAL: ADD / EDIT ANNUAL PRINCIPLE-APPROVED PLAN -->
+  <div id="annualPlanModal" class="hidden fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4">
+    <div class="bg-white rounded-3xl max-w-lg w-full p-5 sm:p-6 space-y-4 shadow-2xl border border-slate-200 max-h-[92vh] overflow-y-auto custom-scrollbar" onclick="event.stopPropagation()">
+      
+      <div class="flex items-center justify-between pb-3 border-b border-slate-100">
+        <div class="flex items-center space-x-2.5">
+          <div class="w-9 h-9 rounded-xl bg-indigo-100 text-indigo-700 flex items-center justify-center font-bold text-sm">
+            <i class="fa-solid fa-file-circle-check"></i>
+          </div>
+          <div>
+            <h3 id="annualPlanModalTitle" class="font-bold text-slate-800 text-sm">บันทึกโครงการอนุมัติหลักการประจำปี</h3>
+            <p class="text-[11px] text-slate-400">กรอกข้อมูลโครงการที่ได้รับอนุมัติหลักการจากกรรมการผู้จัดการแล้ว</p>
+          </div>
+        </div>
+        <button onclick="closeAnnualPlanModal()" class="text-slate-400 hover:text-slate-600 text-lg"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+
+      <form id="annualPlanForm" onsubmit="handleSaveAnnualPlan(event)" class="space-y-3 text-xs">
+        <input type="hidden" id="planEditId" value="">
+
+        <div class="grid grid-cols-2 gap-2.5">
+          <div>
+            <label class="block font-bold text-slate-700 mb-1">ลำดับที่ *</label>
+            <input type="number" id="planSeqInput" min="1" required placeholder="เช่น 1, 2, 3..." class="w-full bg-white border border-slate-300 rounded-xl p-2 font-mono font-bold focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+          </div>
+          <div>
+            <label class="block font-bold text-slate-700 mb-1">รหัสโครงการหลักการ *</label>
+            <input type="text" id="planCodeInput" required placeholder="เช่น PLAN-2569-01" class="w-full bg-white border border-slate-300 rounded-xl p-2 font-mono font-bold focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+          </div>
+        </div>
+
+        <div>
+          <label class="block font-bold text-slate-700 mb-1">ชื่องานอบรม / โครงการที่ได้รับอนุมัติหลักการ *</label>
+          <input type="text" id="planTitleInput" required placeholder="เช่น งานอบรมใหญ่ Active Learning สู่สมรรถนะผู้เรียนระดับชาติ..." class="w-full bg-white border border-slate-300 rounded-xl p-2 text-xs font-bold text-slate-800 focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+        </div>
+
+        <div>
+          <label class="block font-semibold text-slate-700 mb-1">วัตถุประสงค์และกลุ่มเป้าหมาย</label>
+          <input type="text" id="planTargetAudienceInput" placeholder="เช่น ครูผู้สอนระดับมัธยมศึกษา 500 คน ทั่วประเทศ..." class="w-full bg-white border border-slate-300 rounded-xl p-2 focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+        </div>
+
+        <div class="grid grid-cols-2 gap-2.5">
+          <div>
+            <label class="block font-bold text-slate-700 mb-1">กรอบงบประมาณที่อนุมัติ (บาท) *</label>
+            <input type="number" id="planBudgetInput" min="0" required placeholder="เช่น 150000" class="w-full bg-white border border-slate-300 rounded-xl p-2 font-mono font-bold text-amber-700 focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+          </div>
+          <div>
+            <label class="block font-bold text-slate-700 mb-1">เป้าหมายยอดขายที่คาดหวัง (บาท) *</label>
+            <input type="number" id="planTargetSalesInput" min="0" required placeholder="เช่น 1500000" class="w-full bg-white border border-slate-300 rounded-xl p-2 font-mono font-bold text-emerald-700 focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+          </div>
+        </div>
+
+        <div class="grid grid-cols-2 gap-2.5">
+          <div>
+            <label class="block font-semibold text-slate-700 mb-1">ช่วงเวลาจัดงานตามแผน</label>
+            <input type="text" id="planQuarterInput" placeholder="เช่น พฤศจิกายน 2569 (ไตรมาส 1)" class="w-full bg-white border border-slate-300 rounded-xl p-2 focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+          </div>
+          <div>
+            <label class="block font-semibold text-slate-700 mb-1">ผู้อนุมัติหลักการ</label>
+            <input type="text" id="planApproverInput" readonly value="ผศ.อินทิรา บุนนาค (กรรมการผู้จัดการ)" class="w-full bg-slate-50 border border-slate-200 rounded-xl p-2 text-slate-600 font-medium">
+          </div>
+        </div>
+
+        <div>
+          <label class="block font-semibold text-slate-700 mb-1">หมายเหตุเพิ่มเติม</label>
+          <textarea id="planNotesInput" rows="2" placeholder="ระบุรายละเอียดเพิ่มเติม..." class="w-full bg-white border border-slate-300 rounded-xl p-2 focus:ring-2 focus:ring-indigo-500 focus:outline-none"></textarea>
+        </div>
+
+        <div class="flex items-center justify-end space-x-2 pt-2 border-t border-slate-100">
+          <button type="button" onclick="closeAnnualPlanModal()" class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold rounded-xl transition">
+            ยกเลิก
+          </button>
+          <button type="submit" class="px-5 py-2 bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded-xl shadow-sm transition btn-tactile">
+            <i class="fa-solid fa-floppy-disk mr-1"></i>บันทึกโครงการอนุมัติหลักการ
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+    <!-- Footer -->
       <div class="flex items-center justify-between pt-2 border-t border-slate-100 flex-shrink-0 text-xs">
         <span class="text-slate-400 text-[11px]">ฐานข้อมูล สพม. ปีการศึกษา 2568 • บริษัท ไทยวัฒนาพานิช จำกัด</span>
         <button onclick="closeCustomerDirectoryModal()" class="px-4 py-1.5 bg-slate-200 hover:bg-slate-300 text-slate-700 font-semibold rounded-xl transition">ปิดหน้าต่าง</button>
@@ -2953,7 +3042,7 @@
     <!-- Footer -->
   <footer class="bg-white border-t border-slate-200 text-slate-500 text-xs py-4 px-6 mt-auto">
     <div class="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-2">
-      <div>Training Center TWP (EMS Enterprise v1.15.0) &copy; 2026 - บริษัท ไทยวัฒนาพานิช จำกัด</div>
+      <div>Training Center TWP (EMS Enterprise v1.15.1) &copy; 2026 - บริษัท ไทยวัฒนาพานิช จำกัด</div>
       <div class="flex items-center space-x-4">
         <button onclick="showLandingPage()" class="hover:text-blue-600 transition"><i class="fa-solid fa-house mr-1"></i>กลับหน้าแรก</button>
         <span>Google Apps Script + Google Sheets Architecture (PPC Standard)</span>
@@ -3430,9 +3519,77 @@
       ];
     }
 
+    function getInitialSampleAnnualPlans() {
+      return [
+        {
+          seqNo: 1,
+          planId: 'PLAN-2569-01',
+          title: 'งานอบรมใหญ่ Active Learning สู่สมรรถนะผู้เรียนระดับชาติ',
+          targetAudience: 'ครูผู้สอนระดับมัธยมศึกษา 500 คน ทั่วประเทศ',
+          principleBudget: 150000,
+          targetSales: 1500000,
+          quarterOrDate: 'พฤศจิกายน 2569 (ไตรมาส 1)',
+          approverName: 'ผศ.อินทิรา บุนนาค',
+          approverRole: 'กรรมการผู้จัดการ',
+          status: 'APPROVED_PRINCIPLE',
+          notes: 'โครงการยุทธศาสตร์หลักประจำปี เน้นสื่อและแบบฝึก Active Learning'
+        },
+        {
+          seqNo: 2,
+          planId: 'PLAN-2569-02',
+          title: 'โครงการสัมมนาเชิงปฏิบัติการ STEM & Coding สู่ห้องเรียนนวัตกรรม',
+          targetAudience: 'ครูกลุ่มสาระวิทยาศาสตร์และเทคโนโลยี 200 โรงเรียน',
+          principleBudget: 80000,
+          targetSales: 850000,
+          quarterOrDate: 'ธันวาคม 2569 (ไตรมาส 1)',
+          approverName: 'ผศ.อินทิรา บุนนาค',
+          approverRole: 'กรรมการผู้จัดการ',
+          status: 'APPROVED_PRINCIPLE',
+          notes: 'ขยายฐานโรงเรียน Tier A และจัดจำหน่ายชุดบอร์ด Coding'
+        },
+        {
+          seqNo: 3,
+          planId: 'PLAN-2569-03',
+          title: 'อบรมเชิงลึกการวัดและประเมินผลตามแนวทาง PISA และ O-NET',
+          targetAudience: 'ผู้บริหารและครูวิชาการเขตพื้นที่การศึกษา',
+          principleBudget: 60000,
+          targetSales: 650000,
+          quarterOrDate: 'มกราคม 2570 (ไตรมาส 2)',
+          approverName: 'ผศ.อินทิรา บุนนาค',
+          approverRole: 'กรรมการผู้จัดการ',
+          status: 'APPROVED_PRINCIPLE',
+          notes: 'มุ่งเน้นการใช้คลังข้อสอบและเครื่องมือวัดผลมาตรฐาน TWP'
+        },
+        {
+          seqNo: 4,
+          planId: 'PLAN-2569-04',
+          title: 'เวิร์กช็อปพัฒนาศักยภาพผู้บริหารสถานศึกษา ยุค AI & Digital Transformation',
+          targetAudience: 'ผู้อำนวยการและรองผู้อำนวยการสถานศึกษา 100 ท่าน',
+          principleBudget: 100000,
+          targetSales: 1200000,
+          quarterOrDate: 'กุมภาพันธ์ 2570 (ไตรมาส 2)',
+          approverName: 'ผศ.อินทิรา บุนนาค',
+          approverRole: 'กรรมการผู้จัดการ',
+          status: 'APPROVED_PRINCIPLE',
+          notes: 'สัมมนาผู้บริหารระดับสูง สร้างเครือข่ายความร่วมมือการใช้สื่อดิจิทัล'
+        }
+      ];
+    }
+
+    function getPersistedAnnualPlans() {
+      const stored = localStorage.getItem('twp_annual_principle_plans');
+      if (stored) {
+        try {
+          const parsed = JSON.parse(stored);
+          if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+        } catch(e) {}
+      }
+      return getInitialSampleAnnualPlans();
+    }
+
     // System Global State (Synchronously initialized with complete Master Data)
     const AppState = {
-      version: '1.15.0',
+      version: '1.15.1',
       clientId: 'DEV-' + Math.random().toString(36).substring(2, 7).toUpperCase(),
       activeTab: 'dashboard',
       activeDevices: {},
@@ -3451,6 +3608,7 @@
       requests: getPersistedRequests(),
       fy2569Projects: getPersistedFy2569Projects(),
       fy2569TuLedger: getPersistedFy2569TuLedger(),
+      annualPlans: getPersistedAnnualPlans(),
       autoOptions: {
         activityTypes: ['อบรมวิชาการ', 'Workshop เชิงปฏิบัติการ', 'Workshop Hosting', 'ติวนักเรียน', 'สัมมนาวิชาการผู้บริหาร', 'อบรมออนไลน์'],
         courseTopics: ['อบรมคศ.3-4 นวัตกรรมการเรียนรู้', 'Active Learning สู่สมรรถนะผู้เรียน', 'Coding & STEM Education', 'เทคนิคการวัดและประเมินผล', 'AI เพื่อการจัดการเรียนการสอน'],
@@ -3484,6 +3642,13 @@
       enterPortal();
       switchTab('dashboard');
       showAlert('ยินดีต้อนรับท่านผู้บริหาร: เข้าสู่ศูนย์กลางข้อมูลและวิเคราะห์ผลการดำเนินงานเรียบร้อยแล้ว', 'info');
+    }
+
+    // Direct access to Annual Principle Plan from Landing Page
+    function enterAnnualPlan() {
+      enterPortal();
+      switchTab('annualPlan');
+      showAlert('ยินดีต้อนรับ: เข้าสู่โครงการอนุมัติหลักการประจำปี (แผนหลัก) เรียบร้อยแล้ว', 'info');
     }
 
     function showLandingPage() {
@@ -4100,6 +4265,8 @@
       refreshSchoolsDatalist();
       renderAdminSalesList();
       renderDashboard();
+      renderAnnualPlanView();
+      renderAnnualPlanSelectOptions();
       renderTeamBQueue();
       renderExecQueue();
       renderEvaluationCenter();
@@ -4127,6 +4294,8 @@
 
       if (tabId === 'annualPlan') {
         renderAnnualPlanView();
+      } else if (tabId === 'teamA') {
+        renderAnnualPlanSelectOptions();
       } else if (tabId === 'teamBExpenses') {
         renderTeamBExpensesView();
       } else if (tabId === 'fy2569Tu') {
@@ -4632,7 +4801,7 @@
     }
 
     // ==========================================================================
-    // FY2569 STRATEGIC PROJECTS & SALES RECONCILIATION ENGINE (v1.15.0)
+    // FY2569 STRATEGIC PROJECTS & SALES RECONCILIATION ENGINE (v1.15.1)
     // ==========================================================================
 
     let fy2569SelectedMatchProjectId = null;
@@ -5100,7 +5269,7 @@
         '</style></head><body>' +
         '<div class="header">' +
         '<div><h2 style="margin:0; color:#08539E; font-size:16pt;">บริษัท ไทยวัฒนาพานิช จำกัด (TWP)</h2><div style="font-size:11pt; color:#475569;">รายงานสรุปการกระทบยอดงบประมาณจัดอบรมกับยอดขายจริง ประจำปี 2569</div></div>' +
-        '<div style="text-align:right; font-size:9pt; color:#64748b;">ออกโดยระบบ EMS Enterprise v1.15.0<br>วันที่พิมพ์: ' + new Date().toLocaleDateString('th-TH') + '</div>' +
+        '<div style="text-align:right; font-size:9pt; color:#64748b;">ออกโดยระบบ EMS Enterprise v1.15.1<br>วันที่พิมพ์: ' + new Date().toLocaleDateString('th-TH') + '</div>' +
         '</div>' +
         '<div style="display:flex; justify-content:space-between; background:#f8fafc; padding:8px 12px; border-radius:6px; margin-bottom:10px; font-size:10pt;">' +
         '<div>โครงการทั้งหมด: <strong>' + projects.length + ' โครงการ</strong></div>' +
@@ -7289,7 +7458,7 @@
           <div style="border-top:1px dashed #cbd5e1; margin-top:10px; padding-top:4px; display:flex; justify-content:space-between; align-items:center; font-size:8.5pt; color:#64748b;">
             <div>
               <i class="fa-solid fa-file-contract mr-1 text-[#08539E]"></i>
-              รายงานประเมินและวิเคราะห์ต้นทุนการจัดอบรม A4 • ออกโดย TWP Training Enterprise Platform (v1.15.0)
+              รายงานประเมินและวิเคราะห์ต้นทุนการจัดอบรม A4 • ออกโดย TWP Training Enterprise Platform (v1.15.1)
             </div>
             <div>
               หน้า 1/1 • ${d.eventId}
@@ -7461,7 +7630,7 @@
           <div style="border-top:1px dashed #cbd5e1; margin-top:14px; padding-top:6px; display:flex; justify-content:space-between; align-items:center; font-size:8.5pt; color:#64748b;">
             <div>
               <i class="fa-solid fa-shield-halved" style="color:#08539E; margin-right:4px;"></i>
-              เอกสารอิเล็กทรอนิกส์มาตรฐาน A4 ออกโดย TWP Training Enterprise Management System (EMS v1.15.0)
+              เอกสารอิเล็กทรอนิกส์มาตรฐาน A4 ออกโดย TWP Training Enterprise Management System (EMS v1.15.1)
             </div>
             <div>
               รหัสอ้างอิง: <span style="font-family:monospace; font-weight:700; color:#0f172a;">${d.eventId}</span> | หน้า 1/1
@@ -7634,7 +7803,7 @@
           </table>
 
           <div style="margin-top:14px; padding-top:4px; border-top:1px solid #e2e8f0; font-size:8.5pt; color:#94a3b8; text-align:center;">
-            เอกสารฉบับนี้สร้างโดยระบบ Training Center TWP (EMS Enterprise Platform v1.15.0) • ใช้สำหรับติดตามและควบคุมผลการปฏิบัติงานภายใน (PPC Standard)
+            เอกสารฉบับนี้สร้างโดยระบบ Training Center TWP (EMS Enterprise Platform v1.15.1) • ใช้สำหรับติดตามและควบคุมผลการปฏิบัติงานภายใน (PPC Standard)
           </div>
         </div>
       `;
@@ -8389,161 +8558,12 @@
         box.className = 'hidden';
       }, 5000);
     }
-  </script>
 
-  <!-- MODAL: ADD / EDIT ANNUAL PRINCIPLE-APPROVED PLAN -->
-  <div id="annualPlanModal" class="hidden fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4">
-    <div class="bg-white rounded-3xl max-w-lg w-full p-5 sm:p-6 space-y-4 shadow-2xl border border-slate-200 max-h-[92vh] overflow-y-auto custom-scrollbar" onclick="event.stopPropagation()">
-      
-      <div class="flex items-center justify-between pb-3 border-b border-slate-100">
-        <div class="flex items-center space-x-2.5">
-          <div class="w-9 h-9 rounded-xl bg-indigo-100 text-indigo-700 flex items-center justify-center font-bold text-sm">
-            <i class="fa-solid fa-file-circle-check"></i>
-          </div>
-          <div>
-            <h3 id="annualPlanModalTitle" class="font-bold text-slate-800 text-sm">บันทึกโครงการอนุมัติหลักการประจำปี</h3>
-            <p class="text-[11px] text-slate-400">กรอกข้อมูลโครงการที่ได้รับอนุมัติหลักการจากกรรมการผู้จัดการแล้ว</p>
-          </div>
-        </div>
-        <button onclick="closeAnnualPlanModal()" class="text-slate-400 hover:text-slate-600 text-lg"><i class="fa-solid fa-xmark"></i></button>
-      </div>
-
-      <form id="annualPlanForm" onsubmit="handleSaveAnnualPlan(event)" class="space-y-3 text-xs">
-        <input type="hidden" id="planEditId" value="">
-
-        <div class="grid grid-cols-2 gap-2.5">
-          <div>
-            <label class="block font-bold text-slate-700 mb-1">ลำดับที่ *</label>
-            <input type="number" id="planSeqInput" min="1" required placeholder="เช่น 1, 2, 3..." class="w-full bg-white border border-slate-300 rounded-xl p-2 font-mono font-bold focus:ring-2 focus:ring-indigo-500 focus:outline-none">
-          </div>
-          <div>
-            <label class="block font-bold text-slate-700 mb-1">รหัสโครงการหลักการ *</label>
-            <input type="text" id="planCodeInput" required placeholder="เช่น PLAN-2569-01" class="w-full bg-white border border-slate-300 rounded-xl p-2 font-mono font-bold focus:ring-2 focus:ring-indigo-500 focus:outline-none">
-          </div>
-        </div>
-
-        <div>
-          <label class="block font-bold text-slate-700 mb-1">ชื่องานอบรม / โครงการที่ได้รับอนุมัติหลักการ *</label>
-          <input type="text" id="planTitleInput" required placeholder="เช่น งานอบรมใหญ่ Active Learning สู่สมรรถนะผู้เรียนระดับชาติ..." class="w-full bg-white border border-slate-300 rounded-xl p-2 text-xs font-bold text-slate-800 focus:ring-2 focus:ring-indigo-500 focus:outline-none">
-        </div>
-
-        <div>
-          <label class="block font-semibold text-slate-700 mb-1">วัตถุประสงค์และกลุ่มเป้าหมาย</label>
-          <input type="text" id="planTargetAudienceInput" placeholder="เช่น ครูผู้สอนระดับมัธยมศึกษา 500 คน ทั่วประเทศ..." class="w-full bg-white border border-slate-300 rounded-xl p-2 focus:ring-2 focus:ring-indigo-500 focus:outline-none">
-        </div>
-
-        <div class="grid grid-cols-2 gap-2.5">
-          <div>
-            <label class="block font-bold text-slate-700 mb-1">กรอบงบประมาณที่อนุมัติ (บาท) *</label>
-            <input type="number" id="planBudgetInput" min="0" required placeholder="เช่น 150000" class="w-full bg-white border border-slate-300 rounded-xl p-2 font-mono font-bold text-amber-700 focus:ring-2 focus:ring-indigo-500 focus:outline-none">
-          </div>
-          <div>
-            <label class="block font-bold text-slate-700 mb-1">เป้าหมายยอดขายที่คาดหวัง (บาท) *</label>
-            <input type="number" id="planTargetSalesInput" min="0" required placeholder="เช่น 1500000" class="w-full bg-white border border-slate-300 rounded-xl p-2 font-mono font-bold text-emerald-700 focus:ring-2 focus:ring-indigo-500 focus:outline-none">
-          </div>
-        </div>
-
-        <div class="grid grid-cols-2 gap-2.5">
-          <div>
-            <label class="block font-semibold text-slate-700 mb-1">ช่วงเวลาจัดงานตามแผน</label>
-            <input type="text" id="planQuarterInput" placeholder="เช่น พฤศจิกายน 2569 (ไตรมาส 1)" class="w-full bg-white border border-slate-300 rounded-xl p-2 focus:ring-2 focus:ring-indigo-500 focus:outline-none">
-          </div>
-          <div>
-            <label class="block font-semibold text-slate-700 mb-1">ผู้อนุมัติหลักการ</label>
-            <input type="text" id="planApproverInput" readonly value="ผศ.อินทิรา บุนนาค (กรรมการผู้จัดการ)" class="w-full bg-slate-50 border border-slate-200 rounded-xl p-2 text-slate-600 font-medium">
-          </div>
-        </div>
-
-        <div>
-          <label class="block font-semibold text-slate-700 mb-1">หมายเหตุเพิ่มเติม</label>
-          <textarea id="planNotesInput" rows="2" placeholder="ระบุรายละเอียดเพิ่มเติม..." class="w-full bg-white border border-slate-300 rounded-xl p-2 focus:ring-2 focus:ring-indigo-500 focus:outline-none"></textarea>
-        </div>
-
-        <div class="flex items-center justify-end space-x-2 pt-2 border-t border-slate-100">
-          <button type="button" onclick="closeAnnualPlanModal()" class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold rounded-xl transition">
-            ยกเลิก
-          </button>
-          <button type="submit" class="px-5 py-2 bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded-xl shadow-sm transition btn-tactile">
-            <i class="fa-solid fa-floppy-disk mr-1"></i>บันทึกโครงการอนุมัติหลักการ
-          </button>
-        </div>
-      </form>
-    </div>
-  </div>
-
-  <script>
     // ------------------- ANNUAL PRINCIPLE-APPROVED PLANS ENGINE -------------------
     
-    function getInitialSampleAnnualPlans() {
-      return [
-        {
-          seqNo: 1,
-          planId: 'PLAN-2569-01',
-          title: 'งานอบรมใหญ่ Active Learning สู่สมรรถนะผู้เรียนระดับชาติ',
-          targetAudience: 'ครูผู้สอนระดับมัธยมศึกษา 500 คน ทั่วประเทศ',
-          principleBudget: 150000,
-          targetSales: 1500000,
-          quarterOrDate: 'พฤศจิกายน 2569 (ไตรมาส 1)',
-          approverName: 'ผศ.อินทิรา บุนนาค',
-          approverRole: 'กรรมการผู้จัดการ',
-          status: 'APPROVED_PRINCIPLE',
-          notes: 'โครงการยุทธศาสตร์หลักประจำปี เน้นสื่อและแบบฝึก Active Learning'
-        },
-        {
-          seqNo: 2,
-          planId: 'PLAN-2569-02',
-          title: 'โครงการสัมมนาเชิงปฏิบัติการ STEM & Coding สู่ห้องเรียนนวัตกรรม',
-          targetAudience: 'ครูกลุ่มสาระวิทยาศาสตร์และเทคโนโลยี 200 โรงเรียน',
-          principleBudget: 80000,
-          targetSales: 850000,
-          quarterOrDate: 'ธันวาคม 2569 (ไตรมาส 1)',
-          approverName: 'ผศ.อินทิรา บุนนาค',
-          approverRole: 'กรรมการผู้จัดการ',
-          status: 'APPROVED_PRINCIPLE',
-          notes: 'ขยายฐานโรงเรียน Tier A และจัดจำหน่ายชุดบอร์ด Coding'
-        },
-        {
-          seqNo: 3,
-          planId: 'PLAN-2569-03',
-          title: 'อบรมเชิงลึกการวัดและประเมินผลตามแนวทาง PISA และ O-NET',
-          targetAudience: 'ผู้บริหารและครูวิชาการเขตพื้นที่การศึกษา',
-          principleBudget: 60000,
-          targetSales: 650000,
-          quarterOrDate: 'มกราคม 2570 (ไตรมาส 2)',
-          approverName: 'ผศ.อินทิรา บุนนาค',
-          approverRole: 'กรรมการผู้จัดการ',
-          status: 'APPROVED_PRINCIPLE',
-          notes: 'มุ่งเน้นการใช้คลังข้อสอบและเครื่องมือวัดผลมาตรฐาน TWP'
-        },
-        {
-          seqNo: 4,
-          planId: 'PLAN-2569-04',
-          title: 'เวิร์กช็อปพัฒนาศักยภาพผู้บริหารสถานศึกษา ยุค AI & Digital Transformation',
-          targetAudience: 'ผู้อำนวยการและรองผู้อำนวยการสถานศึกษา 100 ท่าน',
-          principleBudget: 100000,
-          targetSales: 1200000,
-          quarterOrDate: 'กุมภาพันธ์ 2570 (ไตรมาส 2)',
-          approverName: 'ผศ.อินทิรา บุนนาค',
-          approverRole: 'กรรมการผู้จัดการ',
-          status: 'APPROVED_PRINCIPLE',
-          notes: 'สัมมนาผู้บริหารระดับสูง สร้างเครือข่ายความร่วมมือการใช้สื่อดิจิทัล'
-        }
-      ];
-    }
+    
 
-    function getPersistedAnnualPlans() {
-      const stored = localStorage.getItem('twp_annual_principle_plans');
-      if (stored) {
-        try {
-          const parsed = JSON.parse(stored);
-          if (Array.isArray(parsed) && parsed.length > 0) return parsed;
-        } catch(e) {}
-      }
-      return getInitialSampleAnnualPlans();
-    }
-
-    // Attach to AppState
-    AppState.annualPlans = getPersistedAnnualPlans();
+    // annualPlans initialized directly in AppState
 
     function renderAnnualPlanView() {
       const plans = AppState.annualPlans || [];

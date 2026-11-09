@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Mobile UI Simulator v1.15.0 - Training Center TWP</title>
+  <title>Mobile UI Simulator v1.15.1 - Training Center TWP</title>
   <script src="https://www.gstatic.com/antigravity/web/dev/tailwindcss.min.js"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700;800&family=Chakra+Petch:wght@500;700&display=swap" rel="stylesheet">
@@ -52,33 +52,36 @@
       <div class="inline-flex items-center space-x-2 bg-slate-800 border border-slate-700 px-3 py-1 rounded-full text-xs text-blue-300 shadow-sm">
         <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
         <span class="font-bold">Mobile UI Simulator</span>
-        <span class="bg-blue-600 text-white text-[10px] px-2 py-0.5 rounded-full font-mono">v1.15.0</span>
+        <span class="bg-blue-600 text-white text-[10px] px-2 py-0.5 rounded-full font-mono">v1.15.1</span>
       </div>
       <span class="text-xs text-slate-400 hidden sm:inline">• เลขอารบิกสากล 100% • Zero-Risk Sandbox</span>
     </div>
     
-    <!-- Screen Switcher Tabs (7 Screens for v1.15.0) -->
-    <div class="grid grid-cols-4 sm:grid-cols-7 gap-1 bg-slate-800/90 p-1.5 rounded-2xl border border-slate-700 text-[11px] shadow-lg">
-      <button onclick="setScreen('landing')" id="btn-landing" class="screen-btn py-1.5 px-1 rounded-xl font-bold bg-[#08539E] text-white shadow transition text-center truncate cursor-pointer">
+    <!-- Screen Switcher Tabs (8 Screens for v1.15.1) -->
+    <div class="grid grid-cols-4 sm:grid-cols-8 gap-1 bg-slate-800/90 p-1.5 rounded-2xl border border-slate-700 text-[10px] shadow-lg">
+      <button onclick="setScreen('landing')" id="btn-landing" class="screen-btn py-1.5 px-0.5 rounded-xl font-bold bg-[#08539E] text-white shadow transition text-center truncate cursor-pointer">
         1. หน้าหลัก
       </button>
-      <button onclick="setScreen('teamA')" id="btn-teamA" class="screen-btn py-1.5 px-1 rounded-xl font-medium text-slate-400 hover:text-white transition text-center truncate cursor-pointer">
-        2. ขอจัด (A)
+      <button onclick="setScreen('annualPlan')" id="btn-annualPlan" class="screen-btn py-1.5 px-0.5 rounded-xl font-medium text-indigo-300 hover:text-white transition text-center truncate cursor-pointer">
+        2. แผนหลักการ
       </button>
-      <button onclick="setScreen('dashboard')" id="btn-dashboard" class="screen-btn py-1.5 px-1 rounded-xl font-medium text-slate-400 hover:text-white transition text-center truncate cursor-pointer">
-        3. Dashboard
+      <button onclick="setScreen('teamA')" id="btn-teamA" class="screen-btn py-1.5 px-0.5 rounded-xl font-medium text-slate-400 hover:text-white transition text-center truncate cursor-pointer">
+        3. ขอจัด (A)
       </button>
-      <button onclick="setScreen('fy2569')" id="btn-fy2569" class="screen-btn py-1.5 px-1 rounded-xl font-medium text-amber-300 hover:text-white transition text-center truncate cursor-pointer">
-        4. แผน 2569
+      <button onclick="setScreen('dashboard')" id="btn-dashboard" class="screen-btn py-1.5 px-0.5 rounded-xl font-medium text-slate-400 hover:text-white transition text-center truncate cursor-pointer">
+        4. Dashboard
       </button>
-      <button onclick="setScreen('teamB')" id="btn-teamB" class="screen-btn py-1.5 px-1 rounded-xl font-medium text-slate-400 hover:text-white transition text-center truncate cursor-pointer">
-        5. 7 ค่าใช้จ่าย (B)
+      <button onclick="setScreen('fy2569')" id="btn-fy2569" class="screen-btn py-1.5 px-0.5 rounded-xl font-medium text-amber-300 hover:text-white transition text-center truncate cursor-pointer">
+        5. แผน 2569
       </button>
-      <button onclick="setScreen('certificate')" id="btn-certificate" class="screen-btn py-1.5 px-1 rounded-xl font-medium text-slate-400 hover:text-white transition text-center truncate cursor-pointer">
-        6. e-Certificate
+      <button onclick="setScreen('teamB')" id="btn-teamB" class="screen-btn py-1.5 px-0.5 rounded-xl font-medium text-slate-400 hover:text-white transition text-center truncate cursor-pointer">
+        6. 7 ค่าใช้จ่าย
       </button>
-      <button onclick="setScreen('survey')" id="btn-survey" class="screen-btn py-1.5 px-1 rounded-xl font-medium text-slate-400 hover:text-white transition text-center truncate cursor-pointer">
-        7. ประเมิน QR
+      <button onclick="setScreen('certificate')" id="btn-certificate" class="screen-btn py-1.5 px-0.5 rounded-xl font-medium text-slate-400 hover:text-white transition text-center truncate cursor-pointer">
+        7. e-Certificate
+      </button>
+      <button onclick="setScreen('survey')" id="btn-survey" class="screen-btn py-1.5 px-0.5 rounded-xl font-medium text-slate-400 hover:text-white transition text-center truncate cursor-pointer">
+        8. ประเมิน QR
       </button>
     </div>
   </div>
@@ -110,7 +113,7 @@
       </div>
 
       <!-- ============================================== -->
-      <!-- SCREEN 1: LANDING PAGE (HERO ENTRANCE v1.15.0) -->
+      <!-- SCREEN 1: LANDING PAGE (HERO ENTRANCE v1.15.1) -->
       <!-- ============================================== -->
       <div id="screen-landing" class="screen-view flex-1 bg-[#08539E] text-white flex flex-col justify-between p-4 overflow-y-auto phone-screen relative select-none">
         
@@ -131,7 +134,7 @@
               <span class="text-[10px] text-blue-200 block">Thai Wattana Panich</span>
             </div>
           </div>
-          <span class="bg-white/15 px-2.5 py-0.5 rounded-full text-[10px] font-mono border border-white/20 font-bold">v1.15.0</span>
+          <span class="bg-white/15 px-2.5 py-0.5 rounded-full text-[10px] font-mono border border-white/20 font-bold">v1.15.1</span>
         </div>
 
         <!-- Center Content -->
@@ -175,13 +178,16 @@
             </div>
           </div>
 
-          <div class="pt-1">
-            <button onclick="setScreen('dashboard')" class="w-full py-3 bg-gradient-to-r from-amber-400 to-amber-500 hover:from-amber-300 hover:to-amber-400 text-slate-950 font-black text-xs rounded-xl shadow-xl border-b-4 border-amber-700 btn-tactile flex items-center justify-center space-x-2 cursor-pointer">
+          <div class="pt-1 space-y-1.5">
+            <button onclick="setScreen('annualPlan')" class="w-full py-2.5 bg-gradient-to-r from-indigo-600 to-blue-700 hover:from-indigo-500 hover:to-blue-600 text-white font-bold text-xs rounded-xl shadow-lg border border-indigo-300/40 btn-tactile flex items-center justify-center space-x-2 cursor-pointer">
+              <i class="fa-solid fa-file-shield text-indigo-200"></i>
+              <span>1. โครงการอนุมัติหลักการประจำปี</span>
+            </button>
+            <button onclick="setScreen('dashboard')" class="w-full py-2.5 bg-gradient-to-r from-amber-400 to-amber-500 hover:from-amber-300 hover:to-amber-400 text-slate-950 font-black text-xs rounded-xl shadow-xl border-b-4 border-amber-700 btn-tactile flex items-center justify-center space-x-2 cursor-pointer">
               <span>เข้าสู่ศูนย์บริหาร Dashboard (ปี 2568-2569)</span>
               <i class="fa-solid fa-arrow-right text-xs"></i>
             </button>
           </div>
-        </div>
 
         <div class="relative z-10 text-center text-[10px] text-blue-200/80 pt-2 border-t border-white/10">
           &copy; 2026 Training Center TWP - บจก.ไทยวัฒนาพานิช
@@ -190,7 +196,87 @@
 
       <!-- ============================================== -->
       <!-- SCREEN 2: TEAM A FORM (MOBILE STACK LAYOUT)   -->
+            <!-- ============================================== -->
+      <!-- SCREEN 2: ANNUAL PRINCIPLE-APPROVED PLAN (v1.15.1) -->
       <!-- ============================================== -->
+      <div id="screen-annualPlan" class="screen-view hidden flex-1 flex flex-col bg-slate-100 overflow-y-auto phone-screen">
+        
+        <!-- App Bar -->
+        <div class="bg-gradient-to-r from-indigo-900 to-indigo-950 text-white px-4 py-2.5 flex items-center justify-between shadow sticky top-0 z-20">
+          <div class="flex items-center space-x-2">
+            <i class="fa-solid fa-file-shield text-indigo-300 text-sm"></i>
+            <div>
+              <div class="font-bold text-xs">โครงการอนุมัติหลักการประจำปี</div>
+              <div class="text-[10px] text-indigo-200">อนุมัติโดย กรรมการผู้จัดการ</div>
+            </div>
+          </div>
+          <button onclick="setScreen('landing')" class="text-indigo-200 hover:text-white text-xs cursor-pointer"><i class="fa-solid fa-house"></i></button>
+        </div>
+
+        <div class="p-3 space-y-2.5">
+          <!-- Summary Banner -->
+          <div class="bg-gradient-to-r from-indigo-600 via-indigo-700 to-blue-700 text-white p-3 rounded-2xl shadow space-y-1">
+            <div class="flex items-center justify-between text-xs font-bold">
+              <span>ภาพรวมแผนหลักการปี 2569</span>
+              <span class="bg-white/20 px-2 py-0.5 rounded-full text-[10px] font-mono">4 โครงการ</span>
+            </div>
+            <div class="grid grid-cols-2 gap-2 pt-1 text-center">
+              <div class="bg-black/20 p-2 rounded-xl">
+                <div class="text-[10px] text-indigo-200">งบหลักการรวม</div>
+                <div class="font-black text-sm text-amber-300">฿390,000</div>
+              </div>
+              <div class="bg-black/20 p-2 rounded-xl">
+                <div class="text-[10px] text-indigo-200">เป้าหมายยอดขายรวม</div>
+                <div class="font-black text-sm text-emerald-300">฿4,200,000</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Plan Card 1 -->
+          <div class="bg-white p-3 rounded-2xl shadow-sm border border-slate-200 space-y-2">
+            <div class="flex items-center justify-between">
+              <span class="bg-indigo-100 text-indigo-800 text-[10px] font-bold px-2 py-0.5 rounded-full">ลำดับที่ 1 • PLAN-2569-01</span>
+              <span class="text-[10px] text-emerald-700 font-bold bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200">อนุมัติแล้ว</span>
+            </div>
+            <div class="font-bold text-xs text-slate-800">งานอบรมใหญ่ Active Learning สู่สมรรถนะผู้เรียนระดับชาติ</div>
+            <div class="text-[11px] text-slate-500">กลุ่มเป้าหมาย: ครูผู้สอนระดับมัธยมศึกษา 500 คน ทั่วประเทศ</div>
+            <div class="grid grid-cols-2 gap-1.5 text-[11px] bg-slate-50 p-2 rounded-xl">
+              <div>งบหลักการ: <span class="font-bold text-amber-700">฿150,000</span></div>
+              <div>เป้าหมายยอดขาย: <span class="font-bold text-emerald-700">฿1,500,000</span></div>
+            </div>
+            <div class="flex items-center justify-between pt-1 border-t border-slate-100 text-[10px]">
+              <span class="text-slate-500">ผู้อนุมัติ: ผศ.อินทิรา บุนนาค (กก.ผจก.)</span>
+              <button onclick="setScreen('teamA')" class="px-2.5 py-1 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-lg shadow-xs flex items-center space-x-1 cursor-pointer">
+                <i class="fa-solid fa-paper-plane text-[9px]"></i>
+                <span>นำไปขอจัดอบรม (A)</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Plan Card 2 -->
+          <div class="bg-white p-3 rounded-2xl shadow-sm border border-slate-200 space-y-2">
+            <div class="flex items-center justify-between">
+              <span class="bg-indigo-100 text-indigo-800 text-[10px] font-bold px-2 py-0.5 rounded-full">ลำดับที่ 2 • PLAN-2569-02</span>
+              <span class="text-[10px] text-emerald-700 font-bold bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200">อนุมัติแล้ว</span>
+            </div>
+            <div class="font-bold text-xs text-slate-800">โครงการสัมมนาเชิงปฏิบัติการ STEM & Coding สู่ห้องเรียนนวัตกรรม</div>
+            <div class="text-[11px] text-slate-500">กลุ่มเป้าหมาย: ครูกลุ่มสาระวิทย์-เทคโน 200 โรงเรียน</div>
+            <div class="grid grid-cols-2 gap-1.5 text-[11px] bg-slate-50 p-2 rounded-xl">
+              <div>งบหลักการ: <span class="font-bold text-amber-700">฿80,000</span></div>
+              <div>เป้าหมายยอดขาย: <span class="font-bold text-emerald-700">฿850,000</span></div>
+            </div>
+            <div class="flex items-center justify-between pt-1 border-t border-slate-100 text-[10px]">
+              <span class="text-slate-500">ผู้อนุมัติ: ผศ.อินทิรา บุนนาค (กก.ผจก.)</span>
+              <button onclick="setScreen('teamA')" class="px-2.5 py-1 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-lg shadow-xs flex items-center space-x-1 cursor-pointer">
+                <i class="fa-solid fa-paper-plane text-[9px]"></i>
+                <span>นำไปขอจัดอบรม (A)</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+<!-- ============================================== -->
       <div id="screen-teamA" class="screen-view hidden flex-1 flex flex-col bg-slate-100 overflow-y-auto phone-screen">
         
         <!-- App Bar -->
@@ -746,7 +832,7 @@
   </div>
 
   <div class="text-center mt-3 text-xs text-slate-400 max-w-md">
-    แตะปุ่ม 1-7 ด้านบนเพื่อสลับดูหน้าจำลองต่างๆ บนสมาร์ตโฟน (เวอร์ชันล่าสุด v1.15.0 รองรับทุกเวิร์กโฟลว์)
+    แตะปุ่ม 1-7 ด้านบนเพื่อสลับดูหน้าจำลองต่างๆ บนสมาร์ตโฟน (เวอร์ชันล่าสุด v1.15.1 รองรับทุกเวิร์กโฟลว์)
   </div>
 
   <script>
