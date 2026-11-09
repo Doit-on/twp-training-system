@@ -1,6 +1,6 @@
 # คู่มือการใช้งาน Training Center TWP (Operational User Manual)
 
-**เวอร์ชันระบบ:** 1.10.0  
+**เวอร์ชันระบบ:** 1.11.0  
 **ระบบ:** Training Center TWP - บริหารคำขอจัดกิจกรรมอบรมและประเมินผลปิดลูป (EMS Enterprise Platform)  
 **Production Apps Script Endpoint:** `https://script.google.com/macros/s/AKfycby-D2AvgHXO_y4tVxg8wgkDP9ARBnRpiVp47-vnF7AiA1TA4AqwKGbelJTyI68tKfmx6g/exec`  
 **รหัสผ่านผู้ดูแลระบบ (Admin Password):** `admin0000`
@@ -167,7 +167,7 @@
 
 ## 8. การออกเอกสาร A4 (TH Sarabun 12pt) 3 รูปแบบ และรายงานวิเคราะห์ต้นทุน/หัวสำหรับผู้บริหาร
 
-ระบบ EMS Enterprise v1.10.0 มาพร้อมเครื่องมือสร้างเอกสารทางการ 3 รูปแบบ พร้อม **3-in-1 Document Switcher** ให้สลับดูและพิมพ์เอกสารได้ในหน้าต่างเดียว:
+ระบบ EMS Enterprise v1.11.0 มาพร้อมเครื่องมือสร้างเอกสารทางการ 3 รูปแบบ พร้อม **3-in-1 Document Switcher** ให้สลับดูและพิมพ์เอกสารได้ในหน้าต่างเดียว:
 
 ### 8.1 รูปแบบเอกสารทั้ง 3 ประเภท:
 1. **บันทึกข้อความขออนุมัติปฏิบัติงาน A4 (Official Approval Memo):**
