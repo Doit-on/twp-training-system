@@ -214,6 +214,18 @@
 
         <!-- Live Certificate Preview Card (Auto-displays upon entering name) -->
         <div id="preSubmitPreviewBox" class="pt-3 border-t border-blue-200/70 space-y-2">
+          
+          <!-- Customizable Certificate Signatory Toolbar -->
+          <div class="flex flex-wrap items-center justify-between gap-2 p-2.5 bg-blue-50/70 border border-blue-200 rounded-xl text-xs">
+            <div class="flex items-center gap-1.5 text-blue-950 font-bold">
+              <i class="fa-solid fa-pen-nib text-amber-500"></i>
+              <span>ผู้ลงนามรับรองวุฒิบัตร (ปรับเปลี่ยนแก้ไขได้):</span>
+            </div>
+            <div class="flex flex-wrap items-center gap-1.5">
+              <input type="text" id="certSignerNameInput" oninput="updateCertSigner(this.value, document.getElementById('certSignerRoleInput').value)" value="ผศ.อินทิรา บุนนาค" class="bg-white border border-blue-300 rounded-lg px-2.5 py-1 text-xs font-bold text-blue-900 focus:ring-1 focus:ring-blue-500 focus:outline-none w-44" title="แก้ไขชื่อผู้ลงนามบนวุฒิบัตร" placeholder="ชื่อ-สกุล ผู้ลงนาม">
+              <input type="text" id="certSignerRoleInput" oninput="updateCertSigner(document.getElementById('certSignerNameInput').value, this.value)" value="กรรมการผู้จัดการ" class="bg-white border border-blue-300 rounded-lg px-2.5 py-1 text-xs font-bold text-slate-700 focus:ring-1 focus:ring-blue-500 focus:outline-none w-36" title="แก้ไขตำแหน่งผู้ลงนามบนวุฒิบัตร" placeholder="ตำแหน่ง">
+            </div>
+          </div>
           <div class="flex items-center justify-between text-xs font-bold">
             <span class="flex items-center gap-1.5 text-blue-900">
               <i class="fa-solid fa-award text-amber-500 text-sm"></i>
@@ -302,8 +314,8 @@
                   <span class="text-[7.5px] font-mono text-[#08539E] font-bold mt-0.5">TWP-VERIFIED</span>
                 </div>
                 <div class="text-center w-1/3">
-                  <div class="text-slate-400 text-[8px]">กรรมการผู้จัดการ</div>
-                  <div class="font-bold text-slate-800">ดร.นิพนธ์ บริหารพัฒนา</div>
+                  <div id="prevCertExecutiveRole" class="text-slate-400 text-[8px]">กรรมการผู้จัดการ</div>
+                  <div id="prevCertExecutive" class="font-bold text-slate-800">ผศ.อินทิรา บุนนาค</div>
                 </div>
               </div>
 
@@ -586,8 +598,8 @@
                 <div class="h-10 flex items-end justify-center pb-0.5">
                   <img id="viewCertExecutiveSig" src="assets/logo.png" style="max-height:38px; max-width:130px; object-fit:contain;" alt="ลายเซ็นผู้บริหาร">
                 </div>
-                <div class="text-xs font-bold text-slate-800 leading-tight">ดร.นิพนธ์ บริหารพัฒนา</div>
-                <div class="text-[10px] text-slate-500">กรรมการผู้จัดการ</div>
+                <div id="viewCertExecutive" class="text-xs font-bold text-slate-800 leading-tight">ผศ.อินทิรา บุนนาค</div>
+                <div id="viewCertExecutiveRole" class="text-[10px] text-slate-500">กรรมการผู้จัดการ</div>
                 <div class="text-[9px] text-[#08539E] font-semibold">บริษัท ไทยวัฒนาพานิช จำกัด</div>
               </div>
 
@@ -992,6 +1004,31 @@
       // Verified participant can always print or save their certificate as PDF
       window.print();
     }
+
+    // Dynamic Certificate Signatory Customizer
+    function updateCertSigner(name, role) {
+      const effName = (name && name.trim()) ? name.trim() : 'ผศ.อินทิรา บุนนาค';
+      const effRole = (role && role.trim()) ? role.trim() : 'กรรมการผู้จัดการ';
+
+      const prevName = document.getElementById('prevCertExecutive'); if (prevName) prevName.innerText = effName;
+      const prevRole = document.getElementById('prevCertExecutiveRole'); if (prevRole) prevRole.innerText = effRole;
+      const viewName = document.getElementById('viewCertExecutive'); if (viewName) viewName.innerText = effName;
+      const viewRole = document.getElementById('viewCertExecutiveRole'); if (viewRole) viewRole.innerText = effRole;
+
+      localStorage.setItem('twp_cert_signer_name', effName);
+      localStorage.setItem('twp_cert_signer_role', effRole);
+    }
+
+    // Initialize saved signer on load
+    window.addEventListener('DOMContentLoaded', function() {
+      const savedSignerName = localStorage.getItem('twp_cert_signer_name') || 'ผศ.อินทิรา บุนนาค';
+      const savedSignerRole = localStorage.getItem('twp_cert_signer_role') || 'กรรมการผู้จัดการ';
+      const nameInp = document.getElementById('certSignerNameInput');
+      const roleInp = document.getElementById('certSignerRoleInput');
+      if (nameInp) nameInp.value = savedSignerName;
+      if (roleInp) roleInp.value = savedSignerRole;
+      updateCertSigner(savedSignerName, savedSignerRole);
+    });
   </script>
 </body>
 </html>
