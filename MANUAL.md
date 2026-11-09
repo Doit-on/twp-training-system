@@ -1,6 +1,6 @@
 # คู่มือการใช้งาน Training Center TWP (Operational User Manual)
 
-**เวอร์ชันระบบ:** 1.12.0  
+**เวอร์ชันระบบ:** 1.13.0  
 **ระบบ:** Training Center TWP - บริหารคำขอจัดกิจกรรมอบรมและประเมินผลปิดลูป (EMS Enterprise Platform)  
 **Production Apps Script Endpoint:** `https://script.google.com/macros/s/AKfycby-D2AvgHXO_y4tVxg8wgkDP9ARBnRpiVp47-vnF7AiA1TA4AqwKGbelJTyI68tKfmx6g/exec`  
 **รหัสผ่านผู้ดูแลระบบ (Admin Password):** `admin0000`

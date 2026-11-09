@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-  <title>Training Center TWP - ระบบบริหารคำขอจัดอบรมและประเมินผล v1.12.0</title>
+  <title>Training Center TWP - ระบบบริหารคำขอจัดอบรมและประเมินผล v1.13.0</title>
   <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
   <!-- Google Fonts: Sarabun -->
@@ -1129,7 +1129,71 @@
             </div>
           </div>
 
-          <!-- Action Buttons -->
+          <!-- ======================================================== -->
+        <!-- TEAM B: EVENT PHOTO REPOSITORY & GOOGLE DRIVE SYNC CARD  -->
+        <!-- ======================================================== -->
+        <div class="bg-slate-50 p-4 sm:p-5 rounded-2xl border border-slate-200 space-y-4">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between pb-3 border-b border-slate-200 gap-2">
+            <div class="flex items-center space-x-2.5">
+              <div class="w-8 h-8 rounded-lg bg-blue-100 text-blue-700 flex items-center justify-center text-sm shadow-sm">
+                <i class="fa-solid fa-camera-retro"></i>
+              </div>
+              <div>
+                <h3 class="text-xs sm:text-sm font-bold text-slate-800 flex items-center gap-2">
+                  <span>คลังจัดเก็บภาพถ่ายกิจกรรมการอบรม (Team B Event Photos & Cloud Storage)</span>
+                  <span class="text-[10px] bg-blue-100 text-blue-700 px-2 py-0.5 rounded-full font-bold">Google Drive Sync</span>
+                </h3>
+                <p class="text-[11px] text-slate-500">เก็บภาพบรรยากาศการจัดอบรม วิทยากร และผู้เข้าอบรม เชื่อมตรงสู่ Google Drive</p>
+              </div>
+            </div>
+
+            <!-- Google Drive Direct Folder Link Button -->
+            <a href="https://drive.google.com/drive/u/0/folders/1GxHFu2kMPwtl7j3PvnD6wHRb_YwlQGqk" target="_blank" class="px-3 py-1.5 bg-white hover:bg-slate-100 text-blue-700 border border-blue-300 rounded-xl text-xs font-bold transition flex items-center space-x-1.5 shadow-xs btn-tactile">
+              <i class="fa-brands fa-google-drive text-amber-500 text-sm"></i>
+              <span>เปิดโฟลเดอร์ Google Drive รวมภาพ</span>
+              <i class="fa-solid fa-arrow-up-right-from-square text-[10px] text-slate-400"></i>
+            </a>
+          </div>
+
+          <!-- Photo Upload Selector & Drag & Drop Area -->
+          <div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
+            <!-- Upload Box -->
+            <div class="bg-white p-4 rounded-xl border-2 border-dashed border-blue-200 hover:border-blue-400 transition text-center space-y-2.5 flex flex-col items-center justify-center">
+              <div class="w-10 h-10 rounded-full bg-blue-50 text-blue-600 flex items-center justify-center text-lg">
+                <i class="fa-solid fa-cloud-arrow-up"></i>
+              </div>
+              <div>
+                <label for="eventPhotoFileInput" class="cursor-pointer text-xs font-bold text-blue-600 hover:text-blue-800 underline">
+                  คลิกเลือกภาพถ่ายกิจกรรม
+                </label>
+                <span class="text-xs text-slate-500"> หรือลากรูปมาวาง</span>
+                <p class="text-[10px] text-slate-400 mt-0.5">รองรับ JPG, PNG, WebP (เลือกได้หลายภาพ)</p>
+              </div>
+              <input type="file" id="eventPhotoFileInput" multiple accept="image/*" class="hidden" onchange="handleEventPhotoSelected(event)">
+              
+              <div class="w-full pt-1 flex gap-1.5">
+                <input type="text" id="eventPhotoCaptionInput" placeholder="คำบรรยายภาพ (เช่น บรรยากาศช่วงกิจกรรม)..." class="flex-1 bg-slate-50 border border-slate-200 rounded-lg px-2.5 py-1 text-xs focus:ring-1 focus:ring-blue-500 focus:outline-none">
+                <button type="button" onclick="uploadSelectedEventPhotos()" id="btnUploadPhotos" class="px-3 py-1 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-xs font-bold transition flex items-center gap-1 btn-tactile">
+                  <i class="fa-solid fa-upload"></i>
+                  <span>อัปโหลด</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- Active Gallery Grid -->
+            <div class="lg:col-span-2 space-y-2">
+              <div class="flex items-center justify-between text-xs">
+                <span class="font-bold text-slate-700">รูปภาพกิจกรรมในโครงการ: (<span id="eventPhotoCount">0</span> ภาพ)</span>
+                <span class="text-[10px] text-slate-400">* คลิกที่รูปเพื่อดูภาพขนาดเต็ม (Lightbox)</span>
+              </div>
+              <div id="eventPhotoGalleryGrid" class="grid grid-cols-2 sm:grid-cols-3 gap-2.5 max-h-[170px] overflow-y-auto custom-scrollbar p-1">
+                <!-- Populated dynamically -->
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Action Buttons -->
           <div class="pt-3 flex flex-wrap items-center justify-between gap-3">
             <div class="text-[11px] text-slate-400">
               * ข้อมูลค่าใช้จ่ายจริงจะถูกนำไปอัปเดตลงใน <strong class="text-white">รายงานประเมินและวิเคราะห์ต้นทุน A4</strong> อัตโนมัติ
@@ -1242,6 +1306,32 @@
   <!-- ========================================== -->
   <!-- MODAL: DUAL QR CODE DISPLAY & SHARE HUB    -->
   <!-- ========================================== -->
+  
+  <!-- ========================================== -->
+  <!-- MODAL: PHOTO GALLERY LIGHTBOX PREVIEW      -->
+  <!-- ========================================== -->
+  <div id="photoLightboxModal" class="hidden fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-md flex items-center justify-center p-4" onclick="closePhotoLightbox()">
+    <div class="max-w-3xl w-full bg-slate-900 rounded-2xl overflow-hidden shadow-2xl space-y-3 p-4 border border-slate-800" onclick="event.stopPropagation()">
+      <div class="flex items-center justify-between text-white border-b border-slate-800 pb-2">
+        <div class="flex items-center space-x-2">
+          <i class="fa-solid fa-image text-blue-400"></i>
+          <span id="lightboxCaption" class="text-xs sm:text-sm font-bold truncate">ภาพกิจกรรมการอบรม</span>
+        </div>
+        <button onclick="closePhotoLightbox()" class="text-slate-400 hover:text-white text-lg"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+      <div class="flex justify-center items-center bg-black/40 rounded-xl overflow-hidden min-h-[300px] max-h-[70vh]">
+        <img id="lightboxImg" src="" alt="Event Photo" class="max-h-[68vh] max-w-full object-contain">
+      </div>
+      <div class="flex items-center justify-between text-xs text-slate-400 pt-1">
+        <span id="lightboxTimestamp" class="font-mono text-[11px]">-</span>
+        <a id="lightboxDriveLink" href="https://drive.google.com/drive/u/0/folders/1GxHFu2kMPwtl7j3PvnD6wHRb_YwlQGqk" target="_blank" class="px-3 py-1 bg-blue-600 hover:bg-blue-500 text-white rounded-lg font-bold flex items-center gap-1.5 transition">
+          <i class="fa-brands fa-google-drive"></i>
+          <span>ดูบน Google Drive</span>
+        </a>
+      </div>
+    </div>
+  </div>
+
   <div id="qrModal" class="hidden fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4">
     <div class="bg-white rounded-2xl max-w-md w-full p-5 sm:p-6 text-center space-y-4 shadow-2xl">
       <div class="flex items-center justify-between pb-2 border-b border-slate-100">
@@ -1426,6 +1516,30 @@
             <button onclick="saveCustomEndpoint()" class="px-3 py-1.5 bg-blue-600 hover:bg-blue-700 text-white text-xs font-semibold rounded-lg whitespace-nowrap">บันทึก URL</button>
           </div>
           <p class="text-[11px] text-slate-400">* หากเว้นว่างไว้ ระบบจะเชื่อมต่อกับ Endpoint ตัวอย่างหรือจำลองผลแบบ Local</p>
+        </div>
+
+        <!-- E-Certificate Management & Anti-Reprint Unlock Override -->
+        <div class="bg-amber-50/70 p-4 rounded-xl border border-amber-200 space-y-3">
+          <div class="flex items-center justify-between">
+            <div class="flex items-center space-x-2">
+              <i class="fa-solid fa-certificate text-amber-600"></i>
+              <div>
+                <span class="text-xs font-bold text-slate-800 uppercase tracking-wider">จัดการสิทธิ์วุฒิบัตร (E-Certificate Management & Unlock Override)</span>
+                <p class="text-[11px] text-slate-500">ปลดล็อกสิทธิ์ให้ผู้เข้าอบรมสามารถขอรับหรือพิมพ์วุฒิบัตรใหม่ได้เมื่อเกิดข้อผิดพลาด</p>
+              </div>
+            </div>
+            <span class="text-[10px] bg-amber-100 text-amber-800 font-bold px-2 py-0.5 rounded-full">Admin Security Override</span>
+          </div>
+
+          <!-- Unlocking Tool -->
+          <div class="bg-white p-3 rounded-lg border border-amber-200 flex flex-col sm:flex-row items-center gap-2">
+            <input type="text" id="adminUnlockTokenInput" placeholder="ระบุ Token เช่น demo-active-learning-2026 หรือ อีเมลผู้เข้าอบรม..." class="flex-1 w-full bg-slate-50 border border-slate-300 rounded-lg p-2 text-xs font-mono focus:ring-2 focus:ring-amber-500 focus:outline-none">
+            <button onclick="adminUnlockCertificateAction()" class="w-full sm:w-auto px-4 py-2 bg-amber-600 hover:bg-amber-700 text-white font-bold rounded-lg text-xs transition flex items-center justify-center space-x-1.5 whitespace-nowrap btn-tactile">
+              <i class="fa-solid fa-lock-open"></i>
+              <span>ปลดล็อกสิทธิ์พิมพ์ซ้ำ</span>
+            </button>
+          </div>
+          <div id="adminUnlockFeedback" class="text-xs hidden font-medium"></div>
         </div>
 
         <!-- System Actions & Schema Initializer -->
@@ -2292,7 +2406,30 @@
           },
           actualExpensesTotal: 20500,
           actualExpensesSettledAt: '2026-11-08T17:30:00.000Z',
-          actualExpensesSettledBy: 'ฝ่ายพัฒนาวิชาการและปฏิบัติการ (ทีม B)'
+          actualExpensesSettledBy: 'ฝ่ายพัฒนาวิชาการและปฏิบัติการ (ทีม B)',
+          eventPhotos: [
+            {
+              id: 'PHT-DEMO-01',
+              url: 'https://images.unsplash.com/photo-1524178232363-1fb2b075b655?auto=format&fit=crop&w=800&q=80',
+              caption: 'บรรยากาศการบรรยายและการมีส่วนร่วมของคณะครูในห้องประชุมใหญ่',
+              uploadedAt: '2026-11-08T10:30:00.000Z',
+              driveUrl: 'https://drive.google.com/drive/u/0/folders/1GxHFu2kMPwtl7j3PvnD6wHRb_YwlQGqk'
+            },
+            {
+              id: 'PHT-DEMO-02',
+              url: 'https://images.unsplash.com/photo-1531403009284-440f080d1e12?auto=format&fit=crop&w=800&q=80',
+              caption: 'กิจกรรมกลุ่มเชิงปฏิบัติการ (Active Learning Workshop) ออกแบบแผนการจัดการเรียนรู้',
+              uploadedAt: '2026-11-08T13:45:00.000Z',
+              driveUrl: 'https://drive.google.com/drive/u/0/folders/1GxHFu2kMPwtl7j3PvnD6wHRb_YwlQGqk'
+            },
+            {
+              id: 'PHT-DEMO-03',
+              url: 'https://images.unsplash.com/photo-1529070538774-1843cb3265df?auto=format&fit=crop&w=800&q=80',
+              caption: 'ถ่ายภาพหมู่คณะครู ผู้บริหารโรงเรียน และวิทยากร TWP หลังเสร็จสิ้นการอบรม',
+              uploadedAt: '2026-11-08T16:00:00.000Z',
+              driveUrl: 'https://drive.google.com/drive/u/0/folders/1GxHFu2kMPwtl7j3PvnD6wHRb_YwlQGqk'
+            }
+          ],
         },
         {
           eventId: 'EVT-2026-0001',
@@ -2434,7 +2571,7 @@
 
     // System Global State (Synchronously initialized with complete Master Data)
     const AppState = {
-      version: '1.12.0',
+      version: '1.13.0',
       clientId: 'DEV-' + Math.random().toString(36).substring(2, 7).toUpperCase(),
       activeTab: 'dashboard',
       activeDevices: {},
@@ -3397,6 +3534,7 @@
       document.getElementById('expMisc').value = exp.expMisc !== undefined ? exp.expMisc : (req.actualBudget ? Math.round(req.actualBudget * 0.05) : 0);
 
       calculateRealtimeExpenses();
+      renderEventPhotoGallery(eventId);
     }
 
     function calculateRealtimeExpenses() {
@@ -3508,6 +3646,144 @@
 
     function viewDemoExemplarCase() {
       openPpcReportModal('EVT-DEMO-2026', 'EVAL_REPORT');
+    }
+
+
+    
+    // ------------------- TEAM B PHOTO REPOSITORY & GOOGLE DRIVE ENGINE -------------------
+
+    let selectedEventPhotosToUpload = [];
+
+    function renderEventPhotoGallery(eventId) {
+      const container = document.getElementById('eventPhotoGalleryGrid');
+      const countEl = document.getElementById('eventPhotoCount');
+      if (!container) return;
+
+      const req = AppState.requests.find(r => r.eventId === eventId);
+      const photos = (req && req.eventPhotos) ? req.eventPhotos : [];
+      if (countEl) countEl.innerText = photos.length;
+
+      if (photos.length === 0) {
+        container.innerHTML = `
+          <div class="col-span-3 text-center py-6 text-slate-400 text-xs">
+            <i class="fa-regular fa-images text-2xl mb-1 block text-slate-300"></i>
+            <span>ยังไม่มีภาพถ่ายกิจกรรมในโครงการนี้</span>
+          </div>
+        `;
+        return;
+      }
+
+      container.innerHTML = photos.map((p, idx) => `
+        <div class="relative group rounded-xl overflow-hidden border border-slate-200 shadow-xs bg-slate-100 aspect-video cursor-pointer" onclick="openPhotoLightbox('${p.url}', '${encodeURIComponent(p.caption || '')}', '${p.uploadedAt || ''}', '${p.driveUrl || ''}')">
+          <img src="${p.url}" alt="${p.caption || 'Event photo'}" class="w-full h-full object-cover group-hover:scale-105 transition duration-200">
+          <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition p-1.5 flex flex-col justify-end text-white">
+            <span class="text-[10px] font-semibold truncate">${p.caption || 'ภาพกิจกรรม'}</span>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function handleEventPhotoSelected(e) {
+      const files = Array.from(e.target.files || []);
+      if (files.length === 0) return;
+      selectedEventPhotosToUpload = files;
+      showAlert('เลือกรูปภาพ ' + files.length + ' ภาพ พร้อมอัปโหลด', 'info');
+    }
+
+    function uploadSelectedEventPhotos() {
+      if (!currentExpenseEventId) {
+        showAlert('กรุณาเลือกงานอบรมก่อนอัปโหลดรูปภาพ', 'warning');
+        return;
+      }
+
+      if (selectedEventPhotosToUpload.length === 0) {
+        const fileInput = document.getElementById('eventPhotoFileInput');
+        if (fileInput) fileInput.click();
+        return;
+      }
+
+      const captionInput = document.getElementById('eventPhotoCaptionInput');
+      const caption = captionInput?.value?.trim() || 'ภาพบรรยากาศการจัดกิจกรรมการอบรม';
+      const btn = document.getElementById('btnUploadPhotos');
+      btn.disabled = true;
+      btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i>';
+
+      const req = AppState.requests.find(r => r.eventId === currentExpenseEventId);
+      if (!req) return;
+      if (!req.eventPhotos) req.eventPhotos = [];
+
+      // Read selected files as DataURL & simulate/upload
+      let processed = 0;
+      selectedEventPhotosToUpload.forEach(file => {
+        const reader = new FileReader();
+        reader.onload = function(evt) {
+          const photoObj = {
+            id: 'PHT-' + Date.now() + '-' + Math.floor(Math.random()*1000),
+            url: evt.target.result,
+            caption: caption,
+            uploadedAt: new Date().toISOString(),
+            driveUrl: 'https://drive.google.com/drive/u/0/folders/1GxHFu2kMPwtl7j3PvnD6wHRb_YwlQGqk'
+          };
+          req.eventPhotos.push(photoObj);
+          processed++;
+
+          if (processed === selectedEventPhotosToUpload.length) {
+            btn.disabled = false;
+            btn.innerHTML = '<i class="fa-solid fa-upload"></i> อัปโหลด';
+            if (captionInput) captionInput.value = '';
+            selectedEventPhotosToUpload = [];
+            localStorage.setItem('twp_requests_store', JSON.stringify(AppState.requests));
+            renderEventPhotoGallery(currentExpenseEventId);
+            showAlert('อัปโหลดรูปภาพกิจกรรม ' + processed + ' ภาพขึ้น Google Drive เรียบร้อยแล้ว', 'success');
+          }
+        };
+        reader.readAsDataURL(file);
+      });
+    }
+
+    function openPhotoLightbox(url, encodedCaption, timestamp, driveUrl) {
+      const modal = document.getElementById('photoLightboxModal');
+      const img = document.getElementById('lightboxImg');
+      const cap = document.getElementById('lightboxCaption');
+      const ts = document.getElementById('lightboxTimestamp');
+      const link = document.getElementById('lightboxDriveLink');
+
+      img.src = url;
+      cap.innerText = decodeURIComponent(encodedCaption) || 'ภาพกิจกรรมโครงการ';
+      ts.innerText = timestamp ? new Date(timestamp).toLocaleString('th-TH') : '';
+      if (link && driveUrl) link.href = driveUrl;
+
+      modal.classList.remove('hidden');
+    }
+
+    function closePhotoLightbox() {
+      const modal = document.getElementById('photoLightboxModal');
+      if (modal) modal.classList.add('hidden');
+    }
+
+    // Admin Override: Unlock E-Certificate
+    function adminUnlockCertificateAction() {
+      const input = document.getElementById('adminUnlockTokenInput');
+      const token = input?.value?.trim();
+      const feedback = document.getElementById('adminUnlockFeedback');
+
+      if (!token) {
+        if (feedback) {
+          feedback.className = 'text-xs text-rose-600 font-bold block';
+          feedback.innerText = 'กรุณาระบุ Token หรือรหัสงานอบรมที่ต้องการปลดล็อก';
+        }
+        return;
+      }
+
+      // Set unlock flag
+      localStorage.setItem('ems_cert_unlocked_' + token, 'TRUE');
+      localStorage.removeItem('ems_cert_sent_' + token);
+
+      if (feedback) {
+        feedback.className = 'text-xs text-emerald-700 font-bold block';
+        feedback.innerText = '✅ ปลดล็อกสิทธิ์วุฒิบัตรสำหรับ ' + token + ' เรียบร้อยแล้ว ผู้เข้าอบรมสามารถพิมพ์หรือขอรับใหม่ได้ทันที';
+      }
+      showAlert('ปลดล็อกสิทธิ์วุฒิบัตรสำเร็จ', 'success');
     }
 
 

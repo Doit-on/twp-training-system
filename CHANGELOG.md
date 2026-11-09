@@ -7,6 +7,28 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [1.13.0] - 2026-11-09
+
+### Added
+- **ระบบวุฒิบัตรอิเล็กทรอนิกส์มาตรฐานสากล (Modern International E-Certificate Platform):**
+  - **การระบุชื่อผู้เข้าอบรม ๒ บรรทัด (Thai & English):** ระบุชื่อภาษาไทย (ฟอนต์ Sarabun หนาสง่างาม) และชื่อภาษาอังกฤษ (ฟอนต์ Cormorant Garamond มาตรฐานสากล)
+  - **การออกแบบกรอบเกียรติบัตรระดับพรีเมียม (Royal Blue & Metallic Gold Luxury Border):** สัดส่วน A4 แนวนอน (Landscape) มีตราสัญลักษณ์สำนักพิมพ์ไทยวัฒนาพานิช (TWP 1936), ตราประทับสุวรรณ TWP 3D Gold Foil Seal, ลายเซ็นดิจิทัล ดร.นิพนธ์ บริหารพัฒนา, และ Verification QR Code
+  - **ระบบดูภาพตัวอย่างสดก่อนส่ง (Live Pre-Submit Preview):** ให้ผู้เข้าอบรมเห็นภาพวุฒิบัตรของตนเองก่อนกดส่ง
+  - **ระบบจัดส่งวุฒิบัตรเข้าสู่อีเมลทันที (Instant Email Delivery):** ส่งไฟล์ e-Certificate ความละเอียดสูงตรงเข้าอีเมลผู้เข้าอบรมผ่าน Google Apps Script
+  - **ระบบล็อกป้องกันการทำซ้ำ (Anti-Reprint Security Lock):** เมื่อส่งอีเมลแล้ว ระบบจะล็อกปุ่มพิมพ์และส่งซ้ำอัตโนมัติ เพื่อป้องกันการสวมสิทธิ์
+  - **แผงควบคุมปลดล็อกสิทธิ์โดยผู้ดูแลระบบ (Admin Override Unlock):** ใน Admin Modal เพิ่มฟังก์ชันค้นหา Token และปลดล็อกสิทธิ์ให้ผู้เข้าอบรมออกวุฒิบัตรใหม่ได้กรณีแก้ไขข้อมูล
+- **คลังภาพถ่ายกิจกรรมการอบรมของทีม B และเชื่อมต่อ Google Drive (Team B Photo Repository):**
+  - เชื่อมตรงกับโฟลเดอร์ Google Drive รวมภาพกิจกรรมโครงการ: `https://drive.google.com/drive/u/0/folders/1GxHFu2kMPwtl7j3PvnD6wHRb_YwlQGqk`
+  - รองรับการเลือกและลากวางรูปภาพหลายไฟล์พร้อมกันจากมือถือ/คอมพิวเตอร์ (Multi-File Image Selector)
+  - ระบบพรีวิวภาพขยายใหญ่ (Interactive Lightbox Modal) พร้อมคำบรรยายภาพและปุ่มเปิดดูบน Google Drive
+- **อัปเดต Google Apps Script Backend (`backend_code.gs` v1.13.0):**
+  - Concurrency Lock 30 วินาที ป้องกันข้อมูลชนกันแม้มีผู้ประเมินพร้อมกัน 100+ คน
+  - ฟังก์ชัน `SEND_ECERTIFICATE_EMAIL` ส่งอีเมลเทมเพลตมาตรฐานสำนักพิมพ์ไทยวัฒนาพานิช
+  - ฟังก์ชัน `UPLOAD_EVENT_PHOTO` อัปโหลดไฟล์รูปภาพเข้า Google Drive โฟลเดอร์ `1GxHFu2kMPwtl7j3PvnD6wHRb_YwlQGqk` โดยตรง
+  - ฟังก์ชัน `ADMIN_UNLOCK_CERT` สำหรับ Admin ปลดล็อกสิทธิ์
+
+---
+
 ## [1.12.0] - 2026-11-09
 
 ### Added
