@@ -1,17 +1,25 @@
 # Training Center TWP (EMS Enterprise Platform)
 
-[![Version](https://img.shields.io/badge/version-1.6.0-blue.svg)](VERSION)
+[![Version](https://img.shields.io/badge/version-1.7.0-blue.svg)](VERSION)
 [![Runtime](https://img.shields.io/badge/runtime-Google%20Apps%20Script%20V8-green.svg)](https://developers.google.com/apps-script)
 [![Database](https://img.shields.io/badge/database-Google%20Sheets-success.svg)](data/Database_Schema.md)
 [![License](https://img.shields.io/badge/license-MIT-lightgrey.svg)](LICENSE)
 
-> ระบบบริหารจัดการคำขอจัดกิจกรรมอบรม และประเมินผลความพึงพอใจแบบปิดลูป (Training Center TWP / EMS Enterprise) ขับเคลื่อนด้วยสถาปัตยกรรม Serverless บน Google Apps Script และ Google Sheets มาพร้อมหน้า Landing Page โลโก้ TWP ทางการ, Modernized Tactile UX/UI Design, ระบบสแกน **QR Code ประจำทีม**, ระบบ **Real-Time Multi-Device Data Sync**, **ระบบสร้างรายงานสรุปการปฏิบัติงาน A4 มาตรฐาน PPC ที่ส่งออกได้ทั้ง PDF และ Microsoft Word (.docx)**, **ระบบตรวจสอบชื่อโรงเรียนและตัวย่ออัจฉริยะ (Smart Normalization & Quick Add)**, **ฐานข้อมูลพนักงานขายมาตรฐานจาก PPC** และ **Dashboard สรุปจำนวนผู้เข้าอบรมพร้อมประเมินความพึงพอใจแยกตามหัวข้ออบรม (v1.6.0)**
+> ระบบบริหารจัดการคำขอจัดกิจกรรมอบรม และประเมินผลความพึงพอใจแบบปิดลูป (Training Center TWP / EMS Enterprise) ขับเคลื่อนด้วยสถาปัตยกรรม Serverless บน Google Apps Script และ Google Sheets มาพร้อมหน้า Landing Page โลโก้ TWP ทางการ, Modernized Tactile UX/UI Design, ระบบสแกน **QR Code ประจำทีม**, ระบบ **Real-Time Multi-Device Data Sync**, **ระบบสร้างรายงานสรุปการปฏิบัติงาน A4 มาตรฐาน PPC ที่ส่งออกได้ทั้ง PDF และ Microsoft Word (.docx)**, **ระบบป้องกันการคีย์ข้อมูลชนกัน (Concurrency Collision Lock)**, **ตัวนับผู้ใช้งานพร้อมกันแบบเรียลไทม์ (Active Devices Monitor)**, **ปุ่มลัดสำหรับผู้บริหารเข้าดู Dashboard ทันที**, และ **ฟังก์ชัน Edit-Delete ทุกการ์ดสำหรับ Admin (v1.7.0)**
 
 ---
 
 ## 🌟 จุดเด่นและฟีเจอร์สำคัญ (Key Features)
 
-1. **Dashboard สรุปผลการดำเนินงาน & ประเมินความพึงพอใจรายหัวข้อ (v1.6.0):**
+1. **ระบบป้องกันข้อมูลชนกัน & ตัวนับเครื่องออนไลน์พร้อมกัน (v1.7.0):**
+   - **กฎ "ใครเข้าใช้ก่อน ให้ทำงานให้เสร็จก่อน" (First-come, First-served):** ป้องกันข้อมูลทับซ้อนเมื่อมีผู้ใช้งานหลายเครื่องเปิดใบงานเดียวกัน พร้อม Pop-up แจ้งเตือนชื่อผู้ใช้คนแรกและเวลาที่เริ่มเข้าใช้
+   - **Active Devices Presence Counter:** แสดงตัวเลขจำนวนเครื่องที่เชื่อมต่อใช้งานพร้อมกันแบบเรียลไทม์บน Header (เช่น `🟢 ใช้งานพร้อมกัน: 3 เครื่อง`)
+   - **Executive Dashboard Fast-Track:** ปุ่มสำหรับผู้บริหารบนหน้า Landing Page กดเข้าดู Dashboard ได้ทันทีในคลิกเดียว
+
+2. **ฟังก์ชัน Edit & Delete ทุกการ์ดสำหรับ Admin (v1.7.0):**
+   - เมื่อปลดล็อกรหัสผู้ดูแลระบบ (`admin0000`) การ์ดทุกใบจะมีปุ่ม `[✏️ แก้ไข (Admin)]` และ `[🗑️ ลบ (Admin)]` ให้ผู้ดูแลจัดการแก้ไขทุกมิติของคำขอ หรือลบข้อมูลพร้อมบันทึก Audit Log
+
+3. **Dashboard สรุปผลการดำเนินงาน & ประเมินความพึงพอใจรายหัวข้อ (v1.6.0):**
    - แสดง KPI สรุป **จำนวนผู้เข้าอบรมรวม (Total Trainees)** สะสมจากทุกโครงการ
    - ตารางและชาร์ตแจกแจง **การดำเนินงานและจำนวนผู้เข้าอบรมรายหัวข้อ (Topic Evaluation Breakdown)**
    - สรุป **คะแนนความพึงพอใจแยกตามหัวข้ออบรม (Topic Satisfaction Rating)** เทียบเกณฑ์ 5.00 คะแนน พร้อมแถบ Visual Progress Bar และระดับคุณภาพ (ดีเยี่ยม, ดีมาก, ปานกลาง)
@@ -96,7 +104,7 @@
 ├── CHANGELOG.md                  # บันทึกประวัติการปรับปรุงแต่ละเวอร์ชัน
 ├── MANUAL.md                     # คู่มือการใช้งานระบบสำหรับผู้ใช้ทุกระดับ
 ├── README.md                     # ภาพรวมระบบและการติดตั้ง
-└── VERSION                       # หมายเลขเวอร์ชันปัจจุบัน (1.6.0)
+└── VERSION                       # หมายเลขเวอร์ชันปัจจุบัน (1.7.0)
 ```
 
 ---

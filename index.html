@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-  <title>Training Center TWP - ระบบบริหารคำขอจัดอบรมและประเมินผล v1.6.0</title>
+  <title>Training Center TWP - ระบบบริหารคำขอจัดอบรมและประเมินผล v1.7.0</title>
   <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
   <!-- Google Fonts: Sarabun -->
@@ -160,7 +160,7 @@
       <div class="flex items-center space-x-3 text-xs">
         <span class="bg-white/15 px-3 py-1.5 rounded-full border border-white/20 backdrop-blur-sm font-mono text-blue-100 flex items-center">
           <span class="w-2 h-2 rounded-full bg-emerald-400 mr-2 animate-pulse"></span>
-          System v1.6.0
+          System v1.7.0
         </span>
       </div>
     </div>
@@ -211,15 +211,19 @@
         </div>
       </div>
 
-      <!-- Tactile 3D Action Buttons: Enter System & Team QR Pairing -->
+      <!-- Tactile 3D Action Buttons: Enter System & Executive Direct Dashboard & Team QR Pairing -->
       <div class="pt-4 flex flex-col sm:flex-row items-center justify-center gap-3">
-        <button onclick="enterPortal()" class="w-full sm:w-auto px-8 sm:px-10 py-4 bg-gradient-to-r from-amber-400 via-amber-500 to-amber-600 hover:from-amber-300 hover:to-amber-500 text-slate-950 font-black text-base sm:text-lg rounded-2xl shadow-2xl shadow-amber-950/50 border-b-4 border-amber-700 active:border-b-0 active:translate-y-1 transition duration-150 flex items-center justify-center space-x-3 cursor-pointer btn-tactile">
-          <span>เข้าสู่ระบบบริหารคำขอ (Enter System)</span>
-          <i class="fa-solid fa-arrow-right text-lg"></i>
+        <button onclick="enterPortal()" class="w-full sm:w-auto px-7 py-3.5 bg-gradient-to-r from-amber-400 via-amber-500 to-amber-600 hover:from-amber-300 hover:to-amber-500 text-slate-950 font-black text-sm sm:text-base rounded-2xl shadow-xl shadow-amber-950/40 border-b-4 border-amber-700 active:border-b-0 active:translate-y-1 transition duration-150 flex items-center justify-center space-x-2.5 cursor-pointer btn-tactile">
+          <i class="fa-solid fa-arrow-right-to-bracket text-base"></i>
+          <span>เข้าสู่ระบบบริหารคำขอ (Enter Portal)</span>
         </button>
-        <button onclick="openTeamQrModal('teamA')" class="w-full sm:w-auto px-6 py-4 bg-white/15 hover:bg-white/25 text-white font-bold text-base rounded-2xl border-2 border-white/40 shadow-lg backdrop-blur-md active:translate-y-1 transition duration-150 flex items-center justify-center space-x-2.5 cursor-pointer btn-tactile">
-          <i class="fa-solid fa-qrcode text-amber-300 text-lg"></i>
-          <span>สแกน QR ประจำทีม (Team Pairing)</span>
+        <button onclick="enterExecutiveDashboard()" class="w-full sm:w-auto px-6 py-3.5 bg-gradient-to-r from-blue-700 via-indigo-600 to-blue-800 hover:from-blue-600 hover:to-indigo-500 text-white font-bold text-sm sm:text-base rounded-2xl shadow-xl shadow-blue-950/50 border border-blue-300/40 active:translate-y-1 transition duration-150 flex items-center justify-center space-x-2.5 cursor-pointer btn-tactile">
+          <i class="fa-solid fa-chart-line text-amber-300 text-base"></i>
+          <span>สำหรับผู้บริหาร: ดู Dashboard ทันที</span>
+        </button>
+        <button onclick="openTeamQrModal('teamA')" class="w-full sm:w-auto px-5 py-3.5 bg-white/15 hover:bg-white/25 text-white font-bold text-sm rounded-2xl border-2 border-white/40 shadow-lg backdrop-blur-md active:translate-y-1 transition duration-150 flex items-center justify-center space-x-2 cursor-pointer btn-tactile">
+          <i class="fa-solid fa-qrcode text-amber-300 text-base"></i>
+          <span>สแกน QR ประจำทีม</span>
         </button>
       </div>
 
@@ -228,7 +232,7 @@
     <!-- Bottom Footer on Landing Page -->
     <div class="max-w-7xl mx-auto w-full px-6 py-4 flex flex-col sm:flex-row items-center justify-between text-xs text-blue-200 border-t border-white/10 relative z-10 gap-2">
       <div>&copy; 2026 Training Center TWP - บริษัท ไทยวัฒนาพานิช จำกัด. All rights reserved.</div>
-      <div class="font-mono text-[11px] bg-white/10 px-3 py-1 rounded-full border border-white/15">EMS Enterprise Platform v1.6.0 (Live Apps Script Engine)</div>
+      <div class="font-mono text-[11px] bg-white/10 px-3 py-1 rounded-full border border-white/15">EMS Enterprise Platform v1.7.0 (Live Apps Script Engine)</div>
     </div>
 
   </div>
@@ -251,7 +255,7 @@
             <div>
               <div class="flex items-center space-x-2">
                 <span class="font-extrabold text-lg tracking-wide text-white">Training Center TWP</span>
-                <span class="bg-blue-400/20 text-blue-200 text-[10px] font-mono px-2 py-0.5 rounded-full border border-blue-300/30">v1.6.0</span>
+                <span class="bg-blue-400/20 text-blue-200 text-[10px] font-mono px-2 py-0.5 rounded-full border border-blue-300/30">v1.7.0</span>
               </div>
               <p class="text-[11px] text-blue-200 hidden sm:block">ระบบบริหารคำขอจัดอบรมและประเมินผลปิดลูป</p>
             </div>
@@ -271,6 +275,13 @@
               <i class="fa-solid fa-qrcode text-amber-300"></i>
               <span class="hidden lg:inline">QR ประจำทีม</span>
             </button>
+
+            <!-- Active Devices / Users Presence Counter -->
+            <div onclick="openActiveDevicesModal()" title="คลิกเพื่อดูรายละเอียดเครื่องที่กำลังเข้าใช้งานพร้อมกัน" class="cursor-pointer bg-slate-900/60 hover:bg-slate-900 transition px-2.5 py-1.5 rounded-lg border border-sky-400/30 flex items-center space-x-1.5 text-xs btn-tactile">
+              <span class="w-2 h-2 rounded-full bg-sky-400 animate-ping"></span>
+              <i class="fa-solid fa-laptop-code text-sky-300 text-[11px]"></i>
+              <span id="headerActiveDevicesCount" class="font-mono text-sky-200 font-bold">1 เครื่อง</span>
+            </div>
 
             <!-- Real-Time Sync Indicator & Force Sync Button -->
             <div onclick="forceSyncAllDevices()" title="คลิกเพื่อบังคับซิงค์ข้อมูลให้ตรงกันทุกเครื่องทันที (Real-Time Sync)" class="cursor-pointer bg-slate-900/60 hover:bg-slate-900 transition px-2.5 py-1.5 rounded-lg border border-emerald-400/30 flex items-center space-x-2 text-xs btn-tactile">
@@ -1204,10 +1215,190 @@
     </div>
   </div>
 
-  <!-- Footer -->
+  <!-- ========================================== -->
+  <!-- MODAL: CONCURRENCY COLLISION POPUP (คีย์ชนกัน) -->
+  <!-- ========================================== -->
+  <div id="concurrencyLockModal" class="hidden fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="bg-white rounded-3xl max-w-md w-full p-6 space-y-4 shadow-2xl border-2 border-amber-400 animate-bounce-short">
+      <div class="flex items-center space-x-3 text-amber-600 border-b border-slate-100 pb-3">
+        <div class="w-12 h-12 rounded-2xl bg-amber-50 text-amber-600 flex items-center justify-center text-2xl shadow-inner border border-amber-200">
+          <i class="fa-solid fa-user-lock"></i>
+        </div>
+        <div>
+          <h3 class="font-black text-slate-900 text-base">ใบงาน/ช่องข้อมูลนี้กำลังถูกใช้งานอยู่</h3>
+          <p class="text-[11px] text-amber-700 font-medium">ป้องกันข้อมูลทับซ้อน (Concurrency Protection)</p>
+        </div>
+      </div>
+
+      <div class="bg-amber-50/70 p-4 rounded-2xl border border-amber-200 text-xs space-y-2.5">
+        <div class="flex items-center justify-between text-slate-700">
+          <span class="text-slate-500">ผู้เข้าใช้งานคนแรก:</span>
+          <strong id="lockModalUserName" class="text-slate-900 font-bold bg-white px-2 py-0.5 rounded border border-amber-200">-</strong>
+        </div>
+        <div class="flex items-center justify-between text-slate-700">
+          <span class="text-slate-500">เวลาที่เริ่มเข้าใช้:</span>
+          <span id="lockModalTime" class="font-mono text-amber-800 font-bold bg-white px-2 py-0.5 rounded border border-amber-200">-</span>
+        </div>
+        <div class="flex items-center justify-between text-slate-700">
+          <span class="text-slate-500">ใบงาน / ฟิลด์:</span>
+          <span id="lockModalField" class="font-mono text-slate-800 bg-white px-2 py-0.5 rounded border border-amber-200">-</span>
+        </div>
+        <p class="text-[11px] text-amber-900 pt-1 leading-relaxed border-t border-amber-200/60">
+          * ระบบใช้กฎ <strong>"ใครเข้าใช้ก่อน ให้ทำงานให้เสร็จก่อน"</strong> เพื่อป้องกันข้อมูลชนกัน ท่านยังสามารถเปิดดูและค้นหาข้อมูลได้ตามปกติ
+        </p>
+      </div>
+
+      <div class="flex justify-end pt-1">
+        <button type="button" onclick="closeConcurrencyLockModal()" class="w-full py-2.5 bg-slate-800 hover:bg-slate-900 text-white font-bold text-xs rounded-xl transition shadow-md">
+          <i class="fa-solid fa-check mr-1.5 text-emerald-400"></i>รับทราบ (ดูข้อมูลแบบอ่านได้อย่างเดียว)
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================== -->
+  <!-- MODAL: ACTIVE ONLINE DEVICES & COLLABORATION -->
+  <!-- ========================================== -->
+  <div id="activeDevicesModal" class="hidden fixed inset-0 z-50 bg-slate-900/70 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="bg-white rounded-3xl max-w-lg w-full p-6 space-y-4 shadow-2xl">
+      <div class="flex items-center justify-between pb-3 border-b border-slate-100">
+        <div class="flex items-center space-x-2.5">
+          <div class="w-10 h-10 rounded-2xl bg-sky-100 text-sky-700 flex items-center justify-center text-xl shadow-sm">
+            <i class="fa-solid fa-network-wired"></i>
+          </div>
+          <div>
+            <h3 class="font-bold text-slate-800 text-base">เครื่องที่กำลังเข้าใช้งานระบบพร้อมกัน</h3>
+            <p class="text-xs text-slate-400">แสดงผลสถานะการเชื่อมต่อและผู้ปฏิบัติงานแบบเรียลไทม์</p>
+          </div>
+        </div>
+        <button onclick="closeActiveDevicesModal()" class="text-slate-400 hover:text-slate-600"><i class="fa-solid fa-xmark text-lg"></i></button>
+      </div>
+
+      <div id="activeDevicesListContainer" class="space-y-2.5 max-h-60 overflow-y-auto custom-scrollbar p-1">
+        <!-- Rendered dynamically -->
+      </div>
+
+      <div class="pt-2 flex justify-between items-center text-xs text-slate-400 border-t border-slate-100">
+        <span>สัญญาณ Heartbeat ตรวจสอบทุก 10 วินาที</span>
+        <button onclick="closeActiveDevicesModal()" class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold rounded-xl transition">ปิด</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================== -->
+  <!-- MODAL: ADMIN EDIT REQUEST (แก้ไขใบงานโดย Admin) -->
+  <!-- ========================================== -->
+  <div id="adminEditRequestModal" class="hidden fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm flex items-center justify-center p-3 sm:p-4">
+    <div class="bg-white rounded-3xl max-w-2xl w-full p-6 space-y-4 shadow-2xl max-h-[92vh] overflow-y-auto custom-scrollbar">
+      <div class="flex items-center justify-between pb-3 border-b border-slate-100">
+        <div class="flex items-center space-x-2.5">
+          <div class="w-10 h-10 rounded-2xl bg-amber-100 text-amber-800 flex items-center justify-center text-lg font-bold">
+            <i class="fa-solid fa-pen-ruler"></i>
+          </div>
+          <div>
+            <h3 class="font-bold text-slate-800 text-base flex items-center space-x-2">
+              <span>แก้ไขใบงานคำขอโดย Admin</span>
+              <span id="adminEditEventIdBadge" class="font-mono text-xs bg-amber-50 text-amber-800 px-2 py-0.5 rounded border border-amber-200">-</span>
+            </h3>
+            <p class="text-xs text-slate-400">สิทธิ์ผู้ดูแลระบบสูงสุด สามารถแก้ไขรายละเอียดทุกมิติของคำขอ</p>
+          </div>
+        </div>
+        <button onclick="closeAdminEditRequestModal()" class="text-slate-400 hover:text-slate-600"><i class="fa-solid fa-xmark text-lg"></i></button>
+      </div>
+
+      <form id="adminEditForm" onsubmit="saveAdminEditRequest(event)" class="space-y-4 text-xs">
+        <input type="hidden" id="adminEditEventId" value="">
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div>
+            <label class="block font-semibold text-slate-700 mb-1">หัวข้อหลักสูตรอบรม *</label>
+            <input type="text" id="adminEditTopic" required class="w-full bg-slate-50 border border-slate-300 rounded-xl p-2.5 text-xs focus:ring-2 focus:ring-amber-500 focus:outline-none">
+          </div>
+          <div>
+            <label class="block font-semibold text-slate-700 mb-1">ประเภทกิจกรรม *</label>
+            <input type="text" id="adminEditActivity" required class="w-full bg-slate-50 border border-slate-300 rounded-xl p-2.5 text-xs focus:ring-2 focus:ring-amber-500 focus:outline-none">
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+          <div>
+            <label class="block font-semibold text-slate-700 mb-1">โรงเรียน / หน่วยงาน *</label>
+            <input type="text" id="adminEditSchool" required class="w-full bg-slate-50 border border-slate-300 rounded-xl p-2.5 text-xs focus:ring-2 focus:ring-amber-500 focus:outline-none">
+          </div>
+          <div>
+            <label class="block font-semibold text-slate-700 mb-1">จังหวัด *</label>
+            <input type="text" id="adminEditProv" required class="w-full bg-slate-50 border border-slate-300 rounded-xl p-2.5 text-xs focus:ring-2 focus:ring-amber-500 focus:outline-none">
+          </div>
+          <div>
+            <label class="block font-semibold text-slate-700 mb-1">พนักงานขายผู้รับผิดชอบ *</label>
+            <input type="text" id="adminEditSale" required class="w-full bg-slate-50 border border-slate-300 rounded-xl p-2.5 text-xs focus:ring-2 focus:ring-amber-500 focus:outline-none">
+          </div>
+        </div>
+
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+          <div>
+            <label class="block font-semibold text-slate-700 mb-1">จำนวนผู้เข้าอบรม (คน)</label>
+            <input type="number" id="adminEditTrainees" min="1" class="w-full bg-slate-50 border border-slate-300 rounded-xl p-2 font-mono text-xs focus:ring-2 focus:ring-amber-500 focus:outline-none">
+          </div>
+          <div>
+            <label class="block font-semibold text-slate-700 mb-1">งบประมาณที่ขอ (บาท)</label>
+            <input type="number" id="adminEditEstBudget" min="0" class="w-full bg-slate-50 border border-slate-300 rounded-xl p-2 font-mono text-xs focus:ring-2 focus:ring-amber-500 focus:outline-none">
+          </div>
+          <div>
+            <label class="block font-semibold text-slate-700 mb-1">งบตัดจ่ายจริง (บาท)</label>
+            <input type="number" id="adminEditActualBudget" min="0" class="w-full bg-slate-50 border border-slate-300 rounded-xl p-2 font-mono text-xs focus:ring-2 focus:ring-amber-500 focus:outline-none">
+          </div>
+          <div>
+            <label class="block font-semibold text-slate-700 mb-1">เป้าหมายยอดขาย (บาท)</label>
+            <input type="number" id="adminEditTargetSales" min="0" class="w-full bg-slate-50 border border-slate-300 rounded-xl p-2 font-mono text-xs focus:ring-2 focus:ring-amber-500 focus:outline-none">
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div>
+            <label class="block font-semibold text-slate-700 mb-1">สถานะใบงาน (Status) *</label>
+            <select id="adminEditStatus" required class="w-full bg-slate-50 border border-slate-300 rounded-xl p-2.5 text-xs font-bold focus:ring-2 focus:ring-amber-500 focus:outline-none">
+              <option value="WAITING_B">WAITING_B (รอทีม B ตรวจสอบ)</option>
+              <option value="WAITING_EXEC">WAITING_EXEC (รอผู้บริหารอนุมัติ)</option>
+              <option value="APPROVED">APPROVED (อนุมัติแล้ว)</option>
+              <option value="RETURNED_TO_A">RETURNED_TO_A (ส่งกลับทีม A)</option>
+              <option value="REJECTED">REJECTED (ไม่อนุมัติ)</option>
+              <option value="COMPLETED">COMPLETED (จัดกิจกรรมเสร็จสิ้น)</option>
+            </select>
+          </div>
+          <div>
+            <label class="block font-semibold text-slate-700 mb-1">วิทยากรที่ยืนยัน (ทีม B)</label>
+            <input type="text" id="adminEditTeamBSpeaker" placeholder="ชื่อวิทยากร..." class="w-full bg-slate-50 border border-slate-300 rounded-xl p-2.5 text-xs focus:ring-2 focus:ring-amber-500 focus:outline-none">
+          </div>
+        </div>
+
+        <div>
+          <label class="block font-semibold text-slate-700 mb-1">ข้อเสนอแนะ / บันทึกเพิ่มเติม</label>
+          <textarea id="adminEditNotes" rows="2" placeholder="ระบุบันทึกของ Admin..." class="w-full bg-slate-50 border border-slate-300 rounded-xl p-2 text-xs focus:ring-2 focus:ring-amber-500 focus:outline-none"></textarea>
+        </div>
+
+        <div class="pt-3 border-t border-slate-100 flex items-center justify-between">
+          <button type="button" onclick="adminDeleteRequest(document.getElementById('adminEditEventId').value)" class="px-4 py-2 bg-rose-50 hover:bg-rose-100 text-rose-700 font-bold rounded-xl transition flex items-center space-x-1.5">
+            <i class="fa-solid fa-trash"></i>
+            <span>ลบคำขอนี้</span>
+          </button>
+
+          <div class="flex space-x-2">
+            <button type="button" onclick="closeAdminEditRequestModal()" class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold rounded-xl">ยกเลิก</button>
+            <button type="submit" class="px-6 py-2 bg-amber-600 hover:bg-amber-700 text-white font-bold rounded-xl shadow-md flex items-center space-x-1.5">
+              <i class="fa-solid fa-floppy-disk"></i>
+              <span>บันทึกการแก้ไข (Admin)</span>
+            </button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+
+    <!-- Footer -->
   <footer class="bg-white border-t border-slate-200 text-slate-500 text-xs py-4 px-6 mt-auto">
     <div class="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-2">
-      <div>Training Center TWP (EMS Enterprise v1.6.0) &copy; 2026 - บริษัท ไทยวัฒนาพานิช จำกัด</div>
+      <div>Training Center TWP (EMS Enterprise v1.7.0) &copy; 2026 - บริษัท ไทยวัฒนาพานิช จำกัด</div>
       <div class="flex items-center space-x-4">
         <button onclick="showLandingPage()" class="hover:text-blue-600 transition"><i class="fa-solid fa-house mr-1"></i>กลับหน้าแรก</button>
         <span>Google Apps Script + Google Sheets Architecture (PPC Standard)</span>
@@ -1225,13 +1416,16 @@
 
     // System Global State
     const AppState = {
-      version: '1.6.0',
+      version: '1.7.0',
+      clientId: 'DEV-' + Math.random().toString(36).substring(2, 7).toUpperCase(),
       activeTab: 'dashboard',
       operatorName: localStorage.getItem('ems_operator_name') || 'สมชาย มุ่งมั่น (ทีม A)',
       gasEndpoint: localStorage.getItem('ems_gas_endpoint') || DEFAULT_GAS_ENDPOINT,
       adminUnlocked: false,
       lastSyncTime: null,
       dataSignature: '',
+      activeDevices: {},
+      locks: {}, // { "EVT-xxx_fieldName": { lockedBy, lockedAt, eventId, fieldName } }
       masterData: {
         provinces: [],
         sales: [],
@@ -1254,6 +1448,13 @@
       document.getElementById('mainPortalView').classList.remove('hidden');
       sessionStorage.setItem('twp_portal_entered', 'true');
       window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    // Direct access to Dashboard for Executives from Landing Page
+    function enterExecutiveDashboard() {
+      enterPortal();
+      switchTab('dashboard');
+      showAlert('ยินดีต้อนรับท่านผู้บริหาร: เข้าสู่ศูนย์กลางข้อมูลและวิเคราะห์ผลการดำเนินงานเรียบร้อยแล้ว', 'info');
     }
 
     function showLandingPage() {
@@ -1873,6 +2074,12 @@
 
       // Start background real-time sync polling
       startBackgroundSyncEngine();
+
+      // Start presence & heartbeat engine
+      startPresenceEngine();
+
+      // Attach collision prevention lock listeners
+      attachFieldLockListeners();
     });
 
     function updateOperatorName(val) {
@@ -2454,6 +2661,10 @@
             </button>
             ${req.pdfUrl ? `<a href="${req.pdfUrl}" target="_blank" class="inline-flex items-center px-2 py-1 bg-blue-50 text-blue-700 text-xs font-semibold rounded hover:bg-blue-100 transition mr-1"><i class="fa-solid fa-file-pdf mr-1 text-red-500"></i>Memo</a>` : ''}
             ${req.status === 'APPROVED' ? `<button onclick="openQrModalFor('${req.eventId}')" class="inline-flex items-center px-2 py-1 bg-indigo-50 text-indigo-700 text-xs font-semibold rounded hover:bg-indigo-100 transition"><i class="fa-solid fa-qrcode mr-1"></i>QR Code</button>` : ''}
+            ${AppState.adminUnlocked ? `
+              <button onclick="openAdminEditRequestModal('${req.eventId}')" class="inline-flex items-center px-2 py-1 bg-amber-100 hover:bg-amber-200 text-amber-900 text-xs font-bold rounded transition ml-1" title="แก้ไขคำขอโดย Admin"><i class="fa-solid fa-pen-to-square mr-1"></i>แก้ (Admin)</button>
+              <button onclick="adminDeleteRequest('${req.eventId}')" class="inline-flex items-center px-2 py-1 bg-rose-100 hover:bg-rose-200 text-rose-800 text-xs font-bold rounded transition ml-1" title="ลบคำขอโดย Admin"><i class="fa-solid fa-trash mr-1"></i>ลบ</button>
+            ` : ''}
           </td>
         `;
         tbody.appendChild(tr);
@@ -2578,7 +2789,13 @@
               </div>
               <p class="text-xs text-slate-500 mt-0.5">โรงเรียน: <strong>${req.schoolName}</strong> (${req.province}) | ผู้แทนขาย: <strong>${req.saleName}</strong></p>
             </div>
-            <div>${formatPendingSLA(req.submittedToBAt || req.createdAt, req.status)}</div>
+            <div class="flex items-center space-x-2">
+              ${formatPendingSLA(req.submittedToBAt || req.createdAt, req.status)}
+              ${AppState.adminUnlocked ? `
+                <button onclick="openAdminEditRequestModal('${req.eventId}')" class="px-2 py-1 bg-amber-100 hover:bg-amber-200 text-amber-900 text-xs font-bold rounded transition ml-1" title="แก้ไขคำขอโดย Admin"><i class="fa-solid fa-pen-to-square mr-1"></i>แก้ (Admin)</button>
+                <button onclick="adminDeleteRequest('${req.eventId}')" class="px-2 py-1 bg-rose-100 hover:bg-rose-200 text-rose-800 text-xs font-bold rounded transition ml-1" title="ลบคำขอโดย Admin"><i class="fa-solid fa-trash mr-1"></i>ลบ</button>
+              ` : ''}
+            </div>
           </div>
 
           <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs">
@@ -2666,7 +2883,13 @@
               </div>
               <p class="text-xs text-slate-500 mt-0.5">โรงเรียน: <strong>${req.schoolName}</strong> | ผู้แทนขาย: <strong>${req.saleName}</strong></p>
             </div>
-            <div>${formatPendingSLA(req.reviewedByBAt || req.createdAt, req.status)}</div>
+            <div class="flex items-center space-x-2">
+              ${formatPendingSLA(req.reviewedByBAt || req.createdAt, req.status)}
+              ${AppState.adminUnlocked ? `
+                <button onclick="openAdminEditRequestModal('${req.eventId}')" class="px-2 py-1 bg-amber-100 hover:bg-amber-200 text-amber-900 text-xs font-bold rounded transition ml-1" title="แก้ไขคำขอโดย Admin"><i class="fa-solid fa-pen-to-square mr-1"></i>แก้ (Admin)</button>
+                <button onclick="adminDeleteRequest('${req.eventId}')" class="px-2 py-1 bg-rose-100 hover:bg-rose-200 text-rose-800 text-xs font-bold rounded transition ml-1" title="ลบคำขอโดย Admin"><i class="fa-solid fa-trash mr-1"></i>ลบ</button>
+              ` : ''}
+            </div>
           </div>
 
           <div class="grid grid-cols-1 sm:grid-cols-4 gap-3 text-xs">
@@ -2760,6 +2983,12 @@
             </button>
             ${req.pdfUrl ? `<a href="${req.pdfUrl}" target="_blank" class="px-3 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold rounded-xl transition flex items-center justify-center" title="ดูเอกสาร PDF Memo"><i class="fa-solid fa-file-pdf text-red-500"></i></a>` : ''}
           </div>
+          ${AppState.adminUnlocked ? `
+            <div class="pt-2 border-t border-slate-100 flex justify-end space-x-1.5 text-xs">
+              <button onclick="openAdminEditRequestModal('${req.eventId}')" class="px-2.5 py-1 bg-amber-50 hover:bg-amber-100 text-amber-900 font-bold rounded-lg border border-amber-200"><i class="fa-solid fa-pen-to-square mr-1"></i>แก้ไข (Admin)</button>
+              <button onclick="adminDeleteRequest('${req.eventId}')" class="px-2.5 py-1 bg-rose-50 hover:bg-rose-100 text-rose-800 font-bold rounded-lg border border-rose-200"><i class="fa-solid fa-trash mr-1"></i>ลบ</button>
+            </div>
+          ` : ''}
         </div>
       `).join('');
     }
@@ -3216,7 +3445,7 @@
           </table>
 
           <div style="margin-top:14px; padding-top:4px; border-top:1px solid #e2e8f0; font-size:8.5pt; color:#94a3b8; text-align:center;">
-            เอกสารฉบับนี้สร้างโดยระบบ Training Center TWP (EMS Enterprise Platform v1.6.0) • ใช้สำหรับติดตามและควบคุมผลการปฏิบัติงานภายใน (PPC Standard)
+            เอกสารฉบับนี้สร้างโดยระบบ Training Center TWP (EMS Enterprise Platform v1.7.0) • ใช้สำหรับติดตามและควบคุมผลการปฏิบัติงานภายใน (PPC Standard)
           </div>
         </div>
       `;
@@ -3363,6 +3592,8 @@
         AppState.adminUnlocked = true;
         err.classList.add('hidden');
         showAdminContent();
+        showAlert('ปลดล็อกสิทธิ์ผู้ดูแลระบบ (Admin) สำเร็จ: ปุ่มแก้ไข/ลบทุกการ์ดพร้อมใช้งาน', 'success');
+        renderAll(); // Re-render to display Admin Edit & Delete buttons on every card
       } else {
         err.classList.remove('hidden');
       }
@@ -3413,6 +3644,78 @@
           { logId: 'LOG-003', eventId: 'EVT-2026-0003', action: 'EXEC_APPROVE', actionBy: 'ดร.นิพนธ์ ประธานบริหาร', timestamp: new Date().toISOString() }
         ], null, 2);
       }
+    }
+
+    // ------------------- ADMIN CARD EDIT & DELETE FUNCTIONS -------------------
+
+    function openAdminEditRequestModal(eventId) {
+      const req = AppState.requests.find(r => r.eventId === eventId);
+      if (!req) return;
+
+      const modal = document.getElementById('adminEditRequestModal');
+      document.getElementById('adminEditEventIdBadge').innerText = eventId;
+      document.getElementById('adminEditEventId').value = eventId;
+      document.getElementById('adminEditTopic').value = req.courseTopic || '';
+      document.getElementById('adminEditActivity').value = req.activityType || 'อบรมวิชาการ';
+      document.getElementById('adminEditSchool').value = req.schoolName || '';
+      document.getElementById('adminEditProv').value = req.province || '';
+      document.getElementById('adminEditSale').value = req.saleName || '';
+      document.getElementById('adminEditTrainees').value = req.expectedTrainees || req.evalCount || 50;
+      document.getElementById('adminEditEstBudget').value = req.estBudget || 0;
+      document.getElementById('adminEditActualBudget').value = req.actualBudget || 0;
+      document.getElementById('adminEditTargetSales').value = req.targetSales || 0;
+      document.getElementById('adminEditStatus').value = req.status || 'WAITING_B';
+      document.getElementById('adminEditTeamBSpeaker').value = req.teamBSpeaker || '';
+      document.getElementById('adminEditNotes').value = req.teamBNotes || req.objective || '';
+
+      modal.classList.remove('hidden');
+    }
+
+    function closeAdminEditRequestModal() {
+      document.getElementById('adminEditRequestModal').classList.add('hidden');
+    }
+
+    function saveAdminEditRequest(e) {
+      e.preventDefault();
+      const eventId = document.getElementById('adminEditEventId').value;
+      const req = AppState.requests.find(r => r.eventId === eventId);
+      if (!req) return;
+
+      req.courseTopic = document.getElementById('adminEditTopic').value.trim();
+      req.activityType = document.getElementById('adminEditActivity').value.trim();
+      req.schoolName = document.getElementById('adminEditSchool').value.trim();
+      req.province = document.getElementById('adminEditProv').value.trim();
+      req.saleName = document.getElementById('adminEditSale').value.trim();
+      req.expectedTrainees = Number(document.getElementById('adminEditTrainees').value) || 50;
+      req.estBudget = Number(document.getElementById('adminEditEstBudget').value) || 0;
+      req.actualBudget = Number(document.getElementById('adminEditActualBudget').value) || 0;
+      req.targetSales = Number(document.getElementById('adminEditTargetSales').value) || 0;
+      req.status = document.getElementById('adminEditStatus').value;
+      req.teamBSpeaker = document.getElementById('adminEditTeamBSpeaker').value.trim();
+      req.teamBNotes = document.getElementById('adminEditNotes').value.trim();
+      req.lastModifiedBy = 'Admin (' + AppState.operatorName + ')';
+      req.lastModifiedAt = new Date().toISOString();
+
+      localStorage.setItem('twp_requests_store', JSON.stringify(AppState.requests));
+      closeAdminEditRequestModal();
+      showAlert(`บันทึกการแก้ไขคำขอ ${eventId} โดย Admin เรียบร้อยแล้ว`, 'success');
+      notifyDataUpdated('ADMIN_EDIT_REQUEST');
+      renderAll();
+    }
+
+    function adminDeleteRequest(eventId) {
+      if (!eventId) return;
+      if (!confirm(`⚠️ ยืนยันการลบคำขอ ${eventId} หรือไม่?\nข้อมูลจะถูกลบออกจากระบบและทุกเครื่องที่เชื่อมต่อทันที`)) return;
+
+      AppState.requests = AppState.requests.filter(r => r.eventId !== eventId);
+      localStorage.setItem('twp_requests_store', JSON.stringify(AppState.requests));
+
+      // Close modal if open
+      closeAdminEditRequestModal();
+
+      showAlert(`ลบคำขอ ${eventId} ออกจากระบบเรียบร้อยแล้ว`, 'success');
+      notifyDataUpdated('ADMIN_DELETE_REQUEST');
+      renderAll();
     }
 
     // ------------------- API POST UTILITY -------------------
