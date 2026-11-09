@@ -2331,6 +2331,9 @@
     // ------------------- INITIALIZATION & LIFECYCLE -------------------
 
     window.addEventListener('DOMContentLoaded', () => {
+      // Force ensure current production Apps Script endpoint
+      AppState.gasEndpoint = DEFAULT_GAS_ENDPOINT;
+      localStorage.setItem('ems_gas_endpoint', DEFAULT_GAS_ENDPOINT);
       // Set Operator Profile & Team Tag
       updateOperatorProfileUI();
       renderAdminTeamMembersList();
