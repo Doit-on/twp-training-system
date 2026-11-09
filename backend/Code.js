@@ -8,7 +8,7 @@
  * ============================================================================
  */
 
-const SYSTEM_VERSION = '1.5.0';
+const SYSTEM_VERSION = '1.9.0';
 const DEFAULT_ADMIN_PASS = 'admin0000';
 
 function getSpreadsheet() {
@@ -19,37 +19,21 @@ function getSpreadsheet() {
  * WebApp View Dispatcher & Ping Endpoint
  */
 function doGet(e) {
-  // รองรับการ Ping แบบเบาผ่าน GET สำหรับทดสอบ Latency
-  if (e && e.parameter && e.parameter.action === 'ping') {
-    return ContentService.createTextOutput(JSON.stringify({
-      status: 'SUCCESS',
-      action: 'ping',
-      version: SYSTEM_VERSION,
-      serverTime: new Date().toISOString()
-    })).setMimeType(ContentService.MimeType.JSON);
-  }
+  let spreadsheetName = 'TWP Training Center Database';
+  try {
+    const ss = getSpreadsheet();
+    if (ss) spreadsheetName = ss.getName();
+  } catch (err) {}
 
-  const token = e && e.parameter ? e.parameter.t : null;
-
-  // โหมดหน้าประเมินสำหรับผู้เข้าอบรม (Public Zero-Trust Survey)
-  if (token) {
-    const surveyData = validateAndGetSurveyData(token);
-    const template = HtmlService.createTemplateFromFile('SurveyView');
-    template.eventData = surveyData;
-    template.systemVersion = SYSTEM_VERSION;
-    return template.evaluate()
-      .setTitle('แบบประเมินความพึงพอใจการจัดอบรม | Training Center TWP')
-      .addMetaTag('viewport', 'width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover')
-      .setXFrameOptionsMode(HtmlService.XFrameOptionsMode.ALLOWALL);
-  }
-
-  // โหมดหน้าหลักระบบบริหารจัดการภายใน (Internal Workflow Portal)
-  const template = HtmlService.createTemplateFromFile('Index');
-  template.systemVersion = SYSTEM_VERSION;
-  return template.evaluate()
-    .setTitle('Training Center TWP - ระบบบริหารคำขอจัดอบรมและประเมินผล (v' + SYSTEM_VERSION + ')')
-    .addMetaTag('viewport', 'width=device-width, initial-scale=1.0, viewport-fit=cover')
-    .setXFrameOptionsMode(HtmlService.XFrameOptionsMode.ALLOWALL);
+  // หากเปิดลิงก์ตรงในเบราว์เซอร์ จะแสดงสถานะ Online และข้อมูลระบบทันที ให้ผู้ใช้ตรวจสอบได้ใน 1 วินาที
+  return ContentService.createTextOutput(JSON.stringify({
+    status: 'ONLINE',
+    service: 'EMS Enterprise Backend API (Training Center TWP)',
+    version: SYSTEM_VERSION,
+    spreadsheet: spreadsheetName,
+    serverTime: new Date().toISOString(),
+    message: 'Google Apps Script Web App ทำงานอย่างสมบูรณ์ พร้อมรับคำสั่ง doPost จากระบบ v1.9.0 เรียบร้อยแล้ว'
+  }, null, 2)).setMimeType(ContentService.MimeType.JSON);
 }
 
 /**
@@ -709,7 +693,11 @@ function generateA4MemoPDF(eventRow, approvedBy) {
 
   const blob = Utilities.newBlob(html, 'text/html', eventId + '_Memo.html').getAs('application/pdf');
   const file = DriveApp.createFile(blob).setName(eventId + '_Approval_Memo.pdf');
-  file.setSharing(DriveApp.Access.ANYONE_WITH_LINK, DriveApp.Permission.VIEW);
+  try {
+    file.setSharing(DriveApp.Access.ANYONE_WITH_LINK, DriveApp.Permission.VIEW);
+  } catch (shareErr) {
+    // โดเมนองค์กรบางแห่งอาจปิดสิทธิ์ ANYONE_WITH_LINK ให้ข้ามโดยไม่ให้ฟังก์ชันพัง
+  }
   return file.getUrl();
 }
 
