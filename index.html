@@ -1632,6 +1632,8 @@
       version: '1.9.0',
       clientId: 'DEV-' + Math.random().toString(36).substring(2, 7).toUpperCase(),
       activeTab: 'dashboard',
+      activeDevices: {},
+      activeLocks: {},
       operatorName: localStorage.getItem('ems_operator_name') || 'สมชาย มุ่งมั่น (ทีม A)',
       gasEndpoint: localStorage.getItem('ems_gas_endpoint') || DEFAULT_GAS_ENDPOINT,
       adminUnlocked: false,
@@ -1657,8 +1659,16 @@
 
     // Landing Page Navigation
     function enterPortal() {
-      document.getElementById('landingPageView').classList.add('hidden');
-      document.getElementById('mainPortalView').classList.remove('hidden');
+      const landing = document.getElementById('landingPageView');
+      const portal = document.getElementById('mainPortalView');
+      if (landing) {
+        landing.classList.add('hidden');
+        landing.style.display = 'none';
+      }
+      if (portal) {
+        portal.classList.remove('hidden');
+        portal.style.display = 'flex';
+      }
       sessionStorage.setItem('twp_portal_entered', 'true');
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
@@ -1671,8 +1681,16 @@
     }
 
     function showLandingPage() {
-      document.getElementById('mainPortalView').classList.add('hidden');
-      document.getElementById('landingPageView').classList.remove('hidden');
+      const portal = document.getElementById('mainPortalView');
+      const landing = document.getElementById('landingPageView');
+      if (portal) {
+        portal.classList.add('hidden');
+        portal.style.display = 'none';
+      }
+      if (landing) {
+        landing.classList.remove('hidden');
+        landing.style.display = 'flex';
+      }
       sessionStorage.removeItem('twp_portal_entered');
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
@@ -2295,7 +2313,8 @@
       if (targetOp) {
         AppState.operatorName = decodeURIComponent(targetOp);
         localStorage.setItem('ems_operator_name', AppState.operatorName);
-        document.getElementById('operatorNameInput').value = AppState.operatorName;
+        const opInp = document.getElementById('operatorNameInput');
+        if (opInp) opInp.value = AppState.operatorName;
       }
 
       if (targetRole) {
@@ -2798,12 +2817,15 @@
 
     function onCourseTopicChange(val) {
       const wrap = document.getElementById('customTopicWrap');
-      if (val === 'อื่นๆ') {
-        wrap.classList.remove('hidden');
-        document.getElementById('customTopic').required = true;
-      } else {
-        wrap.classList.add('hidden');
-        document.getElementById('customTopic').required = false;
+      const custom = document.getElementById('customTopic');
+      if (wrap) {
+        if (val === 'อื่นๆ') {
+          wrap.classList.remove('hidden');
+          if (custom) custom.required = true;
+        } else {
+          wrap.classList.add('hidden');
+          if (custom) custom.required = false;
+        }
       }
     }
 
@@ -3406,9 +3428,9 @@
     function handleTeamASubmit(e) {
       e.preventDefault();
       const schoolSelect = document.getElementById('schoolSelect');
-      const selectedSchoolName = schoolSelect.options[schoolSelect.selectedIndex]?.dataset?.name || schoolSelect.value;
-      const courseTopicVal = document.getElementById('courseTopic').value;
-      const customTopicVal = document.getElementById('customTopic').value;
+      const selectedSchoolName = schoolSelect?.options ? (schoolSelect.options[schoolSelect.selectedIndex]?.dataset?.name || schoolSelect.value) : '';
+      const courseTopicVal = document.getElementById('courseTopic')?.value || '';
+      const customTopicVal = document.getElementById('customTopic')?.value || '';
 
       const needAccom = document.getElementById('needAccommodation').checked;
       const roomCount = needAccom ? (Number(document.getElementById('roomCount').value) || 1) : 0;
@@ -4462,36 +4484,256 @@
       renderAdminTeamMembersList();
     }
 
-    // ------------------- LOGOUT & SYNC NOTIFICATION FLOW -------------------
+    // ------------------- CONCURRENCY COLLISION LOCK ENGINE -------------------
 
-    function handleLogout() {
-      if (!confirm('ต้องการออกจากระบบและบันทึกซิงค์ข้อมูลล่าสุดหรือไม่?')) return;
+    function attachFieldLockListeners() {
+      document.querySelectorAll('input, select, textarea').forEach(el => {
+        el.addEventListener('focus', () => {
+          const fieldKey = el.id || el.name;
+          if (!fieldKey) return;
+          const lockedBy = checkFieldLock(fieldKey);
+          if (lockedBy && lockedBy.clientId !== AppState.clientId) {
+            el.blur();
+            showConcurrencyLockPopup(lockedBy, fieldKey);
+          } else {
+            acquireFieldLock(fieldKey);
+          }
+        });
 
-      // Force Sync to backend and cloud
-      updateSyncStatusUI('syncing');
-      
-      // Release self device from presence and locks
-      if (syncChannel) {
-        syncChannel.postMessage({
-          type: 'USER_LOGOUT',
-          clientId: AppState.clientId
+        el.addEventListener('blur', () => {
+          const fieldKey = el.id || el.name;
+          if (fieldKey) releaseFieldLock(fieldKey);
+        });
+      });
+    }
+
+    function checkFieldLock(fieldKey) {
+      if (!AppState.activeLocks) AppState.activeLocks = {};
+      const lock = AppState.activeLocks[fieldKey];
+      if (!lock) return null;
+      if (Date.now() - lock.timestamp > 150000) {
+        delete AppState.activeLocks[fieldKey];
+        return null;
+      }
+      return lock;
+    }
+
+    function acquireFieldLock(fieldKey) {
+      if (!AppState.activeLocks) AppState.activeLocks = {};
+      AppState.activeLocks[fieldKey] = {
+        fieldKey: fieldKey,
+        clientId: AppState.clientId,
+        operatorName: AppState.operatorName,
+        timestamp: Date.now(),
+        timeStr: new Date().toLocaleTimeString('th-TH')
+      };
+      if (typeof appBroadcastChannel !== 'undefined' && appBroadcastChannel) {
+        try {
+          appBroadcastChannel.postMessage({
+            type: 'LOCK_ACQUIRED',
+            lock: AppState.activeLocks[fieldKey]
+          });
+        } catch(e) {}
+      }
+    }
+
+    function releaseFieldLock(fieldKey) {
+      if (!AppState.activeLocks) return;
+      delete AppState.activeLocks[fieldKey];
+      if (typeof appBroadcastChannel !== 'undefined' && appBroadcastChannel) {
+        try {
+          appBroadcastChannel.postMessage({
+            type: 'LOCK_RELEASED',
+            fieldKey: fieldKey,
+            clientId: AppState.clientId
+          });
+        } catch(e) {}
+      }
+    }
+
+    function showConcurrencyLockPopup(lock, fieldKey) {
+      const modal = document.getElementById('concurrencyLockModal');
+      if (!modal) return;
+      const userElem = document.getElementById('lockModalUserName');
+      const timeElem = document.getElementById('lockModalTime');
+      const fieldElem = document.getElementById('lockModalField');
+      if (userElem) userElem.innerText = lock.operatorName || 'ผู้ใช้อื่น';
+      if (timeElem) timeElem.innerText = lock.timeStr || new Date(lock.timestamp).toLocaleTimeString('th-TH');
+      if (fieldElem) fieldElem.innerText = fieldKey;
+      modal.classList.remove('hidden');
+      modal.style.display = 'flex';
+    }
+
+    function closeConcurrencyLockModal() {
+      const modal = document.getElementById('concurrencyLockModal');
+      if (modal) {
+        modal.classList.add('hidden');
+        modal.style.display = 'none';
+      }
+    }
+
+    // ------------------- PRESENCE & COLLABORATION ENGINE -------------------
+
+    function startPresenceEngine() {
+      if (!AppState.activeDevices) AppState.activeDevices = {};
+      AppState.activeDevices[AppState.clientId] = {
+        clientId: AppState.clientId,
+        operatorName: AppState.operatorName,
+        activeTab: AppState.activeTab,
+        lastSeen: Date.now()
+      };
+      updateActiveDevicesUI();
+
+      if (typeof appBroadcastChannel !== 'undefined' && appBroadcastChannel) {
+        appBroadcastChannel.addEventListener('message', (event) => {
+          const data = event.data;
+          if (!data) return;
+          if (data.type === 'HEARTBEAT') {
+            if (!AppState.activeDevices) AppState.activeDevices = {};
+            AppState.activeDevices[data.clientId] = {
+              clientId: data.clientId,
+              operatorName: data.operatorName,
+              activeTab: data.activeTab,
+              lastSeen: Date.now()
+            };
+            updateActiveDevicesUI();
+          } else if (data.type === 'USER_LOGOUT') {
+            if (AppState.activeDevices) delete AppState.activeDevices[data.clientId];
+            updateActiveDevicesUI();
+          } else if (data.type === 'LOCK_ACQUIRED') {
+            if (!AppState.activeLocks) AppState.activeLocks = {};
+            AppState.activeLocks[data.lock.fieldKey] = data.lock;
+          } else if (data.type === 'LOCK_RELEASED') {
+            if (AppState.activeLocks) delete AppState.activeLocks[data.fieldKey];
+          }
         });
       }
 
-      delete AppState.activeDevices[AppState.clientId];
+      setInterval(() => {
+        sendPresenceHeartbeat();
+      }, 8000);
+    }
+
+    function sendPresenceHeartbeat() {
+      if (!AppState.activeDevices) AppState.activeDevices = {};
+      AppState.activeDevices[AppState.clientId] = {
+        clientId: AppState.clientId,
+        operatorName: AppState.operatorName,
+        activeTab: AppState.activeTab,
+        lastSeen: Date.now()
+      };
+
+      const now = Date.now();
+      for (let cid in AppState.activeDevices) {
+        if (cid !== AppState.clientId && now - AppState.activeDevices[cid].lastSeen > 25000) {
+          delete AppState.activeDevices[cid];
+        }
+      }
+
+      if (typeof appBroadcastChannel !== 'undefined' && appBroadcastChannel) {
+        try {
+          appBroadcastChannel.postMessage({
+            type: 'HEARTBEAT',
+            clientId: AppState.clientId,
+            operatorName: AppState.operatorName,
+            activeTab: AppState.activeTab
+          });
+        } catch(e) {}
+      }
+
       updateActiveDevicesUI();
+    }
 
-      // Show Logout Modal with sync status
-      document.getElementById('logoutModal').classList.remove('hidden');
+    function updateActiveDevicesUI() {
+      const container = document.getElementById('headerActiveDevicesCount');
+      const listContainer = document.getElementById('activeDevicesListContainer');
+      const devices = Object.values(AppState.activeDevices || {});
+      const count = Math.max(1, devices.length);
 
-      // Auto redirect to landing page after 2 seconds
+      if (container) {
+        container.innerText = `${count} เครื่อง`;
+      }
+
+      if (listContainer) {
+        listContainer.innerHTML = devices.map(d => {
+          const isSelf = d.clientId === AppState.clientId;
+          return `
+            <div class="flex items-center justify-between p-2.5 rounded-2xl border ${isSelf ? 'bg-sky-50 border-sky-200' : 'bg-slate-50 border-slate-200'} text-xs">
+              <div class="flex items-center space-x-2.5">
+                <div class="w-8 h-8 rounded-xl ${isSelf ? 'bg-sky-600 text-white' : 'bg-slate-300 text-slate-700'} flex items-center justify-center font-bold">
+                  <i class="fa-solid fa-laptop"></i>
+                </div>
+                <div>
+                  <div class="font-bold text-slate-800 flex items-center space-x-1.5">
+                    <span>${d.operatorName || 'ผู้ใช้งาน'}</span>
+                    ${isSelf ? '<span class="text-[10px] bg-sky-200 text-sky-800 font-bold px-1.5 py-0.5 rounded-full">เครื่องนี้</span>' : ''}
+                  </div>
+                  <div class="text-[10px] text-slate-400 font-mono">${d.clientId} • แท็บ: ${d.activeTab || 'dashboard'}</div>
+                </div>
+              </div>
+              <span class="inline-flex items-center text-[11px] text-emerald-600 font-bold">
+                <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse mr-1"></span>ออนไลน์
+              </span>
+            </div>
+          `;
+        }).join('');
+      }
+    }
+
+    function openActiveDevicesModal() {
+      const modal = document.getElementById('activeDevicesModal');
+      if (modal) {
+        modal.classList.remove('hidden');
+        modal.style.display = 'flex';
+        updateActiveDevicesUI();
+      }
+    }
+
+    function closeActiveDevicesModal() {
+      const modal = document.getElementById('activeDevicesModal');
+      if (modal) {
+        modal.classList.add('hidden');
+        modal.style.display = 'none';
+      }
+    }
+
+    // ------------------- LOGOUT & SYNC NOTIFICATION FLOW -------------------
+
+    function handleLogout() {
+      // 1. Release self device from presence and locks
+      if (typeof appBroadcastChannel !== 'undefined' && appBroadcastChannel) {
+        try {
+          appBroadcastChannel.postMessage({
+            type: 'USER_LOGOUT',
+            clientId: AppState.clientId
+          });
+        } catch(e) {}
+      }
+
+      if (AppState.activeDevices && AppState.clientId) {
+        delete AppState.activeDevices[AppState.clientId];
+        updateActiveDevicesUI();
+      }
+
+      // 2. Show Logout Modal with sync status
+      const modal = document.getElementById('logoutModal');
+      if (modal) {
+        modal.classList.remove('hidden');
+        modal.style.display = 'flex';
+      }
+
+      // 3. Transition to landing page after 1.5 seconds
       setTimeout(() => {
         confirmLogoutRedirect();
-      }, 2200);
+      }, 1500);
     }
 
     function confirmLogoutRedirect() {
-      document.getElementById('logoutModal').classList.add('hidden');
+      const modal = document.getElementById('logoutModal');
+      if (modal) {
+        modal.classList.add('hidden');
+        modal.style.display = 'none';
+      }
       showLandingPage();
       showAlert('ออกจากระบบและบันทึกข้อมูลเรียบร้อยแล้ว', 'info');
     }
