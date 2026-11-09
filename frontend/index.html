@@ -168,6 +168,25 @@
       background-color: #cbd5e1;
       border-radius: 9999px;
     }
+
+    /* Typographic & Visual Alignment Standardization */
+    table th, table td {
+      vertical-align: middle !important;
+    }
+    span[class*="rounded-full"], div[class*="rounded-full"] {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      line-height: 1.25;
+      vertical-align: middle;
+    }
+    .badge-pill {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      line-height: 1;
+      vertical-align: middle;
+    }
   </style>
 </head>
 <body class="bg-slate-100 text-slate-800 min-h-screen flex flex-col antialiased">
@@ -401,8 +420,8 @@
         </button>
         <button onclick="switchTab('fy2569Tu')" id="tabBtn-fy2569Tu" class="tab-btn py-3 px-2 border-b-2 border-transparent hover:text-rose-600 flex items-center space-x-2 whitespace-nowrap">
           <i class="fa-solid fa-crosshairs text-rose-600"></i>
-          <span>โครงการปี 2569 & กระทบยอด TU</span>
-          <span class="bg-rose-100 text-rose-700 text-[10px] font-bold px-1.5 py-0.5 rounded-full ml-1">แยกสัดส่วน</span>
+          <span>ติดตาม & กระทบยอดขายปี 2569</span>
+          <span class="bg-rose-100 text-rose-700 text-[10px] font-bold px-2 py-0.5 rounded-full ml-1 inline-flex items-center">แผนยุทธศาสตร์</span>
         </button>
       </div>
     </div>
@@ -438,7 +457,7 @@
           </div>
           <div>
             <h2 class="text-sm sm:text-base font-extrabold text-slate-900 flex items-center gap-2">
-              <span>ภาพรวมและผลการดำเนินงานจัดอบรม ปี ๒๕๖๙ (EMS & PPC Matrix)</span>
+              <span>ภาพรวมและผลการดำเนินงานจัดอบรม ปี 2569 (EMS & PPC Matrix)</span>
               <span class="text-[10px] bg-emerald-100 text-emerald-800 font-bold px-2 py-0.5 rounded-full border border-emerald-300">ปี 2569</span>
             </h2>
             <p class="text-xs text-slate-500">วิเคราะห์ผลตอบแทนเชิงพาณิชย์ รายตัวแทนขาย (PPC) และเชื่อมโยงยอดขาย TU</p>
@@ -451,7 +470,7 @@
             <i class="fa-regular fa-calendar-days text-blue-600"></i>
             <span>ปี:</span>
             <select id="dashboardYearFilter" onchange="onDashboardFilterChange()" class="bg-transparent font-bold text-blue-800 focus:outline-none cursor-pointer">
-              <option value="2569" selected>๒๕๖๙ (2026)</option>
+              <option value="2569" selected>2569 (2026)</option>
               <option value="ALL">ทุกปีสะสม</option>
             </select>
           </div>
@@ -1053,7 +1072,7 @@
           <div class="flex items-center justify-between">
             <h3 class="text-xs font-bold text-slate-700 uppercase tracking-wider flex items-center gap-1.5">
               <i class="fa-solid fa-list-check text-amber-600"></i>
-              <span>ระบุค่าใช้จ่ายจริงแยกตาม ๗ หมวดมาตรฐาน (Recommended 7 Expense Dimensions)</span>
+              <span>ระบุค่าใช้จ่ายจริงแยกตาม 7 หมวดมาตรฐาน (Recommended 7 Expense Dimensions)</span>
             </h3>
             <span class="text-[11px] text-slate-500">* คำนวณยอดรวมและผลต่างแบบ Real-Time</span>
           </div>
@@ -1187,19 +1206,19 @@
 
           <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 text-center">
             <div class="bg-slate-800/80 p-3 rounded-xl border border-slate-700">
-              <span class="text-[10px] text-slate-400 block">๑. งบขอเดิม (ทีม A)</span>
+              <span class="text-[10px] text-slate-400 block">1. งบขอเดิม (ทีม A)</span>
               <span id="sumReqBudget" class="font-bold text-base font-mono text-slate-200">฿0</span>
             </div>
             <div class="bg-slate-800/80 p-3 rounded-xl border border-slate-700">
-              <span class="text-[10px] text-slate-400 block">๒. งบตัดจ่าย (ทีม B)</span>
+              <span class="text-[10px] text-slate-400 block">2. งบตัดจ่าย (ทีม B)</span>
               <span id="sumApprovedBudget" class="font-bold text-base font-mono text-purple-300">฿0</span>
             </div>
             <div class="bg-slate-800/80 p-3 rounded-xl border border-amber-500/50 bg-amber-500/10">
-              <span class="text-[10px] text-amber-300 font-bold block">๓. รวมจ่ายจริง (7 หมวด)</span>
+              <span class="text-[10px] text-amber-300 font-bold block">3. รวมจ่ายจริง (7 หมวด)</span>
               <span id="sumActualExpenses" class="font-bold text-lg font-mono text-amber-400">฿0</span>
             </div>
             <div class="bg-slate-800/80 p-3 rounded-xl border border-emerald-500/50 bg-emerald-500/10">
-              <span class="text-[10px] text-emerald-300 font-bold block">๔. เงินประหยัดสุทธิ</span>
+              <span class="text-[10px] text-emerald-300 font-bold block">4. เงินประหยัดสุทธิ</span>
               <span id="sumSavedBudget" class="font-bold text-base font-mono text-emerald-400">฿0</span>
             </div>
           </div>
@@ -1316,14 +1335,14 @@
             <div>
               <div class="flex items-center gap-2">
                 <h2 class="text-base sm:text-lg font-black text-slate-900">
-                  ศูนย์บริหารโครงการปี 2569 & กระทบยอดขาย TU (FY2569 Strategic Training & TU Sales Reconciliation)
+                  ศูนย์ติดตามและกระทบยอดขายปี 2569 (FY2569 Strategic Training & Sales Impact Hub)
                 </h2>
-                <span class="bg-rose-100 text-rose-700 text-[10px] font-bold px-2 py-0.5 rounded-full border border-rose-300">
-                  แยกสัดส่วนชัดเจน
+                <span class="bg-rose-100 text-rose-700 text-[10px] font-bold px-2.5 py-0.5 rounded-full border border-rose-300 inline-flex items-center">
+                  แผนยุทธศาสตร์ & กระทบยอด
                 </span>
               </div>
               <p class="text-xs text-slate-500 mt-0.5">
-                วางแผนคำขอจัดอบรมปี 2569 พร้อมกระทบยอดขายจริงจากระบบ TU รายโรงเรียน วิเคราะห์ ROI และอัตราผลสำเร็จ ไม่ปะปนกับงานปีปัจจุบัน
+                วางแผนคำขอจัดอบรมปี 2569 เปรียบเทียบฐานยอดขายเดิมในอดีต (Baseline) และกระทบยอดขายจริงเมื่อมีบิลสั่งซื้อ (Actual Invoiced Orders) พร้อมวิเคราะห์ ROI รายโรงเรียน ไม่ปะปนกับงานปีปัจจุบัน
               </p>
             </div>
           </div>
@@ -1331,11 +1350,11 @@
           <div class="flex flex-wrap items-center gap-2">
             <button onclick="loadSampleFy2569Data()" class="px-3.5 py-2 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-white rounded-xl text-xs font-bold transition btn-tactile shadow-sm flex items-center space-x-1.5 cursor-pointer">
               <i class="fa-solid fa-wand-magic-sparkles text-yellow-200"></i>
-              <span>โหลดข้อมูลจำลองปี 2569 & TU</span>
+              <span>โหลดข้อมูลจำลองปี 2569 & ยอดขาย</span>
             </button>
             <button onclick="openImportTuExcelModal()" class="px-3 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-300 rounded-xl text-xs font-bold transition btn-tactile flex items-center space-x-1.5 cursor-pointer">
               <i class="fa-solid fa-file-excel text-emerald-600"></i>
-              <span>นำเข้ายอดขาย TU</span>
+              <span>นำเข้ายอดขายจริง</span>
             </button>
             <button onclick="printFy2569ReconcileMemo()" class="px-3.5 py-2 bg-[#08539E] hover:bg-[#07488a] text-white rounded-xl text-xs font-bold transition btn-tactile shadow-sm flex items-center space-x-1.5 cursor-pointer">
               <i class="fa-solid fa-print text-blue-200"></i>
@@ -1461,7 +1480,7 @@
             </form>
           </div>
 
-          <!-- CARD B: ทางเข้าบันทึกยอดขายจริงจากระบบ TU (Actual Invoiced Matching Gateway) -->
+          <!-- CARD B: ทางเข้าบันทึกยอดขายจริงหลังจัดอบรม (Actual Sales Reconciliation & Invoicing) -->
           <div class="lg:col-span-6 bg-slate-50 p-4 sm:p-5 rounded-2xl border border-slate-200 space-y-3.5">
             <div class="flex items-center justify-between pb-2 border-b border-slate-200">
               <div class="flex items-center space-x-2">
@@ -1469,17 +1488,17 @@
                   B
                 </div>
                 <h3 class="text-xs sm:text-sm font-bold text-slate-800">
-                  บันทึกยอดขายจริงจากระบบ TU (Invoiced Matching)
+                  บันทึกยอดขายจริงหลังจัดอบรม (Actual Sales & TU Orders)
                 </h3>
               </div>
-              <span class="text-[10px] text-emerald-700 bg-emerald-100 px-2 py-0.5 rounded-full font-bold">ERP Integration</span>
+              <span class="text-[10px] text-emerald-700 bg-emerald-100 px-2 py-0.5 rounded-full font-bold inline-flex items-center">ยอดขายจริง & ERP</span>
             </div>
 
             <form id="fy2569TuMatchForm" onsubmit="handleSaveTuMatch(event)" class="space-y-3 text-xs">
               
               <div>
                 <label class="block font-bold text-slate-700 mb-1 flex items-center justify-between">
-                  <span>เลือกโครงการปี 2569 ที่ต้องการบันทึกยอดขาย TU *</span>
+                  <span>เลือกโครงการปี 2569 ที่ต้องการบันทึกยอดขายจริง *</span>
                   <span class="text-[10px] text-emerald-600 font-semibold">จับคู่รายโครงการ</span>
                 </label>
                 <select id="fy2569MatchProjectSelect" onchange="onSelectFy2569MatchProject(this.value)" required class="w-full bg-white border border-slate-300 rounded-xl p-2.5 text-xs font-medium focus:ring-2 focus:ring-emerald-500 focus:outline-none">
@@ -1779,7 +1798,7 @@
         <div class="flex items-center justify-between text-xs">
           <span class="font-bold text-slate-700 flex items-center gap-1.5">
             <i class="fa-solid fa-list-check text-blue-600"></i>
-            <span>ตารางเปรียบเทียบคำขอกับยอดขาย TU ประจำปี ๒๕๖๙:</span>
+            <span>ตารางเปรียบเทียบคำขอกับยอดขาย TU ประจำปี 2569:</span>
           </span>
           <span class="text-slate-400 text-[11px]">* บันทึกทดสอบความพร้อมโดยไม่กระทบข้อมูลจริง</span>
         </div>
@@ -1832,11 +1851,11 @@
       <div class="grid grid-cols-2 gap-1.5 p-1 bg-slate-100 rounded-xl text-xs font-semibold">
         <button id="qrTabSurveyBtn" onclick="switchQrModalMode('SURVEY')" class="py-2 px-3 rounded-lg bg-white text-blue-700 shadow-sm flex items-center justify-center space-x-1.5 transition">
           <i class="fa-solid fa-square-poll-vertical text-blue-600"></i>
-          <span>๑. แบบประเมิน ๑๐ ข้อ</span>
+          <span>1. แบบประเมิน 10 ข้อ</span>
         </button>
         <button id="qrTabResourceBtn" onclick="switchQrModalMode('RESOURCE')" class="py-2 px-3 rounded-lg text-slate-600 hover:text-slate-900 flex items-center justify-center space-x-1.5 transition">
           <i class="fa-brands fa-google-drive text-amber-600"></i>
-          <span>๒. แหล่งเก็บไฟล์ (ปลดล็อกหลังประเมิน)</span>
+          <span>2. แหล่งเก็บไฟล์ (ปลดล็อกหลังประเมิน)</span>
         </button>
       </div>
 
@@ -1844,7 +1863,7 @@
       <div class="p-3 bg-gradient-to-b from-slate-50 to-white border border-slate-200 rounded-2xl flex flex-col items-center justify-center shadow-inner relative">
         <div id="qrcodeWrapper" class="p-2 bg-white rounded-xl shadow-sm border border-slate-200"></div>
         <div id="qrModeSubtitle" class="text-[11px] font-medium text-slate-600 mt-2">
-          สแกนด้วยสมาร์ทโฟนเพื่อทำแบบประเมินผลการอบรม ๑๐ ข้อ
+          สแกนด้วยสมาร์ทโฟนเพื่อทำแบบประเมินผลการอบรม 10 ข้อ
         </div>
       </div>
       
@@ -4280,7 +4299,7 @@
       // Persist locally
       localStorage.setItem('twp_requests_store', JSON.stringify(AppState.requests));
 
-      showAlert('บันทึกสรุปค่าใช้จ่ายจริง ๗ หมวด ยอดรวม ฿' + totalActual.toLocaleString() + ' เรียบร้อยแล้ว', 'success');
+      showAlert('บันทึกสรุปค่าใช้จ่ายจริง 7 หมวด ยอดรวม ฿' + totalActual.toLocaleString() + ' เรียบร้อยแล้ว', 'success');
       notifyDataUpdated('SAVE_EXPENSES');
       renderAll();
     }
@@ -6456,8 +6475,8 @@
       if (mode === 'SURVEY') {
         surveyBtn.className = 'py-2 px-3 rounded-lg bg-white text-blue-700 shadow-sm flex items-center justify-center space-x-1.5 transition';
         resBtn.className = 'py-2 px-3 rounded-lg text-slate-600 hover:text-slate-900 flex items-center justify-center space-x-1.5 transition';
-        subtitle.innerText = 'สแกนด้วยสมาร์ทโฟนเพื่อทำแบบประเมินผลการอบรม ๑๐ ข้อ';
-        linkTag.innerText = 'แบบประเมินออนไลน์ ๑๐ ข้อ';
+        subtitle.innerText = 'สแกนด้วยสมาร์ทโฟนเพื่อทำแบบประเมินผลการอบรม 10 ข้อ';
+        linkTag.innerText = 'แบบประเมินออนไลน์ 10 ข้อ';
         linkTag.className = 'text-[10px] text-blue-600 bg-blue-50 px-1.5 py-0.5 rounded';
         resEditBox.classList.add('hidden');
 
@@ -6512,8 +6531,8 @@
       const req = AppState.requests.find(r => r.eventId === activeQrModalEventId);
       if (!req) return;
 
-      const title = 'แบบประเมินผลการจัดอบรม ๑๐ ข้อ';
-      const sub = 'กรุณาสแกน QR Code เพื่อทำแบบประเมิน ๑๐ ข้อ และรับวุฒิบัตร e-Certificate พร้อมปลดล็อกคลังดาวน์โหลดไฟล์เอกสารประกอบโครงการ';
+      const title = 'แบบประเมินผลการจัดอบรม 10 ข้อ';
+      const sub = 'กรุณาสแกน QR Code เพื่อทำแบบประเมิน 10 ข้อ และรับวุฒิบัตร e-Certificate พร้อมปลดล็อกคลังดาวน์โหลดไฟล์เอกสารประกอบโครงการ';
       const url = document.getElementById('modalShareUrl').value;
 
       const printWin = window.open('', '_blank');
@@ -6744,7 +6763,7 @@
                 <span style="font-size:16pt;">🌟</span>
                 <div>
                   <div style="font-size:12pt; font-weight:800; letter-spacing:0.5px; line-height:1.2;">เอกสารตัวอย่างการใช้ระบบ (End-to-End System Demonstration Exemplar)</div>
-                  <div style="font-size:8.5pt; opacity:0.95;">สาธิตกระบวนการทำงานครบวงจร: ขอจัดอบรม &rarr; ตรวจวิชาการ &rarr; อนุมัติและลงนาม &rarr; สแกน QR ทำแบบประเมิน &rarr; สรุปค่าใช้จ่ายจริง ๗ หมวด</div>
+                  <div style="font-size:8.5pt; opacity:0.95;">สาธิตกระบวนการทำงานครบวงจร: ขอจัดอบรม &rarr; ตรวจวิชาการ &rarr; อนุมัติและลงนาม &rarr; สแกน QR ทำแบบประเมิน &rarr; สรุปค่าใช้จ่ายจริง 7 หมวด</div>
                 </div>
               </div>
               <div style="text-align:right; font-size:8.5pt; font-weight:700; background:rgba(255,255,255,0.2); padding:3px 8px; border-radius:4px; border:1px solid rgba(255,255,255,0.4); white-space:nowrap;">
@@ -6790,7 +6809,7 @@
           <!-- SECTION 2: ATTENDANCE & COST PER HEAD METRICS -->
           <div style="border:1px solid #cbd5e1; border-radius:8px; padding:10px 12px; margin-bottom:10px; background:#ffffff;">
             <div style="font-size:12pt; font-weight:700; color:#08539E; border-bottom:1px solid #e2e8f0; pb-1; margin-bottom:6px;">
-              ๑. ตัวชี้วัดจำนวนผู้เข้าร่วมอบรม และการวิเคราะห์ต้นทุนค่าใช้จ่ายต่อหัว (Cost per Head)
+              1. ตัวชี้วัดจำนวนผู้เข้าร่วมอบรม และการวิเคราะห์ต้นทุนค่าใช้จ่ายต่อหัว (Cost per Head)
             </div>
             
             <div style="display:grid; grid-template-columns: repeat(4, 1fr); gap:8px; text-align:center; margin-bottom:8px;">
@@ -6821,14 +6840,14 @@
           <!-- SECTION 3: 10-DIMENSION EVALUATION BREAKDOWN TABLE -->
           <div style="margin-bottom:10px;">
             <div style="font-size:12pt; font-weight:700; color:#08539E; margin-bottom:4px;">
-              ๒. สรุปผลการประเมินความพึงพอใจ ๑๐ มิติมาตรฐาน (Ten Evaluation Dimensions)
+              2. สรุปผลการประเมินความพึงพอใจ 10 มิติมาตรฐาน (Ten Evaluation Dimensions)
             </div>
 
             <table style="width:100%; border-collapse:collapse; font-size:10.5pt; line-height:1.3; text-align:left;">
               <thead>
                 <tr style="background:#08539E; color:#ffffff;">
                   <th style="padding:5px 6px; border:1px solid #cbd5e1; text-align:center; width:35px;">ข้อ</th>
-                  <th style="padding:5px 8px; border:1px solid #cbd5e1;">หัวข้อการประเมินมาตรฐาน ๑๐ ข้อ</th>
+                  <th style="padding:5px 8px; border:1px solid #cbd5e1;">หัวข้อการประเมินมาตรฐาน 10 ข้อ</th>
                   <th style="padding:5px 6px; border:1px solid #cbd5e1; text-align:center; width:80px;">คะแนน (5.00)</th>
                   <th style="padding:5px 6px; border:1px solid #cbd5e1; text-align:center; width:65px;">ร้อยละ</th>
                   <th style="padding:5px 6px; border:1px solid #cbd5e1; text-align:center; width:85px;">ระดับคุณภาพ</th>
@@ -6866,7 +6885,7 @@
           <!-- SECTION 2.5: ITEMIZED 7 ACTUAL EXPENSES BREAKDOWN & VARIANCE TABLE -->
           <div style="margin-bottom:10px; border:1px solid #cbd5e1; border-radius:8px; padding:8px 12px; background:#ffffff;">
             <div style="font-size:12pt; font-weight:700; color:#08539E; margin-bottom:4px; display:flex; justify-content:space-between; align-items:center;">
-              <span>๒. สรุปรายละเอียดค่าใช้จ่ายจริง ๗ หมวดมาตรฐาน (Itemized Actual Expenses Settlement)</span>
+              <span>3. สรุปรายละเอียดค่าใช้จ่ายจริง 7 หมวดมาตรฐาน (Itemized Actual Expenses Settlement)</span>
               <span style="font-size:9pt; font-weight:600; color:#059669; background:#ecfdf5; padding:2px 8px; border-radius:4px; border:1px solid #a7f3d0;">
                 ประหยัดสุทธิ ฿${(d.actualBudget <= d.estBudget ? (d.estBudget - d.actualBudget) : 0).toLocaleString()} บาท
               </span>
@@ -6876,7 +6895,7 @@
               <thead>
                 <tr style="background:#f1f5f9; color:#1e293b; font-weight:700;">
                   <th style="padding:4px 6px; border:1px solid #cbd5e1; text-align:center; width:30px;">ลำดับ</th>
-                  <th style="padding:4px 8px; border:1px solid #cbd5e1;">หมวดรายการค่าใช้จ่ายจริง (๗ หมวดมาตรฐาน)</th>
+                  <th style="padding:4px 8px; border:1px solid #cbd5e1;">หมวดรายการค่าใช้จ่ายจริง (7 หมวดมาตรฐาน)</th>
                   <th style="padding:4px 6px; border:1px solid #cbd5e1; text-align:right; width:95px;">จำนวนเงิน (บาท)</th>
                   <th style="padding:4px 6px; border:1px solid #cbd5e1; text-align:center; width:65px;">สัดส่วน (%)</th>
                   <th style="padding:4px 8px; border:1px solid #cbd5e1;">หมายเหตุ / ความสอดคล้องตามเกณฑ์</th>
@@ -6884,49 +6903,49 @@
               </thead>
               <tbody>
                 <tr>
-                  <td style="padding:3px 6px; border:1px solid #e2e8f0; text-align:center; font-weight:700;">๑</td>
+                  <td style="padding:3px 6px; border:1px solid #e2e8f0; text-align:center; font-weight:700;">1</td>
                   <td style="padding:3px 8px; border:1px solid #e2e8f0;">ค่าตอบแทนวิทยากร และผู้ช่วยวิทยากร</td>
                   <td style="padding:3px 6px; border:1px solid #e2e8f0; text-align:right; font-family:monospace; font-weight:700; color:#08539E;">${Number(exp.expSpeaker || 0).toLocaleString()}</td>
                   <td style="padding:3px 6px; border:1px solid #e2e8f0; text-align:center;">${d.actualExpensesTotal > 0 ? ((Number(exp.expSpeaker || 0) / d.actualExpensesTotal) * 100).toFixed(1) : '0.0'}%</td>
                   <td style="padding:3px 8px; border:1px solid #e2e8f0; font-size:9pt; color:#475569;">วิทยากรผู้ทรงคุณวุฒิระดับเชี่ยวชาญ</td>
                 </tr>
                 <tr style="background:#f8fafc;">
-                  <td style="padding:3px 6px; border:1px solid #e2e8f0; text-align:center; font-weight:700;">๒</td>
+                  <td style="padding:3px 6px; border:1px solid #e2e8f0; text-align:center; font-weight:700;">2</td>
                   <td style="padding:3px 8px; border:1px solid #e2e8f0;">ค่ายานพาหนะ การเดินทาง และน้ำมันเชื้อเพลิง</td>
                   <td style="padding:3px 6px; border:1px solid #e2e8f0; text-align:right; font-family:monospace; font-weight:700; color:#08539E;">${Number(exp.expTravel || 0).toLocaleString()}</td>
                   <td style="padding:3px 6px; border:1px solid #e2e8f0; text-align:center;">${d.actualExpensesTotal > 0 ? ((Number(exp.expTravel || 0) / d.actualExpensesTotal) * 100).toFixed(1) : '0.0'}%</td>
                   <td style="padding:3px 8px; border:1px solid #e2e8f0; font-size:9pt; color:#475569;">รถตู้บริษัทและค่าน้ำมันเชื้อเพลิงตามจริง</td>
                 </tr>
                 <tr>
-                  <td style="padding:3px 6px; border:1px solid #e2e8f0; text-align:center; font-weight:700;">๓</td>
+                  <td style="padding:3px 6px; border:1px solid #e2e8f0; text-align:center; font-weight:700;">3</td>
                   <td style="padding:3px 8px; border:1px solid #e2e8f0;">ค่าห้องพักและที่พักทีมงาน/วิทยากร</td>
                   <td style="padding:3px 6px; border:1px solid #e2e8f0; text-align:right; font-family:monospace; font-weight:700; color:#08539E;">${Number(exp.expAccom || 0).toLocaleString()}</td>
                   <td style="padding:3px 6px; border:1px solid #e2e8f0; text-align:center;">${d.actualExpensesTotal > 0 ? ((Number(exp.expAccom || 0) / d.actualExpensesTotal) * 100).toFixed(1) : '0.0'}%</td>
                   <td style="padding:3px 8px; border:1px solid #e2e8f0; font-size:9pt; color:#475569;">พักตามระเบียบสวัสดิการบริษัท</td>
                 </tr>
                 <tr style="background:#f8fafc;">
-                  <td style="padding:3px 6px; border:1px solid #e2e8f0; text-align:center; font-weight:700;">๔</td>
+                  <td style="padding:3px 6px; border:1px solid #e2e8f0; text-align:center; font-weight:700;">4</td>
                   <td style="padding:3px 8px; border:1px solid #e2e8f0;">ค่าอาหารกลางวัน อาหารว่าง และเครื่องดื่ม (Break)</td>
                   <td style="padding:3px 6px; border:1px solid #e2e8f0; text-align:right; font-family:monospace; font-weight:700; color:#08539E;">${Number(exp.expFood || 0).toLocaleString()}</td>
                   <td style="padding:3px 6px; border:1px solid #e2e8f0; text-align:center;">${d.actualExpensesTotal > 0 ? ((Number(exp.expFood || 0) / d.actualExpensesTotal) * 100).toFixed(1) : '0.0'}%</td>
                   <td style="padding:3px 8px; border:1px solid #e2e8f0; font-size:9pt; color:#475569;">เฉลี่ย ฿${(Number(exp.expFood || 0) / (d.evalCount || 50)).toFixed(1)}/คน ครบถ้วนตามมาตรฐาน</td>
                 </tr>
                 <tr>
-                  <td style="padding:3px 6px; border:1px solid #e2e8f0; text-align:center; font-weight:700;">๕</td>
+                  <td style="padding:3px 6px; border:1px solid #e2e8f0; text-align:center; font-weight:700;">5</td>
                   <td style="padding:3px 8px; border:1px solid #e2e8f0;">ค่าเอกสารสิ่งพิมพ์ คู่มือ และชุดอุปกรณ์การเรียน</td>
                   <td style="padding:3px 6px; border:1px solid #e2e8f0; text-align:right; font-family:monospace; font-weight:700; color:#08539E;">${Number(exp.expDocKit || 0).toLocaleString()}</td>
                   <td style="padding:3px 6px; border:1px solid #e2e8f0; text-align:center;">${d.actualExpensesTotal > 0 ? ((Number(exp.expDocKit || 0) / d.actualExpensesTotal) * 100).toFixed(1) : '0.0'}%</td>
                   <td style="padding:3px 8px; border:1px solid #e2e8f0; font-size:9pt; color:#475569;">ชุดคู่มือ Active Learning และเอกสารแจกครบทุกคน</td>
                 </tr>
                 <tr style="background:#f8fafc;">
-                  <td style="padding:3px 6px; border:1px solid #e2e8f0; text-align:center; font-weight:700;">๖</td>
+                  <td style="padding:3px 6px; border:1px solid #e2e8f0; text-align:center; font-weight:700;">6</td>
                   <td style="padding:3px 8px; border:1px solid #e2e8f0;">ค่าเช่าสถานที่ โสตทัศนูปกรณ์ และห้องประชุม</td>
                   <td style="padding:3px 6px; border:1px solid #e2e8f0; text-align:right; font-family:monospace; font-weight:700; color:#08539E;">${Number(exp.expVenue || 0).toLocaleString()}</td>
                   <td style="padding:3px 6px; border:1px solid #e2e8f0; text-align:center;">${d.actualExpensesTotal > 0 ? ((Number(exp.expVenue || 0) / d.actualExpensesTotal) * 100).toFixed(1) : '0.0'}%</td>
                   <td style="padding:3px 8px; border:1px solid #e2e8f0; font-size:9pt; color:#475569;">${Number(exp.expVenue || 0) === 0 ? 'สถานศึกษาให้ความอนุเคราะห์ห้องประชุมฟรี' : 'ค่าเช่าห้องประชุม'}</td>
                 </tr>
                 <tr>
-                  <td style="padding:3px 6px; border:1px solid #e2e8f0; text-align:center; font-weight:700;">๗</td>
+                  <td style="padding:3px 6px; border:1px solid #e2e8f0; text-align:center; font-weight:700;">7</td>
                   <td style="padding:3px 8px; border:1px solid #e2e8f0;">ค่าของที่ระลึก เกียรติบัตร ป้ายไวนิล และเบ็ดเตล็ด</td>
                   <td style="padding:3px 6px; border:1px solid #e2e8f0; text-align:right; font-family:monospace; font-weight:700; color:#08539E;">${Number(exp.expMisc || 0).toLocaleString()}</td>
                   <td style="padding:3px 6px; border:1px solid #e2e8f0; text-align:center;">${d.actualExpensesTotal > 0 ? ((Number(exp.expMisc || 0) / d.actualExpensesTotal) * 100).toFixed(1) : '0.0'}%</td>
@@ -6935,7 +6954,7 @@
                 <!-- Total Row -->
                 <tr style="background:#eff6ff; font-weight:700; border-top:2px solid #08539E;">
                   <td colspan="2" style="padding:5px 8px; border:1px solid #cbd5e1; text-align:right; color:#08539E;">
-                    รวมค่าใช้จ่ายจริงทั้งสิ้น ๗ หมวด (Total Actual Expenses):
+                    รวมค่าใช้จ่ายจริงทั้งสิ้น 7 หมวด (Total Actual Expenses):
                   </td>
                   <td style="padding:5px 6px; border:1px solid #cbd5e1; text-align:right; font-family:monospace; font-size:11pt; color:#08539E;">
                     ${Number(d.actualExpensesTotal || d.actualBudget).toLocaleString()}
@@ -6951,7 +6970,7 @@
 
           <!-- SECTION 4: QUALITATIVE FEEDBACK & INSIGHTS -->
           <div style="background:#f8fafc; border:1px solid #cbd5e1; border-radius:8px; padding:8px 12px; margin-bottom:12px; font-size:10.5pt;">
-            <strong style="color:#08539E;">๓. ข้อคิดเห็นและข้อเสนอแนะเชิงคุณภาพจากผู้เข้าอบรม:</strong>
+            <strong style="color:#08539E;">4. ข้อคิดเห็นและข้อเสนอแนะเชิงคุณภาพจากผู้เข้าอบรม:</strong>
             <p style="margin:3px 0 0 0; color:#334155; line-height:1.4;">
               ผู้เข้ารับการอบรมมีความพึงพอใจระดับดีเยี่ยมต่อการถ่ายทอดของวิทยากร สื่อการสอนและชุดกิจกรรมมีความน่าสนใจ สอดคล้องกับการจัดการเรียนรู้แบบ Active Learning ในชั้นเรียนจริง โดยผู้เข้าอบรมเสนอแนะให้บริษัท ไทยวัฒนาพานิช จำกัด จัดกิจกรรมเชิงปฏิบัติการและเวิร์กช็อปต่อเนื่องในระดับเขตพื้นที่การศึกษาต่อไป
             </p>
@@ -6960,7 +6979,7 @@
           <!-- SECTION 4.5: DUAL QR CODE VERIFICATION & DOCUMENT REPOSITORY HUB -->
           <div style="background:#ffffff; border:1.5px solid #08539E; border-radius:8px; padding:10px 14px; margin-bottom:12px;">
             <div style="font-size:11.5pt; font-weight:700; color:#08539E; margin-bottom:8px; display:flex; align-items:center; justify-content:space-between;">
-              <span>๓. ช่องทางสแกน QR Code สำหรับผู้เข้าอบรม และลิงก์แหล่งเก็บไฟล์โครงการ</span>
+              <span>5. ช่องทางสแกน QR Code สำหรับผู้เข้าอบรม และลิงก์แหล่งเก็บไฟล์โครงการ</span>
               <span style="font-size:8.5pt; color:#64748b; font-weight:normal;">สแกนผ่านสมาร์ทโฟนได้ทันที</span>
             </div>
 
@@ -6971,7 +6990,7 @@
                   <img src="https://api.qrserver.com/v1/create-qr-code/?size=110x110&data=${encodeURIComponent(window.location.origin + (window.location.pathname.endsWith('/') ? window.location.pathname + 'survey.html' : window.location.pathname.replace(/index\.html$/, 'survey.html')) + '?t=' + (d.eventId === 'EVT-DEMO-2026' ? 'demo-active-learning-2026' : d.eventId))}" style="width:78px; height:78px; display:block;" alt="QR แบบประเมิน 10 ข้อ">
                 </div>
                 <div>
-                  <div style="font-size:10.5pt; font-weight:700; color:#1e3a8a;">๑. QR แบบประเมินผล ๑๐ ข้อ</div>
+                  <div style="font-size:10.5pt; font-weight:700; color:#1e3a8a;">1. QR แบบประเมินผล 10 ข้อ</div>
                   <div style="font-size:8.5pt; color:#475569; margin-top:2px;">สแกนเพื่อตอบแบบประเมินความพึงพอใจและรับเกียรติบัตร</div>
                   <div style="font-size:7.5pt; color:#2563eb; font-family:monospace; margin-top:4px;">survey.html?t=${d.eventId}</div>
                 </div>
@@ -6983,7 +7002,7 @@
                   <img src="https://api.qrserver.com/v1/create-qr-code/?size=110x110&data=${encodeURIComponent(d.resourceLink || 'https://drive.google.com')}" style="width:78px; height:78px; display:block;" alt="QR เอกสารและภาพโครงการ">
                 </div>
                 <div>
-                  <div style="font-size:10.5pt; font-weight:700; color:#b45309;">๒. QR แหล่งเก็บไฟล์ & ภาพอบรม</div>
+                  <div style="font-size:10.5pt; font-weight:700; color:#b45309;">2. QR แหล่งเก็บไฟล์ & ภาพอบรม</div>
                   <div style="font-size:8.5pt; color:#78350f; margin-top:2px;">สแกนดาวน์โหลดคู่มือ สไลด์ และภาพกิจกรรมโครงการ</div>
                   <div style="font-size:7.5pt; color:#b45309; font-family:monospace; margin-top:4px;">${d.resourceLink ? d.resourceLink.substring(0, 38) + '...' : 'https://drive.google.com/...'}</div>
                 </div>
@@ -7058,7 +7077,7 @@
                 <span style="font-size:16pt;">🌟</span>
                 <div>
                   <div style="font-size:12pt; font-weight:800; letter-spacing:0.5px; line-height:1.2;">เอกสารตัวอย่างการใช้ระบบ (End-to-End System Demonstration Exemplar)</div>
-                  <div style="font-size:8.5pt; opacity:0.95;">สาธิตกระบวนการทำงานครบวงจร: ขอจัดอบรม &rarr; ตรวจวิชาการ &rarr; อนุมัติและลงนาม &rarr; สแกน QR ทำแบบประเมิน &rarr; สรุปค่าใช้จ่ายจริง ๗ หมวด</div>
+                  <div style="font-size:8.5pt; opacity:0.95;">สาธิตกระบวนการทำงานครบวงจร: ขอจัดอบรม &rarr; ตรวจวิชาการ &rarr; อนุมัติและลงนาม &rarr; สแกน QR ทำแบบประเมิน &rarr; สรุปค่าใช้จ่ายจริง 7 หมวด</div>
                 </div>
               </div>
               <div style="text-align:right; font-size:8.5pt; font-weight:700; background:rgba(255,255,255,0.2); padding:3px 8px; border-radius:4px; border:1px solid rgba(255,255,255,0.4); white-space:nowrap;">
@@ -7121,7 +7140,7 @@
 
             <!-- Paragraph 1: Background & Team A Proposal -->
             <div class="a4-memo-section-title" style="font-weight:700; color:#08539E;">
-              ๑. ความเป็นมาและวัตถุประสงค์ (ข้อเสนอจากฝ่ายขาย - ทีม A)
+              1. ความเป็นมาและวัตถุประสงค์ (ข้อเสนอจากฝ่ายขาย - ทีม A)
             </div>
             <div class="a4-memo-indent" style="text-indent:2.5cm; margin-bottom:8px;">
               ตามที่ฝ่ายขาย (ทีม A) โดย <strong>${d.saleName}</strong> (${d.saleCompany}) ได้ประสานงานร่วมกับ <strong>${d.schoolName}</strong> จังหวัด${d.province} และมีความประสงค์ขออนุมัติจัดกิจกรรมอบรมวิชาการ ประเภทกิจกรรม "${d.activityType}" ในหัวข้อเรื่อง "<strong>${d.courseTopic}</strong>" โดยมีกลุ่มเป้าหมายผู้เข้าร่วมอบรมเป็นผู้บริหารสถานศึกษา คณะครู และบุคลากรทางการศึกษาจำนวนทั้งสิ้น <strong>${(d.expectedTrainees || 50).toLocaleString()} คน</strong> ทั้งนี้ มีวัตถุประสงค์หลักเพื่อ${d.objective} และได้กำหนดเป้าหมายยอดขายสื่อการเรียนรู้สืบเนื่องจากการจัดโครงการครั้งนี้เป็นจำนวนเงิน <strong>฿${Number(d.targetSales).toLocaleString()} บาท</strong>
@@ -7129,7 +7148,7 @@
 
             <!-- Paragraph 2: Academic Screening & Logistics Plan (Team B) -->
             <div class="a4-memo-section-title" style="font-weight:700; color:#6b21a8;">
-              ๒. แผนการจัดกิจกรรมเชิงวิชาการและโลจิสติกส์ (การกลั่นกรองจากฝ่ายวิชาการ - ทีม B)
+              2. แผนการจัดกิจกรรมเชิงวิชาการและโลจิสติกส์ (การกลั่นกรองจากฝ่ายวิชาการ - ทีม B)
             </div>
             <div class="a4-memo-indent" style="text-indent:2.5cm; margin-bottom:8px;">
               ฝ่ายวิชาการ (ทีม B) ได้ทำการตรวจสอบและกลั่นกรองความพร้อมของหลักสูตร สื่อการสอนประกอบการบรรยาย และมาตรฐานทางวิชาการเป็นที่เรียบร้อยแล้ว โดยกำหนดจัดกิจกรรมในวันที่ <strong>${d.eventDate}</strong> ณ ${d.venueType === 'โรงเรียน' ? d.schoolName : d.venueType} และได้ประสานงานมอบหมายให้ <strong>${d.teamBSpeaker || d.speakerType}</strong> ปฏิบัติหน้าที่เป็นวิทยากรผู้บรรยายหลัก สำหรับการเตรียมความพร้อมด้านโลจิสติกส์ ${d.needAccom ? `มีความจำเป็นต้องจัดสรรห้องพักจำนวน ${d.roomCount} ห้อง` : 'ไม่มีความจำเป็นต้องจัดสรรห้องพัก'} และ${d.needTrans ? `จัดเตรียมยานพาหนะเดินทาง (${d.transDetails || 'รถยนต์/รถตู้ส่วนกลาง'})` : 'ไม่ต้องจัดเตรียมยานพาหนะ'} โดยฝ่ายวิชาการมีความเห็นเพิ่มเติมว่า "<em>${d.teamBNotes}</em>"
@@ -7137,7 +7156,7 @@
 
             <!-- Paragraph 3: Budget Analysis & Justification -->
             <div class="a4-memo-section-title" style="font-weight:700; color:#0f766e;">
-              ๓. ประมาณการงบประมาณและผลตอบแทนที่คาดว่าจะได้รับ (Financial & ROI Justification)
+              3. ประมาณการงบประมาณและผลตอบแทนที่คาดว่าจะได้รับ (Financial & ROI Justification)
             </div>
             <div class="a4-memo-indent" style="text-indent:2.5cm; margin-bottom:8px;">
               ในการดำเนินงานครั้งนี้ ฝ่ายขาย (ทีม A) ได้เสนอของบประมาณเบื้องต้นจำนวน ฿${Number(d.estBudget).toLocaleString()} บาท และฝ่ายวิชาการ (ทีม B) ได้ตรวจสอบความเหมาะสมและตัดยอดค่าใช้จ่ายให้อยู่ในกรอบประหยัดสูงสุด โดยเสนองบประมาณตัดจ่ายจริงสุทธิจำนวน <strong>฿${Number(d.actualBudget).toLocaleString()} บาท</strong> ${savedAmount > 0 ? `(สามารถประหยัดงบประมาณของบริษัทฯ ได้จำนวน ฿${savedAmount.toLocaleString()} บาท)` : ''} ซึ่งคิดเป็นสัดส่วนงบประมาณต่องบประมาณยอดขายเป้าหมาย (Cost-to-Sales Ratio) เพียงร้อยละ <strong>${d.costRatio}%</strong> ซึ่งจัดอยู่ในเกณฑ์มาตรฐานความคุ้มค่าและความพร้อมในการสร้างยอดขายอย่างยั่งยืน
@@ -7145,7 +7164,7 @@
 
             <!-- Paragraph 4: Proposal Recommendation -->
             <div class="a4-memo-section-title" style="font-weight:700; color:#0f172a;">
-              ๔. ข้อพิจารณาและข้อเสนอเพื่อโปรดอนุมัติ
+              4. ข้อพิจารณาและข้อเสนอเพื่อโปรดอนุมัติ
             </div>
             <div class="a4-memo-indent" style="text-indent:2.5cm; margin-bottom:12px;">
               ฝ่ายขายและฝ่ายวิชาการพิจารณาร่วมกันแล้วเห็นว่า โครงการจัดกิจกรรมอบรมวิชาการดังกล่าวจะช่วยเสริมสร้างภาพลักษณ์ความเป็นเลิศทางวิชาการของบริษัท ไทยวัฒนาพานิช จำกัด และสนับสนุนการบรรลุเป้าหมายยอดขายของบริษัทฯ ได้อย่างมีประสิทธิภาพ จึงเห็นควรพิจารณาอนุมัติให้ดำเนินการจัดกิจกรรม พร้อมอนุมัติกรอบวงเงินงบประมาณจำนวน <strong>฿${Number(d.actualBudget).toLocaleString()} บาท</strong> เพื่อให้คณะทำงานสามารถเตรียมการปฏิบัติงานได้ตามกำหนดการ
@@ -7230,7 +7249,7 @@
                 <span style="font-size:16pt;">🌟</span>
                 <div>
                   <div style="font-size:12pt; font-weight:800; letter-spacing:0.5px; line-height:1.2;">เอกสารตัวอย่างการใช้ระบบ (End-to-End System Demonstration Exemplar)</div>
-                  <div style="font-size:8.5pt; opacity:0.95;">สาธิตกระบวนการทำงานครบวงจร: ขอจัดอบรม &rarr; ตรวจวิชาการ &rarr; อนุมัติและลงนาม &rarr; สแกน QR ทำแบบประเมิน &rarr; สรุปค่าใช้จ่ายจริง ๗ หมวด</div>
+                  <div style="font-size:8.5pt; opacity:0.95;">สาธิตกระบวนการทำงานครบวงจร: ขอจัดอบรม &rarr; ตรวจวิชาการ &rarr; อนุมัติและลงนาม &rarr; สแกน QR ทำแบบประเมิน &rarr; สรุปค่าใช้จ่ายจริง 7 หมวด</div>
                 </div>
               </div>
               <div style="text-align:right; font-size:8.5pt; font-weight:700; background:rgba(255,255,255,0.2); padding:3px 8px; border-radius:4px; border:1px solid rgba(255,255,255,0.4); white-space:nowrap;">
