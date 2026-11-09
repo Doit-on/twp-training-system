@@ -334,6 +334,46 @@
 
       </div>
 
+      <!-- EXCLUSIVE UNLOCKED REWARD: CLOUD DRIVE & TRAINING MATERIALS (ACCESSIBLE ONLY AFTER SUBMITTING SURVEY) -->
+      <div id="unlockedResourceCard" class="bg-gradient-to-r from-amber-500/10 via-amber-500/5 to-transparent border-2 border-amber-300 rounded-2xl p-4 sm:p-5 shadow-sm space-y-3.5">
+        <div class="flex items-center justify-between">
+          <div class="flex items-center space-x-2.5">
+            <div class="w-10 h-10 rounded-xl bg-amber-500 text-white flex items-center justify-center text-lg shadow-sm">
+              <i class="fa-solid fa-gift"></i>
+            </div>
+            <div>
+              <div class="flex items-center gap-1.5">
+                <h4 class="text-xs sm:text-sm font-extrabold text-amber-950">คลังเอกสาร สื่อการสอน และภาพถ่ายโครงการ (Google Drive)</h4>
+                <span class="text-[9px] bg-emerald-100 text-emerald-800 font-bold px-2 py-0.5 rounded-full border border-emerald-300 flex items-center gap-1">
+                  <i class="fa-solid fa-unlock"></i> ปลดล็อกแล้ว
+                </span>
+              </div>
+              <p class="text-[11px] text-amber-800 mt-0.5">ท่านทำแบบประเมินเสร็จสมบูรณ์แล้ว สามารถเข้าถึงและดาวน์โหลดเอกสารคู่มือ สไลด์ และภาพกิจกรรมได้ทันที</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 items-center bg-white p-3 rounded-xl border border-amber-200">
+          <!-- QR Code for Drive (for participants on PC wanting to scan to mobile) -->
+          <div class="flex flex-col items-center justify-center text-center p-1 sm:border-r border-slate-100">
+            <div id="unlockedDriveQrWrapper" class="p-1 bg-white border border-amber-300 rounded-lg shadow-xs"></div>
+            <span class="text-[9px] text-slate-500 mt-1 font-medium">สแกนเปิด Drive บนมือถือ</span>
+          </div>
+
+          <!-- Direct Drive Access Button & Link -->
+          <div class="sm:col-span-2 space-y-2">
+            <a id="btnOpenUnlockedDrive" href="https://drive.google.com/drive/u/0/folders/1GxHFu2kMPwtl7j3PvnD6wHRb_YwlQGqk" target="_blank" class="w-full py-2.5 px-4 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-white font-bold rounded-xl text-xs transition flex items-center justify-center space-x-2 shadow-sm btn-touch">
+              <i class="fa-brands fa-google-drive text-sm"></i>
+              <span>เข้าสู่ Google Drive เพื่อดาวน์โหลดไฟล์ & สื่อการสอน</span>
+              <i class="fa-solid fa-arrow-up-right-from-square text-[10px]"></i>
+            </a>
+            <p class="text-[10px] text-slate-400">
+              * แหล่งรวบรวมไฟล์สไลด์บรรยาย คู่มือการจัดกิจกรรม และโฟลเดอร์ภาพถ่ายความละเอียดสูง
+            </p>
+          </div>
+        </div>
+      </div>
+
       <!-- FULL E-CERTIFICATE DISPLAY & PREVIEW CONTAINER -->
       <div class="space-y-2">
         <div class="flex items-center justify-between px-1 text-xs">
@@ -527,7 +567,8 @@
       courseTitle: 'Active Learning สู่สมรรถนะผู้เรียนด้วยสื่อนวัตกรรมดิจิทัล',
       speakerName: 'ศ.ดร.ประสาน ปัญญาเลิศ',
       eventDate: '๙ พฤศจิกายน ๒๕๖๙',
-      eventDateEn: 'November 9, 2026'
+      eventDateEn: 'November 9, 2026',
+      resourceLink: 'https://drive.google.com/drive/u/0/folders/1GxHFu2kMPwtl7j3PvnD6wHRb_YwlQGqk'
     };
 
     // Client Fingerprint
@@ -620,6 +661,7 @@
             currentParticipant.courseTitle = found.courseTopic || currentParticipant.courseTitle;
             currentParticipant.speakerName = found.teamBSpeaker || found.speakerType || currentParticipant.speakerName;
             currentParticipant.school = found.schoolName || currentParticipant.school;
+            currentParticipant.resourceLink = found.resourceLink || currentParticipant.resourceLink;
             if (found.eventDate) {
               const d = new Date(found.eventDate);
               currentParticipant.eventDate = d.toLocaleDateString('th-TH', { year: 'numeric', month: 'long', day: 'numeric' });
@@ -746,6 +788,23 @@
       document.getElementById('viewCertRefId').innerText = certId || currentParticipant.certId;
 
       updateCertLivePreview();
+
+      // Render Unlocked Google Drive QR Code (Accessible only after evaluation)
+      const driveQrWrap = document.getElementById('unlockedDriveQrWrapper');
+      if (driveQrWrap) {
+        driveQrWrap.innerHTML = '';
+        const driveUrl = currentParticipant.resourceLink || 'https://drive.google.com/drive/u/0/folders/1GxHFu2kMPwtl7j3PvnD6wHRb_YwlQGqk';
+        const driveBtn = document.getElementById('btnOpenUnlockedDrive');
+        if (driveBtn) driveBtn.href = driveUrl;
+        new QRCode(driveQrWrap, {
+          text: driveUrl,
+          width: 70,
+          height: 70,
+          colorDark: '#b45309',
+          colorLight: '#ffffff',
+          correctLevel: QRCode.CorrectLevel.M
+        });
+      }
 
       // Generate Verification QR Code inside certificate
       const qrWrap = document.getElementById('certQrWrapper');
