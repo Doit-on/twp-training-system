@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-  <title>Training Center TWP - ระบบบริหารคำขอจัดอบรมและประเมินผล v1.11.0</title>
+  <title>Training Center TWP - ระบบบริหารคำขอจัดอบรมและประเมินผล v1.13.0</title>
   <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
   <!-- Google Fonts: Sarabun -->
@@ -345,7 +345,12 @@
             </div>
 
             <!-- Admin Button -->
-            <button onclick="openCustomerDirectoryModal()" title="ตรวจสอบฐานข้อมูลลูกค้า สพม. (2,363 โรงเรียน)" class="bg-emerald-600/80 hover:bg-emerald-600 text-emerald-100 hover:text-white px-2.5 py-1.5 rounded-lg border border-emerald-400/40 text-xs font-semibold flex items-center space-x-1.5 transition btn-tactile">
+            <button onclick="viewDemoExemplarCase()" title="ดูตัวอย่างการจัดงานครบวงจร 1 งานตั้งแต่ต้นจนจบ (Demo Case)" class="bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-white px-2.5 py-1.5 rounded-lg border border-amber-300/40 text-xs font-bold flex items-center space-x-1.5 transition btn-tactile shadow-sm">
+              <i class="fa-solid fa-star text-yellow-200"></i>
+              <span class="hidden lg:inline">ตัวอย่างการจัดงานครบวงจร</span>
+              <span class="lg:hidden">ตัวอย่าง Demo</span>
+            </button>
+          <button onclick="openCustomerDirectoryModal()" title="ตรวจสอบฐานข้อมูลลูกค้า สพม. (2,363 โรงเรียน)" class="bg-emerald-600/80 hover:bg-emerald-600 text-emerald-100 hover:text-white px-2.5 py-1.5 rounded-lg border border-emerald-400/40 text-xs font-semibold flex items-center space-x-1.5 transition btn-tactile">
             <i class="fa-solid fa-school text-emerald-200"></i>
             <span class="hidden md:inline">ฐานข้อมูลลูกค้า (2,363)</span>
           </button>
@@ -388,6 +393,11 @@
         <button onclick="switchTab('evaluation')" id="tabBtn-evaluation" class="tab-btn py-3 px-2 border-b-2 border-transparent hover:text-blue-600 flex items-center space-x-2 whitespace-nowrap">
           <i class="fa-solid fa-qrcode text-indigo-600"></i>
           <span>QR & ผลประเมินปิดลูป</span>
+        </button>
+        <button onclick="switchTab('teamBExpenses')" id="tabBtn-teamBExpenses" class="tab-btn py-3 px-2 border-b-2 border-transparent hover:text-blue-600 flex items-center space-x-2 whitespace-nowrap">
+          <i class="fa-solid fa-coins text-amber-500"></i>
+          <span>ทีม B: สรุปค่าใช้จ่ายจริง</span>
+          <span id="badgeExpenses" class="bg-amber-100 text-amber-800 text-[10px] font-bold px-1.5 py-0.5 rounded-full">1</span>
         </button>
       </div>
     </div>
@@ -736,6 +746,22 @@
             </div>
           </div>
 
+          <!-- Resource & Cloud Storage Link -->
+          <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 space-y-2">
+            <label class="block text-xs font-semibold text-slate-700 flex items-center justify-between">
+              <span class="flex items-center space-x-1.5">
+                <i class="fa-solid fa-cloud-arrow-up text-blue-600"></i>
+                <span>ลิงก์แหล่งเก็บไฟล์ / สื่อการสอน / รูปภาพการอบรม (Google Drive / OneDrive URL)</span>
+              </span>
+              <span class="text-[10px] text-blue-600 font-medium">ระบบจะสร้าง QR Code ไฟล์ให้อัตโนมัติ</span>
+            </label>
+            <div class="relative">
+              <i class="fa-brands fa-google-drive absolute left-3 top-2.5 text-slate-400 text-sm"></i>
+              <input type="url" id="resourceLink" placeholder="วางลิงก์ Google Drive, OneDrive หรือโฟลเดอร์ภาพถ่ายโครงการ เช่น https://drive.google.com/..." class="w-full bg-white border border-slate-300 rounded-lg pl-9 pr-3 py-2 text-xs focus:ring-2 focus:ring-blue-500 focus:outline-none">
+            </div>
+            <span class="text-[10px] text-slate-400 block">* แนบลิงก์สำหรับให้ผู้เข้าอบรมสแกน QR ดาวน์โหลดเอกสารประกอบ และให้ผู้บริหารตรวจดูหลักฐาน</span>
+          </div>
+
           <!-- Real-Time Cost-to-Sales ROI Calculator -->
           <div class="bg-blue-50/70 p-4 rounded-xl border border-blue-200 space-y-3">
             <div class="flex items-center justify-between">
@@ -879,6 +905,315 @@
       </div>
     </section>
 
+    <!-- ======================================================== -->
+    <!-- TAB: TEAM B ACTUAL EXPENSE SETTLEMENT & VARIANCE ENGINE -->
+    <!-- ======================================================== -->
+    <section id="view-teamBExpenses" class="hidden space-y-6">
+      <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-4 sm:p-6 space-y-6">
+        
+        <!-- Header & Instructions -->
+        <div class="flex flex-col md:flex-row md:items-center justify-between pb-4 border-b border-slate-200 gap-3">
+          <div class="flex items-center space-x-3">
+            <div class="w-10 h-10 rounded-xl bg-amber-100 text-amber-700 flex items-center justify-center text-xl shadow-sm">
+              <i class="fa-solid fa-coins"></i>
+            </div>
+            <div>
+              <h2 class="text-base sm:text-lg font-bold text-slate-900 flex items-center gap-2">
+                <span>บันทึกและวิเคราะห์ค่าใช้จ่ายจริงในการจัดอบรม (Team B Actual Expenses)</span>
+                <span class="bg-amber-100 text-amber-800 text-[10px] font-bold px-2 py-0.5 rounded-full border border-amber-300">7 หมวดมาตรฐาน</span>
+              </h2>
+              <p class="text-xs text-slate-500">บันทึกยอดเงินใช้จริง เปรียบเทียบกับงบที่ขอ (ทีม A) และงบตัดจ่าย (ทีม B) พร้อมวิเคราะห์ค่าใช้จ่ายต่อหัว (Cost per Head)</p>
+            </div>
+          </div>
+
+          <div class="flex items-center space-x-2">
+            <button onclick="loadDemoProjectForExpense()" class="px-3 py-1.5 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-white rounded-xl text-xs font-bold transition btn-tactile shadow-sm flex items-center space-x-1.5">
+              <i class="fa-solid fa-star text-yellow-200"></i>
+              <span>โหลดเคสตัวอย่าง (Demo Case)</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Event Selection Selector Bar -->
+        <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 space-y-3">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+            <label class="block text-xs font-bold text-slate-700 flex items-center gap-1.5">
+              <i class="fa-solid fa-calendar-check text-blue-600"></i>
+              <span>เลือกโครงการ/งานอบรมที่ต้องการตัดยอดค่าใช้จ่ายจริง:</span>
+            </label>
+            <span id="expenseEventStatusBadge" class="text-xs font-bold px-2.5 py-0.5 rounded-full bg-slate-200 text-slate-700 inline-block self-start sm:self-auto">
+              กรุณาเลือกงานอบรม
+            </span>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+            <div class="md:col-span-2">
+              <select id="expenseEventSelect" onchange="onExpenseEventSelect(this.value)" class="w-full bg-white border border-slate-300 rounded-lg p-2.5 text-xs font-semibold text-slate-800 focus:ring-2 focus:ring-blue-500 focus:outline-none">
+                <!-- Dynamically populated -->
+              </select>
+            </div>
+            <div>
+              <div id="expenseEventInfoBrief" class="text-xs text-slate-600 p-2 bg-white rounded-lg border border-slate-200 flex items-center justify-between">
+                <span>โรงเรียน: <strong id="expenseBriefSchool" class="text-slate-800">-</strong></span>
+                <span>ผู้เข้าอบรม: <strong id="expenseBriefAttendees" class="text-emerald-700">- คน</strong></span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 7 Recommended Standard Expense Categories -->
+        <div class="space-y-3">
+          <div class="flex items-center justify-between">
+            <h3 class="text-xs font-bold text-slate-700 uppercase tracking-wider flex items-center gap-1.5">
+              <i class="fa-solid fa-list-check text-amber-600"></i>
+              <span>ระบุค่าใช้จ่ายจริงแยกตาม ๗ หมวดมาตรฐาน (Recommended 7 Expense Dimensions)</span>
+            </h3>
+            <span class="text-[11px] text-slate-500">* คำนวณยอดรวมและผลต่างแบบ Real-Time</span>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3.5">
+            
+            <!-- Category 1: Speaker Honorarium -->
+            <div class="bg-white p-3.5 rounded-xl border border-slate-200 shadow-xs hover:border-blue-400 transition space-y-1.5">
+              <div class="flex items-center justify-between">
+                <span class="text-xs font-bold text-slate-800 flex items-center gap-1.5">
+                  <span class="w-5 h-5 rounded-full bg-blue-100 text-blue-700 text-[10px] font-bold flex items-center justify-center">1</span>
+                  <span>ค่าตอบแทนวิทยากร / ผู้ช่วย</span>
+                </span>
+                <span class="text-[10px] text-slate-400">Honorarium</span>
+              </div>
+              <div class="relative">
+                <span class="absolute left-3 top-2 text-xs font-bold text-slate-400">฿</span>
+                <input type="number" id="expSpeaker" min="0" value="0" oninput="calculateRealtimeExpenses()" placeholder="0" class="w-full bg-slate-50 border border-slate-300 rounded-lg pl-7 pr-3 py-1.5 text-xs font-mono font-bold text-slate-800 focus:bg-white focus:ring-2 focus:ring-blue-500 focus:outline-none">
+              </div>
+              <p class="text-[10px] text-slate-500">แนะนำ: ค่าบรรยายวิทยากรหลัก, วิทยากรผู้ช่วย, ผู้เชี่ยวชาญประจำกลุ่ม</p>
+            </div>
+
+            <!-- Category 2: Travel & Fuel -->
+            <div class="bg-white p-3.5 rounded-xl border border-slate-200 shadow-xs hover:border-blue-400 transition space-y-1.5">
+              <div class="flex items-center justify-between">
+                <span class="text-xs font-bold text-slate-800 flex items-center gap-1.5">
+                  <span class="w-5 h-5 rounded-full bg-emerald-100 text-emerald-700 text-[10px] font-bold flex items-center justify-center">2</span>
+                  <span>ค่ายานพาหนะ และน้ำมันเชื้อเพลิง</span>
+                </span>
+                <span class="text-[10px] text-slate-400">Travel & Fuel</span>
+              </div>
+              <div class="relative">
+                <span class="absolute left-3 top-2 text-xs font-bold text-slate-400">฿</span>
+                <input type="number" id="expTravel" min="0" value="0" oninput="calculateRealtimeExpenses()" placeholder="0" class="w-full bg-slate-50 border border-slate-300 rounded-lg pl-7 pr-3 py-1.5 text-xs font-mono font-bold text-slate-800 focus:bg-white focus:ring-2 focus:ring-blue-500 focus:outline-none">
+              </div>
+              <p class="text-[10px] text-slate-500">แนะนำ: ค่าน้ำมันรถบริษัท, ค่าทางด่วน, ค่าตั๋วเครื่องบิน/รถไฟ, ค่าเช่าเหมารถตู้</p>
+            </div>
+
+            <!-- Category 3: Accommodation -->
+            <div class="bg-white p-3.5 rounded-xl border border-slate-200 shadow-xs hover:border-blue-400 transition space-y-1.5">
+              <div class="flex items-center justify-between">
+                <span class="text-xs font-bold text-slate-800 flex items-center gap-1.5">
+                  <span class="w-5 h-5 rounded-full bg-purple-100 text-purple-700 text-[10px] font-bold flex items-center justify-center">3</span>
+                  <span>ค่าห้องพักและที่พักทีมงาน/วิทยากร</span>
+                </span>
+                <span class="text-[10px] text-slate-400">Hotel & Stay</span>
+              </div>
+              <div class="relative">
+                <span class="absolute left-3 top-2 text-xs font-bold text-slate-400">฿</span>
+                <input type="number" id="expAccom" min="0" value="0" oninput="calculateRealtimeExpenses()" placeholder="0" class="w-full bg-slate-50 border border-slate-300 rounded-lg pl-7 pr-3 py-1.5 text-xs font-mono font-bold text-slate-800 focus:bg-white focus:ring-2 focus:ring-blue-500 focus:outline-none">
+              </div>
+              <p class="text-[10px] text-slate-500">แนะนำ: ค่าโรงแรมที่พักวิทยากรและทีมงานตามจำนวนคืนที่ปฏิบัติงาน</p>
+            </div>
+
+            <!-- Category 4: Food, Lunch & Coffee Break -->
+            <div class="bg-white p-3.5 rounded-xl border border-slate-200 shadow-xs hover:border-blue-400 transition space-y-1.5">
+              <div class="flex items-center justify-between">
+                <span class="text-xs font-bold text-slate-800 flex items-center gap-1.5">
+                  <span class="w-5 h-5 rounded-full bg-amber-100 text-amber-700 text-[10px] font-bold flex items-center justify-center">4</span>
+                  <span>ค่าอาหารกลางวัน และอาหารว่าง (Break)</span>
+                </span>
+                <span class="text-[10px] text-slate-400">Catering & Break</span>
+              </div>
+              <div class="relative">
+                <span class="absolute left-3 top-2 text-xs font-bold text-slate-400">฿</span>
+                <input type="number" id="expFood" min="0" value="0" oninput="calculateRealtimeExpenses()" placeholder="0" class="w-full bg-slate-50 border border-slate-300 rounded-lg pl-7 pr-3 py-1.5 text-xs font-mono font-bold text-slate-800 focus:bg-white focus:ring-2 focus:ring-blue-500 focus:outline-none">
+              </div>
+              <p class="text-[10px] text-slate-500">แนะนำ: อาหารกลางวันผู้เข้าอบรม, ขนมเบรกเช้า-บ่าย, น้ำดื่มและชา-กาแฟ</p>
+            </div>
+
+            <!-- Category 5: Training Materials & Kits -->
+            <div class="bg-white p-3.5 rounded-xl border border-slate-200 shadow-xs hover:border-blue-400 transition space-y-1.5">
+              <div class="flex items-center justify-between">
+                <span class="text-xs font-bold text-slate-800 flex items-center gap-1.5">
+                  <span class="w-5 h-5 rounded-full bg-rose-100 text-rose-700 text-[10px] font-bold flex items-center justify-center">5</span>
+                  <span>ค่าเอกสาร คู่มือ และชุดอุปกรณ์การเรียน</span>
+                </span>
+                <span class="text-[10px] text-slate-400">Materials & Kits</span>
+              </div>
+              <div class="relative">
+                <span class="absolute left-3 top-2 text-xs font-bold text-slate-400">฿</span>
+                <input type="number" id="expDocKit" min="0" value="0" oninput="calculateRealtimeExpenses()" placeholder="0" class="w-full bg-slate-50 border border-slate-300 rounded-lg pl-7 pr-3 py-1.5 text-xs font-mono font-bold text-slate-800 focus:bg-white focus:ring-2 focus:ring-blue-500 focus:outline-none">
+              </div>
+              <p class="text-[10px] text-slate-500">แนะนำ: เอกสารประกอบการสอน, คู่มือ Active Learning, สื่อตัวอย่าง, ปากกา สมุดโน้ต</p>
+            </div>
+
+            <!-- Category 6: Venue Rental & AV Tech -->
+            <div class="bg-white p-3.5 rounded-xl border border-slate-200 shadow-xs hover:border-blue-400 transition space-y-1.5">
+              <div class="flex items-center justify-between">
+                <span class="text-xs font-bold text-slate-800 flex items-center gap-1.5">
+                  <span class="w-5 h-5 rounded-full bg-indigo-100 text-indigo-700 text-[10px] font-bold flex items-center justify-center">6</span>
+                  <span>ค่าสถานที่ โสตทัศนูปกรณ์ และห้องประชุม</span>
+                </span>
+                <span class="text-[10px] text-slate-400">Venue & Tech</span>
+              </div>
+              <div class="relative">
+                <span class="absolute left-3 top-2 text-xs font-bold text-slate-400">฿</span>
+                <input type="number" id="expVenue" min="0" value="0" oninput="calculateRealtimeExpenses()" placeholder="0" class="w-full bg-slate-50 border border-slate-300 rounded-lg pl-7 pr-3 py-1.5 text-xs font-mono font-bold text-slate-800 focus:bg-white focus:ring-2 focus:ring-blue-500 focus:outline-none">
+              </div>
+              <p class="text-[10px] text-slate-500">แนะนำ: ค่าเช่าห้องประชุมโรงแรม, เครื่องเสียง, ไมค์ลอย, โปรเจกเตอร์ (ถ้าจัดที่โรงเรียนฟรีระบุ 0)</p>
+            </div>
+
+            <!-- Category 7: Souvenirs & Misc -->
+            <div class="bg-white p-3.5 rounded-xl border border-slate-200 shadow-xs hover:border-blue-400 transition space-y-1.5 md:col-span-2 lg:col-span-3">
+              <div class="flex items-center justify-between">
+                <span class="text-xs font-bold text-slate-800 flex items-center gap-1.5">
+                  <span class="w-5 h-5 rounded-full bg-teal-100 text-teal-700 text-[10px] font-bold flex items-center justify-center">7</span>
+                  <span>ค่าของที่ระลึก เกียรติบัตร ป้ายไวนิล และเบ็ดเตล็ด</span>
+                </span>
+                <span class="text-[10px] text-slate-400">Souvenirs, Certificates & Misc</span>
+              </div>
+              <div class="relative">
+                <span class="absolute left-3 top-2 text-xs font-bold text-slate-400">฿</span>
+                <input type="number" id="expMisc" min="0" value="0" oninput="calculateRealtimeExpenses()" placeholder="0" class="w-full bg-slate-50 border border-slate-300 rounded-lg pl-7 pr-3 py-1.5 text-xs font-mono font-bold text-slate-800 focus:bg-white focus:ring-2 focus:ring-blue-500 focus:outline-none">
+              </div>
+              <p class="text-[10px] text-slate-500">แนะนำ: ของที่ระลึกมอบให้ผู้บริหารโรงเรียน/วิทยากร, กรอบเกียรติบัตร, ป้ายไวนิลเวที, ป้ายชื่อผู้เข้าอบรม</p>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- Live Financial Summary & Triple Comparison Box -->
+        <div class="bg-slate-900 text-white rounded-2xl p-5 shadow-lg space-y-4">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between pb-3 border-b border-slate-800 gap-2">
+            <span class="text-xs font-bold uppercase tracking-wider text-amber-400 flex items-center gap-1.5">
+              <i class="fa-solid fa-scale-balanced"></i>
+              <span>สรุปผลการเปรียบเทียบงบประมาณ 3 มิติ (Triple Budget Comparison)</span>
+            </span>
+            <span class="text-[11px] text-slate-400 font-mono">หน่วย: บาท (THB)</span>
+          </div>
+
+          <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 text-center">
+            <div class="bg-slate-800/80 p-3 rounded-xl border border-slate-700">
+              <span class="text-[10px] text-slate-400 block">๑. งบขอเดิม (ทีม A)</span>
+              <span id="sumReqBudget" class="font-bold text-base font-mono text-slate-200">฿0</span>
+            </div>
+            <div class="bg-slate-800/80 p-3 rounded-xl border border-slate-700">
+              <span class="text-[10px] text-slate-400 block">๒. งบตัดจ่าย (ทีม B)</span>
+              <span id="sumApprovedBudget" class="font-bold text-base font-mono text-purple-300">฿0</span>
+            </div>
+            <div class="bg-slate-800/80 p-3 rounded-xl border border-amber-500/50 bg-amber-500/10">
+              <span class="text-[10px] text-amber-300 font-bold block">๓. รวมจ่ายจริง (7 หมวด)</span>
+              <span id="sumActualExpenses" class="font-bold text-lg font-mono text-amber-400">฿0</span>
+            </div>
+            <div class="bg-slate-800/80 p-3 rounded-xl border border-emerald-500/50 bg-emerald-500/10">
+              <span class="text-[10px] text-emerald-300 font-bold block">๔. เงินประหยัดสุทธิ</span>
+              <span id="sumSavedBudget" class="font-bold text-base font-mono text-emerald-400">฿0</span>
+            </div>
+          </div>
+
+          <!-- Cost Per Head & Variance Breakdown -->
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2 border-t border-slate-800 text-xs">
+            <div class="flex items-center justify-between p-2.5 bg-slate-800/40 rounded-xl">
+              <span class="text-slate-400">ค่าใช้จ่ายจริงต่อผู้เข้าอบรม:</span>
+              <strong id="sumCostPerHeadActual" class="font-mono text-amber-300 text-sm">฿0.00 / คน</strong>
+            </div>
+            <div class="flex items-center justify-between p-2.5 bg-slate-800/40 rounded-xl">
+              <span class="text-slate-400">เปรียบเทียบกับประมาณการต่อหัว:</span>
+              <strong id="sumCostPerHeadCompare" class="font-mono text-emerald-300 text-sm">ประหยัด ฿0.00 / คน</strong>
+            </div>
+          </div>
+
+          <!-- ======================================================== -->
+        <!-- TEAM B: EVENT PHOTO REPOSITORY & GOOGLE DRIVE SYNC CARD  -->
+        <!-- ======================================================== -->
+        <div class="bg-slate-50 p-4 sm:p-5 rounded-2xl border border-slate-200 space-y-4">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between pb-3 border-b border-slate-200 gap-2">
+            <div class="flex items-center space-x-2.5">
+              <div class="w-8 h-8 rounded-lg bg-blue-100 text-blue-700 flex items-center justify-center text-sm shadow-sm">
+                <i class="fa-solid fa-camera-retro"></i>
+              </div>
+              <div>
+                <h3 class="text-xs sm:text-sm font-bold text-slate-800 flex items-center gap-2">
+                  <span>คลังจัดเก็บภาพถ่ายกิจกรรมการอบรม (Team B Event Photos & Cloud Storage)</span>
+                  <span class="text-[10px] bg-blue-100 text-blue-700 px-2 py-0.5 rounded-full font-bold">Google Drive Sync</span>
+                </h3>
+                <p class="text-[11px] text-slate-500">เก็บภาพบรรยากาศการจัดอบรม วิทยากร และผู้เข้าอบรม เชื่อมตรงสู่ Google Drive</p>
+              </div>
+            </div>
+
+            <!-- Google Drive Direct Folder Link Button -->
+            <a href="https://drive.google.com/drive/u/0/folders/1GxHFu2kMPwtl7j3PvnD6wHRb_YwlQGqk" target="_blank" class="px-3 py-1.5 bg-white hover:bg-slate-100 text-blue-700 border border-blue-300 rounded-xl text-xs font-bold transition flex items-center space-x-1.5 shadow-xs btn-tactile">
+              <i class="fa-brands fa-google-drive text-amber-500 text-sm"></i>
+              <span>เปิดโฟลเดอร์ Google Drive รวมภาพ</span>
+              <i class="fa-solid fa-arrow-up-right-from-square text-[10px] text-slate-400"></i>
+            </a>
+          </div>
+
+          <!-- Photo Upload Selector & Drag & Drop Area -->
+          <div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
+            <!-- Upload Box -->
+            <div class="bg-white p-4 rounded-xl border-2 border-dashed border-blue-200 hover:border-blue-400 transition text-center space-y-2.5 flex flex-col items-center justify-center">
+              <div class="w-10 h-10 rounded-full bg-blue-50 text-blue-600 flex items-center justify-center text-lg">
+                <i class="fa-solid fa-cloud-arrow-up"></i>
+              </div>
+              <div>
+                <label for="eventPhotoFileInput" class="cursor-pointer text-xs font-bold text-blue-600 hover:text-blue-800 underline">
+                  คลิกเลือกภาพถ่ายกิจกรรม
+                </label>
+                <span class="text-xs text-slate-500"> หรือลากรูปมาวาง</span>
+                <p class="text-[10px] text-slate-400 mt-0.5">รองรับ JPG, PNG, WebP (เลือกได้หลายภาพ)</p>
+              </div>
+              <input type="file" id="eventPhotoFileInput" multiple accept="image/*" class="hidden" onchange="handleEventPhotoSelected(event)">
+              
+              <div class="w-full pt-1 flex gap-1.5">
+                <input type="text" id="eventPhotoCaptionInput" placeholder="คำบรรยายภาพ (เช่น บรรยากาศช่วงกิจกรรม)..." class="flex-1 bg-slate-50 border border-slate-200 rounded-lg px-2.5 py-1 text-xs focus:ring-1 focus:ring-blue-500 focus:outline-none">
+                <button type="button" onclick="uploadSelectedEventPhotos()" id="btnUploadPhotos" class="px-3 py-1 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-xs font-bold transition flex items-center gap-1 btn-tactile">
+                  <i class="fa-solid fa-upload"></i>
+                  <span>อัปโหลด</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- Active Gallery Grid -->
+            <div class="lg:col-span-2 space-y-2">
+              <div class="flex items-center justify-between text-xs">
+                <span class="font-bold text-slate-700">รูปภาพกิจกรรมในโครงการ: (<span id="eventPhotoCount">0</span> ภาพ)</span>
+                <span class="text-[10px] text-slate-400">* คลิกที่รูปเพื่อดูภาพขนาดเต็ม (Lightbox)</span>
+              </div>
+              <div id="eventPhotoGalleryGrid" class="grid grid-cols-2 sm:grid-cols-3 gap-2.5 max-h-[170px] overflow-y-auto custom-scrollbar p-1">
+                <!-- Populated dynamically -->
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Action Buttons -->
+          <div class="pt-3 flex flex-wrap items-center justify-between gap-3">
+            <div class="text-[11px] text-slate-400">
+              * ข้อมูลค่าใช้จ่ายจริงจะถูกนำไปอัปเดตลงใน <strong class="text-white">รายงานประเมินและวิเคราะห์ต้นทุน A4</strong> อัตโนมัติ
+            </div>
+            <div class="flex items-center space-x-2">
+              <button onclick="previewExpenseReportA4()" class="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-white rounded-xl text-xs font-bold transition btn-tactile border border-slate-600">
+                <i class="fa-solid fa-file-invoice mr-1 text-blue-400"></i>ดูรายงานสรุปประเมิน A4
+              </button>
+              <button onclick="saveEventExpenses()" class="px-6 py-2.5 bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl text-xs font-bold transition btn-tactile shadow-md flex items-center space-x-1.5">
+                <i class="fa-solid fa-floppy-disk text-amber-300"></i>
+                <span>ยืนยันและบันทึกค่าใช้จ่ายจริง</span>
+              </button>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+    </section>
+
   </main>
 
   <!-- ========================================== -->
@@ -969,32 +1304,111 @@
   </div>
 
   <!-- ========================================== -->
-  <!-- MODAL: QR CODE DISPLAY & SHARE LINK       -->
+  <!-- MODAL: DUAL QR CODE DISPLAY & SHARE HUB    -->
   <!-- ========================================== -->
+  
+  <!-- ========================================== -->
+  <!-- MODAL: PHOTO GALLERY LIGHTBOX PREVIEW      -->
+  <!-- ========================================== -->
+  <div id="photoLightboxModal" class="hidden fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-md flex items-center justify-center p-4" onclick="closePhotoLightbox()">
+    <div class="max-w-3xl w-full bg-slate-900 rounded-2xl overflow-hidden shadow-2xl space-y-3 p-4 border border-slate-800" onclick="event.stopPropagation()">
+      <div class="flex items-center justify-between text-white border-b border-slate-800 pb-2">
+        <div class="flex items-center space-x-2">
+          <i class="fa-solid fa-image text-blue-400"></i>
+          <span id="lightboxCaption" class="text-xs sm:text-sm font-bold truncate">ภาพกิจกรรมการอบรม</span>
+        </div>
+        <button onclick="closePhotoLightbox()" class="text-slate-400 hover:text-white text-lg"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+      <div class="flex justify-center items-center bg-black/40 rounded-xl overflow-hidden min-h-[300px] max-h-[70vh]">
+        <img id="lightboxImg" src="" alt="Event Photo" class="max-h-[68vh] max-w-full object-contain">
+      </div>
+      <div class="flex items-center justify-between text-xs text-slate-400 pt-1">
+        <span id="lightboxTimestamp" class="font-mono text-[11px]">-</span>
+        <a id="lightboxDriveLink" href="https://drive.google.com/drive/u/0/folders/1GxHFu2kMPwtl7j3PvnD6wHRb_YwlQGqk" target="_blank" class="px-3 py-1 bg-blue-600 hover:bg-blue-500 text-white rounded-lg font-bold flex items-center gap-1.5 transition">
+          <i class="fa-brands fa-google-drive"></i>
+          <span>ดูบน Google Drive</span>
+        </a>
+      </div>
+    </div>
+  </div>
+
   <div id="qrModal" class="hidden fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4">
-    <div class="bg-white rounded-2xl max-w-sm w-full p-6 text-center space-y-4 shadow-2xl">
+    <div class="bg-white rounded-2xl max-w-md w-full p-5 sm:p-6 text-center space-y-4 shadow-2xl">
       <div class="flex items-center justify-between pb-2 border-b border-slate-100">
-        <h3 class="font-bold text-slate-800 text-sm">QR Code สำหรับผู้เข้าอบรม</h3>
+        <div class="flex items-center space-x-2">
+          <div class="w-8 h-8 rounded-lg bg-indigo-100 text-indigo-700 flex items-center justify-center text-sm">
+            <i class="fa-solid fa-qrcode"></i>
+          </div>
+          <h3 class="font-bold text-slate-800 text-sm text-left">ศูนย์สร้างและแชร์ QR Code โครงการ</h3>
+        </div>
         <button onclick="closeQrModal()" class="text-slate-400 hover:text-slate-600"><i class="fa-solid fa-xmark text-lg"></i></button>
       </div>
 
-      <div id="qrcodeWrapper" class="flex justify-center p-3 bg-white border border-slate-200 rounded-xl"></div>
-      
-      <div>
-        <div id="modalCourseTitle" class="font-bold text-slate-800 text-sm leading-tight"></div>
-        <div id="modalEventId" class="text-xs text-slate-400 mt-1 font-mono"></div>
-      </div>
-
-      <div class="bg-slate-50 p-2.5 rounded-lg border border-slate-200 flex items-center justify-between text-xs">
-        <input type="text" id="modalShareUrl" readonly class="bg-transparent text-slate-600 focus:outline-none w-full font-mono text-[11px]">
-        <button onclick="copyShareUrl()" class="ml-2 px-2.5 py-1 bg-blue-600 hover:bg-blue-700 text-white rounded text-xs font-semibold whitespace-nowrap">
-          <i class="fa-solid fa-copy mr-1"></i>คัดลอก
+      <!-- Mode Switcher Tabs -->
+      <div class="grid grid-cols-2 gap-1.5 p-1 bg-slate-100 rounded-xl text-xs font-semibold">
+        <button id="qrTabSurveyBtn" onclick="switchQrModalMode('SURVEY')" class="py-2 px-3 rounded-lg bg-white text-blue-700 shadow-sm flex items-center justify-center space-x-1.5 transition">
+          <i class="fa-solid fa-square-poll-vertical text-blue-600"></i>
+          <span>๑. แบบประเมิน ๑๐ ข้อ</span>
+        </button>
+        <button id="qrTabResourceBtn" onclick="switchQrModalMode('RESOURCE')" class="py-2 px-3 rounded-lg text-slate-600 hover:text-slate-900 flex items-center justify-center space-x-1.5 transition">
+          <i class="fa-brands fa-google-drive text-amber-600"></i>
+          <span>๒. แหล่งเก็บไฟล์ / ไดรฟ์</span>
         </button>
       </div>
 
-      <a id="modalOpenSurveyLink" href="#" target="_blank" class="block w-full py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold rounded-xl text-xs transition">
-        <i class="fa-solid fa-arrow-up-right-from-square mr-1.5"></i>เปิดหน้าแบบประเมินในแท็บใหม่
-      </a>
+      <!-- QR Code Presentation Canvas Box -->
+      <div class="p-3 bg-gradient-to-b from-slate-50 to-white border border-slate-200 rounded-2xl flex flex-col items-center justify-center shadow-inner relative">
+        <div id="qrcodeWrapper" class="p-2 bg-white rounded-xl shadow-sm border border-slate-200"></div>
+        <div id="qrModeSubtitle" class="text-[11px] font-medium text-slate-600 mt-2">
+          สแกนด้วยสมาร์ทโฟนเพื่อทำแบบประเมินผลการอบรม ๑๐ ข้อ
+        </div>
+      </div>
+      
+      <div>
+        <div id="modalCourseTitle" class="font-bold text-slate-800 text-sm leading-tight"></div>
+        <div id="modalEventId" class="text-xs text-slate-400 mt-0.5 font-mono"></div>
+      </div>
+
+      <!-- Link URL & Copy Box -->
+      <div class="space-y-1 text-left">
+        <label id="modalLinkFieldLabel" class="block text-[11px] font-semibold text-slate-600 flex items-center justify-between">
+          <span>ลิงก์ปลายทาง (Target URL):</span>
+          <span id="modalLinkTag" class="text-[10px] text-blue-600 bg-blue-50 px-1.5 py-0.5 rounded">แบบประเมินออนไลน์</span>
+        </label>
+        <div class="bg-slate-50 p-2 rounded-xl border border-slate-200 flex items-center justify-between text-xs">
+          <input type="text" id="modalShareUrl" readonly class="bg-transparent text-slate-700 focus:outline-none w-full font-mono text-[11px]">
+          <button onclick="copyShareUrl()" class="ml-2 px-3 py-1.5 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-xs font-semibold whitespace-nowrap btn-tactile shadow-sm flex items-center space-x-1">
+            <i class="fa-solid fa-copy"></i>
+            <span>คัดลอก</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Quick Edit Resource Link Section (when in RESOURCE mode) -->
+      <div id="qrResourceEditBox" class="hidden text-left bg-amber-50 p-2.5 rounded-xl border border-amber-200 space-y-1.5">
+        <label class="block text-[11px] font-bold text-amber-900 flex items-center justify-between">
+          <span>แก้ไข/เปลี่ยนลิงก์ Google Drive หรือ OneDrive โครงการ:</span>
+        </label>
+        <div class="flex gap-1.5">
+          <input type="url" id="qrResourceInput" placeholder="https://drive.google.com/..." class="flex-1 bg-white border border-amber-300 rounded-lg px-2.5 py-1 text-xs focus:ring-2 focus:ring-amber-500 focus:outline-none">
+          <button onclick="saveEventResourceLink()" class="px-3 py-1 bg-amber-600 hover:bg-amber-700 text-white rounded-lg text-xs font-bold whitespace-nowrap btn-tactile">
+            บันทึก
+          </button>
+        </div>
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="grid grid-cols-2 gap-2 pt-1">
+        <a id="modalOpenSurveyLink" href="#" target="_blank" class="w-full py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold rounded-xl text-xs transition flex items-center justify-center space-x-1 btn-tactile">
+          <i class="fa-solid fa-arrow-up-right-from-square"></i>
+          <span>เปิดลิงก์ในแท็บใหม่</span>
+        </a>
+        <button onclick="printQrProjectionCard()" class="w-full py-2 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold rounded-xl text-xs transition flex items-center justify-center space-x-1 btn-tactile shadow-sm">
+          <i class="fa-solid fa-tv"></i>
+          <span>ฉายจอห้องอบรม (Slide)</span>
+        </button>
+      </div>
+
     </div>
   </div>
 
@@ -1102,6 +1516,30 @@
             <button onclick="saveCustomEndpoint()" class="px-3 py-1.5 bg-blue-600 hover:bg-blue-700 text-white text-xs font-semibold rounded-lg whitespace-nowrap">บันทึก URL</button>
           </div>
           <p class="text-[11px] text-slate-400">* หากเว้นว่างไว้ ระบบจะเชื่อมต่อกับ Endpoint ตัวอย่างหรือจำลองผลแบบ Local</p>
+        </div>
+
+        <!-- E-Certificate Management & Anti-Reprint Unlock Override -->
+        <div class="bg-amber-50/70 p-4 rounded-xl border border-amber-200 space-y-3">
+          <div class="flex items-center justify-between">
+            <div class="flex items-center space-x-2">
+              <i class="fa-solid fa-certificate text-amber-600"></i>
+              <div>
+                <span class="text-xs font-bold text-slate-800 uppercase tracking-wider">จัดการสิทธิ์วุฒิบัตร (E-Certificate Management & Unlock Override)</span>
+                <p class="text-[11px] text-slate-500">ปลดล็อกสิทธิ์ให้ผู้เข้าอบรมสามารถขอรับหรือพิมพ์วุฒิบัตรใหม่ได้เมื่อเกิดข้อผิดพลาด</p>
+              </div>
+            </div>
+            <span class="text-[10px] bg-amber-100 text-amber-800 font-bold px-2 py-0.5 rounded-full">Admin Security Override</span>
+          </div>
+
+          <!-- Unlocking Tool -->
+          <div class="bg-white p-3 rounded-lg border border-amber-200 flex flex-col sm:flex-row items-center gap-2">
+            <input type="text" id="adminUnlockTokenInput" placeholder="ระบุ Token เช่น demo-active-learning-2026 หรือ อีเมลผู้เข้าอบรม..." class="flex-1 w-full bg-slate-50 border border-slate-300 rounded-lg p-2 text-xs font-mono focus:ring-2 focus:ring-amber-500 focus:outline-none">
+            <button onclick="adminUnlockCertificateAction()" class="w-full sm:w-auto px-4 py-2 bg-amber-600 hover:bg-amber-700 text-white font-bold rounded-lg text-xs transition flex items-center justify-center space-x-1.5 whitespace-nowrap btn-tactile">
+              <i class="fa-solid fa-lock-open"></i>
+              <span>ปลดล็อกสิทธิ์พิมพ์ซ้ำ</span>
+            </button>
+          </div>
+          <div id="adminUnlockFeedback" class="text-xs hidden font-medium"></div>
         </div>
 
         <!-- System Actions & Schema Initializer -->
@@ -1903,6 +2341,8 @@
       };
     }
 
+    const DEMO_EXECUTIVE_SIGNATURE = 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNjAiIGhlaWdodD0iOTAiIHZpZXdCb3g9IjAgMCAyNjAgOTAiPgogIDxwYXRoIGQ9Ik0gMjUgNTUgUSA1MCAxNSwgNzUgNTAgVCAxMTUgNDAgUSAxNDUgMjUsIDE2NSA1NSBUIDIwNSA0NSBRIDIzNSAzNSwgMjUwIDQwIiBmaWxsPSJub25lIiBzdHJva2U9IiMwMDMzOTkiIHN0cm9rZS13aWR0aD0iMi42IiBzdHJva2UtbGluZWNhcD0icm91bmQiLz4KICA8cGF0aCBkPSJNIDU1IDY1IFEgMTI1IDcwLCAyMjUgNTgiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzAwMzM5OSIgc3Ryb2tlLXdpZHRoPSIyLjIiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIvPgogIDxwYXRoIGQ9Ik0gMTAwIDMwIFEgMTEwIDEwLCAxMjAgMzUiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzAwMzM5OSIgc3Ryb2tlLXdpZHRoPSIyLjIiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIvPgogIDx0ZXh0IHg9IjEzNSIgeT0iODAiIGZvbnQtZmFtaWx5PSJzYW5zLXNlcmlmIiBmb250LXNpemU9IjE0IiBmaWxsPSIjMDg1MzlFIiBmb250LXdlaWdodD0iYm9sZCI+4LiU4LijLuC4meC4tOC4nuC4meC4mOC5jCDguJouPC90ZXh0Pgo8L3N2Zz4=';
+
     const MockDatabase = {
       masterData: {
         provinces: ALL_PROVINCES,
@@ -1910,6 +2350,87 @@
         schools: getPersistedSchools()
       },
       requests: [
+
+        {
+          eventId: 'EVT-DEMO-2026',
+          createdAt: '2026-11-01T08:30:00.000Z',
+          status: 'APPROVED',
+          activityType: 'Workshop เชิงปฏิบัติการ',
+          courseTopic: 'Active Learning สู่สมรรถนะผู้เรียนด้วยสื่อนวัตกรรมดิจิทัล',
+          customTopic: '',
+          eventDate: '2026-11-08',
+          province: 'กรุงเทพมหานคร',
+          saleName: 'กิตติศักดิ์ ฉันทวุฒินันท์',
+          schoolId: 'SCH-1002',
+          schoolName: 'โรงเรียน เตรียมอุดมศึกษาพัฒนาการ',
+          schoolArea: 'สพม.กรุงเทพมหานคร เขต 2',
+          schoolSize: 'AA',
+          schoolTier: 'Tier AA',
+          totalStudents: 3982,
+          speakerType: 'ทีมวิชาการภายใน',
+          venueType: 'โรงเรียน',
+          objective: 'เพื่อยกระดับทักษะครูผู้สอนในการจัดการเรียนรู้เชิงรุก (Active Learning) ผสานการวัดและประเมินผลตามแนวทางสมรรถนะผู้เรียน พร้อมทั้งสาธิตการใช้ชุดสื่อการเรียนรู้นวัตกรรมของ TWP ในห้องเรียนจริง',
+          targetSales: 350000,
+          estBudget: 25000,
+          teamBSpeaker: 'ศ.ดร.ประสาน ปัญญาเลิศ (ที่ปรึกษาอาวุโสด้านวิชาการ TWP)',
+          teamBNotes: 'แผนการอบรมและเนื้อหาหลักสูตรผ่านการตรวจสอบมาตรฐานแล้ว เอกสารประกอบและชุดกิจกรรมพร้อมจัดส่ง มีการประสานงานห้องประชุมและโสตทัศนูปกรณ์ล่วงหน้า ปรับลดงบตัดจ่ายเหลือ 22,000 บาท',
+          actualBudget: 20500,
+          createdBy: 'กิตติศักดิ์ ฉันทวุฒินันท์ (ทีม A)',
+          reviewedBy: 'ทีมวิชาการและพัฒนาหลักสูตร (ทีม B)',
+          approvedBy: 'ดร.นิพนธ์ บริหารพัฒนา (ประธานกรรมการบริหาร)',
+          lastModifiedBy: 'ทีมวิชาการและพัฒนาหลักสูตร (ทีม B)',
+          submittedToBAt: '2026-11-01T10:15:00.000Z',
+          reviewedByBAt: '2026-11-02T14:20:00.000Z',
+          approvedAt: '2026-11-03T09:00:00.000Z',
+          pdfUrl: '',
+          needAccommodation: 'YES',
+          roomCount: 2,
+          needTransportation: 'YES',
+          transportDetails: 'รถตู้บริษัทพร้อมพนักงานขับรถรับ-ส่งวิทยากรและทีมงาน',
+          expectedTrainees: 50,
+          evalCount: 48,
+          evalAvg: 4.91,
+          evalAvgScore: 4.91,
+          token: 'demo-active-learning-2026',
+          resourceLink: 'https://drive.google.com/drive/folders/1twp-demo-active-learning-2026-materials',
+          approverSignature: DEMO_EXECUTIVE_SIGNATURE,
+          isDemoCase: true,
+          actualExpenses: {
+            expSpeaker: 8000,
+            expTravel: 2500,
+            expAccom: 2800,
+            expFood: 4200,
+            expDocKit: 1800,
+            expVenue: 0,
+            expMisc: 1200
+          },
+          actualExpensesTotal: 20500,
+          actualExpensesSettledAt: '2026-11-08T17:30:00.000Z',
+          actualExpensesSettledBy: 'ฝ่ายพัฒนาวิชาการและปฏิบัติการ (ทีม B)',
+          eventPhotos: [
+            {
+              id: 'PHT-DEMO-01',
+              url: 'https://images.unsplash.com/photo-1524178232363-1fb2b075b655?auto=format&fit=crop&w=800&q=80',
+              caption: 'บรรยากาศการบรรยายและการมีส่วนร่วมของคณะครูในห้องประชุมใหญ่',
+              uploadedAt: '2026-11-08T10:30:00.000Z',
+              driveUrl: 'https://drive.google.com/drive/u/0/folders/1GxHFu2kMPwtl7j3PvnD6wHRb_YwlQGqk'
+            },
+            {
+              id: 'PHT-DEMO-02',
+              url: 'https://images.unsplash.com/photo-1531403009284-440f080d1e12?auto=format&fit=crop&w=800&q=80',
+              caption: 'กิจกรรมกลุ่มเชิงปฏิบัติการ (Active Learning Workshop) ออกแบบแผนการจัดการเรียนรู้',
+              uploadedAt: '2026-11-08T13:45:00.000Z',
+              driveUrl: 'https://drive.google.com/drive/u/0/folders/1GxHFu2kMPwtl7j3PvnD6wHRb_YwlQGqk'
+            },
+            {
+              id: 'PHT-DEMO-03',
+              url: 'https://images.unsplash.com/photo-1529070538774-1843cb3265df?auto=format&fit=crop&w=800&q=80',
+              caption: 'ถ่ายภาพหมู่คณะครู ผู้บริหารโรงเรียน และวิทยากร TWP หลังเสร็จสิ้นการอบรม',
+              uploadedAt: '2026-11-08T16:00:00.000Z',
+              driveUrl: 'https://drive.google.com/drive/u/0/folders/1GxHFu2kMPwtl7j3PvnD6wHRb_YwlQGqk'
+            }
+          ],
+        },
         {
           eventId: 'EVT-2026-0001',
           createdAt: new Date(Date.now() - 36 * 3600 * 1000).toISOString(),
@@ -2031,19 +2552,26 @@
     };
 
     function getPersistedRequests() {
+      let reqs = MockDatabase.requests;
       const stored = localStorage.getItem('twp_requests_store');
       if (stored) {
         try {
           const parsed = JSON.parse(stored);
-          if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+          if (Array.isArray(parsed) && parsed.length > 0) {
+            reqs = parsed;
+          }
         } catch(e) {}
       }
-      return MockDatabase.requests;
+      const demoExemplar = MockDatabase.requests.find(r => r.eventId === 'EVT-DEMO-2026');
+      if (demoExemplar && !reqs.some(r => r.eventId === 'EVT-DEMO-2026')) {
+        reqs.unshift(demoExemplar);
+      }
+      return reqs;
     }
 
     // System Global State (Synchronously initialized with complete Master Data)
     const AppState = {
-      version: '1.11.0',
+      version: '1.13.0',
       clientId: 'DEV-' + Math.random().toString(36).substring(2, 7).toUpperCase(),
       activeTab: 'dashboard',
       activeDevices: {},
@@ -2723,13 +3251,17 @@
       const activeBtn = document.getElementById('tabBtn-' + tabId);
       if (activeBtn) activeBtn.classList.add('tab-active');
 
-      ['dashboard', 'teamA', 'teamB', 'exec', 'evaluation'].forEach(id => {
+      ['dashboard', 'teamA', 'teamB', 'exec', 'evaluation', 'teamBExpenses'].forEach(id => {
         const view = document.getElementById('view-' + id);
         if (view) {
           if (id === tabId) view.classList.remove('hidden');
           else view.classList.add('hidden');
         }
       });
+
+      if (tabId === 'teamBExpenses') {
+        renderTeamBExpensesView();
+      }
     }
 
     // ------------------- SMART NAME NORMALIZATION & ANTI-DUPLICATION -------------------
@@ -2930,6 +3462,330 @@
     
     // ------------------- CUSTOMER DIRECTORY ENGINE -------------------
     let customerFilterCache = [];
+
+    
+    // ------------------- TEAM B ACTUAL EXPENSE SETTLEMENT ENGINE -------------------
+
+    let currentExpenseEventId = null;
+
+    function renderTeamBExpensesView() {
+      const select = document.getElementById('expenseEventSelect');
+      if (!select) return;
+
+      const requests = AppState.requests || [];
+      if (requests.length === 0) {
+        select.innerHTML = '<option value="">-- ยังไม่มีโครงการในระบบ --</option>';
+        return;
+      }
+
+      // Populate events dropdown
+      select.innerHTML = requests.map(r => {
+        const isDemo = r.isDemoCase || r.eventId === 'EVT-DEMO-2026';
+        const demoStar = isDemo ? '⭐ [เคสตัวอย่าง] ' : '';
+        const statusLabel = r.status === 'APPROVED' ? '[อนุมัติแล้ว]' : r.status === 'WAITING_B' ? '[รอทีม B]' : '[รออนุมัติ]';
+        return `<option value="${r.eventId}">${demoStar}${r.eventId} | ${r.schoolName} (${statusLabel})</option>`;
+      }).join('');
+
+      // Auto-select current or EVT-DEMO-2026 or first
+      if (!currentExpenseEventId || !requests.some(r => r.eventId === currentExpenseEventId)) {
+        const demo = requests.find(r => r.eventId === 'EVT-DEMO-2026');
+        currentExpenseEventId = demo ? demo.eventId : requests[0].eventId;
+      }
+
+      select.value = currentExpenseEventId;
+      onExpenseEventSelect(currentExpenseEventId);
+    }
+
+    function onExpenseEventSelect(eventId) {
+      currentExpenseEventId = eventId;
+      const req = AppState.requests.find(r => r.eventId === eventId);
+      if (!req) return;
+
+      // Status badge
+      const badge = document.getElementById('expenseEventStatusBadge');
+      if (badge) {
+        if (req.isDemoCase || req.eventId === 'EVT-DEMO-2026') {
+          badge.className = 'text-xs font-bold px-2.5 py-0.5 rounded-full bg-amber-100 text-amber-800 border border-amber-300';
+          badge.innerHTML = '<i class="fa-solid fa-star text-amber-500 mr-1"></i>เคสตัวอย่างสมบูรณ์ (Demo Case)';
+        } else if (req.status === 'APPROVED') {
+          badge.className = 'text-xs font-bold px-2.5 py-0.5 rounded-full bg-emerald-100 text-emerald-800 border border-emerald-300';
+          badge.innerText = 'อนุมัติเรียบร้อย (พร้อมตัดยอดค่าใช้จ่าย)';
+        } else {
+          badge.className = 'text-xs font-bold px-2.5 py-0.5 rounded-full bg-slate-200 text-slate-700';
+          badge.innerText = 'สถานะ: ' + req.status;
+        }
+      }
+
+      // Brief info
+      const schoolEl = document.getElementById('expenseBriefSchool');
+      if (schoolEl) schoolEl.innerText = (req.schoolName || '-') + ' (' + (req.province || '-') + ')';
+      const attEl = document.getElementById('expenseBriefAttendees');
+      const evalActual = req.evalCount || req.expectedTrainees || 50;
+      if (attEl) attEl.innerText = evalActual + ' คน';
+
+      // Load expenses into inputs
+      const exp = req.actualExpenses || {};
+      document.getElementById('expSpeaker').value = exp.expSpeaker !== undefined ? exp.expSpeaker : (req.actualBudget ? Math.round(req.actualBudget * 0.4) : 0);
+      document.getElementById('expTravel').value = exp.expTravel !== undefined ? exp.expTravel : (req.actualBudget ? Math.round(req.actualBudget * 0.15) : 0);
+      document.getElementById('expAccom').value = exp.expAccom !== undefined ? exp.expAccom : (req.actualBudget ? Math.round(req.actualBudget * 0.15) : 0);
+      document.getElementById('expFood').value = exp.expFood !== undefined ? exp.expFood : (req.actualBudget ? Math.round(req.actualBudget * 0.20) : 0);
+      document.getElementById('expDocKit').value = exp.expDocKit !== undefined ? exp.expDocKit : (req.actualBudget ? Math.round(req.actualBudget * 0.05) : 0);
+      document.getElementById('expVenue').value = exp.expVenue !== undefined ? exp.expVenue : 0;
+      document.getElementById('expMisc').value = exp.expMisc !== undefined ? exp.expMisc : (req.actualBudget ? Math.round(req.actualBudget * 0.05) : 0);
+
+      calculateRealtimeExpenses();
+      renderEventPhotoGallery(eventId);
+    }
+
+    function calculateRealtimeExpenses() {
+      const req = AppState.requests.find(r => r.eventId === currentExpenseEventId);
+      if (!req) return;
+
+      const expSpeaker = Number(document.getElementById('expSpeaker').value) || 0;
+      const expTravel = Number(document.getElementById('expTravel').value) || 0;
+      const expAccom = Number(document.getElementById('expAccom').value) || 0;
+      const expFood = Number(document.getElementById('expFood').value) || 0;
+      const expDocKit = Number(document.getElementById('expDocKit').value) || 0;
+      const expVenue = Number(document.getElementById('expVenue').value) || 0;
+      const expMisc = Number(document.getElementById('expMisc').value) || 0;
+
+      const totalActual = expSpeaker + expTravel + expAccom + expFood + expDocKit + expVenue + expMisc;
+      const reqBudget = Number(req.estBudget) || 0;
+      const approvedBudget = Number(req.actualBudget) || reqBudget;
+      const netSaved = approvedBudget - totalActual;
+
+      const attendees = Number(req.evalCount) || Number(req.expectedTrainees) || 50;
+      const actualCostPerHead = attendees > 0 ? (totalActual / attendees).toFixed(2) : '0.00';
+      const approvedCostPerHead = attendees > 0 ? (approvedBudget / attendees).toFixed(2) : '0.00';
+      const diffCostPerHead = (Number(approvedCostPerHead) - Number(actualCostPerHead)).toFixed(2);
+
+      // Render into Triple Budget Comparison Box
+      document.getElementById('sumReqBudget').innerText = '฿' + reqBudget.toLocaleString();
+      document.getElementById('sumApprovedBudget').innerText = '฿' + approvedBudget.toLocaleString();
+      document.getElementById('sumActualExpenses').innerText = '฿' + totalActual.toLocaleString();
+
+      const savedEl = document.getElementById('sumSavedBudget');
+      if (netSaved >= 0) {
+        savedEl.className = 'font-bold text-base font-mono text-emerald-400';
+        savedEl.innerText = '+฿' + netSaved.toLocaleString();
+      } else {
+        savedEl.className = 'font-bold text-base font-mono text-rose-400';
+        savedEl.innerText = '-฿' + Math.abs(netSaved).toLocaleString();
+      }
+
+      document.getElementById('sumCostPerHeadActual').innerText = '฿' + Number(actualCostPerHead).toLocaleString() + ' / คน';
+
+      const compareEl = document.getElementById('sumCostPerHeadCompare');
+      if (Number(diffCostPerHead) >= 0) {
+        compareEl.className = 'font-mono text-emerald-300 text-sm';
+        compareEl.innerText = 'ประหยัด ฿' + Number(diffCostPerHead).toLocaleString() + ' / คน';
+      } else {
+        compareEl.className = 'font-mono text-rose-300 text-sm';
+        compareEl.innerText = 'เกินงบ ฿' + Math.abs(Number(diffCostPerHead)).toLocaleString() + ' / คน';
+      }
+    }
+
+    function saveEventExpenses() {
+      const req = AppState.requests.find(r => r.eventId === currentExpenseEventId);
+      if (!req) {
+        showAlert('ไม่พบข้อมูลโครงการ', 'error');
+        return;
+      }
+
+      const expSpeaker = Number(document.getElementById('expSpeaker').value) || 0;
+      const expTravel = Number(document.getElementById('expTravel').value) || 0;
+      const expAccom = Number(document.getElementById('expAccom').value) || 0;
+      const expFood = Number(document.getElementById('expFood').value) || 0;
+      const expDocKit = Number(document.getElementById('expDocKit').value) || 0;
+      const expVenue = Number(document.getElementById('expVenue').value) || 0;
+      const expMisc = Number(document.getElementById('expMisc').value) || 0;
+
+      const totalActual = expSpeaker + expTravel + expAccom + expFood + expDocKit + expVenue + expMisc;
+
+      req.actualExpenses = {
+        expSpeaker,
+        expTravel,
+        expAccom,
+        expFood,
+        expDocKit,
+        expVenue,
+        expMisc
+      };
+      req.actualExpensesTotal = totalActual;
+      req.actualBudget = totalActual;
+      req.actualExpensesSettledAt = new Date().toISOString();
+      req.actualExpensesSettledBy = AppState.operatorName || 'ฝ่ายพัฒนาวิชาการ (ทีม B)';
+
+      // Persist locally
+      localStorage.setItem('twp_requests_store', JSON.stringify(AppState.requests));
+
+      showAlert('บันทึกสรุปค่าใช้จ่ายจริง ๗ หมวด ยอดรวม ฿' + totalActual.toLocaleString() + ' เรียบร้อยแล้ว', 'success');
+      notifyDataUpdated('SAVE_EXPENSES');
+      renderAll();
+    }
+
+    function openExpensesForEvent(eventId) {
+      switchTab('teamBExpenses');
+      const select = document.getElementById('expenseEventSelect');
+      if (select) {
+        select.value = eventId;
+        onExpenseEventSelect(eventId);
+      }
+    }
+
+    function loadDemoProjectForExpense() {
+      openExpensesForEvent('EVT-DEMO-2026');
+      showAlert('โหลดโครงการตัวอย่าง EVT-DEMO-2026 เข้าสู่ระบบเรียบร้อย', 'info');
+    }
+
+    function previewExpenseReportA4() {
+      if (currentExpenseEventId) {
+        openPpcReportModal(currentExpenseEventId, 'EVAL_REPORT');
+      }
+    }
+
+    function viewDemoExemplarCase() {
+      openPpcReportModal('EVT-DEMO-2026', 'EVAL_REPORT');
+    }
+
+
+    
+    // ------------------- TEAM B PHOTO REPOSITORY & GOOGLE DRIVE ENGINE -------------------
+
+    let selectedEventPhotosToUpload = [];
+
+    function renderEventPhotoGallery(eventId) {
+      const container = document.getElementById('eventPhotoGalleryGrid');
+      const countEl = document.getElementById('eventPhotoCount');
+      if (!container) return;
+
+      const req = AppState.requests.find(r => r.eventId === eventId);
+      const photos = (req && req.eventPhotos) ? req.eventPhotos : [];
+      if (countEl) countEl.innerText = photos.length;
+
+      if (photos.length === 0) {
+        container.innerHTML = `
+          <div class="col-span-3 text-center py-6 text-slate-400 text-xs">
+            <i class="fa-regular fa-images text-2xl mb-1 block text-slate-300"></i>
+            <span>ยังไม่มีภาพถ่ายกิจกรรมในโครงการนี้</span>
+          </div>
+        `;
+        return;
+      }
+
+      container.innerHTML = photos.map((p, idx) => `
+        <div class="relative group rounded-xl overflow-hidden border border-slate-200 shadow-xs bg-slate-100 aspect-video cursor-pointer" onclick="openPhotoLightbox('${p.url}', '${encodeURIComponent(p.caption || '')}', '${p.uploadedAt || ''}', '${p.driveUrl || ''}')">
+          <img src="${p.url}" alt="${p.caption || 'Event photo'}" class="w-full h-full object-cover group-hover:scale-105 transition duration-200">
+          <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition p-1.5 flex flex-col justify-end text-white">
+            <span class="text-[10px] font-semibold truncate">${p.caption || 'ภาพกิจกรรม'}</span>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function handleEventPhotoSelected(e) {
+      const files = Array.from(e.target.files || []);
+      if (files.length === 0) return;
+      selectedEventPhotosToUpload = files;
+      showAlert('เลือกรูปภาพ ' + files.length + ' ภาพ พร้อมอัปโหลด', 'info');
+    }
+
+    function uploadSelectedEventPhotos() {
+      if (!currentExpenseEventId) {
+        showAlert('กรุณาเลือกงานอบรมก่อนอัปโหลดรูปภาพ', 'warning');
+        return;
+      }
+
+      if (selectedEventPhotosToUpload.length === 0) {
+        const fileInput = document.getElementById('eventPhotoFileInput');
+        if (fileInput) fileInput.click();
+        return;
+      }
+
+      const captionInput = document.getElementById('eventPhotoCaptionInput');
+      const caption = captionInput?.value?.trim() || 'ภาพบรรยากาศการจัดกิจกรรมการอบรม';
+      const btn = document.getElementById('btnUploadPhotos');
+      btn.disabled = true;
+      btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i>';
+
+      const req = AppState.requests.find(r => r.eventId === currentExpenseEventId);
+      if (!req) return;
+      if (!req.eventPhotos) req.eventPhotos = [];
+
+      // Read selected files as DataURL & simulate/upload
+      let processed = 0;
+      selectedEventPhotosToUpload.forEach(file => {
+        const reader = new FileReader();
+        reader.onload = function(evt) {
+          const photoObj = {
+            id: 'PHT-' + Date.now() + '-' + Math.floor(Math.random()*1000),
+            url: evt.target.result,
+            caption: caption,
+            uploadedAt: new Date().toISOString(),
+            driveUrl: 'https://drive.google.com/drive/u/0/folders/1GxHFu2kMPwtl7j3PvnD6wHRb_YwlQGqk'
+          };
+          req.eventPhotos.push(photoObj);
+          processed++;
+
+          if (processed === selectedEventPhotosToUpload.length) {
+            btn.disabled = false;
+            btn.innerHTML = '<i class="fa-solid fa-upload"></i> อัปโหลด';
+            if (captionInput) captionInput.value = '';
+            selectedEventPhotosToUpload = [];
+            localStorage.setItem('twp_requests_store', JSON.stringify(AppState.requests));
+            renderEventPhotoGallery(currentExpenseEventId);
+            showAlert('อัปโหลดรูปภาพกิจกรรม ' + processed + ' ภาพขึ้น Google Drive เรียบร้อยแล้ว', 'success');
+          }
+        };
+        reader.readAsDataURL(file);
+      });
+    }
+
+    function openPhotoLightbox(url, encodedCaption, timestamp, driveUrl) {
+      const modal = document.getElementById('photoLightboxModal');
+      const img = document.getElementById('lightboxImg');
+      const cap = document.getElementById('lightboxCaption');
+      const ts = document.getElementById('lightboxTimestamp');
+      const link = document.getElementById('lightboxDriveLink');
+
+      img.src = url;
+      cap.innerText = decodeURIComponent(encodedCaption) || 'ภาพกิจกรรมโครงการ';
+      ts.innerText = timestamp ? new Date(timestamp).toLocaleString('th-TH') : '';
+      if (link && driveUrl) link.href = driveUrl;
+
+      modal.classList.remove('hidden');
+    }
+
+    function closePhotoLightbox() {
+      const modal = document.getElementById('photoLightboxModal');
+      if (modal) modal.classList.add('hidden');
+    }
+
+    // Admin Override: Unlock E-Certificate
+    function adminUnlockCertificateAction() {
+      const input = document.getElementById('adminUnlockTokenInput');
+      const token = input?.value?.trim();
+      const feedback = document.getElementById('adminUnlockFeedback');
+
+      if (!token) {
+        if (feedback) {
+          feedback.className = 'text-xs text-rose-600 font-bold block';
+          feedback.innerText = 'กรุณาระบุ Token หรือรหัสงานอบรมที่ต้องการปลดล็อก';
+        }
+        return;
+      }
+
+      // Set unlock flag
+      localStorage.setItem('ems_cert_unlocked_' + token, 'TRUE');
+      localStorage.removeItem('ems_cert_sent_' + token);
+
+      if (feedback) {
+        feedback.className = 'text-xs text-emerald-700 font-bold block';
+        feedback.innerText = '✅ ปลดล็อกสิทธิ์วุฒิบัตรสำหรับ ' + token + ' เรียบร้อยแล้ว ผู้เข้าอบรมสามารถพิมพ์หรือขอรับใหม่ได้ทันที';
+      }
+      showAlert('ปลดล็อกสิทธิ์วุฒิบัตรสำเร็จ', 'success');
+    }
+
 
     function openCustomerDirectoryModal() {
       const modal = document.getElementById('customerDirectoryModal');
@@ -3795,9 +4651,13 @@
 
           <!-- Action Buttons -->
           <div class="flex flex-col sm:flex-row gap-2 pt-1 border-t border-slate-100">
-            <button onclick="openQrModalFor('${req.eventId}')" class="flex-1 py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold rounded-xl transition flex items-center justify-center space-x-1.5 shadow-sm btn-tactile">
+            <button onclick="openQrModalFor('${req.eventId}')" class="flex-1 py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold rounded-xl transition flex items-center justify-center space-x-1 shadow-sm btn-tactile" title="เปิด QR ประเมิน 10 ข้อ และ QR ไฟล์ไดรฟ์">
               <i class="fa-solid fa-qrcode text-amber-300"></i>
-              <span>QR ผู้เข้าอบรม</span>
+              <span>QR ประเมิน & ไดรฟ์</span>
+            </button>
+            <button onclick="openExpensesForEvent('${req.eventId}')" class="px-3 py-2 bg-amber-500 hover:bg-amber-600 text-white text-xs font-bold rounded-xl transition flex items-center justify-center space-x-1 shadow-sm btn-tactile" title="บันทึกและตรวจดูค่าใช้จ่ายจริง 7 หมวด">
+              <i class="fa-solid fa-coins text-yellow-200"></i>
+              <span>ค่าใช้จ่าย</span>
             </button>
             <button onclick="openPpcReportModal('${req.eventId}', 'EVAL_REPORT')" class="flex-1 py-2 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold rounded-xl transition flex items-center justify-center space-x-1.5 shadow-sm btn-tactile" title="เปิดดูรายงานผลการประเมิน 10 ข้อและต้นทุนต่อหัว A4">
               <i class="fa-solid fa-square-poll-vertical text-amber-300"></i>
@@ -3868,6 +4728,7 @@
         roomCount: roomCount,
         needTransportation: needTrans ? 'YES' : 'NO',
         transportDetails: transDetails,
+        resourceLink: document.getElementById('resourceLink')?.value?.trim() || '',
         estBudget: Number(document.getElementById('estBudget').value) || 0,
         targetSales: Number(document.getElementById('targetSales').value) || 0,
         operatorName: AppState.operatorName
@@ -3896,6 +4757,7 @@
             toggleAccommodationFields(false);
             document.getElementById('needTransportation').checked = false;
             toggleTransportFields(false);
+            if (document.getElementById('resourceLink')) document.getElementById('resourceLink').value = '';
             notifyDataUpdated('CREATE_REQUEST_A');
             fetchInitialData();
             switchTab('dashboard');
@@ -4198,39 +5060,141 @@
 
     // ------------------- QR CODE MODAL -------------------
 
-    function openQrModalFor(eventId) {
+    let activeQrModalEventId = null;
+    let activeQrModalMode = 'SURVEY'; // 'SURVEY' or 'RESOURCE'
+
+    function openQrModalFor(eventId, mode = 'SURVEY') {
       const req = AppState.requests.find(r => r.eventId === eventId);
       if (!req) return;
 
+      activeQrModalEventId = eventId;
+      activeQrModalMode = mode;
       const modal = document.getElementById('qrModal');
-      const token = req.token || 'tok-' + eventId.replace(/-/g, '').toLowerCase();
-      
-      // Target survey URL
-      const baseUrl = window.location.origin + window.location.pathname.replace('index.html', 'survey.html');
-      const activeEp = AppState.gasEndpoint || DEFAULT_GAS_ENDPOINT;
-      let surveyUrl = `${baseUrl}?t=${token}`;
-      if (activeEp) {
-        surveyUrl += `&ep=${encodeURIComponent(activeEp)}`;
-      }
 
       document.getElementById('modalCourseTitle').innerText = req.courseTopic;
-      document.getElementById('modalEventId').innerText = req.eventId;
-      document.getElementById('modalShareUrl').value = surveyUrl;
-      document.getElementById('modalOpenSurveyLink').href = surveyUrl;
+      document.getElementById('modalEventId').innerText = req.eventId + ' | ' + req.schoolName;
 
-      // Generate QR Code
+      switchQrModalMode(mode);
+      modal.classList.remove('hidden');
+    }
+
+    function switchQrModalMode(mode) {
+      activeQrModalMode = mode;
+      const req = AppState.requests.find(r => r.eventId === activeQrModalEventId);
+      if (!req) return;
+
+      const surveyBtn = document.getElementById('qrTabSurveyBtn');
+      const resBtn = document.getElementById('qrTabResourceBtn');
+      const subtitle = document.getElementById('qrModeSubtitle');
+      const linkTag = document.getElementById('modalLinkTag');
+      const resEditBox = document.getElementById('qrResourceEditBox');
+      const shareInput = document.getElementById('modalShareUrl');
+      const openLink = document.getElementById('modalOpenSurveyLink');
       const wrap = document.getElementById('qrcodeWrapper');
+
+      let targetUrl = '';
+      let darkColor = '#1e3a8a';
+
+      if (mode === 'SURVEY') {
+        surveyBtn.className = 'py-2 px-3 rounded-lg bg-white text-blue-700 shadow-sm flex items-center justify-center space-x-1.5 transition';
+        resBtn.className = 'py-2 px-3 rounded-lg text-slate-600 hover:text-slate-900 flex items-center justify-center space-x-1.5 transition';
+        subtitle.innerText = 'สแกนด้วยสมาร์ทโฟนเพื่อทำแบบประเมินผลการอบรม ๑๐ ข้อ';
+        linkTag.innerText = 'แบบประเมินออนไลน์ ๑๐ ข้อ';
+        linkTag.className = 'text-[10px] text-blue-600 bg-blue-50 px-1.5 py-0.5 rounded';
+        resEditBox.classList.add('hidden');
+
+        const token = req.token || 'tok-' + req.eventId.replace(/-/g, '').toLowerCase();
+        const baseUrl = window.location.origin + window.location.pathname.replace('index.html', 'survey.html');
+        const activeEp = AppState.gasEndpoint || DEFAULT_GAS_ENDPOINT;
+        targetUrl = `${baseUrl}?t=${token}`;
+        if (activeEp) targetUrl += `&ep=${encodeURIComponent(activeEp)}`;
+        darkColor = '#1e3a8a';
+      } else {
+        resBtn.className = 'py-2 px-3 rounded-lg bg-white text-amber-700 shadow-sm flex items-center justify-center space-x-1.5 transition';
+        surveyBtn.className = 'py-2 px-3 rounded-lg text-slate-600 hover:text-slate-900 flex items-center justify-center space-x-1.5 transition';
+        subtitle.innerText = 'สแกนเพื่อเข้าถึงเอกสาร สื่อการสอน และภาพถ่ายโครงการ (Cloud Storage)';
+        linkTag.innerText = 'Google Drive / OneDrive';
+        linkTag.className = 'text-[10px] text-amber-700 bg-amber-50 px-1.5 py-0.5 rounded';
+        resEditBox.classList.remove('hidden');
+
+        targetUrl = req.resourceLink || 'https://drive.google.com';
+        document.getElementById('qrResourceInput').value = req.resourceLink || '';
+        darkColor = '#b45309';
+      }
+
+      shareInput.value = targetUrl;
+      openLink.href = targetUrl;
+
+      // Draw QR Code
       wrap.innerHTML = '';
       new QRCode(wrap, {
-        text: surveyUrl,
-        width: 180,
-        height: 180,
-        colorDark: '#1e3a8a',
+        text: targetUrl,
+        width: 190,
+        height: 190,
+        colorDark: darkColor,
         colorLight: '#ffffff',
         correctLevel: QRCode.CorrectLevel.M
       });
+    }
 
-      modal.classList.remove('hidden');
+    function saveEventResourceLink() {
+      const input = document.getElementById('qrResourceInput');
+      const val = input.value.trim();
+      if (!val) {
+        showAlert('กรุณากรอก URL เช่น ลิงก์ Google Drive หรือ OneDrive', 'warning');
+        return;
+      }
+      const req = AppState.requests.find(r => r.eventId === activeQrModalEventId);
+      if (req) {
+        req.resourceLink = val;
+        localStorage.setItem('twp_requests_store', JSON.stringify(AppState.requests));
+        switchQrModalMode('RESOURCE');
+        showAlert('บันทึกลิงก์คลังไฟล์สำหรับโครงการเรียบร้อยแล้ว', 'success');
+      }
+    }
+
+    function printQrProjectionCard() {
+      const req = AppState.requests.find(r => r.eventId === activeQrModalEventId);
+      if (!req) return;
+
+      const title = activeQrModalMode === 'SURVEY' ? 'แบบประเมินผลการจัดอบรม ๑๐ ข้อ' : 'คลังเอกสารและสื่อการเรียนรู้';
+      const sub = activeQrModalMode === 'SURVEY' ? 'กรุณาสแกน QR Code ด้วยสมาร์ทโฟนเพื่อตอบแบบประเมินความพึงพอใจ' : 'สแกนเพื่อดาวน์โหลดสไลด์ คู่มือ และชุดสื่อการสอน';
+      const url = document.getElementById('modalShareUrl').value;
+
+      const printWin = window.open('', '_blank');
+      const docHtml = '<!DOCTYPE html><html><head><meta charset="UTF-8"><title>ฉายจอ QR Code - ' + req.eventId + '</title>' +
+        '<link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@400;600;700;800&display=swap" rel="stylesheet">' +
+        '<style>' +
+        'body { font-family: "Sarabun", sans-serif; background: #0f172a; color: #ffffff; margin: 0; padding: 40px 20px; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 90vh; text-align: center; }' +
+        '.card { background: #ffffff; color: #0f172a; padding: 40px 50px; border-radius: 24px; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5); max-width: 600px; width: 100%; border: 4px solid #3b82f6; }' +
+        '.header-tag { display: inline-block; background: #eff6ff; color: #1d4ed8; padding: 6px 16px; border-radius: 9999px; font-weight: 700; font-size: 16px; margin-bottom: 12px; }' +
+        'h1 { font-size: 28px; margin: 0 0 8px 0; color: #1e3a8a; font-weight: 800; }' +
+        'h2 { font-size: 20px; margin: 0 0 16px 0; color: #475569; font-weight: 600; }' +
+        '.qr-wrap { background: #ffffff; padding: 16px; border-radius: 16px; display: inline-block; box-shadow: 0 10px 25px rgba(0,0,0,0.1); margin: 16px 0; border: 2px dashed #cbd5e1; }' +
+        '.qr-wrap canvas, .qr-wrap img { width: 280px !important; height: 280px !important; }' +
+        '.inst { font-size: 18px; font-weight: 700; color: #0f172a; margin-top: 12px; }' +
+        '.url-txt { font-family: monospace; font-size: 13px; color: #64748b; background: #f8fafc; padding: 8px; border-radius: 8px; margin-top: 10px; word-break: break-all; }' +
+        '.footer { margin-top: 24px; font-size: 13px; color: #94a3b8; }' +
+        '@media print { body { background: #ffffff; padding: 0; } .card { box-shadow: none; border: 2px solid #000000; } }' +
+        '</style>' +
+        '<script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"><\/script>' +
+        '</head><body><div class="card">' +
+        '<div class="header-tag">บริษัท ไทยวัฒนาพานิช จำกัด (TWP)</div>' +
+        '<h1>' + title + '</h1>' +
+        '<h2>' + req.courseTopic + '</h2>' +
+        '<div style="font-size: 16px; color: #334155; font-weight: 600;">' + req.schoolName + ' (' + req.province + ')</div>' +
+        '<div class="qr-wrap" id="printQrBox"></div>' +
+        '<div class="inst">' + sub + '</div>' +
+        '<div class="url-txt">' + url + '</div>' +
+        '<div class="footer">รหัสอ้างอิง: ' + req.eventId + ' | ขอบพระคุณทุกท่านที่ร่วมพัฒนาการศึกษากับ TWP</div>' +
+        '</div>' +
+        '<script>' +
+        'new QRCode(document.getElementById("printQrBox"), { text: "' + url + '", width: 280, height: 280, colorDark: "#0f172a", colorLight: "#ffffff", correctLevel: QRCode.CorrectLevel.H });' +
+        'setTimeout(function() { window.print(); }, 800);' +
+        '<\/script></body></html>';
+
+      printWin.document.write(docHtml);
+      printWin.document.close();
     }
 
     function closeQrModal() {
@@ -4241,7 +5205,7 @@
       const input = document.getElementById('modalShareUrl');
       input.select();
       document.execCommand('copy');
-      showAlert('คัดลอกลิงก์แบบประเมินเรียบร้อยแล้ว', 'success');
+      showAlert('คัดลอกลิงก์เรียบร้อยแล้ว', 'success');
     }
 
     // ------------------- PPC STANDARD A4 REPORT ENGINE (PDF & WORD) -------------------
@@ -4375,6 +5339,18 @@
         roomCount: req.roomCount || 0,
         needTrans: needTrans,
         transDetails: req.transportDetails || '',
+        isDemoCase: req.isDemoCase || req.eventId === 'EVT-DEMO-2026',
+        resourceLink: req.resourceLink || '',
+        actualExpenses: req.actualExpenses || {
+          expSpeaker: Math.round(actualBudget * 0.40),
+          expTravel: Math.round(actualBudget * 0.12),
+          expAccom: Math.round(actualBudget * 0.14),
+          expFood: Math.round(actualBudget * 0.20),
+          expDocKit: Math.round(actualBudget * 0.08),
+          expVenue: 0,
+          expMisc: Math.round(actualBudget * 0.06)
+        },
+        actualExpensesTotal: req.actualExpensesTotal || actualBudget,
         createdBy: req.createdBy || req.saleName || 'พนักงานขาย (ทีม A)',
         reviewedBy: req.reviewedBy || 'ฝ่ายวิชาการ (ทีม B)',
         approvedBy: req.approvedBy || 'ดร.นิพนธ์ ประธานบริหาร',
@@ -4402,10 +5378,26 @@
 
     function renderA4EvalReportHtmlClient(d) {
       const isApproved = d.status === 'APPROVED';
+      const exp = d.actualExpenses || {};
 
       return `
         <div class="a4-memo-container select-text" style="font-family:'TH Sarabun New','TH Sarabun PSK','Sarabun',sans-serif; font-size:12pt; line-height:1.45; color:#0f172a;">
           
+          ${d.isDemoCase ? `
+            <div style="background:linear-gradient(90deg, #1e3a8a, #0284c7); color:#ffffff; padding:8px 12px; border-radius:6px; margin-bottom:12px; display:flex; align-items:center; justify-content:space-between; box-shadow:0 2px 4px rgba(0,0,0,0.1);">
+              <div style="display:flex; align-items:center; gap:8px;">
+                <span style="font-size:16pt;">🌟</span>
+                <div>
+                  <div style="font-size:12pt; font-weight:800; letter-spacing:0.5px; line-height:1.2;">เอกสารตัวอย่างการใช้ระบบ (End-to-End System Demonstration Exemplar)</div>
+                  <div style="font-size:8.5pt; opacity:0.95;">สาธิตกระบวนการทำงานครบวงจร: ขอจัดอบรม &rarr; ตรวจวิชาการ &rarr; อนุมัติและลงนาม &rarr; สแกน QR ทำแบบประเมิน &rarr; สรุปค่าใช้จ่ายจริง ๗ หมวด</div>
+                </div>
+              </div>
+              <div style="text-align:right; font-size:8.5pt; font-weight:700; background:rgba(255,255,255,0.2); padding:3px 8px; border-radius:4px; border:1px solid rgba(255,255,255,0.4); white-space:nowrap;">
+                เคสตัวอย่างสมบูรณ์
+              </div>
+            </div>
+          ` : ''}
+
           <!-- LETTERHEAD -->
           <div style="display:flex; align-items:flex-end; justify-content:space-between; border-bottom:2.5px solid #08539E; padding-bottom:8px; margin-bottom:12px;">
             <div style="display:flex; align-items:center; gap:12px;">
@@ -4516,12 +5508,132 @@
             </table>
           </div>
 
+          <!-- SECTION 2.5: ITEMIZED 7 ACTUAL EXPENSES BREAKDOWN & VARIANCE TABLE -->
+          <div style="margin-bottom:10px; border:1px solid #cbd5e1; border-radius:8px; padding:8px 12px; background:#ffffff;">
+            <div style="font-size:12pt; font-weight:700; color:#08539E; margin-bottom:4px; display:flex; justify-content:space-between; align-items:center;">
+              <span>๒. สรุปรายละเอียดค่าใช้จ่ายจริง ๗ หมวดมาตรฐาน (Itemized Actual Expenses Settlement)</span>
+              <span style="font-size:9pt; font-weight:600; color:#059669; background:#ecfdf5; padding:2px 8px; border-radius:4px; border:1px solid #a7f3d0;">
+                ประหยัดสุทธิ ฿${(d.actualBudget <= d.estBudget ? (d.estBudget - d.actualBudget) : 0).toLocaleString()} บาท
+              </span>
+            </div>
+
+            <table style="width:100%; border-collapse:collapse; font-size:10pt; line-height:1.3; text-align:left; margin-top:4px;">
+              <thead>
+                <tr style="background:#f1f5f9; color:#1e293b; font-weight:700;">
+                  <th style="padding:4px 6px; border:1px solid #cbd5e1; text-align:center; width:30px;">ลำดับ</th>
+                  <th style="padding:4px 8px; border:1px solid #cbd5e1;">หมวดรายการค่าใช้จ่ายจริง (๗ หมวดมาตรฐาน)</th>
+                  <th style="padding:4px 6px; border:1px solid #cbd5e1; text-align:right; width:95px;">จำนวนเงิน (บาท)</th>
+                  <th style="padding:4px 6px; border:1px solid #cbd5e1; text-align:center; width:65px;">สัดส่วน (%)</th>
+                  <th style="padding:4px 8px; border:1px solid #cbd5e1;">หมายเหตุ / ความสอดคล้องตามเกณฑ์</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td style="padding:3px 6px; border:1px solid #e2e8f0; text-align:center; font-weight:700;">๑</td>
+                  <td style="padding:3px 8px; border:1px solid #e2e8f0;">ค่าตอบแทนวิทยากร และผู้ช่วยวิทยากร</td>
+                  <td style="padding:3px 6px; border:1px solid #e2e8f0; text-align:right; font-family:monospace; font-weight:700; color:#08539E;">${Number(exp.expSpeaker || 0).toLocaleString()}</td>
+                  <td style="padding:3px 6px; border:1px solid #e2e8f0; text-align:center;">${d.actualExpensesTotal > 0 ? ((Number(exp.expSpeaker || 0) / d.actualExpensesTotal) * 100).toFixed(1) : '0.0'}%</td>
+                  <td style="padding:3px 8px; border:1px solid #e2e8f0; font-size:9pt; color:#475569;">วิทยากรผู้ทรงคุณวุฒิระดับเชี่ยวชาญ</td>
+                </tr>
+                <tr style="background:#f8fafc;">
+                  <td style="padding:3px 6px; border:1px solid #e2e8f0; text-align:center; font-weight:700;">๒</td>
+                  <td style="padding:3px 8px; border:1px solid #e2e8f0;">ค่ายานพาหนะ การเดินทาง และน้ำมันเชื้อเพลิง</td>
+                  <td style="padding:3px 6px; border:1px solid #e2e8f0; text-align:right; font-family:monospace; font-weight:700; color:#08539E;">${Number(exp.expTravel || 0).toLocaleString()}</td>
+                  <td style="padding:3px 6px; border:1px solid #e2e8f0; text-align:center;">${d.actualExpensesTotal > 0 ? ((Number(exp.expTravel || 0) / d.actualExpensesTotal) * 100).toFixed(1) : '0.0'}%</td>
+                  <td style="padding:3px 8px; border:1px solid #e2e8f0; font-size:9pt; color:#475569;">รถตู้บริษัทและค่าน้ำมันเชื้อเพลิงตามจริง</td>
+                </tr>
+                <tr>
+                  <td style="padding:3px 6px; border:1px solid #e2e8f0; text-align:center; font-weight:700;">๓</td>
+                  <td style="padding:3px 8px; border:1px solid #e2e8f0;">ค่าห้องพักและที่พักทีมงาน/วิทยากร</td>
+                  <td style="padding:3px 6px; border:1px solid #e2e8f0; text-align:right; font-family:monospace; font-weight:700; color:#08539E;">${Number(exp.expAccom || 0).toLocaleString()}</td>
+                  <td style="padding:3px 6px; border:1px solid #e2e8f0; text-align:center;">${d.actualExpensesTotal > 0 ? ((Number(exp.expAccom || 0) / d.actualExpensesTotal) * 100).toFixed(1) : '0.0'}%</td>
+                  <td style="padding:3px 8px; border:1px solid #e2e8f0; font-size:9pt; color:#475569;">พักตามระเบียบสวัสดิการบริษัท</td>
+                </tr>
+                <tr style="background:#f8fafc;">
+                  <td style="padding:3px 6px; border:1px solid #e2e8f0; text-align:center; font-weight:700;">๔</td>
+                  <td style="padding:3px 8px; border:1px solid #e2e8f0;">ค่าอาหารกลางวัน อาหารว่าง และเครื่องดื่ม (Break)</td>
+                  <td style="padding:3px 6px; border:1px solid #e2e8f0; text-align:right; font-family:monospace; font-weight:700; color:#08539E;">${Number(exp.expFood || 0).toLocaleString()}</td>
+                  <td style="padding:3px 6px; border:1px solid #e2e8f0; text-align:center;">${d.actualExpensesTotal > 0 ? ((Number(exp.expFood || 0) / d.actualExpensesTotal) * 100).toFixed(1) : '0.0'}%</td>
+                  <td style="padding:3px 8px; border:1px solid #e2e8f0; font-size:9pt; color:#475569;">เฉลี่ย ฿${(Number(exp.expFood || 0) / (d.evalCount || 50)).toFixed(1)}/คน ครบถ้วนตามมาตรฐาน</td>
+                </tr>
+                <tr>
+                  <td style="padding:3px 6px; border:1px solid #e2e8f0; text-align:center; font-weight:700;">๕</td>
+                  <td style="padding:3px 8px; border:1px solid #e2e8f0;">ค่าเอกสารสิ่งพิมพ์ คู่มือ และชุดอุปกรณ์การเรียน</td>
+                  <td style="padding:3px 6px; border:1px solid #e2e8f0; text-align:right; font-family:monospace; font-weight:700; color:#08539E;">${Number(exp.expDocKit || 0).toLocaleString()}</td>
+                  <td style="padding:3px 6px; border:1px solid #e2e8f0; text-align:center;">${d.actualExpensesTotal > 0 ? ((Number(exp.expDocKit || 0) / d.actualExpensesTotal) * 100).toFixed(1) : '0.0'}%</td>
+                  <td style="padding:3px 8px; border:1px solid #e2e8f0; font-size:9pt; color:#475569;">ชุดคู่มือ Active Learning และเอกสารแจกครบทุกคน</td>
+                </tr>
+                <tr style="background:#f8fafc;">
+                  <td style="padding:3px 6px; border:1px solid #e2e8f0; text-align:center; font-weight:700;">๖</td>
+                  <td style="padding:3px 8px; border:1px solid #e2e8f0;">ค่าเช่าสถานที่ โสตทัศนูปกรณ์ และห้องประชุม</td>
+                  <td style="padding:3px 6px; border:1px solid #e2e8f0; text-align:right; font-family:monospace; font-weight:700; color:#08539E;">${Number(exp.expVenue || 0).toLocaleString()}</td>
+                  <td style="padding:3px 6px; border:1px solid #e2e8f0; text-align:center;">${d.actualExpensesTotal > 0 ? ((Number(exp.expVenue || 0) / d.actualExpensesTotal) * 100).toFixed(1) : '0.0'}%</td>
+                  <td style="padding:3px 8px; border:1px solid #e2e8f0; font-size:9pt; color:#475569;">${Number(exp.expVenue || 0) === 0 ? 'สถานศึกษาให้ความอนุเคราะห์ห้องประชุมฟรี' : 'ค่าเช่าห้องประชุม'}</td>
+                </tr>
+                <tr>
+                  <td style="padding:3px 6px; border:1px solid #e2e8f0; text-align:center; font-weight:700;">๗</td>
+                  <td style="padding:3px 8px; border:1px solid #e2e8f0;">ค่าของที่ระลึก เกียรติบัตร ป้ายไวนิล และเบ็ดเตล็ด</td>
+                  <td style="padding:3px 6px; border:1px solid #e2e8f0; text-align:right; font-family:monospace; font-weight:700; color:#08539E;">${Number(exp.expMisc || 0).toLocaleString()}</td>
+                  <td style="padding:3px 6px; border:1px solid #e2e8f0; text-align:center;">${d.actualExpensesTotal > 0 ? ((Number(exp.expMisc || 0) / d.actualExpensesTotal) * 100).toFixed(1) : '0.0'}%</td>
+                  <td style="padding:3px 8px; border:1px solid #e2e8f0; font-size:9pt; color:#475569;">ของที่ระลึกผู้บริหาร ป้ายเวที และกรอบเกียรติบัตร</td>
+                </tr>
+                <!-- Total Row -->
+                <tr style="background:#eff6ff; font-weight:700; border-top:2px solid #08539E;">
+                  <td colspan="2" style="padding:5px 8px; border:1px solid #cbd5e1; text-align:right; color:#08539E;">
+                    รวมค่าใช้จ่ายจริงทั้งสิ้น ๗ หมวด (Total Actual Expenses):
+                  </td>
+                  <td style="padding:5px 6px; border:1px solid #cbd5e1; text-align:right; font-family:monospace; font-size:11pt; color:#08539E;">
+                    ${Number(d.actualExpensesTotal || d.actualBudget).toLocaleString()}
+                  </td>
+                  <td style="padding:5px 6px; border:1px solid #cbd5e1; text-align:center; color:#08539E;">100.0%</td>
+                  <td style="padding:5px 8px; border:1px solid #cbd5e1; color:#059669; font-size:9.5pt;">
+                    ต้นทุนจริงเฉลี่ยเพียง <strong>฿${d.costPerHead}</strong> / คน (ประหยัด ฿${d.savingPerHead}/คน)
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
           <!-- SECTION 4: QUALITATIVE FEEDBACK & INSIGHTS -->
           <div style="background:#f8fafc; border:1px solid #cbd5e1; border-radius:8px; padding:8px 12px; margin-bottom:12px; font-size:10.5pt;">
             <strong style="color:#08539E;">๓. ข้อคิดเห็นและข้อเสนอแนะเชิงคุณภาพจากผู้เข้าอบรม:</strong>
             <p style="margin:3px 0 0 0; color:#334155; line-height:1.4;">
               ผู้เข้ารับการอบรมมีความพึงพอใจระดับดีเยี่ยมต่อการถ่ายทอดของวิทยากร สื่อการสอนและชุดกิจกรรมมีความน่าสนใจ สอดคล้องกับการจัดการเรียนรู้แบบ Active Learning ในชั้นเรียนจริง โดยผู้เข้าอบรมเสนอแนะให้บริษัท ไทยวัฒนาพานิช จำกัด จัดกิจกรรมเชิงปฏิบัติการและเวิร์กช็อปต่อเนื่องในระดับเขตพื้นที่การศึกษาต่อไป
             </p>
+          </div>
+
+          <!-- SECTION 4.5: DUAL QR CODE VERIFICATION & DOCUMENT REPOSITORY HUB -->
+          <div style="background:#ffffff; border:1.5px solid #08539E; border-radius:8px; padding:10px 14px; margin-bottom:12px;">
+            <div style="font-size:11.5pt; font-weight:700; color:#08539E; margin-bottom:8px; display:flex; align-items:center; justify-content:space-between;">
+              <span>๓. ช่องทางสแกน QR Code สำหรับผู้เข้าอบรม และลิงก์แหล่งเก็บไฟล์โครงการ</span>
+              <span style="font-size:8.5pt; color:#64748b; font-weight:normal;">สแกนผ่านสมาร์ทโฟนได้ทันที</span>
+            </div>
+
+            <div style="display:grid; grid-template-columns: 1fr 1fr; gap:14px; align-items:center;">
+              <!-- QR Code 1: 10-Question Evaluation Survey -->
+              <div style="background:#f8fafc; border:1px solid #cbd5e1; border-radius:6px; padding:8px 12px; display:flex; align-items:center; gap:12px;">
+                <div style="background:#ffffff; padding:4px; border-radius:6px; border:1px solid #94a3b8; display:flex; align-items:center; justify-content:center;">
+                  <img src="https://api.qrserver.com/v1/create-qr-code/?size=110x110&data=${encodeURIComponent(window.location.origin + window.location.pathname.replace('index.html', 'survey.html') + '?t=' + (d.eventId === 'EVT-DEMO-2026' ? 'demo-active-learning-2026' : d.eventId))}" style="width:78px; height:78px; display:block;" alt="QR แบบประเมิน 10 ข้อ">
+                </div>
+                <div>
+                  <div style="font-size:10.5pt; font-weight:700; color:#1e3a8a;">๑. QR แบบประเมินผล ๑๐ ข้อ</div>
+                  <div style="font-size:8.5pt; color:#475569; margin-top:2px;">สแกนเพื่อตอบแบบประเมินความพึงพอใจและรับเกียรติบัตร</div>
+                  <div style="font-size:7.5pt; color:#2563eb; font-family:monospace; margin-top:4px;">survey.html?t=${d.eventId}</div>
+                </div>
+              </div>
+
+              <!-- QR Code 2: Cloud Storage / Google Drive -->
+              <div style="background:#fffbeb; border:1px solid #fde68a; border-radius:6px; padding:8px 12px; display:flex; align-items:center; gap:12px;">
+                <div style="background:#ffffff; padding:4px; border-radius:6px; border:1px solid #d97706; display:flex; align-items:center; justify-content:center;">
+                  <img src="https://api.qrserver.com/v1/create-qr-code/?size=110x110&data=${encodeURIComponent(d.resourceLink || 'https://drive.google.com')}" style="width:78px; height:78px; display:block;" alt="QR เอกสารและภาพโครงการ">
+                </div>
+                <div>
+                  <div style="font-size:10.5pt; font-weight:700; color:#b45309;">๒. QR แหล่งเก็บไฟล์ & ภาพอบรม</div>
+                  <div style="font-size:8.5pt; color:#78350f; margin-top:2px;">สแกนดาวน์โหลดคู่มือ สไลด์ และภาพกิจกรรมโครงการ</div>
+                  <div style="font-size:7.5pt; color:#b45309; font-family:monospace; margin-top:4px;">${d.resourceLink ? d.resourceLink.substring(0, 38) + '...' : 'https://drive.google.com/...'}</div>
+                </div>
+              </div>
+            </div>
           </div>
 
           <!-- SECTION 5: SIGNATURES BLOCK WITH DIGITAL SIGNATURE -->
@@ -4584,6 +5696,22 @@
       return `
         <div class="a4-memo-container select-text" style="font-family:'TH Sarabun New','TH Sarabun PSK','Sarabun',sans-serif; font-size:12pt; line-height:1.5; color:#0f172a;">
           
+          
+          ${d.isDemoCase ? `
+            <div style="background:linear-gradient(90deg, #1e3a8a, #0284c7); color:#ffffff; padding:8px 12px; border-radius:6px; margin-bottom:12px; display:flex; align-items:center; justify-content:space-between; box-shadow:0 2px 4px rgba(0,0,0,0.1);">
+              <div style="display:flex; align-items:center; gap:8px;">
+                <span style="font-size:16pt;">🌟</span>
+                <div>
+                  <div style="font-size:12pt; font-weight:800; letter-spacing:0.5px; line-height:1.2;">เอกสารตัวอย่างการใช้ระบบ (End-to-End System Demonstration Exemplar)</div>
+                  <div style="font-size:8.5pt; opacity:0.95;">สาธิตกระบวนการทำงานครบวงจร: ขอจัดอบรม &rarr; ตรวจวิชาการ &rarr; อนุมัติและลงนาม &rarr; สแกน QR ทำแบบประเมิน &rarr; สรุปค่าใช้จ่ายจริง ๗ หมวด</div>
+                </div>
+              </div>
+              <div style="text-align:right; font-size:8.5pt; font-weight:700; background:rgba(255,255,255,0.2); padding:3px 8px; border-radius:4px; border:1px solid rgba(255,255,255,0.4); white-space:nowrap;">
+                เคสตัวอย่างสมบูรณ์
+              </div>
+            </div>
+          ` : ''}
+
           <!-- MEMO LETTERHEAD (ครุฑ / ตราสัญลักษณ์ TWP และ บันทึกข้อความ) -->
           <div style="display:flex; align-items:flex-end; justify-content:space-between; border-bottom:2.5px solid #0f172a; padding-bottom:8px; margin-bottom:12px;">
             <div style="display:flex; align-items:center; gap:12px;">
@@ -4740,6 +5868,21 @@
     function renderPpcReportHtmlClient(d) {
       return `
         <div style="font-family:'Sarabun',sans-serif; color:#0f172a; line-height:1.35; font-size:11.5pt;">
+
+          ${d.isDemoCase ? `
+            <div style="background:linear-gradient(90deg, #1e3a8a, #0284c7); color:#ffffff; padding:8px 12px; border-radius:6px; margin-bottom:12px; display:flex; align-items:center; justify-content:space-between; box-shadow:0 2px 4px rgba(0,0,0,0.1);">
+              <div style="display:flex; align-items:center; gap:8px;">
+                <span style="font-size:16pt;">🌟</span>
+                <div>
+                  <div style="font-size:12pt; font-weight:800; letter-spacing:0.5px; line-height:1.2;">เอกสารตัวอย่างการใช้ระบบ (End-to-End System Demonstration Exemplar)</div>
+                  <div style="font-size:8.5pt; opacity:0.95;">สาธิตกระบวนการทำงานครบวงจร: ขอจัดอบรม &rarr; ตรวจวิชาการ &rarr; อนุมัติและลงนาม &rarr; สแกน QR ทำแบบประเมิน &rarr; สรุปค่าใช้จ่ายจริง ๗ หมวด</div>
+                </div>
+              </div>
+              <div style="text-align:right; font-size:8.5pt; font-weight:700; background:rgba(255,255,255,0.2); padding:3px 8px; border-radius:4px; border:1px solid rgba(255,255,255,0.4); white-space:nowrap;">
+                เคสตัวอย่างสมบูรณ์
+              </div>
+            </div>
+          ` : ''}
           <div style="border-bottom:2.5px solid #08539E; padding-bottom:10px; margin-bottom:14px; display:flex; justify-content:space-between; align-items:flex-start;">
             <div>
               <div style="font-size:16pt; font-weight:800; color:#08539E; line-height:1.2;">บริษัท ไทยวัฒนาพานิช จำกัด (TWP)</div>
