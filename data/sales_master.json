@@ -1,0 +1,80 @@
+[
+  {
+    "saleId": "SAL-101",
+    "saleName": "กิตติศักดิ์ ฉันทวุฒินันท์",
+    "province": "กรุงเทพมหานคร",
+    "zone": "กทม."
+  },
+  {
+    "saleId": "SAL-102",
+    "saleName": "ควรชิด จัตตุพร",
+    "province": "กรุงเทพมหานคร",
+    "zone": "กทม."
+  },
+  {
+    "saleId": "SAL-103",
+    "saleName": "อิทธินัย ชมภู่",
+    "province": "กรุงเทพมหานคร",
+    "zone": "กทม."
+  },
+  {
+    "saleId": "SAL-104",
+    "saleName": "ฉัตรชัย บุษบารัตน์",
+    "province": "จันทบุรี",
+    "zone": "ภาคกลาง"
+  },
+  {
+    "saleId": "SAL-105",
+    "saleName": "ปภังกร กฤตพุทธิกุล",
+    "province": "กาญจนบุรี",
+    "zone": "ภาคกลาง"
+  },
+  {
+    "saleId": "SAL-106",
+    "saleName": "โชคอำนวย ศรีรัตนพิบูลย์",
+    "province": "ตรัง",
+    "zone": "ภาคใต้"
+  },
+  {
+    "saleId": "SAL-107",
+    "saleName": "นิติพจน์ ไกรวงศ์",
+    "province": "กระบี่",
+    "zone": "ภาคใต้"
+  },
+  {
+    "saleId": "SAL-108",
+    "saleName": "Chor",
+    "province": "กำแพงเพชร",
+    "zone": "ภาคเหนือ"
+  },
+  {
+    "saleId": "SAL-109",
+    "saleName": "ชุดาภรณ์ มุศรีพันธุ์",
+    "province": "ขอนแก่น",
+    "zone": "ภาคอีสาน"
+  },
+  {
+    "saleId": "SAL-110",
+    "saleName": "ถาวร สิริชัยโชติ",
+    "province": "กาฬสินธุ์",
+    "zone": "ภาคอีสาน"
+  },
+  {
+    "saleId": "SAL-111",
+    "saleName": "บุญลาภ ยิ้มสุข",
+    "province": "ชัยภูมิ",
+    "zone": "ภาคอีสาน"
+  },
+  {
+    "saleId": "SAL-112",
+    "saleName": "ส่วนกลาง1",
+    "province": "เชียงราย",
+    "zone": "ส่วนกลาง"
+  },
+  {
+    "saleId": "SAL-113",
+    "saleName": "ส่วนกลาง2",
+    "province": "ศรีสะเกษ",
+    "zone": "ส่วนกลาง"
+  }
+]
