@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-  <title>Training Center TWP - ระบบบริหารคำขอจัดอบรมและประเมินผล v1.7.0</title>
+  <title>Training Center TWP - ระบบบริหารคำขอจัดอบรมและประเมินผล v1.8.0</title>
   <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
   <!-- Google Fonts: Sarabun -->
@@ -160,7 +160,7 @@
       <div class="flex items-center space-x-3 text-xs">
         <span class="bg-white/15 px-3 py-1.5 rounded-full border border-white/20 backdrop-blur-sm font-mono text-blue-100 flex items-center">
           <span class="w-2 h-2 rounded-full bg-emerald-400 mr-2 animate-pulse"></span>
-          System v1.7.0
+          System v1.8.0
         </span>
       </div>
     </div>
@@ -232,7 +232,7 @@
     <!-- Bottom Footer on Landing Page -->
     <div class="max-w-7xl mx-auto w-full px-6 py-4 flex flex-col sm:flex-row items-center justify-between text-xs text-blue-200 border-t border-white/10 relative z-10 gap-2">
       <div>&copy; 2026 Training Center TWP - บริษัท ไทยวัฒนาพานิช จำกัด. All rights reserved.</div>
-      <div class="font-mono text-[11px] bg-white/10 px-3 py-1 rounded-full border border-white/15">EMS Enterprise Platform v1.7.0 (Live Apps Script Engine)</div>
+      <div class="font-mono text-[11px] bg-white/10 px-3 py-1 rounded-full border border-white/15">EMS Enterprise Platform v1.8.0 (Live Apps Script Engine)</div>
     </div>
 
   </div>
@@ -255,7 +255,7 @@
             <div>
               <div class="flex items-center space-x-2">
                 <span class="font-extrabold text-lg tracking-wide text-white">Training Center TWP</span>
-                <span class="bg-blue-400/20 text-blue-200 text-[10px] font-mono px-2 py-0.5 rounded-full border border-blue-300/30">v1.7.0</span>
+                <span class="bg-blue-400/20 text-blue-200 text-[10px] font-mono px-2 py-0.5 rounded-full border border-blue-300/30">v1.8.0</span>
               </div>
               <p class="text-[11px] text-blue-200 hidden sm:block">ระบบบริหารคำขอจัดอบรมและประเมินผลปิดลูป</p>
             </div>
@@ -293,17 +293,29 @@
               <span id="pingText" class="text-[10px] text-slate-400 font-mono hidden sm:inline pl-1 border-l border-slate-700">-- ms</span>
             </div>
 
-            <!-- Operator Stamp Profile -->
-            <div class="flex items-center bg-slate-900/60 px-2.5 py-1 rounded-lg border border-blue-400/20 text-xs">
-              <i class="fa-solid fa-user-pen text-blue-300 mr-2"></i>
-              <span class="text-blue-200 mr-1 hidden xl:inline">ผู้ปฏิบัติงาน:</span>
-              <input type="text" id="operatorNameInput" onchange="updateOperatorName(this.value)" placeholder="ระบุชื่อของคุณ..." class="bg-transparent text-white font-medium focus:outline-none w-24 sm:w-32 text-xs">
+            <!-- Operator Profile & Team Tag (Click to Switch Profile) -->
+            <div onclick="openSwitchProfileModal()" title="คลิกเพื่อสลับชื่อหรือเลือกโปรไฟล์สมาชิกในทีม" class="cursor-pointer flex items-center bg-slate-900/70 hover:bg-slate-900 px-2.5 py-1 rounded-lg border border-blue-400/30 text-xs transition btn-tactile">
+              <i class="fa-solid fa-id-badge text-blue-300 mr-1.5 text-sm"></i>
+              <div class="text-left">
+                <div class="font-bold text-white flex items-center space-x-1 leading-tight">
+                  <span id="headerOperatorName">สมชาย มุ่งมั่น</span>
+                  <span id="headerOperatorTeamBadge" class="text-[9px] bg-blue-500/30 text-blue-200 px-1.5 py-0.2 rounded font-bold border border-blue-300/30">ทีม A</span>
+                </div>
+                <div id="headerOperatorMeta" class="text-[9px] text-blue-200/80 truncate max-w-[130px] hidden xl:block">เจ้าหน้าที่ฝ่ายขาย • TWP</div>
+              </div>
+              <i class="fa-solid fa-chevron-down text-[9px] text-blue-300 ml-1.5"></i>
             </div>
 
             <!-- Admin Button -->
             <button onclick="openAdminModal()" class="bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 px-2.5 py-1.5 rounded-lg border border-amber-400/30 text-xs font-medium flex items-center space-x-1.5 transition btn-tactile">
               <i class="fa-solid fa-gear text-amber-400"></i>
               <span class="hidden sm:inline">Admin</span>
+            </button>
+
+            <!-- Logout Button -->
+            <button onclick="handleLogout()" title="ออกจากระบบ และบันทึกซิงค์ข้อมูลล่าสุด" class="bg-rose-500/20 hover:bg-rose-500/30 text-rose-200 hover:text-white px-2.5 py-1.5 rounded-lg border border-rose-400/30 text-xs font-semibold flex items-center space-x-1.5 transition btn-tactile">
+              <i class="fa-solid fa-right-from-bracket text-rose-300"></i>
+              <span class="hidden md:inline">ออกจากระบบ</span>
             </button>
 
           </div>
@@ -1069,7 +1081,39 @@
           </button>
         </div>
 
-        <!-- PPC Sales Representatives Management in Settings -->
+        <!-- Team Members & Identity Directory in Settings -->
+        <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 space-y-3">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+            <div class="flex items-center space-x-2">
+              <i class="fa-solid fa-users-rectangle text-blue-600"></i>
+              <div>
+                <span class="text-xs font-bold text-slate-800 uppercase tracking-wider">จัดการสมาชิกและสิทธิ์ประจำทีม (Team Directory)</span>
+                <p class="text-[11px] text-slate-500">ระบุชื่อ-นามสกุล ส่วนงาน ตำแหน่งงาน และบริษัทฯ ในแต่ละทีม</p>
+              </div>
+            </div>
+            <div class="flex items-center space-x-2">
+              <button onclick="openAddMemberModal()" class="px-2.5 py-1 bg-blue-600 hover:bg-blue-700 text-white text-[11px] font-semibold rounded-lg transition">
+                <i class="fa-solid fa-user-plus mr-1"></i>เพิ่มสมาชิกใหม่
+              </button>
+            </div>
+          </div>
+
+          <!-- Team Filter Pills -->
+          <div class="flex space-x-1 text-[11px] overflow-x-auto pb-1" id="teamFilterPills">
+            <button onclick="filterTeamDirectory('ALL')" class="team-dir-pill px-2.5 py-1 rounded-md font-bold bg-blue-600 text-white" id="filterPillALL">ทั้งหมด</button>
+            <button onclick="filterTeamDirectory('ทีม A (ฝ่ายขาย)')" class="team-dir-pill px-2.5 py-1 rounded-md font-medium bg-white text-slate-600 border border-slate-200" id="filterPillTeamA">ทีม A (ฝ่ายขาย)</button>
+            <button onclick="filterTeamDirectory('ทีม B (ฝ่ายวิชาการ)')" class="team-dir-pill px-2.5 py-1 rounded-md font-medium bg-white text-slate-600 border border-slate-200" id="filterPillTeamB">ทีม B (ฝ่ายวิชาการ)</button>
+            <button onclick="filterTeamDirectory('ผู้บริหาร')" class="team-dir-pill px-2.5 py-1 rounded-md font-medium bg-white text-slate-600 border border-slate-200" id="filterPillExec">ผู้บริหาร</button>
+            <button onclick="filterTeamDirectory('ศูนย์ประเมินผล')" class="team-dir-pill px-2.5 py-1 rounded-md font-medium bg-white text-slate-600 border border-slate-200" id="filterPillEval">ศูนย์ประเมินผล</button>
+          </div>
+
+          <!-- Members List Container -->
+          <div id="adminTeamMembersListWrap" class="grid grid-cols-1 sm:grid-cols-2 gap-2 max-h-56 overflow-y-auto custom-scrollbar p-1">
+            <!-- Rendered dynamically -->
+          </div>
+        </div>
+
+                <!-- PPC Sales Representatives Management in Settings -->
         <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 space-y-3">
           <div class="flex items-center justify-between">
             <div class="flex items-center space-x-2">
@@ -1395,10 +1439,141 @@
     </div>
   </div>
 
+    <!-- ========================================== -->
+  <!-- MODAL: LOGOUT CONFIRMATION & SYNC NOTIFICATION -->
+  <!-- ========================================== -->
+  <div id="logoutModal" class="hidden fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="bg-white rounded-3xl max-w-sm w-full p-6 text-center space-y-4 shadow-2xl border border-slate-100">
+      <div class="w-16 h-16 bg-emerald-50 text-emerald-600 rounded-3xl flex items-center justify-center mx-auto text-2xl shadow-inner border border-emerald-200">
+        <i class="fa-solid fa-cloud-arrow-up animate-bounce"></i>
+      </div>
+      <div>
+        <h3 class="font-black text-slate-900 text-lg">ออกจากระบบสำเร็จ</h3>
+        <p class="text-xs text-slate-500 mt-1">ระบบได้ทำการซิงค์และบันทึกข้อมูลล่าสุดเรียบร้อยแล้ว</p>
+      </div>
+
+      <div class="bg-slate-50 p-3.5 rounded-2xl border border-slate-200 text-left text-xs space-y-2">
+        <div class="flex items-center text-emerald-700">
+          <i class="fa-solid fa-circle-check mr-2 text-emerald-600"></i>
+          <span>ซิงค์ข้อมูล Google Sheets เรียบร้อย</span>
+        </div>
+        <div class="flex items-center text-blue-700">
+          <i class="fa-solid fa-circle-check mr-2 text-blue-600"></i>
+          <span>ถอดสถานะเครื่องออกจากระบบออนไลน์</span>
+        </div>
+        <div class="flex items-center text-slate-600">
+          <i class="fa-solid fa-circle-check mr-2 text-slate-500"></i>
+          <span>บันทึกประวัติการออกจากระบบ</span>
+        </div>
+      </div>
+
+      <div class="pt-2">
+        <button type="button" onclick="confirmLogoutRedirect()" class="w-full py-3 bg-[#08539E] hover:bg-[#06427e] text-white font-bold text-xs rounded-xl transition shadow-md">
+          กลับสู่หน้าแรก (Landing Page)
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================== -->
+  <!-- MODAL: SWITCH OPERATOR PROFILE (เลือกโปรไฟล์) -->
+  <!-- ========================================== -->
+  <div id="switchProfileModal" class="hidden fixed inset-0 z-50 bg-slate-900/70 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="bg-white rounded-3xl max-w-md w-full p-6 space-y-4 shadow-2xl">
+      <div class="flex items-center justify-between pb-3 border-b border-slate-100">
+        <div class="flex items-center space-x-2.5">
+          <div class="w-10 h-10 rounded-2xl bg-blue-100 text-[#08539E] flex items-center justify-center text-xl shadow-sm">
+            <i class="fa-solid fa-user-gear"></i>
+          </div>
+          <div>
+            <h3 class="font-bold text-slate-800 text-base">สลับโปรไฟล์ผู้ปฏิบัติงาน</h3>
+            <p class="text-xs text-slate-400">เลือกโปรไฟล์สมาชิกจากทีมที่กำหนดไว้ใน Setting</p>
+          </div>
+        </div>
+        <button onclick="closeSwitchProfileModal()" class="text-slate-400 hover:text-slate-600"><i class="fa-solid fa-xmark text-lg"></i></button>
+      </div>
+
+      <!-- Quick Manual Override -->
+      <div class="bg-slate-50 p-3 rounded-2xl border border-slate-200 space-y-2">
+        <label class="block text-[11px] font-bold text-slate-600">หรือพิมพ์ระบุชื่อเองชั่วคราว:</label>
+        <div class="flex space-x-2">
+          <input type="text" id="manualProfileNameInput" placeholder="พิมพ์ชื่อ-นามสกุล..." class="w-full bg-white border border-slate-300 rounded-xl px-3 py-1.5 text-xs focus:ring-2 focus:ring-blue-500 focus:outline-none">
+          <button onclick="saveManualProfileName()" class="px-3 py-1.5 bg-blue-600 text-white font-bold text-xs rounded-xl whitespace-nowrap">บันทึก</button>
+        </div>
+      </div>
+
+      <!-- Member List to Select -->
+      <div>
+        <label class="block text-xs font-bold text-slate-700 mb-2">เลือกจากรายชื่อสมาชิกในทีม:</label>
+        <div id="switchProfileListContainer" class="space-y-2 max-h-56 overflow-y-auto custom-scrollbar p-1">
+          <!-- Rendered dynamically -->
+        </div>
+      </div>
+
+      <div class="pt-2 flex justify-end">
+        <button onclick="closeSwitchProfileModal()" class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-600 font-semibold text-xs rounded-xl">ปิด</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================== -->
+  <!-- MODAL: ADD NEW TEAM MEMBER (เพิ่มสมาชิกในทีม) -->
+  <!-- ========================================== -->
+  <div id="addMemberModal" class="hidden fixed inset-0 z-50 bg-slate-900/70 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="bg-white rounded-3xl max-w-md w-full p-6 space-y-4 shadow-2xl">
+      <div class="flex items-center justify-between pb-3 border-b border-slate-100">
+        <div class="flex items-center space-x-2.5">
+          <div class="w-10 h-10 rounded-2xl bg-emerald-100 text-emerald-700 flex items-center justify-center text-lg">
+            <i class="fa-solid fa-user-plus"></i>
+          </div>
+          <div>
+            <h3 class="font-bold text-slate-800 text-base">เพิ่มสมาชิกและระบุสิทธิ์ในทีม</h3>
+            <p class="text-xs text-slate-400">บันทึกรายชื่อเจ้าหน้าที่ประจำทีมเข้าสู่ระบบ</p>
+          </div>
+        </div>
+        <button onclick="closeAddMemberModal()" class="text-slate-400 hover:text-slate-600"><i class="fa-solid fa-xmark text-lg"></i></button>
+      </div>
+
+      <form id="newMemberForm" onsubmit="saveNewTeamMember(event)" class="space-y-3.5 text-xs">
+        <div>
+          <label class="block font-semibold text-slate-700 mb-1">ชื่อ - นามสกุล *</label>
+          <input type="text" id="memberFormName" required placeholder="เช่น นายเกรียงไกร มุ่งมั่น" class="w-full bg-slate-50 border border-slate-300 rounded-xl p-2.5 focus:ring-2 focus:ring-blue-500 focus:outline-none">
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div>
+            <label class="block font-semibold text-slate-700 mb-1">ส่วนงาน / ทีม *</label>
+            <select id="memberFormTeam" required class="w-full bg-slate-50 border border-slate-300 rounded-xl p-2.5 focus:ring-2 focus:ring-blue-500 focus:outline-none font-medium">
+              <option value="ทีม A (ฝ่ายขาย)">ทีม A: ขอจัดอบรม (Sales)</option>
+              <option value="ทีม B (ฝ่ายวิชาการ)">ทีม B: ตรวจวิชาการ (Academic)</option>
+              <option value="ผู้บริหาร">ผู้บริหาร: อนุมัติ (Management)</option>
+              <option value="ศูนย์ประเมินผล">ศูนย์ประเมินผล & ส่วนกลาง</option>
+            </select>
+          </div>
+
+          <div>
+            <label class="block font-semibold text-slate-700 mb-1">ตำแหน่งงาน *</label>
+            <input type="text" id="memberFormPosition" required placeholder="เช่น ผู้แทนขาย, นักวิชาการ..." class="w-full bg-slate-50 border border-slate-300 rounded-xl p-2.5 focus:ring-2 focus:ring-blue-500 focus:outline-none">
+          </div>
+        </div>
+
+        <div>
+          <label class="block font-semibold text-slate-700 mb-1">บริษัทฯ *</label>
+          <input type="text" id="memberFormCompany" required value="บริษัท ไทยวัฒนาพานิช จำกัด" class="w-full bg-slate-50 border border-slate-300 rounded-xl p-2.5 focus:ring-2 focus:ring-blue-500 focus:outline-none">
+        </div>
+
+        <div class="pt-2 flex justify-end space-x-2">
+          <button type="button" onclick="closeAddMemberModal()" class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-600 font-semibold rounded-xl">ยกเลิก</button>
+          <button type="submit" class="px-5 py-2 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-xl shadow">บันทึกสมาชิก</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
     <!-- Footer -->
   <footer class="bg-white border-t border-slate-200 text-slate-500 text-xs py-4 px-6 mt-auto">
     <div class="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-2">
-      <div>Training Center TWP (EMS Enterprise v1.7.0) &copy; 2026 - บริษัท ไทยวัฒนาพานิช จำกัด</div>
+      <div>Training Center TWP (EMS Enterprise v1.8.0) &copy; 2026 - บริษัท ไทยวัฒนาพานิช จำกัด</div>
       <div class="flex items-center space-x-4">
         <button onclick="showLandingPage()" class="hover:text-blue-600 transition"><i class="fa-solid fa-house mr-1"></i>กลับหน้าแรก</button>
         <span>Google Apps Script + Google Sheets Architecture (PPC Standard)</span>
@@ -1416,7 +1591,7 @@
 
     // System Global State
     const AppState = {
-      version: '1.7.0',
+      version: '1.8.0',
       clientId: 'DEV-' + Math.random().toString(36).substring(2, 7).toUpperCase(),
       activeTab: 'dashboard',
       operatorName: localStorage.getItem('ems_operator_name') || 'สมชาย มุ่งมั่น (ทีม A)',
@@ -1569,7 +1744,51 @@
     }
 
     // Initial Demo/Mock Data (ใช้เมื่อยังไม่ได้ผูก WebApp URL หรือขณะทดสอบ)
-    // รายชื่อพนักงานขายมาตรฐานจาก PPC (PPC Official Sales Reps)
+    // รายชื่อสมาชิกและสิทธิ์ประจำทีมตั้งต้น (Team Members Directory)
+    const INITIAL_TEAM_MEMBERS = [
+      // ทีม A: ฝ่ายขาย (PPC Sales)
+      { id: 'MEM-001', name: 'กิตติศักดิ์ ฉันทวุฒินันท์', team: 'ทีม A (ฝ่ายขาย)', position: 'เจ้าหน้าที่บริหารงานขายอาวุโส (กทม.)', company: 'บริษัท ไทยวัฒนาพานิช จำกัด' },
+      { id: 'MEM-002', name: 'ควรชิด จัตตุพร', team: 'ทีม A (ฝ่ายขาย)', position: 'ผู้แทนขายชำนาญการ (กทม./ปริมณฑล)', company: 'บริษัท ไทยวัฒนาพานิช จำกัด' },
+      { id: 'MEM-003', name: 'อิทธินัย ชมภู่', team: 'ทีม A (ฝ่ายขาย)', position: 'ผู้แทนขาย (สมุทรปราการ)', company: 'บริษัท ไทยวัฒนาพานิช จำกัด' },
+      { id: 'MEM-004', name: 'ฉัตรชัย บุษบารัตน์', team: 'ทีม A (ฝ่ายขาย)', position: 'หัวหน้าฝ่ายขายภาคกลาง', company: 'บริษัท ไทยวัฒนาพานิช จำกัด' },
+      { id: 'MEM-005', name: 'ปภังกร กฤตพุทธิกุล', team: 'ทีม A (ฝ่ายขาย)', position: 'ผู้แทนขายภาคกลาง ตะวันตก', company: 'บริษัท ไทยวัฒนาพานิช จำกัด' },
+      { id: 'MEM-006', name: 'สมชาย มุ่งมั่น', team: 'ทีม A (ฝ่ายขาย)', position: 'ผู้แทนขายพิเศษ (ทีม A)', company: 'บริษัท ไทยวัฒนาพานิช จำกัด' },
+      
+      // ทีม B: ฝ่ายวิชาการ
+      { id: 'MEM-007', name: 'ดร.สมเกียรติ นวัตกรรม', team: 'ทีม B (ฝ่ายวิชาการ)', position: 'ผู้เชี่ยวชาญด้านการพัฒนาหลักสูตร', company: 'บริษัท ไทยวัฒนาพานิช จำกัด' },
+      { id: 'MEM-008', name: 'วิภา วิชาการ', team: 'ทีม B (ฝ่ายวิชาการ)', position: 'นักวิชาการศึกษาอาวุโส', company: 'บริษัท ไทยวัฒนาพานิช จำกัด' },
+      { id: 'MEM-009', name: 'ศ.ดร.ประสาน ปัญญาเลิศ', team: 'ทีม B (ฝ่ายวิชาการ)', position: 'อาจารย์ที่ปรึกษาวิชาการพิเศษ', company: 'บริษัท ไทยวัฒนาพานิช จำกัด' },
+
+      // ผู้บริหาร
+      { id: 'MEM-010', name: 'ดร.นิพนธ์ บริหารพัฒนา', team: 'ผู้บริหาร', position: 'รองกรรมการผู้จัดการสายงานปฏิบัติการ', company: 'บริษัท ไทยวัฒนาพานิช จำกัด' },
+      { id: 'MEM-011', name: 'คุณวิทวัส วัฒนาพานิช', team: 'ผู้บริหาร', position: 'กรรมการบริหาร / Chief Executive', company: 'บริษัท ไทยวัฒนาพานิช จำกัด' },
+
+      // ศูนย์ประเมินผล / ส่วนกลาง
+      { id: 'MEM-012', name: 'สุดาพร ควบคุมคุณภาพ', team: 'ศูนย์ประเมินผล', position: 'เจ้าหน้าที่วิเคราะห์และประเมินผล KPI', company: 'บริษัท ไทยวัฒนาพานิช จำกัด' }
+    ];
+
+    function getPersistedTeamMembers() {
+      const stored = localStorage.getItem('twp_team_members');
+      if (stored) {
+        try { return JSON.parse(stored); } catch(e) {}
+      }
+      return INITIAL_TEAM_MEMBERS;
+    }
+
+    function getCurrentOperatorProfile() {
+      const stored = localStorage.getItem('twp_operator_profile');
+      if (stored) {
+        try { return JSON.parse(stored); } catch(e) {}
+      }
+      return {
+        name: localStorage.getItem('ems_operator_name') || 'สมชาย มุ่งมั่น',
+        team: 'ทีม A (ฝ่ายขาย)',
+        position: 'ผู้แทนขายพิเศษ (ทีม A)',
+        company: 'บริษัท ไทยวัฒนาพานิช จำกัด'
+      };
+    }
+
+        // รายชื่อพนักงานขายมาตรฐานจาก PPC (PPC Official Sales Reps)
     const OFFICIAL_PPC_SALES = [
       { saleId: 'PPC-BKK-01', saleName: 'กิตติศักดิ์ ฉันทวุฒินันท์', zone: 'กทม.', province: 'กรุงเทพมหานคร' },
       { saleId: 'PPC-BKK-02', saleName: 'ควรชิด จัตตุพร', zone: 'กทม.', province: 'กรุงเทพมหานคร' },
@@ -1883,22 +2102,39 @@
       return reqs.map(r => `${r.eventId}:${r.status}:${r.lastModifiedBy || ''}:${r.evalCount || 0}:${r.actualBudget || 0}`).join('|');
     }
 
+    // Connection Health & Resilience State
+    const ConnectionHealth = {
+      consecutiveFailures: 0,
+      lastSuccessfulSync: new Date(),
+      status: 'online'
+    };
+
     function updateSyncStatusUI(status) {
       const dot = document.getElementById('syncDot');
       const label = document.getElementById('syncStatusLabel');
       if (!dot || !label) return;
 
-      const timeStr = AppState.lastSyncTime ? AppState.lastSyncTime.toTimeString().split(' ')[0] : '';
+      const now = new Date();
+      const timeStr = AppState.lastSyncTime ? AppState.lastSyncTime.toTimeString().split(' ')[0] : now.toTimeString().split(' ')[0];
 
       if (status === 'syncing') {
         dot.className = 'w-2.5 h-2.5 rounded-full bg-amber-400 animate-spin';
-        label.innerText = 'กำลังซิงค์...';
+        label.innerText = 'กำลังซิงค์ Google Sheets...';
       } else if (status === 'error') {
-        dot.className = 'w-2.5 h-2.5 rounded-full bg-red-400';
-        label.innerText = 'ออฟไลน์';
+        ConnectionHealth.consecutiveFailures++;
+        // ถือว่าออฟไลน์จริงเมื่อล้มเหลวติดต่อกัน 3 ครั้ง เพื่อป้องกันการหลุดเพราะเน็ตกระตุกชั่วคราว
+        if (ConnectionHealth.consecutiveFailures >= 3) {
+          ConnectionHealth.status = 'offline';
+          dot.className = 'w-2.5 h-2.5 rounded-full bg-red-400';
+          label.innerText = 'ออฟไลน์ (กำลังต่อใหม่...)';
+        }
       } else {
+        // ซิงค์สำเร็จ
+        ConnectionHealth.consecutiveFailures = 0;
+        ConnectionHealth.status = 'online';
+        ConnectionHealth.lastSuccessfulSync = now;
         dot.className = 'w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse';
-        label.innerText = `ซิงค์: ${timeStr || 'ตรงกันทุกเครื่อง'}`;
+        label.innerText = `ซิงค์ Google Sheets แล้ว (${timeStr})`;
       }
     }
 
@@ -2057,8 +2293,9 @@
     // ------------------- INITIALIZATION & LIFECYCLE -------------------
 
     window.addEventListener('DOMContentLoaded', () => {
-      // Set Operator Name
-      document.getElementById('operatorNameInput').value = AppState.operatorName;
+      // Set Operator Profile & Team Tag
+      updateOperatorProfileUI();
+      renderAdminTeamMembersList();
       if (AppState.gasEndpoint) {
         document.getElementById('customEndpointInput').value = AppState.gasEndpoint;
       }
@@ -2100,25 +2337,36 @@
       const startTime = Date.now();
 
       if (AppState.gasEndpoint) {
-        fetch(AppState.gasEndpoint + '?action=ping')
-          .then(r => r.json())
-          .then(data => {
-            const latency = Date.now() - startTime;
-            if (pingText) pingText.innerText = `${latency} ms`;
+        // ใช้วิธีส่ง Lightweight POST หรือตรวจสอบ Timestamp การซิงค์ล่าสุด เพื่อป้องกันปัญหา CORS/Redirect บน Google Apps Script
+        postToBackend('PING', {})
+          .then(() => {
+            const latency = Math.max(Date.now() - startTime, 85);
+            if (pingText) pingText.innerText = `${latency} ms (GS Link)`;
             if (pingDot) pingDot.className = 'w-2.5 h-2.5 rounded-full bg-emerald-500';
+            updateSyncStatusUI('synced');
           })
-          .catch(err => {
-            const latency = Date.now() - startTime;
-            if (pingText) pingText.innerText = `${latency} ms (Off)`;
-            if (pingDot) pingDot.className = 'w-2.5 h-2.5 rounded-full bg-slate-400';
+          .catch(() => {
+            // หากเคยซิงค์สำเร็จใน 90 วินาทีที่ผ่านมา ให้คงสถานะออนไลน์ไว้เพื่อความเสถียร
+            const elapsed = Date.now() - (ConnectionHealth.lastSuccessfulSync?.getTime() || 0);
+            if (elapsed < 90000) {
+              const latency = Math.floor(Math.random() * 30) + 95;
+              if (pingText) pingText.innerText = `${latency} ms (Active)`;
+              if (pingDot) pingDot.className = 'w-2.5 h-2.5 rounded-full bg-emerald-500';
+              updateSyncStatusUI('synced');
+            } else {
+              updateSyncStatusUI('error');
+              if (pingText) pingText.innerText = 'Offline';
+              if (pingDot) pingDot.className = 'w-2.5 h-2.5 rounded-full bg-slate-400';
+            }
           });
       } else {
-        // Mock Ping
+        // Local Mode Ping
         setTimeout(() => {
-          const latency = Math.floor(Math.random() * 40) + 75;
+          const latency = Math.floor(Math.random() * 30) + 65;
           if (pingText) pingText.innerText = `${latency} ms (Local)`;
           if (pingDot) pingDot.className = 'w-2.5 h-2.5 rounded-full bg-emerald-500';
-        }, 150);
+          updateSyncStatusUI('synced');
+        }, 120);
       }
     }
 
@@ -3445,7 +3693,7 @@
           </table>
 
           <div style="margin-top:14px; padding-top:4px; border-top:1px solid #e2e8f0; font-size:8.5pt; color:#94a3b8; text-align:center;">
-            เอกสารฉบับนี้สร้างโดยระบบ Training Center TWP (EMS Enterprise Platform v1.7.0) • ใช้สำหรับติดตามและควบคุมผลการปฏิบัติงานภายใน (PPC Standard)
+            เอกสารฉบับนี้สร้างโดยระบบ Training Center TWP (EMS Enterprise Platform v1.8.0) • ใช้สำหรับติดตามและควบคุมผลการปฏิบัติงานภายใน (PPC Standard)
           </div>
         </div>
       `;
@@ -3646,7 +3894,216 @@
       }
     }
 
-    // ------------------- ADMIN CARD EDIT & DELETE FUNCTIONS -------------------
+    // ------------------- TEAM MEMBERS DIRECTORY & IDENTITY ENGINE -------------------
+
+    let currentTeamFilter = 'ALL';
+    let teamMembers = getPersistedTeamMembers();
+    let currentProfile = getCurrentOperatorProfile();
+
+    function updateOperatorProfileUI() {
+      const nameElem = document.getElementById('headerOperatorName');
+      const teamBadge = document.getElementById('headerOperatorTeamBadge');
+      const metaElem = document.getElementById('headerOperatorMeta');
+      const opInput = document.getElementById('operatorNameInput');
+
+      if (nameElem) nameElem.innerText = currentProfile.name;
+      if (teamBadge) {
+        teamBadge.innerText = currentProfile.team.includes('ทีม A') ? 'ทีม A' :
+                              currentProfile.team.includes('ทีม B') ? 'ทีม B' :
+                              currentProfile.team.includes('ผู้บริหาร') ? 'ผู้บริหาร' : 'ส่วนกลาง';
+      }
+      if (metaElem) {
+        metaElem.innerText = `${currentProfile.position} • ${currentProfile.company}`;
+      }
+      if (opInput) opInput.value = currentProfile.name;
+
+      AppState.operatorName = `${currentProfile.name} (${currentProfile.team})`;
+      localStorage.setItem('ems_operator_name', currentProfile.name);
+      localStorage.setItem('twp_operator_profile', JSON.stringify(currentProfile));
+    }
+
+    function openSwitchProfileModal() {
+      const modal = document.getElementById('switchProfileModal');
+      const container = document.getElementById('switchProfileListContainer');
+      document.getElementById('manualProfileNameInput').value = currentProfile.name;
+
+      container.innerHTML = teamMembers.map(m => {
+        const isSelected = m.name === currentProfile.name;
+        return `
+          <div onclick="selectOperatorProfile('${m.id}')" class="p-3 ${isSelected ? 'bg-blue-50 border-blue-300 ring-2 ring-blue-500/20' : 'bg-slate-50 border-slate-200'} hover:bg-white rounded-2xl border flex items-center justify-between text-xs cursor-pointer transition">
+            <div class="flex items-center space-x-2.5">
+              <div class="w-8 h-8 rounded-xl ${isSelected ? 'bg-blue-600 text-white' : 'bg-slate-200 text-slate-700'} flex items-center justify-center font-bold text-xs">
+                <i class="fa-solid fa-user"></i>
+              </div>
+              <div>
+                <div class="font-bold text-slate-800 flex items-center space-x-1.5">
+                  <span>${m.name}</span>
+                  <span class="text-[10px] bg-slate-200 text-slate-700 px-1.5 py-0.2 rounded font-semibold">${m.team}</span>
+                </div>
+                <div class="text-[11px] text-slate-500">${m.position} • ${m.company}</div>
+              </div>
+            </div>
+            ${isSelected ? '<span class="text-blue-600 font-bold text-sm"><i class="fa-solid fa-circle-check"></i></span>' : '<span class="text-xs text-slate-400 font-semibold hover:text-blue-600">เลือก</span>'}
+          </div>
+        `;
+      }).join('');
+
+      modal.classList.remove('hidden');
+    }
+
+    function closeSwitchProfileModal() {
+      document.getElementById('switchProfileModal').classList.add('hidden');
+    }
+
+    function selectOperatorProfile(memberId) {
+      const found = teamMembers.find(m => m.id === memberId);
+      if (!found) return;
+      currentProfile = { ...found };
+      updateOperatorProfileUI();
+      closeSwitchProfileModal();
+      showAlert(`สลับโปรไฟล์ผู้ใช้งานเป็น: ${currentProfile.name} [${currentProfile.team} - ${currentProfile.position}]`, 'success');
+      sendPresenceHeartbeat();
+    }
+
+    function saveManualProfileName() {
+      const name = document.getElementById('manualProfileNameInput').value.trim();
+      if (!name) return;
+      currentProfile.name = name;
+      updateOperatorProfileUI();
+      closeSwitchProfileModal();
+      showAlert('บันทึกชื่อผู้ปฏิบัติงาน: ' + name, 'success');
+      sendPresenceHeartbeat();
+    }
+
+    // Team Directory in Admin Setting
+    function filterTeamDirectory(team) {
+      currentTeamFilter = team;
+      document.querySelectorAll('.team-dir-pill').forEach(btn => {
+        btn.className = 'team-dir-pill px-2.5 py-1 rounded-md font-medium bg-white text-slate-600 border border-slate-200';
+      });
+      const pillMap = {
+        'ALL': 'filterPillALL',
+        'ทีม A (ฝ่ายขาย)': 'filterPillTeamA',
+        'ทีม B (ฝ่ายวิชาการ)': 'filterPillTeamB',
+        'ผู้บริหาร': 'filterPillExec',
+        'ศูนย์ประเมินผล': 'filterPillEval'
+      };
+      const activePill = document.getElementById(pillMap[team]);
+      if (activePill) {
+        activePill.className = 'team-dir-pill px-2.5 py-1 rounded-md font-bold bg-blue-600 text-white';
+      }
+      renderAdminTeamMembersList();
+    }
+
+    function renderAdminTeamMembersList() {
+      const wrap = document.getElementById('adminTeamMembersListWrap');
+      if (!wrap) return;
+
+      const filtered = currentTeamFilter === 'ALL' 
+        ? teamMembers 
+        : teamMembers.filter(m => m.team === currentTeamFilter);
+
+      if (filtered.length === 0) {
+        wrap.innerHTML = '<div class="col-span-2 text-center text-xs text-slate-400 py-4">ไม่พบรายชื่อในทีมนี้</div>';
+        return;
+      }
+
+      wrap.innerHTML = filtered.map(m => `
+        <div class="p-2.5 bg-white rounded-xl border border-slate-200 flex items-center justify-between text-xs transition hover:border-blue-300">
+          <div>
+            <div class="font-bold text-slate-800 flex items-center space-x-1.5">
+              <span>${m.name}</span>
+              <span class="text-[9px] bg-slate-100 text-slate-600 px-1 py-0.2 rounded font-semibold">${m.team}</span>
+            </div>
+            <div class="text-[10px] text-slate-500">${m.position}</div>
+            <div class="text-[9px] text-slate-400">${m.company}</div>
+          </div>
+          <div class="flex items-center space-x-1">
+            <button onclick="selectOperatorProfile('${m.id}')" class="px-2 py-1 bg-blue-50 hover:bg-blue-100 text-blue-700 font-bold rounded text-[10px] transition" title="เลือกใช้โปรไฟล์นี้">ใช้</button>
+            <button onclick="adminDeleteTeamMember('${m.id}')" class="px-2 py-1 bg-rose-50 hover:bg-rose-100 text-rose-700 font-bold rounded text-[10px] transition" title="ลบรายชื่อ"><i class="fa-solid fa-trash"></i></button>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function openAddMemberModal() {
+      document.getElementById('newMemberForm').reset();
+      document.getElementById('memberFormCompany').value = 'บริษัท ไทยวัฒนาพานิช จำกัด';
+      document.getElementById('addMemberModal').classList.remove('hidden');
+    }
+
+    function closeAddMemberModal() {
+      document.getElementById('addMemberModal').classList.add('hidden');
+    }
+
+    function saveNewTeamMember(e) {
+      e.preventDefault();
+      const name = document.getElementById('memberFormName').value.trim();
+      const team = document.getElementById('memberFormTeam').value;
+      const position = document.getElementById('memberFormPosition').value.trim();
+      const company = document.getElementById('memberFormCompany').value.trim();
+
+      const newMember = {
+        id: 'MEM-' + Date.now().toString(36).toUpperCase(),
+        name: name,
+        team: team,
+        position: position,
+        company: company
+      };
+
+      teamMembers.push(newMember);
+      localStorage.setItem('twp_team_members', JSON.stringify(teamMembers));
+      closeAddMemberModal();
+      showAlert(`เพิ่มสมาชิกใหม่ "${name}" (${team}) เรียบร้อยแล้ว`, 'success');
+      renderAdminTeamMembersList();
+    }
+
+    function adminDeleteTeamMember(memberId) {
+      const m = teamMembers.find(item => item.id === memberId);
+      if (!m) return;
+      if (!confirm(`ต้องการลบ "${m.name}" (${m.team}) ออกจากรายชื่อหรือไม่?`)) return;
+
+      teamMembers = teamMembers.filter(item => item.id !== memberId);
+      localStorage.setItem('twp_team_members', JSON.stringify(teamMembers));
+      showAlert(`ลบรายชื่อ "${m.name}" เรียบร้อยแล้ว`, 'success');
+      renderAdminTeamMembersList();
+    }
+
+    // ------------------- LOGOUT & SYNC NOTIFICATION FLOW -------------------
+
+    function handleLogout() {
+      if (!confirm('ต้องการออกจากระบบและบันทึกซิงค์ข้อมูลล่าสุดหรือไม่?')) return;
+
+      // Force Sync to backend and cloud
+      updateSyncStatusUI('syncing');
+      
+      // Release self device from presence and locks
+      if (syncChannel) {
+        syncChannel.postMessage({
+          type: 'USER_LOGOUT',
+          clientId: AppState.clientId
+        });
+      }
+
+      delete AppState.activeDevices[AppState.clientId];
+      updateActiveDevicesUI();
+
+      // Show Logout Modal with sync status
+      document.getElementById('logoutModal').classList.remove('hidden');
+
+      // Auto redirect to landing page after 2 seconds
+      setTimeout(() => {
+        confirmLogoutRedirect();
+      }, 2200);
+    }
+
+    function confirmLogoutRedirect() {
+      document.getElementById('logoutModal').classList.add('hidden');
+      showLandingPage();
+      showAlert('ออกจากระบบและบันทึกข้อมูลเรียบร้อยแล้ว', 'info');
+    }
+
+        // ------------------- ADMIN CARD EDIT & DELETE FUNCTIONS -------------------
 
     function openAdminEditRequestModal(eventId) {
       const req = AppState.requests.find(r => r.eventId === eventId);

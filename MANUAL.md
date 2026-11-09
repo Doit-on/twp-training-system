@@ -1,6 +1,6 @@
 # คู่มือการใช้งาน Training Center TWP (Operational User Manual)
 
-**เวอร์ชันระบบ:** 1.7.0  
+**เวอร์ชันระบบ:** 1.8.0  
 **ระบบ:** Training Center TWP - บริหารคำขอจัดกิจกรรมอบรมและประเมินผลปิดลูป (EMS Enterprise Platform)  
 **Production Apps Script Endpoint:** `https://script.google.com/macros/s/AKfycby-D2AvgHXO_y4tVxg8wgkDP9ARBnRpiVp47-vnF7AiA1TA4AqwKGbelJTyI68tKfmx6g/exec`  
 **รหัสผ่านผู้ดูแลระบบ (Admin Password):** `admin0000`
@@ -28,7 +28,7 @@
 ## 1. ภาพรวมและหน้า Landing Page (Training Center TWP)
 
 เมื่อเปิดระบบเข้ามา ผู้ใช้จะพบกับหน้า **Landing Page สีน้ำเงินเอกลักษณ์ของบริษัท ไทยวัฒนาพานิช (TWP) `#08539E`** พร้อมตราสัญลักษณ์ทางการ:
-* แสดงข้อความ **Training Center TWP** และเวอร์ชัน **v1.7.0**
+* แสดงข้อความ **Training Center TWP** และเวอร์ชัน **v1.8.0**
 * คลิกปุ่ม **"สำหรับผู้บริหาร: ดู Dashboard ทันที"** เพื่อเข้าสู่หน้าสรุปผลการดำเนินงานและสถิติ KPI ในคลิกเดียว
 * คลิกปุ่ม **"เข้าสู่ระบบบริหารคำขอ (Enter System)"** เพื่อเปิดเข้าสู่หน้าหลักของระบบ (Single-Page Portal)
 * คลิกปุ่ม **"สแกน QR ประจำทีม"** เพื่อเปิดหน้าต่างสร้าง QR Code สำหรับเชื่อมต่อโทรศัพท์มือถือเข้าสู่ทีมงาน
