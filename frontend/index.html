@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-  <title>Training Center TWP - ระบบบริหารคำขอจัดอบรมและประเมินผล v1.14.0</title>
+  <title>Training Center TWP - ระบบบริหารคำขอจัดอบรมและประเมินผล v1.15.0</title>
   <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
   <!-- Google Fonts: Sarabun -->
@@ -198,7 +198,7 @@
       <div class="flex items-center space-x-3 text-xs">
         <span class="bg-white/15 px-3 py-1.5 rounded-full border border-white/20 backdrop-blur-sm font-mono text-blue-100 flex items-center">
           <span class="w-2 h-2 rounded-full bg-emerald-400 mr-2 animate-pulse"></span>
-          System v1.14.0
+          System v1.15.0
         </span>
       </div>
     </div>
@@ -270,7 +270,7 @@
     <!-- Bottom Footer on Landing Page -->
     <div class="max-w-7xl mx-auto w-full px-6 py-4 flex flex-col sm:flex-row items-center justify-between text-xs text-blue-200 border-t border-white/10 relative z-10 gap-2">
       <div>&copy; 2026 Training Center TWP - บริษัท ไทยวัฒนาพานิช จำกัด. All rights reserved.</div>
-      <div class="font-mono text-[11px] bg-white/10 px-3 py-1 rounded-full border border-white/15">EMS Enterprise Platform v1.14.0 (Live Apps Script Engine)</div>
+      <div class="font-mono text-[11px] bg-white/10 px-3 py-1 rounded-full border border-white/15">EMS Enterprise Platform v1.15.0 (Live Apps Script Engine)</div>
     </div>
 
   </div>
@@ -293,7 +293,7 @@
             <div>
               <div class="flex items-center space-x-2">
                 <span class="font-extrabold text-lg tracking-wide text-white">Training Center TWP</span>
-                <span class="bg-blue-400/20 text-blue-200 text-[10px] font-mono px-2 py-0.5 rounded-full border border-blue-300/30">v1.14.0</span>
+                <span class="bg-blue-400/20 text-blue-200 text-[10px] font-mono px-2 py-0.5 rounded-full border border-blue-300/30">v1.15.0</span>
               </div>
               <p class="text-[11px] text-blue-200 hidden sm:block">ระบบบริหารคำขอจัดอบรมและประเมินผลปิดลูป</p>
             </div>
@@ -398,6 +398,11 @@
           <i class="fa-solid fa-coins text-amber-500"></i>
           <span>ทีม B: สรุปค่าใช้จ่ายจริง</span>
           <span id="badgeExpenses" class="bg-amber-100 text-amber-800 text-[10px] font-bold px-1.5 py-0.5 rounded-full">1</span>
+        </button>
+        <button onclick="switchTab('fy2569Tu')" id="tabBtn-fy2569Tu" class="tab-btn py-3 px-2 border-b-2 border-transparent hover:text-rose-600 flex items-center space-x-2 whitespace-nowrap">
+          <i class="fa-solid fa-crosshairs text-rose-600"></i>
+          <span>โครงการปี 2569 & กระทบยอด TU</span>
+          <span class="bg-rose-100 text-rose-700 text-[10px] font-bold px-1.5 py-0.5 rounded-full ml-1">แยกสัดส่วน</span>
         </button>
       </div>
     </div>
@@ -1289,6 +1294,320 @@
                 <span>ยืนยันและบันทึกค่าใช้จ่ายจริง</span>
               </button>
             </div>
+          </div>
+
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ======================================================== -->
+    <!-- TAB 7: FY2569 STRATEGIC PROJECTS & TU RECONCILIATION HUB -->
+    <!-- ======================================================== -->
+    <section id="view-fy2569Tu" class="hidden space-y-6">
+      <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-4 sm:p-6 space-y-6">
+        
+        <!-- Header Banner & Action Buttons -->
+        <div class="flex flex-col lg:flex-row lg:items-center justify-between pb-4 border-b border-slate-200 gap-4">
+          <div class="flex items-center space-x-3.5">
+            <div class="w-12 h-12 rounded-2xl bg-rose-100 text-rose-600 flex items-center justify-center text-2xl shadow-sm border border-rose-200">
+              <i class="fa-solid fa-crosshairs"></i>
+            </div>
+            <div>
+              <div class="flex items-center gap-2">
+                <h2 class="text-base sm:text-lg font-black text-slate-900">
+                  ศูนย์บริหารโครงการปี 2569 & กระทบยอดขาย TU (FY2569 Strategic Training & TU Sales Reconciliation)
+                </h2>
+                <span class="bg-rose-100 text-rose-700 text-[10px] font-bold px-2 py-0.5 rounded-full border border-rose-300">
+                  แยกสัดส่วนชัดเจน
+                </span>
+              </div>
+              <p class="text-xs text-slate-500 mt-0.5">
+                วางแผนคำขอจัดอบรมปี 2569 พร้อมกระทบยอดขายจริงจากระบบ TU รายโรงเรียน วิเคราะห์ ROI และอัตราผลสำเร็จ ไม่ปะปนกับงานปีปัจจุบัน
+              </p>
+            </div>
+          </div>
+
+          <div class="flex flex-wrap items-center gap-2">
+            <button onclick="loadSampleFy2569Data()" class="px-3.5 py-2 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-white rounded-xl text-xs font-bold transition btn-tactile shadow-sm flex items-center space-x-1.5 cursor-pointer">
+              <i class="fa-solid fa-wand-magic-sparkles text-yellow-200"></i>
+              <span>โหลดข้อมูลจำลองปี 2569 & TU</span>
+            </button>
+            <button onclick="openImportTuExcelModal()" class="px-3 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-300 rounded-xl text-xs font-bold transition btn-tactile flex items-center space-x-1.5 cursor-pointer">
+              <i class="fa-solid fa-file-excel text-emerald-600"></i>
+              <span>นำเข้ายอดขาย TU</span>
+            </button>
+            <button onclick="printFy2569ReconcileMemo()" class="px-3.5 py-2 bg-[#08539E] hover:bg-[#07488a] text-white rounded-xl text-xs font-bold transition btn-tactile shadow-sm flex items-center space-x-1.5 cursor-pointer">
+              <i class="fa-solid fa-print text-blue-200"></i>
+              <span>ออกใบบันทึกกระทบยอด A4</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- KPI Scorecard 5 Dimensions -->
+        <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">
+          <div class="bg-slate-50 p-3.5 rounded-xl border border-slate-200">
+            <span class="text-[11px] text-slate-500 block">โครงการปี 2569</span>
+            <strong id="fy2569TotalProjects" class="text-lg font-mono font-extrabold text-slate-800">0 โครงการ</strong>
+            <span class="text-[10px] text-slate-400 block mt-0.5">ครอบคลุม รร. เป้าหมาย</span>
+          </div>
+
+          <div class="bg-blue-50/60 p-3.5 rounded-xl border border-blue-200">
+            <span class="text-[11px] text-blue-900 block font-semibold">งบประมาณจัดอบรม 2569</span>
+            <strong id="fy2569TotalBudget" class="text-lg font-mono font-black text-blue-700">฿0</strong>
+            <span class="text-[10px] text-blue-600 block mt-0.5">รวมงบลงทุนเชิงกลยุทธ์</span>
+          </div>
+
+          <div class="bg-indigo-50/60 p-3.5 rounded-xl border border-indigo-200">
+            <span class="text-[11px] text-indigo-900 block font-semibold">เป้าหมายยอดขาย (Target)</span>
+            <strong id="fy2569TotalTarget" class="text-lg font-mono font-black text-indigo-700">฿0</strong>
+            <span class="text-[10px] text-indigo-600 block mt-0.5">เป้าขายสืบเนื่องจากอบรม</span>
+          </div>
+
+          <div class="bg-emerald-50/70 p-3.5 rounded-xl border border-emerald-200">
+            <span class="text-[11px] text-emerald-950 block font-semibold">ยอดขายจริงใน TU (Invoiced)</span>
+            <strong id="fy2569TotalTuActual" class="text-lg font-mono font-black text-emerald-700">฿0</strong>
+            <span id="fy2569AchievementRate" class="text-[10px] text-emerald-800 font-bold block mt-0.5">บรรลุเป้า: 0.0%</span>
+          </div>
+
+          <div class="bg-amber-50/70 p-3.5 rounded-xl border border-amber-200">
+            <span class="text-[11px] text-amber-950 block font-semibold">ผลต่างยอดขาย / ROI</span>
+            <strong id="fy2569TotalVariance" class="text-lg font-mono font-black text-amber-800">฿0</strong>
+            <span id="fy2569RoiRate" class="text-[10px] text-amber-800 font-bold block mt-0.5">Cost Ratio: 0.0%</span>
+          </div>
+        </div>
+
+        <!-- 2 Work Entry Cards: Section A (FY2569 Project Entry) and Section B (TU Invoiced Entry) -->
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-5">
+          
+          <!-- CARD A: ทางเข้าบันทึกโครงการอบรมปี 2569 (Dedicated FY2569 Project Gateway) -->
+          <div class="lg:col-span-6 bg-slate-50 p-4 sm:p-5 rounded-2xl border border-slate-200 space-y-3.5">
+            <div class="flex items-center justify-between pb-2 border-b border-slate-200">
+              <div class="flex items-center space-x-2">
+                <div class="w-7 h-7 rounded-lg bg-rose-100 text-rose-600 flex items-center justify-center text-xs font-bold">
+                  A
+                </div>
+                <h3 class="text-xs sm:text-sm font-bold text-slate-800">
+                  ทางเข้าบันทึกโครงการอบรมปี 2569 (Dedicated Entry Gateway)
+                </h3>
+              </div>
+              <span class="text-[10px] text-slate-400 font-mono">EVT-2569 Series</span>
+            </div>
+
+            <form id="fy2569ProjectForm" onsubmit="handleSaveFy2569Project(event)" class="space-y-3 text-xs">
+              
+              <!-- School Selector with Auto PPC Rep & Province -->
+              <div>
+                <label class="block font-bold text-slate-700 mb-1 flex items-center justify-between">
+                  <span>สถานศึกษา / โรงเรียนเป้าหมายปี 2569 *</span>
+                  <span class="text-[10px] text-blue-600 font-normal">ค้นหาจาก 2,363 โรงเรียน หรือพิมพ์ชื่อใหม่</span>
+                </label>
+                <div class="relative">
+                  <input type="text" id="fy2569SchoolInput" list="fy2569SchoolDatalist" oninput="onFy2569SchoolInput(this.value)" required placeholder="พิมพ์ชื่อโรงเรียนเพื่อค้นหา..." class="w-full bg-white border border-slate-300 rounded-xl p-2.5 text-xs focus:ring-2 focus:ring-rose-500 focus:outline-none">
+                  <datalist id="fy2569SchoolDatalist"></datalist>
+                </div>
+              </div>
+
+              <div class="grid grid-cols-2 gap-2.5">
+                <div>
+                  <label class="block font-semibold text-slate-600 mb-1">จังหวัด</label>
+                  <input type="text" id="fy2569ProvinceInput" readonly placeholder="ดึงอัตโนมัติ..." class="w-full bg-slate-100 border border-slate-200 rounded-xl p-2 text-xs text-slate-700">
+                </div>
+                <div>
+                  <label class="block font-semibold text-slate-600 mb-1">ผู้แทนขาย (PPC Sales Rep) *</label>
+                  <select id="fy2569SalesSelect" required class="w-full bg-white border border-slate-300 rounded-xl p-2 text-xs font-medium focus:ring-2 focus:ring-rose-500 focus:outline-none">
+                    <!-- Populated dynamically -->
+                  </select>
+                </div>
+              </div>
+
+              <div class="grid grid-cols-2 gap-2.5">
+                <div>
+                  <label class="block font-semibold text-slate-600 mb-1">หลักสูตร / หัวข้อการอบรม</label>
+                  <input type="text" id="fy2569TopicInput" required value="Active Learning ยกระดับผลสัมฤทธิ์สู่สมรรถนะ" placeholder="ระบุหัวข้ออบรม..." class="w-full bg-white border border-slate-300 rounded-xl p-2 text-xs focus:ring-2 focus:ring-rose-500 focus:outline-none">
+                </div>
+                <div>
+                  <label class="block font-semibold text-slate-600 mb-1">วันที่จัดกิจกรรม (ปี 2569)</label>
+                  <input type="date" id="fy2569DateInput" required value="2026-05-20" class="w-full bg-white border border-slate-300 rounded-xl p-2 text-xs focus:ring-2 focus:ring-rose-500 focus:outline-none">
+                </div>
+              </div>
+
+              <div class="grid grid-cols-2 gap-2.5">
+                <div>
+                  <label class="block font-bold text-slate-700 mb-1 flex items-center justify-between">
+                    <span>งบอบรมขอจัด (บาท) *</span>
+                    <span class="text-[10px] text-slate-400">Budget</span>
+                  </label>
+                  <input type="number" id="fy2569BudgetInput" min="0" required placeholder="เช่น 15000" class="w-full bg-white border border-slate-300 rounded-xl p-2 text-xs font-mono font-bold text-slate-800 focus:ring-2 focus:ring-rose-500 focus:outline-none">
+                </div>
+                <div>
+                  <label class="block font-bold text-slate-700 mb-1 flex items-center justify-between">
+                    <span>เป้าหมายยอดขาย (บาท) *</span>
+                    <span class="text-[10px] text-blue-600">Target</span>
+                  </label>
+                  <input type="number" id="fy2569TargetInput" min="0" required placeholder="เช่น 150000" class="w-full bg-white border border-slate-300 rounded-xl p-2 text-xs font-mono font-bold text-blue-700 focus:ring-2 focus:ring-rose-500 focus:outline-none">
+                </div>
+              </div>
+
+              <div>
+                <label class="block font-semibold text-slate-600 mb-1">บันทึกกลยุทธ์ / วัตถุประสงค์</label>
+                <input type="text" id="fy2569RemarksInput" placeholder="เช่น อบรมครูวิทยาศาสตร์ ม.ต้น เพื่อนำร่องชุดกิจกรรมใหม่..." class="w-full bg-white border border-slate-300 rounded-xl p-2 text-xs focus:ring-2 focus:ring-rose-500 focus:outline-none">
+              </div>
+
+              <button type="submit" class="w-full py-2.5 bg-rose-600 hover:bg-rose-700 text-white rounded-xl font-bold transition shadow-sm btn-tactile flex items-center justify-center space-x-1.5 cursor-pointer">
+                <i class="fa-solid fa-plus-circle"></i>
+                <span>บันทึกโครงการปี 2569 เข้าสู่แผนงาน</span>
+              </button>
+            </form>
+          </div>
+
+          <!-- CARD B: ทางเข้าบันทึกยอดขายจริงจากระบบ TU (Actual Invoiced Matching Gateway) -->
+          <div class="lg:col-span-6 bg-slate-50 p-4 sm:p-5 rounded-2xl border border-slate-200 space-y-3.5">
+            <div class="flex items-center justify-between pb-2 border-b border-slate-200">
+              <div class="flex items-center space-x-2">
+                <div class="w-7 h-7 rounded-lg bg-emerald-100 text-emerald-700 flex items-center justify-center text-xs font-bold">
+                  B
+                </div>
+                <h3 class="text-xs sm:text-sm font-bold text-slate-800">
+                  บันทึกยอดขายจริงจากระบบ TU (Invoiced Matching)
+                </h3>
+              </div>
+              <span class="text-[10px] text-emerald-700 bg-emerald-100 px-2 py-0.5 rounded-full font-bold">ERP Integration</span>
+            </div>
+
+            <form id="fy2569TuMatchForm" onsubmit="handleSaveTuMatch(event)" class="space-y-3 text-xs">
+              
+              <div>
+                <label class="block font-bold text-slate-700 mb-1 flex items-center justify-between">
+                  <span>เลือกโครงการปี 2569 ที่ต้องการบันทึกยอดขาย TU *</span>
+                  <span class="text-[10px] text-emerald-600 font-semibold">จับคู่รายโครงการ</span>
+                </label>
+                <select id="fy2569MatchProjectSelect" onchange="onSelectFy2569MatchProject(this.value)" required class="w-full bg-white border border-slate-300 rounded-xl p-2.5 text-xs font-medium focus:ring-2 focus:ring-emerald-500 focus:outline-none">
+                  <option value="">-- เลือกโครงการปี 2569 --</option>
+                </select>
+              </div>
+
+              <!-- Selected Project Mini Detail Preview -->
+              <div id="fy2569SelectedProjectCard" class="hidden p-2.5 bg-white rounded-xl border border-slate-200 text-[11px] space-y-1">
+                <div class="flex justify-between font-bold text-slate-800">
+                  <span id="previewMatchSchoolName">โรงเรียน...</span>
+                  <span id="previewMatchRep" class="text-blue-600">PPC...</span>
+                </div>
+                <div class="flex justify-between text-slate-500">
+                  <span>งบอบรม: <strong id="previewMatchBudget" class="text-slate-700 font-mono">฿0</strong></span>
+                  <span>เป้าหมายขาย: <strong id="previewMatchTarget" class="text-indigo-600 font-mono">฿0</strong></span>
+                </div>
+              </div>
+
+              <div class="grid grid-cols-2 gap-2.5">
+                <div>
+                  <label class="block font-bold text-slate-700 mb-1">เลขที่บิล / ใบสั่งซื้อ TU *</label>
+                  <input type="text" id="fy2569TuInvoiceNoInput" required placeholder="เช่น TU-69-0412" class="w-full bg-white border border-slate-300 rounded-xl p-2 text-xs font-mono font-bold focus:ring-2 focus:ring-emerald-500 focus:outline-none">
+                </div>
+                <div>
+                  <label class="block font-bold text-slate-700 mb-1">วันที่เปิดบิลใน TU</label>
+                  <input type="date" id="fy2569TuInvoiceDateInput" required value="2026-06-15" class="w-full bg-white border border-slate-300 rounded-xl p-2 text-xs focus:ring-2 focus:ring-emerald-500 focus:outline-none">
+                </div>
+              </div>
+
+              <div class="grid grid-cols-2 gap-2.5">
+                <div>
+                  <label class="block font-bold text-slate-700 mb-1 flex items-center justify-between">
+                    <span>ยอดจัดซื้อจริงจาก TU (บาท) *</span>
+                    <span class="text-[10px] text-emerald-600 font-bold">Invoiced THB</span>
+                  </label>
+                  <input type="number" id="fy2569TuAmountInput" min="0" required placeholder="เช่น 168000" class="w-full bg-white border border-slate-300 rounded-xl p-2 text-xs font-mono font-black text-emerald-700 focus:ring-2 focus:ring-emerald-500 focus:outline-none">
+                </div>
+                <div>
+                  <label class="block font-semibold text-slate-600 mb-1">สถานะในระบบ TU</label>
+                  <select id="fy2569TuStatusSelect" class="w-full bg-white border border-slate-300 rounded-xl p-2 text-xs font-medium focus:ring-2 focus:ring-emerald-500 focus:outline-none">
+                    <option value="INVOICED" selected>เปิดบิลแล้ว (Invoiced)</option>
+                    <option value="PAID">ชำระเงินเรียบร้อย (Paid)</option>
+                    <option value="PENDING">รอส่งมอบ / รออนุมัติจัดซื้อ (Pending)</option>
+                  </select>
+                </div>
+              </div>
+
+              <div>
+                <label class="block font-semibold text-slate-600 mb-1">รายละเอียดรายการสั่งซื้อใน TU</label>
+                <input type="text" id="fy2569TuItemsInput" placeholder="เช่น หนังสือเรียนและชุดแบบฝึก Active Learning ม.1-3 ครบสาระ..." class="w-full bg-white border border-slate-300 rounded-xl p-2 text-xs focus:ring-2 focus:ring-emerald-500 focus:outline-none">
+              </div>
+
+              <button type="submit" class="w-full py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl font-bold transition shadow-sm btn-tactile flex items-center justify-center space-x-1.5 cursor-pointer">
+                <i class="fa-solid fa-link"></i>
+                <span>บันทึกจับคู่ยอดขายจริง TU เข้าสู่ระบบ</span>
+              </button>
+            </form>
+          </div>
+
+        </div>
+
+        <!-- RECONCILIATION LEDGER TABLE (ตารางกระทบยอดรายโรงเรียนแบบเจาะจง) -->
+        <div class="space-y-3 pt-2">
+          
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between pb-2 border-b border-slate-200 gap-2">
+            <div class="flex items-center space-x-2">
+              <i class="fa-solid fa-table-list text-rose-600"></i>
+              <h3 class="text-xs sm:text-sm font-bold text-slate-900">
+                ตารางกระทบยอดขายจริง TU รายโครงการ ประจำปี 2569 (Side-by-Side Reconciliation Ledger)
+              </h3>
+            </div>
+
+            <!-- Filters: PPC Rep & Status Filter -->
+            <div class="flex flex-wrap items-center gap-2 text-xs">
+              <div class="flex items-center space-x-1 bg-slate-50 px-2.5 py-1 rounded-lg border border-slate-200">
+                <span class="text-slate-500">กรองเซลล์:</span>
+                <select id="fy2569LedgerRepFilter" onchange="renderFy2569LedgerTable()" class="bg-transparent font-bold text-blue-700 focus:outline-none cursor-pointer">
+                  <option value="ALL">ทุกคน (13 ผู้แทนขาย)</option>
+                </select>
+              </div>
+
+              <div class="flex items-center space-x-1 bg-slate-50 px-2.5 py-1 rounded-lg border border-slate-200">
+                <span class="text-slate-500">สถานะ:</span>
+                <select id="fy2569LedgerStatusFilter" onchange="renderFy2569LedgerTable()" class="bg-transparent font-bold text-slate-700 focus:outline-none cursor-pointer">
+                  <option value="ALL">ทุกสถานะ</option>
+                  <option value="ACHIEVED">🟢 ยอดทะลุเป้า</option>
+                  <option value="PENDING">🟡 รอวางบิล TU</option>
+                  <option value="BELOW">🔴 ต่ำกว่าเป้า</option>
+                </select>
+              </div>
+
+              <button onclick="clearAllFy2569DataPrompt()" class="text-rose-600 hover:text-rose-800 text-[11px] underline ml-1 cursor-pointer">
+                ล้างข้อมูลทดสอบ 2569
+              </button>
+            </div>
+          </div>
+
+          <!-- Responsive Ledger Table Container -->
+          <div class="overflow-x-auto border border-slate-200 rounded-2xl shadow-xs">
+            <table class="w-full text-left text-xs border-collapse">
+              <thead>
+                <tr class="bg-slate-100 text-slate-700 font-bold border-b border-slate-200 text-[11px]">
+                  <th class="p-3 text-center w-10">#</th>
+                  <th class="p-3">รหัส / สถานศึกษาเป้าหมาย</th>
+                  <th class="p-3">ผู้แทนขาย (PPC)</th>
+                  <th class="p-3 text-center">วันที่จัด 2569</th>
+                  <th class="p-3 text-right">งบอบรม</th>
+                  <th class="p-3 text-right">เป้าหมายขาย</th>
+                  <th class="p-3 text-center">เลขบิล TU</th>
+                  <th class="p-3 text-right">ยอดขาย TU จริง</th>
+                  <th class="p-3 text-right">ผลต่าง (+/-)</th>
+                  <th class="p-3 text-center">% บรรลุเป้า</th>
+                  <th class="p-3 text-center">Cost/Sales ROI</th>
+                  <th class="p-3 text-center">สถานะกระทบยอด</th>
+                  <th class="p-3 text-center w-24">จัดการ</th>
+                </tr>
+              </thead>
+              <tbody id="fy2569LedgerTableBody" class="divide-y divide-slate-100 bg-white">
+                <!-- Dynamically rendered -->
+              </tbody>
+            </table>
+          </div>
+
+          <!-- Ledger Table Footer Note -->
+          <div class="flex flex-col sm:flex-row items-center justify-between text-[11px] text-slate-400 px-1 pt-1 gap-1">
+            <span>* ยอดขายจริง TU ดึงจากบิลและใบสั่งซื้อที่เปิดในระบบการค้าไทยวัฒนาพานิช (ERP/TU System)</span>
+            <span class="font-mono text-emerald-600 font-medium"><i class="fa-solid fa-lock mr-1"></i>ข้อมูลของปีปัจจุบัน (2568) แยกจากตารางนี้อย่างเด็ดขาด ปลอดภัย 100%</span>
           </div>
 
         </div>
@@ -2427,7 +2746,7 @@
     <!-- Footer -->
   <footer class="bg-white border-t border-slate-200 text-slate-500 text-xs py-4 px-6 mt-auto">
     <div class="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-2">
-      <div>Training Center TWP (EMS Enterprise v1.14.0) &copy; 2026 - บริษัท ไทยวัฒนาพานิช จำกัด</div>
+      <div>Training Center TWP (EMS Enterprise v1.15.0) &copy; 2026 - บริษัท ไทยวัฒนาพานิช จำกัด</div>
       <div class="flex items-center space-x-4">
         <button onclick="showLandingPage()" class="hover:text-blue-600 transition"><i class="fa-solid fa-house mr-1"></i>กลับหน้าแรก</button>
         <span>Google Apps Script + Google Sheets Architecture (PPC Standard)</span>
@@ -2775,9 +3094,138 @@
       return reqs;
     }
 
+    function getPersistedFy2569Projects() {
+      const stored = localStorage.getItem('twp_fy2569_projects');
+      if (stored) {
+        try {
+          const parsed = JSON.parse(stored);
+          if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+        } catch(e) {}
+      }
+      return [
+        {
+          id: 'EVT-2569-0001',
+          schoolCode: 'SCH-1001',
+          schoolName: 'โรงเรียน สวนกุหลาบวิทยาลัย',
+          province: 'กรุงเทพมหานคร',
+          salesRep: 'สุรศักดิ์ จันทรศิลปิน',
+          topic: 'Active Learning สู่สมรรถนะผู้เรียนด้วยสื่อนวัตกรรมดิจิทัล',
+          eventDate: '2026-05-18',
+          budget: 15000,
+          targetSales: 150000,
+          remarks: 'เป้าหมายจัดซื้อชุดแบบฝึก Active Learning ม.1-3 และแบบวัดผลครบสาระ',
+          createdAt: '2026-01-15T09:00:00Z'
+        },
+        {
+          id: 'EVT-2569-0002',
+          schoolCode: 'SCH-1016',
+          schoolName: 'โรงเรียน สตรีวิทยา',
+          province: 'กรุงเทพมหานคร',
+          salesRep: 'กิตติศักดิ์ สุขุมินทนันท์',
+          topic: 'STEM & AI เพื่อยกระดับห้องเรียนอัจฉริยะ',
+          eventDate: '2026-06-10',
+          budget: 12000,
+          targetSales: 120000,
+          remarks: 'อบรมกลุ่มสาระวิทยาศาสตร์และเทคโนโลยี ขยายผลคู่มือการสอน',
+          createdAt: '2026-01-20T10:30:00Z'
+        },
+        {
+          id: 'EVT-2569-0003',
+          schoolCode: 'SCH-1085',
+          schoolName: 'โรงเรียน บดินทรเดชา (สิงห์ สิงหเสนี)',
+          province: 'กรุงเทพมหานคร',
+          salesRep: 'ควรชิด จัตตุพร',
+          topic: 'Coding & Hands-on Robotics สำหรับมัธยมศึกษา',
+          eventDate: '2026-06-25',
+          budget: 18000,
+          targetSales: 200000,
+          remarks: 'โครงการนำร่องชุดกิจกรรม Coding และเตรียมสั่งซื้อห้องปฏิบัติการ',
+          createdAt: '2026-02-01T11:15:00Z'
+        },
+        {
+          id: 'EVT-2569-0004',
+          schoolCode: 'SCH-1440',
+          schoolName: 'โรงเรียน ยุพราชวิทยาลัย',
+          province: 'เชียงใหม่',
+          salesRep: 'ธงชัย มงคลกาญจน์',
+          topic: 'เทคนิคการวัดและประเมินผลตามเกณฑ์ ว PA',
+          eventDate: '2026-07-08',
+          budget: 20000,
+          targetSales: 180000,
+          remarks: 'จัดร่วมกับเครือข่ายครูวิชาการประจำโซนภาคเหนือ',
+          createdAt: '2026-02-10T14:00:00Z'
+        },
+        {
+          id: 'EVT-2569-0005',
+          schoolCode: 'SCH-2201',
+          schoolName: 'โรงเรียน ขอนแก่นวิทยายน',
+          province: 'ขอนแก่น',
+          salesRep: 'สมศักดิ์ ปิยะโสภณ',
+          topic: 'การจัดการเรียนรู้บูรณาการ Active Learning สพม.',
+          eventDate: '2026-07-22',
+          budget: 16000,
+          targetSales: 160000,
+          remarks: 'เป้าหมายจัดซื้อสื่อประกอบแผนการสอนระดับมัธยมปลาย',
+          createdAt: '2026-02-15T08:45:00Z'
+        }
+      ];
+    }
+
+    function getPersistedFy2569TuLedger() {
+      const stored = localStorage.getItem('twp_fy2569_tu_ledger');
+      if (stored) {
+        try {
+          const parsed = JSON.parse(stored);
+          if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+        } catch(e) {}
+      }
+      return [
+        {
+          projectId: 'EVT-2569-0001',
+          tuInvoiceNo: 'TU-69-0891',
+          tuInvoiceDate: '2026-06-05',
+          tuActualSales: 168000,
+          tuStatus: 'PAID',
+          tuItems: 'ชุดแบบฝึกหัด Active Learning และคู่มือครูครบสาระ'
+        },
+        {
+          projectId: 'EVT-2569-0002',
+          tuInvoiceNo: 'TU-69-1044',
+          tuInvoiceDate: '2026-06-28',
+          tuActualSales: 115000,
+          tuStatus: 'INVOICED',
+          tuItems: 'สื่อการเรียนรู้สะเต็มศึกษาและดิจิทัลแพลตฟอร์ม'
+        },
+        {
+          projectId: 'EVT-2569-0003',
+          tuInvoiceNo: 'TU-69-1205',
+          tuInvoiceDate: '2026-07-15',
+          tuActualSales: 218000,
+          tuStatus: 'PAID',
+          tuItems: 'ชุดอุปกรณ์บอร์ดสมองกล Coding และสื่อประกอบการเรียน'
+        },
+        {
+          projectId: 'EVT-2569-0004',
+          tuInvoiceNo: 'TU-69-1420',
+          tuInvoiceDate: '2026-08-02',
+          tuActualSales: 185000,
+          tuStatus: 'INVOICED',
+          tuItems: 'คู่มือและแบบวัดผลประเมินผลสมรรถนะผู้เรียน'
+        },
+        {
+          projectId: 'EVT-2569-0005',
+          tuInvoiceNo: '',
+          tuInvoiceDate: '',
+          tuActualSales: 0,
+          tuStatus: 'PENDING',
+          tuItems: 'อยู่ระหว่างรอการประชุมสรุปยอดจัดซื้อประจำปีของโรงเรียน'
+        }
+      ];
+    }
+
     // System Global State (Synchronously initialized with complete Master Data)
     const AppState = {
-      version: '1.14.0',
+      version: '1.15.0',
       clientId: 'DEV-' + Math.random().toString(36).substring(2, 7).toUpperCase(),
       activeTab: 'dashboard',
       activeDevices: {},
@@ -2794,6 +3242,8 @@
         schools: getPersistedSchools()
       },
       requests: getPersistedRequests(),
+      fy2569Projects: getPersistedFy2569Projects(),
+      fy2569TuLedger: getPersistedFy2569TuLedger(),
       autoOptions: {
         activityTypes: ['อบรมวิชาการ', 'Workshop เชิงปฏิบัติการ', 'Workshop Hosting', 'ติวนักเรียน', 'สัมมนาวิชาการผู้บริหาร', 'อบรมออนไลน์'],
         courseTopics: ['อบรมคศ.3-4 นวัตกรรมการเรียนรู้', 'Active Learning สู่สมรรถนะผู้เรียน', 'Coding & STEM Education', 'เทคนิคการวัดและประเมินผล', 'AI เพื่อการจัดการเรียนการสอน'],
@@ -3447,6 +3897,9 @@
       renderExecQueue();
       renderEvaluationCenter();
       updateQueueBadges();
+      if (AppState.activeTab === 'fy2569Tu') {
+        renderFy2569TuView();
+      }
     }
 
     // ------------------- TAB SWITCHER -------------------
@@ -3457,7 +3910,7 @@
       const activeBtn = document.getElementById('tabBtn-' + tabId);
       if (activeBtn) activeBtn.classList.add('tab-active');
 
-      ['dashboard', 'teamA', 'teamB', 'exec', 'evaluation', 'teamBExpenses'].forEach(id => {
+      ['dashboard', 'teamA', 'teamB', 'exec', 'evaluation', 'teamBExpenses', 'fy2569Tu'].forEach(id => {
         const view = document.getElementById('view-' + id);
         if (view) {
           if (id === tabId) view.classList.remove('hidden');
@@ -3467,6 +3920,8 @@
 
       if (tabId === 'teamBExpenses') {
         renderTeamBExpensesView();
+      } else if (tabId === 'fy2569Tu') {
+        renderFy2569TuView();
       }
     }
 
@@ -3965,6 +4420,507 @@
     function closePhotoLightbox() {
       const modal = document.getElementById('photoLightboxModal');
       if (modal) modal.classList.add('hidden');
+    }
+
+    // ==========================================================================
+    // FY2569 STRATEGIC PROJECTS & TU SALES RECONCILIATION ENGINE (v1.15.0)
+    // ==========================================================================
+
+    let fy2569SelectedMatchProjectId = null;
+
+    function renderFy2569TuView() {
+      // 1. Populate Schools Datalist from RAW_PPC_SCHOOLS
+      const datalist = document.getElementById('fy2569SchoolDatalist');
+      if (datalist && datalist.children.length === 0) {
+        if (typeof RAW_PPC_SCHOOLS !== 'undefined' && Array.isArray(RAW_PPC_SCHOOLS)) {
+          datalist.innerHTML = RAW_PPC_SCHOOLS.map(s => 
+            `<option value="${s[1]}">${s[0]} | ${s[2]} (${s[5]})</option>`
+          ).join('');
+        }
+      }
+
+      // 2. Populate PPC Sales Reps dropdowns
+      const salesSelect = document.getElementById('fy2569SalesSelect');
+      const filterRep = document.getElementById('fy2569LedgerRepFilter');
+      if (salesSelect && typeof PPC_SALES_REPRESENTATIVES !== 'undefined') {
+        if (salesSelect.children.length <= 1) {
+          salesSelect.innerHTML = '<option value="">-- เลือกผู้แทนขาย PPC --</option>' +
+            PPC_SALES_REPRESENTATIVES.map(rep => `<option value="${rep.name}">${rep.name} (${rep.role})</option>`).join('');
+        }
+      }
+      if (filterRep && typeof PPC_SALES_REPRESENTATIVES !== 'undefined') {
+        const curVal = filterRep.value || 'ALL';
+        filterRep.innerHTML = '<option value="ALL">ทุกคน (13 ผู้แทนขาย)</option>' +
+          PPC_SALES_REPRESENTATIVES.map(rep => `<option value="${rep.name}">${rep.name}</option>`).join('');
+        filterRep.value = curVal;
+      }
+
+      // 3. Populate Match Project Dropdown
+      const matchSelect = document.getElementById('fy2569MatchProjectSelect');
+      const projects = AppState.fy2569Projects || [];
+      if (matchSelect) {
+        const curMatchVal = matchSelect.value;
+        if (projects.length === 0) {
+          matchSelect.innerHTML = '<option value="">-- ยังไม่มีโครงการปี 2569 (กรุณาบันทึกโครงการทางซ้าย) --</option>';
+        } else {
+          matchSelect.innerHTML = '<option value="">-- เลือกโครงการปี 2569 --</option>' +
+            projects.map(p => `<option value="${p.id}">${p.id} | ${p.schoolName} (${p.salesRep})</option>`).join('');
+          if (curMatchVal && projects.some(p => p.id === curMatchVal)) {
+            matchSelect.value = curMatchVal;
+          }
+        }
+      }
+
+      // 4. Compute 5 KPIs
+      computeFy2569Kpis();
+
+      // 5. Render Ledger Table
+      renderFy2569LedgerTable();
+    }
+
+    function computeFy2569Kpis() {
+      const projects = AppState.fy2569Projects || [];
+      const ledger = AppState.fy2569TuLedger || [];
+
+      const totalProjects = projects.length;
+      let totalBudget = 0;
+      let totalTarget = 0;
+      let totalTuActual = 0;
+
+      projects.forEach(p => {
+        totalBudget += Number(p.budget) || 0;
+        totalTarget += Number(p.targetSales) || 0;
+        const match = ledger.find(l => l.projectId === p.id);
+        if (match) {
+          totalTuActual += Number(match.tuActualSales) || 0;
+        }
+      });
+
+      const netVariance = totalTuActual - totalTarget;
+      const achievePct = totalTarget > 0 ? ((totalTuActual / totalTarget) * 100).toFixed(1) : '0.0';
+      const costRoi = totalTuActual > 0 ? ((totalBudget / totalTuActual) * 100).toFixed(1) : '0.0';
+
+      const elProjects = document.getElementById('fy2569TotalProjects');
+      const elBudget = document.getElementById('fy2569TotalBudget');
+      const elTarget = document.getElementById('fy2569TotalTarget');
+      const elTuActual = document.getElementById('fy2569TotalTuActual');
+      const elVariance = document.getElementById('fy2569TotalVariance');
+      const elAchieve = document.getElementById('fy2569AchievementRate');
+      const elRoi = document.getElementById('fy2569RoiRate');
+
+      if (elProjects) elProjects.innerText = totalProjects + ' โครงการ';
+      if (elBudget) elBudget.innerText = '฿' + totalBudget.toLocaleString();
+      if (elTarget) elTarget.innerText = '฿' + totalTarget.toLocaleString();
+      if (elTuActual) elTuActual.innerText = '฿' + totalTuActual.toLocaleString();
+
+      if (elVariance) {
+        if (netVariance >= 0) {
+          elVariance.className = 'text-lg font-mono font-black text-emerald-700';
+          elVariance.innerText = '+฿' + netVariance.toLocaleString();
+        } else {
+          elVariance.className = 'text-lg font-mono font-black text-rose-700';
+          elVariance.innerText = '-฿' + Math.abs(netVariance).toLocaleString();
+        }
+      }
+
+      if (elAchieve) elAchieve.innerText = 'บรรลุเป้า: ' + achievePct + '%';
+      if (elRoi) elRoi.innerText = 'Cost/Sales: ' + costRoi + '%';
+    }
+
+    function onFy2569SchoolInput(val) {
+      if (!val) return;
+      const clean = normalizeSchoolName(val);
+      if (typeof RAW_PPC_SCHOOLS !== 'undefined' && Array.isArray(RAW_PPC_SCHOOLS)) {
+        const found = RAW_PPC_SCHOOLS.find(s => s[1].toLowerCase() === val.trim().toLowerCase() || s[1].toLowerCase() === clean.toLowerCase());
+        if (found) {
+          const provInput = document.getElementById('fy2569ProvinceInput');
+          const salesSelect = document.getElementById('fy2569SalesSelect');
+          if (provInput) provInput.value = found[2] || '';
+          if (salesSelect && found[5]) {
+            for (let i = 0; i < salesSelect.options.length; i++) {
+              if (salesSelect.options[i].value === found[5]) {
+                salesSelect.selectedIndex = i;
+                break;
+              }
+            }
+          }
+        }
+      }
+    }
+
+    function handleSaveFy2569Project(e) {
+      e.preventDefault();
+      const schoolName = document.getElementById('fy2569SchoolInput').value.trim();
+      const province = document.getElementById('fy2569ProvinceInput').value.trim();
+      const salesRep = document.getElementById('fy2569SalesSelect').value;
+      const topic = document.getElementById('fy2569TopicInput').value.trim();
+      const eventDate = document.getElementById('fy2569DateInput').value;
+      const budget = Number(document.getElementById('fy2569BudgetInput').value) || 0;
+      const targetSales = Number(document.getElementById('fy2569TargetInput').value) || 0;
+      const remarks = document.getElementById('fy2569RemarksInput').value.trim();
+
+      if (!schoolName || !salesRep) {
+        showAlert('กรุณาระบุชื่อโรงเรียนและผู้แทนขาย PPC', 'warning');
+        return;
+      }
+
+      let schoolCode = 'SCH-CUSTOM';
+      if (typeof RAW_PPC_SCHOOLS !== 'undefined') {
+        const found = RAW_PPC_SCHOOLS.find(s => s[1] === schoolName);
+        if (found) schoolCode = found[0];
+      }
+
+      const projects = AppState.fy2569Projects || [];
+      const nextNum = projects.length + 1;
+      const newId = 'EVT-2569-' + String(nextNum).padStart(4, '0');
+
+      const newProject = {
+        id: newId,
+        schoolCode,
+        schoolName,
+        province,
+        salesRep,
+        topic,
+        eventDate,
+        budget,
+        targetSales,
+        remarks,
+        createdAt: new Date().toISOString()
+      };
+
+      projects.unshift(newProject);
+      AppState.fy2569Projects = projects;
+      localStorage.setItem('twp_fy2569_projects', JSON.stringify(projects));
+
+      // Also create empty pending TU record
+      const ledger = AppState.fy2569TuLedger || [];
+      ledger.unshift({
+        projectId: newId,
+        tuInvoiceNo: '',
+        tuInvoiceDate: '',
+        tuActualSales: 0,
+        tuStatus: 'PENDING',
+        tuItems: ''
+      });
+      AppState.fy2569TuLedger = ledger;
+      localStorage.setItem('twp_fy2569_tu_ledger', JSON.stringify(ledger));
+
+      // Reset form
+      document.getElementById('fy2569SchoolInput').value = '';
+      document.getElementById('fy2569ProvinceInput').value = '';
+      document.getElementById('fy2569BudgetInput').value = '';
+      document.getElementById('fy2569TargetInput').value = '';
+      document.getElementById('fy2569RemarksInput').value = '';
+
+      showAlert('บันทึกโครงการปี 2569 รหัส ' + newId + ' เรียบร้อยแล้ว', 'success');
+      renderFy2569TuView();
+    }
+
+    function onSelectFy2569MatchProject(projectId) {
+      fy2569SelectedMatchProjectId = projectId;
+      const card = document.getElementById('fy2569SelectedProjectCard');
+      if (!projectId) {
+        if (card) card.classList.add('hidden');
+        return;
+      }
+
+      const p = (AppState.fy2569Projects || []).find(x => x.id === projectId);
+      if (!p) return;
+
+      if (card) {
+        card.classList.remove('hidden');
+        document.getElementById('previewMatchSchoolName').innerText = p.schoolName + ' (' + p.province + ')';
+        document.getElementById('previewMatchRep').innerText = 'PPC: ' + p.salesRep;
+        document.getElementById('previewMatchBudget').innerText = '฿' + Number(p.budget).toLocaleString();
+        document.getElementById('previewMatchTarget').innerText = '฿' + Number(p.targetSales).toLocaleString();
+      }
+
+      // Check if existing TU data
+      const existing = (AppState.fy2569TuLedger || []).find(l => l.projectId === projectId);
+      if (existing) {
+        document.getElementById('fy2569TuInvoiceNoInput').value = existing.tuInvoiceNo || '';
+        document.getElementById('fy2569TuInvoiceDateInput').value = existing.tuInvoiceDate || '';
+        document.getElementById('fy2569TuAmountInput').value = existing.tuActualSales || '';
+        document.getElementById('fy2569TuStatusSelect').value = existing.tuStatus || 'INVOICED';
+        document.getElementById('fy2569TuItemsInput').value = existing.tuItems || '';
+      }
+    }
+
+    function handleSaveTuMatch(e) {
+      e.preventDefault();
+      const projectId = document.getElementById('fy2569MatchProjectSelect').value;
+      if (!projectId) {
+        showAlert('กรุณาเลือกโครงการปี 2569 ที่ต้องการกระทบยอด', 'warning');
+        return;
+      }
+
+      const tuInvoiceNo = document.getElementById('fy2569TuInvoiceNoInput').value.trim();
+      const tuInvoiceDate = document.getElementById('fy2569TuInvoiceDateInput').value;
+      const tuActualSales = Number(document.getElementById('fy2569TuAmountInput').value) || 0;
+      const tuStatus = document.getElementById('fy2569TuStatusSelect').value;
+      const tuItems = document.getElementById('fy2569TuItemsInput').value.trim();
+
+      const ledger = AppState.fy2569TuLedger || [];
+      const idx = ledger.findIndex(l => l.projectId === projectId);
+
+      const entry = {
+        projectId,
+        tuInvoiceNo,
+        tuInvoiceDate,
+        tuActualSales,
+        tuStatus,
+        tuItems
+      };
+
+      if (idx >= 0) {
+        ledger[idx] = entry;
+      } else {
+        ledger.unshift(entry);
+      }
+
+      AppState.fy2569TuLedger = ledger;
+      localStorage.setItem('twp_fy2569_tu_ledger', JSON.stringify(ledger));
+
+      showAlert('บันทึกจับคู่ยอดขาย TU รหัส ' + projectId + ' สำเร็จแล้ว', 'success');
+      renderFy2569TuView();
+    }
+
+    function renderFy2569LedgerTable() {
+      const tbody = document.getElementById('fy2569LedgerTableBody');
+      if (!tbody) return;
+
+      const projects = AppState.fy2569Projects || [];
+      const ledger = AppState.fy2569TuLedger || [];
+
+      const repFilter = document.getElementById('fy2569LedgerRepFilter')?.value || 'ALL';
+      const statusFilter = document.getElementById('fy2569LedgerStatusFilter')?.value || 'ALL';
+
+      let filtered = projects.filter(p => {
+        if (repFilter !== 'ALL' && p.salesRep !== repFilter) return false;
+        const match = ledger.find(l => l.projectId === p.id);
+        const actual = match ? Number(match.tuActualSales) || 0 : 0;
+        const target = Number(p.targetSales) || 0;
+
+        let status = 'PENDING';
+        if (match && match.tuInvoiceNo && actual > 0) {
+          status = actual >= target ? 'ACHIEVED' : 'BELOW';
+        }
+
+        if (statusFilter !== 'ALL' && status !== statusFilter) return false;
+        return true;
+      });
+
+      if (filtered.length === 0) {
+        tbody.innerHTML = `
+          <tr>
+            <td colspan="13" class="text-center py-8 text-slate-400">
+              <i class="fa-solid fa-folder-open text-3xl mb-2 text-slate-300 block"></i>
+              <span>ไม่พบข้อมูลโครงการปี 2569 ตามเงื่อนไขที่เลือก</span>
+            </td>
+          </tr>
+        `;
+        return;
+      }
+
+      tbody.innerHTML = filtered.map((p, idx) => {
+        const match = ledger.find(l => l.projectId === p.id) || {};
+        const budget = Number(p.budget) || 0;
+        const target = Number(p.targetSales) || 0;
+        const actual = Number(match.tuActualSales) || 0;
+        const diff = actual - target;
+        const achieve = target > 0 ? ((actual / target) * 100).toFixed(1) : '0.0';
+        const costRoi = actual > 0 ? ((budget / actual) * 100).toFixed(1) : '0.0';
+
+        let badgeHtml = '';
+        if (!match.tuInvoiceNo || actual === 0) {
+          badgeHtml = '<span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-amber-100 text-amber-800 border border-amber-300">🟡 รอวางบิล TU</span>';
+        } else if (actual >= target) {
+          badgeHtml = '<span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-100 text-emerald-800 border border-emerald-300">🟢 ทะลุเป้า</span>';
+        } else {
+          badgeHtml = '<span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-rose-100 text-rose-800 border border-rose-300">🔴 ต่ำกว่าเป้า</span>';
+        }
+
+        const diffClass = diff >= 0 ? 'text-emerald-700 font-bold' : 'text-rose-600 font-bold';
+        const diffSign = diff >= 0 ? '+' : '';
+
+        return `
+          <tr class="hover:bg-slate-50 transition">
+            <td class="p-3 text-center text-slate-400 font-mono">${idx + 1}</td>
+            <td class="p-3">
+              <div class="font-bold text-slate-900">${p.schoolName}</div>
+              <div class="text-[10px] text-slate-400 font-mono">${p.id} • ${p.province}</div>
+            </td>
+            <td class="p-3 font-medium text-slate-700">${p.salesRep}</td>
+            <td class="p-3 text-center font-mono text-slate-600">${p.eventDate}</td>
+            <td class="p-3 text-right font-mono font-bold text-slate-800">฿${budget.toLocaleString()}</td>
+            <td class="p-3 text-right font-mono font-bold text-indigo-700">฿${target.toLocaleString()}</td>
+            <td class="p-3 text-center font-mono text-slate-600">${match.tuInvoiceNo || '<span class="text-slate-300">-</span>'}</td>
+            <td class="p-3 text-right font-mono font-black text-emerald-700">${actual > 0 ? '฿' + actual.toLocaleString() : '<span class="text-slate-300">0</span>'}</td>
+            <td class="p-3 text-right font-mono ${diffClass}">${actual > 0 ? diffSign + '฿' + diff.toLocaleString() : '-'}</td>
+            <td class="p-3 text-center font-mono font-bold ${Number(achieve) >= 100 ? 'text-emerald-700' : 'text-slate-600'}">${actual > 0 ? achieve + '%' : '-'}</td>
+            <td class="p-3 text-center font-mono text-slate-600">${actual > 0 ? costRoi + '%' : '-'}</td>
+            <td class="p-3 text-center">${badgeHtml}</td>
+            <td class="p-3 text-center space-x-1 whitespace-nowrap">
+              <button onclick="quickSelectMatchProject('${p.id}')" title="กรอกยอดขาย TU" class="p-1.5 text-blue-600 hover:bg-blue-50 rounded-lg transition cursor-pointer"><i class="fa-solid fa-pen-to-square"></i></button>
+              <button onclick="deleteFy2569Project('${p.id}')" title="ลบโครงการ" class="p-1.5 text-rose-500 hover:bg-rose-50 rounded-lg transition cursor-pointer"><i class="fa-solid fa-trash-can"></i></button>
+            </td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    function quickSelectMatchProject(projectId) {
+      const matchSelect = document.getElementById('fy2569MatchProjectSelect');
+      if (matchSelect) {
+        matchSelect.value = projectId;
+        onSelectFy2569MatchProject(projectId);
+        matchSelect.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
+    }
+
+    function deleteFy2569Project(projectId) {
+      if (!confirm('ต้องการลบโครงการ ' + projectId + ' ใช่หรือไม่?')) return;
+      AppState.fy2569Projects = (AppState.fy2569Projects || []).filter(p => p.id !== projectId);
+      AppState.fy2569TuLedger = (AppState.fy2569TuLedger || []).filter(l => l.projectId !== projectId);
+      localStorage.setItem('twp_fy2569_projects', JSON.stringify(AppState.fy2569Projects));
+      localStorage.setItem('twp_fy2569_tu_ledger', JSON.stringify(AppState.fy2569TuLedger));
+      showAlert('ลบโครงการ ' + projectId + ' เรียบร้อยแล้ว', 'info');
+      renderFy2569TuView();
+    }
+
+    function clearAllFy2569DataPrompt() {
+      if (!confirm('ยืนยันล้างข้อมูลทดสอบปี 2569 ทั้งหมดใช่หรือไม่? (ข้อมูลปีปัจจุบันจะไม่ได้รับผลกระทบ)')) return;
+      AppState.fy2569Projects = [];
+      AppState.fy2569TuLedger = [];
+      localStorage.removeItem('twp_fy2569_projects');
+      localStorage.removeItem('twp_fy2569_tu_ledger');
+      showAlert('ล้างข้อมูลทดสอบปี 2569 เรียบร้อยแล้ว', 'info');
+      renderFy2569TuView();
+    }
+
+    function loadSampleFy2569Data() {
+      localStorage.removeItem('twp_fy2569_projects');
+      localStorage.removeItem('twp_fy2569_tu_ledger');
+      AppState.fy2569Projects = getPersistedFy2569Projects();
+      AppState.fy2569TuLedger = getPersistedFy2569TuLedger();
+      localStorage.setItem('twp_fy2569_projects', JSON.stringify(AppState.fy2569Projects));
+      localStorage.setItem('twp_fy2569_tu_ledger', JSON.stringify(AppState.fy2569TuLedger));
+      showAlert('โหลดข้อมูลจำลองโครงการปี 2569 และยอดขาย TU สมบูรณ์แล้ว', 'success');
+      renderFy2569TuView();
+    }
+
+    function openImportTuExcelModal() {
+      const csvData = prompt(
+        'วางข้อมูลยอดขาย TU (รูปแบบ: รหัสโครงการ,เลขที่บิลTU,วันที่บิล,ยอดขายจริงTU เช่น EVT-2569-0005,TU-69-9999,2026-08-10,175000):'
+      );
+      if (!csvData) return;
+      const lines = csvData.trim().split('\n');
+      let count = 0;
+      const ledger = AppState.fy2569TuLedger || [];
+      lines.forEach(line => {
+        const parts = line.split(/[,;\t]/).map(x => x.trim());
+        if (parts.length >= 4) {
+          const [projId, invNo, invDate, amt] = parts;
+          const idx = ledger.findIndex(l => l.projectId === projId);
+          const entry = {
+            projectId: projId,
+            tuInvoiceNo: invNo,
+            tuInvoiceDate: invDate,
+            tuActualSales: Number(amt) || 0,
+            tuStatus: 'INVOICED',
+            tuItems: 'นำเข้าจากระบบ TU'
+          };
+          if (idx >= 0) ledger[idx] = entry;
+          else ledger.push(entry);
+          count++;
+        }
+      });
+      AppState.fy2569TuLedger = ledger;
+      localStorage.setItem('twp_fy2569_tu_ledger', JSON.stringify(ledger));
+      showAlert('นำเข้าข้อมูลยอดขาย TU เรียบร้อย ' + count + ' รายการ', 'success');
+      renderFy2569TuView();
+    }
+
+    function printFy2569ReconcileMemo() {
+      const projects = AppState.fy2569Projects || [];
+      const ledger = AppState.fy2569TuLedger || [];
+
+      let totalBudget = 0;
+      let totalTarget = 0;
+      let totalTuActual = 0;
+
+      projects.forEach(p => {
+        totalBudget += Number(p.budget) || 0;
+        totalTarget += Number(p.targetSales) || 0;
+        const match = ledger.find(l => l.projectId === p.id);
+        if (match) totalTuActual += Number(match.tuActualSales) || 0;
+      });
+
+      const netVariance = totalTuActual - totalTarget;
+      const achievePct = totalTarget > 0 ? ((totalTuActual / totalTarget) * 100).toFixed(1) : '0.0';
+
+      const printWin = window.open('', '_blank');
+      const rowsHtml = projects.map((p, idx) => {
+        const m = ledger.find(l => l.projectId === p.id) || {};
+        const b = Number(p.budget) || 0;
+        const t = Number(p.targetSales) || 0;
+        const a = Number(m.tuActualSales) || 0;
+        const v = a - t;
+        const ach = t > 0 ? ((a / t) * 100).toFixed(1) : '0.0';
+        return '<tr>' +
+          '<td style="padding:4px; text-align:center; border:1px solid #cbd5e1;">' + (idx + 1) + '</td>' +
+          '<td style="padding:4px; border:1px solid #cbd5e1;"><strong>' + p.schoolName + '</strong> (' + p.province + ')</td>' +
+          '<td style="padding:4px; border:1px solid #cbd5e1;">' + p.salesRep + '</td>' +
+          '<td style="padding:4px; text-align:right; border:1px solid #cbd5e1;">฿' + b.toLocaleString() + '</td>' +
+          '<td style="padding:4px; text-align:right; border:1px solid #cbd5e1;">฿' + t.toLocaleString() + '</td>' +
+          '<td style="padding:4px; text-align:center; border:1px solid #cbd5e1;">' + (m.tuInvoiceNo || '-') + '</td>' +
+          '<td style="padding:4px; text-align:right; border:1px solid #cbd5e1; font-weight:bold; color:#15803d;">฿' + a.toLocaleString() + '</td>' +
+          '<td style="padding:4px; text-align:right; border:1px solid #cbd5e1;">' + (v >= 0 ? '+' : '') + '฿' + v.toLocaleString() + '</td>' +
+          '<td style="padding:4px; text-align:center; border:1px solid #cbd5e1;">' + ach + '%</td>' +
+        '</tr>';
+      }).join('');
+
+      const docHtml = '<!DOCTYPE html><html><head><meta charset="UTF-8"><title>รายงานกระทบยอดขาย TU ประจำปี 2569</title>' +
+        '<link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@400;600;700;800&display=swap" rel="stylesheet">' +
+        '<style>' +
+        'body { font-family: "Sarabun", sans-serif; font-size: 12pt; margin: 25mm 20mm; color: #0f172a; line-height: 1.4; }' +
+        '.header { display: flex; justify-content: space-between; align-items: flex-end; border-bottom: 2px solid #08539E; padding-bottom: 8px; margin-bottom: 12px; }' +
+        'table { width: 100%; border-collapse: collapse; font-size: 10pt; margin-top: 10px; }' +
+        'th { background: #08539E; color: #fff; padding: 6px 4px; border: 1px solid #cbd5e1; font-weight: bold; }' +
+        '@media print { @page { size: A4 landscape; margin: 15mm; } body { margin: 0; } }' +
+        '</style></head><body>' +
+        '<div class="header">' +
+        '<div><h2 style="margin:0; color:#08539E; font-size:16pt;">บริษัท ไทยวัฒนาพานิช จำกัด (TWP)</h2><div style="font-size:11pt; color:#475569;">รายงานสรุปการกระทบยอดงบประมาณจัดอบรมกับยอดขายจริงจากระบบ TU ประจำปี 2569</div></div>' +
+        '<div style="text-align:right; font-size:9pt; color:#64748b;">ออกโดยระบบ EMS Enterprise v1.15.0<br>วันที่พิมพ์: ' + new Date().toLocaleDateString('th-TH') + '</div>' +
+        '</div>' +
+        '<div style="display:flex; justify-content:space-between; background:#f8fafc; padding:8px 12px; border-radius:6px; margin-bottom:10px; font-size:10pt;">' +
+        '<div>โครงการทั้งหมด: <strong>' + projects.length + ' โครงการ</strong></div>' +
+        '<div>งบประมาณอบรมรวม: <strong>฿' + totalBudget.toLocaleString() + '</strong></div>' +
+        '<div>เป้าหมายยอดขายรวม: <strong>฿' + totalTarget.toLocaleString() + '</strong></div>' +
+        '<div>ยอดสั่งซื้อจริง TU: <strong style="color:#15803d;">฿' + totalTuActual.toLocaleString() + '</strong></div>' +
+        '<div>ผลต่างสุทธิ: <strong>' + (netVariance >= 0 ? '+' : '') + '฿' + netVariance.toLocaleString() + '</strong> (' + achievePct + '%)</div>' +
+        '</div>' +
+        '<table><thead><tr>' +
+        '<th style="width:30px;">#</th><th>สถานศึกษา / จังหวัด</th><th>ผู้แทนขาย PPC</th><th>งบอบรม</th><th>เป้าขาย</th><th>เลขที่บิล TU</th><th>ยอดซื้อจริง TU</th><th>ผลต่าง (+/-)</th><th>% บรรลุ</th>' +
+        '</tr></thead><tbody>' + rowsHtml +
+        '<tr style="background:#eff6ff; font-weight:bold; border-top:2px solid #08539E;">' +
+        '<td colspan="3" style="padding:6px; text-align:right; border:1px solid #cbd5e1;">รวมทั้งสิ้น (Grand Total):</td>' +
+        '<td style="padding:6px; text-align:right; border:1px solid #cbd5e1;">฿' + totalBudget.toLocaleString() + '</td>' +
+        '<td style="padding:6px; text-align:right; border:1px solid #cbd5e1;">฿' + totalTarget.toLocaleString() + '</td>' +
+        '<td style="padding:6px; text-align:center; border:1px solid #cbd5e1;">-</td>' +
+        '<td style="padding:6px; text-align:right; border:1px solid #cbd5e1; color:#15803d;">฿' + totalTuActual.toLocaleString() + '</td>' +
+        '<td style="padding:6px; text-align:right; border:1px solid #cbd5e1;">' + (netVariance >= 0 ? '+' : '') + '฿' + netVariance.toLocaleString() + '</td>' +
+        '<td style="padding:6px; text-align:center; border:1px solid #cbd5e1;">' + achievePct + '%</td>' +
+        '</tr></tbody></table>' +
+        '<div style="margin-top:20px; display:flex; justify-content:space-between; font-size:10pt;">' +
+        '<div style="text-align:center; width:200px;"><div style="margin-bottom:40px;">ผู้จัดทำรายงาน (ฝ่ายขาย/PPC)</div><div>(___________________________)</div></div>' +
+        '<div style="text-align:center; width:200px;"><div style="margin-bottom:40px;">ผู้ตรวจสอบ (ฝ่ายวิชาการ)</div><div>(___________________________)</div></div>' +
+        '<div style="text-align:center; width:200px;"><div style="margin-bottom:40px;">ผู้อนุมัติ (ผู้บริหาร)</div><div>(___________________________)</div></div>' +
+        '</div></body></html>';
+
+      printWin.document.write(docHtml);
+      printWin.document.close();
+      setTimeout(() => { printWin.print(); }, 500);
     }
 
     // Admin Override: Unlock E-Certificate
@@ -6077,7 +7033,7 @@
           <div style="border-top:1px dashed #cbd5e1; margin-top:10px; padding-top:4px; display:flex; justify-content:space-between; align-items:center; font-size:8.5pt; color:#64748b;">
             <div>
               <i class="fa-solid fa-file-contract mr-1 text-[#08539E]"></i>
-              รายงานประเมินและวิเคราะห์ต้นทุนการจัดอบรม A4 • ออกโดย TWP Training Enterprise Platform (v1.14.0)
+              รายงานประเมินและวิเคราะห์ต้นทุนการจัดอบรม A4 • ออกโดย TWP Training Enterprise Platform (v1.15.0)
             </div>
             <div>
               หน้า 1/1 • ${d.eventId}
@@ -6248,7 +7204,7 @@
           <div style="border-top:1px dashed #cbd5e1; margin-top:14px; padding-top:6px; display:flex; justify-content:space-between; align-items:center; font-size:8.5pt; color:#64748b;">
             <div>
               <i class="fa-solid fa-shield-halved" style="color:#08539E; margin-right:4px;"></i>
-              เอกสารอิเล็กทรอนิกส์มาตรฐาน A4 ออกโดย TWP Training Enterprise Management System (EMS v1.14.0)
+              เอกสารอิเล็กทรอนิกส์มาตรฐาน A4 ออกโดย TWP Training Enterprise Management System (EMS v1.15.0)
             </div>
             <div>
               รหัสอ้างอิง: <span style="font-family:monospace; font-weight:700; color:#0f172a;">${d.eventId}</span> | หน้า 1/1
@@ -6421,7 +7377,7 @@
           </table>
 
           <div style="margin-top:14px; padding-top:4px; border-top:1px solid #e2e8f0; font-size:8.5pt; color:#94a3b8; text-align:center;">
-            เอกสารฉบับนี้สร้างโดยระบบ Training Center TWP (EMS Enterprise Platform v1.14.0) • ใช้สำหรับติดตามและควบคุมผลการปฏิบัติงานภายใน (PPC Standard)
+            เอกสารฉบับนี้สร้างโดยระบบ Training Center TWP (EMS Enterprise Platform v1.15.0) • ใช้สำหรับติดตามและควบคุมผลการปฏิบัติงานภายใน (PPC Standard)
           </div>
         </div>
       `;
