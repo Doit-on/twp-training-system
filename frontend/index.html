@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-  <title>Training Center TWP - ระบบบริหารคำขอจัดอบรมและประเมินผล v1.8.0</title>
+  <title>Training Center TWP - ระบบบริหารคำขอจัดอบรมและประเมินผล v1.9.0</title>
   <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
   <!-- Google Fonts: Sarabun -->
@@ -47,6 +47,44 @@
       --twp-dark: #05315e;
     }
     body { font-family: 'Sarabun', sans-serif; }
+    /* TH Sarabun 12pt Standard A4 Memo & Print Styles */
+    .font-sarabun {
+      font-family: 'TH Sarabun New', 'TH Sarabun PSK', 'Sarabun', 'Cordia New', sans-serif;
+    }
+    .a4-memo-container {
+      font-family: 'TH Sarabun New', 'TH Sarabun PSK', 'Sarabun', sans-serif;
+      font-size: 12pt;
+      line-height: 1.5;
+      color: #0f172a;
+      box-sizing: border-box;
+      text-align: justify;
+    }
+    .a4-memo-title {
+      font-size: 24pt;
+      font-weight: 800;
+      color: #08539E;
+      letter-spacing: 0.5px;
+    }
+    .a4-memo-head-label {
+      font-size: 13pt;
+      font-weight: 700;
+      color: #1e293b;
+    }
+    .a4-memo-indent {
+      text-indent: 2.5cm;
+    }
+    .a4-memo-section-title {
+      font-size: 12.5pt;
+      font-weight: 700;
+      color: #0f172a;
+      margin-top: 12px;
+      margin-bottom: 4px;
+    }
+    @page {
+      size: A4 portrait;
+      margin: 25mm 20mm 25mm 30mm;
+    }
+
     
     /* 3D Tactile Buttons (กดแล้วยุบ มีความลึกชัดเจน) */
     .btn-tactile {
@@ -160,7 +198,7 @@
       <div class="flex items-center space-x-3 text-xs">
         <span class="bg-white/15 px-3 py-1.5 rounded-full border border-white/20 backdrop-blur-sm font-mono text-blue-100 flex items-center">
           <span class="w-2 h-2 rounded-full bg-emerald-400 mr-2 animate-pulse"></span>
-          System v1.8.0
+          System v1.9.0
         </span>
       </div>
     </div>
@@ -232,7 +270,7 @@
     <!-- Bottom Footer on Landing Page -->
     <div class="max-w-7xl mx-auto w-full px-6 py-4 flex flex-col sm:flex-row items-center justify-between text-xs text-blue-200 border-t border-white/10 relative z-10 gap-2">
       <div>&copy; 2026 Training Center TWP - บริษัท ไทยวัฒนาพานิช จำกัด. All rights reserved.</div>
-      <div class="font-mono text-[11px] bg-white/10 px-3 py-1 rounded-full border border-white/15">EMS Enterprise Platform v1.8.0 (Live Apps Script Engine)</div>
+      <div class="font-mono text-[11px] bg-white/10 px-3 py-1 rounded-full border border-white/15">EMS Enterprise Platform v1.9.0 (Live Apps Script Engine)</div>
     </div>
 
   </div>
@@ -255,7 +293,7 @@
             <div>
               <div class="flex items-center space-x-2">
                 <span class="font-extrabold text-lg tracking-wide text-white">Training Center TWP</span>
-                <span class="bg-blue-400/20 text-blue-200 text-[10px] font-mono px-2 py-0.5 rounded-full border border-blue-300/30">v1.8.0</span>
+                <span class="bg-blue-400/20 text-blue-200 text-[10px] font-mono px-2 py-0.5 rounded-full border border-blue-300/30">v1.9.0</span>
               </div>
               <p class="text-[11px] text-blue-200 hidden sm:block">ระบบบริหารคำขอจัดอบรมและประเมินผลปิดลูป</p>
             </div>
@@ -997,7 +1035,7 @@
 
       <!-- Scrollable A4 Document Paper Container -->
       <div class="flex-1 overflow-y-auto custom-scrollbar p-2 sm:p-4 bg-slate-100/70 rounded-xl my-3">
-        <div id="ppcReportPaper" class="max-w-[794px] mx-auto bg-white p-6 sm:p-10 shadow-lg rounded border border-slate-300 text-slate-900 font-sans select-text">
+        <div id="ppcReportPaper" class="max-w-[794px] mx-auto bg-white p-8 sm:p-12 shadow-xl rounded border border-slate-300 text-slate-900 font-sarabun select-text" style="min-height: 1123px; box-sizing: border-box;">
           <!-- Rendered dynamically -->
         </div>
       </div>
@@ -1573,7 +1611,7 @@
     <!-- Footer -->
   <footer class="bg-white border-t border-slate-200 text-slate-500 text-xs py-4 px-6 mt-auto">
     <div class="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-2">
-      <div>Training Center TWP (EMS Enterprise v1.8.0) &copy; 2026 - บริษัท ไทยวัฒนาพานิช จำกัด</div>
+      <div>Training Center TWP (EMS Enterprise v1.9.0) &copy; 2026 - บริษัท ไทยวัฒนาพานิช จำกัด</div>
       <div class="flex items-center space-x-4">
         <button onclick="showLandingPage()" class="hover:text-blue-600 transition"><i class="fa-solid fa-house mr-1"></i>กลับหน้าแรก</button>
         <span>Google Apps Script + Google Sheets Architecture (PPC Standard)</span>
@@ -1591,7 +1629,7 @@
 
     // System Global State
     const AppState = {
-      version: '1.8.0',
+      version: '1.9.0',
       clientId: 'DEV-' + Math.random().toString(36).substring(2, 7).toUpperCase(),
       activeTab: 'dashboard',
       operatorName: localStorage.getItem('ems_operator_name') || 'สมชาย มุ่งมั่น (ทีม A)',
@@ -3027,89 +3065,145 @@
         return;
       }
 
-      container.innerHTML = queue.map(req => `
-        <div onclick="setActiveReadingCard(this)" class="reading-card bg-slate-50 hover:bg-white rounded-2xl p-5 border border-slate-200 space-y-4 cursor-pointer transition">
-          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-200 pb-3">
+      container.innerHTML = queue.map(req => {
+        const costRatio = req.targetSales > 0 ? ((req.estBudget / req.targetSales) * 100).toFixed(1) + '%' : '-';
+        return `
+        <div onclick="setActiveReadingCard(this)" class="reading-card bg-white rounded-3xl p-6 border border-slate-200 shadow-sm space-y-5 cursor-pointer transition">
+          
+          <!-- Card Header & Status -->
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-100 pb-3.5">
             <div>
               <div class="flex items-center space-x-2">
-                <span class="font-bold text-slate-900 text-base">${req.eventId}</span>
-                <span class="text-xs bg-blue-100 text-blue-800 font-semibold px-2 py-0.5 rounded-full">${req.activityType}</span>
+                <span class="font-black text-slate-900 text-lg font-mono">${req.eventId}</span>
+                <span class="text-xs bg-purple-100 text-purple-800 font-bold px-2.5 py-0.5 rounded-full border border-purple-200">${req.activityType}</span>
+                <span class="text-xs bg-slate-100 text-slate-600 px-2 py-0.5 rounded-md font-mono">วันที่จัด: ${req.eventDate || '-'}</span>
               </div>
-              <p class="text-xs text-slate-500 mt-0.5">โรงเรียน: <strong>${req.schoolName}</strong> (${req.province}) | ผู้แทนขาย: <strong>${req.saleName}</strong></p>
+              <h3 class="font-bold text-slate-800 text-base mt-1">${req.courseTopic}</h3>
             </div>
             <div class="flex items-center space-x-2">
               ${formatPendingSLA(req.submittedToBAt || req.createdAt, req.status)}
+              <button onclick="openPpcReportModal('${req.eventId}', 'MEMO')" class="px-3 py-1.5 bg-blue-50 hover:bg-blue-100 text-[#08539E] border border-blue-200 text-xs font-bold rounded-xl transition flex items-center space-x-1.5 shadow-sm" title="เปิดดูบันทึกข้อความขออนุมัติปฏิบัติงาน A4 (Print/Export)">
+                <i class="fa-solid fa-file-invoice text-blue-600"></i>
+                <span>ดูบันทึกขออนุมัติ A4</span>
+              </button>
               ${AppState.adminUnlocked ? `
-                <button onclick="openAdminEditRequestModal('${req.eventId}')" class="px-2 py-1 bg-amber-100 hover:bg-amber-200 text-amber-900 text-xs font-bold rounded transition ml-1" title="แก้ไขคำขอโดย Admin"><i class="fa-solid fa-pen-to-square mr-1"></i>แก้ (Admin)</button>
-                <button onclick="adminDeleteRequest('${req.eventId}')" class="px-2 py-1 bg-rose-100 hover:bg-rose-200 text-rose-800 text-xs font-bold rounded transition ml-1" title="ลบคำขอโดย Admin"><i class="fa-solid fa-trash mr-1"></i>ลบ</button>
+                <button onclick="openAdminEditRequestModal('${req.eventId}')" class="px-2 py-1 bg-amber-100 hover:bg-amber-200 text-amber-900 text-xs font-bold rounded-lg transition ml-1" title="แก้ไขคำขอโดย Admin"><i class="fa-solid fa-pen-to-square mr-1"></i>แก้ (Admin)</button>
+                <button onclick="adminDeleteRequest('${req.eventId}')" class="px-2 py-1 bg-rose-100 hover:bg-rose-200 text-rose-800 text-xs font-bold rounded-lg transition ml-1" title="ลบคำขอโดย Admin"><i class="fa-solid fa-trash mr-1"></i>ลบ</button>
               ` : ''}
             </div>
           </div>
 
-          <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs">
-            <div class="bg-white p-3 rounded-xl border border-slate-200">
-              <span class="text-slate-400 block">หัวข้อที่เสนอ:</span>
-              <span class="font-bold text-slate-800 text-sm">${req.courseTopic}</span>
+          <!-- FULL DOSSIER FROM TEAM A (READ-ONLY / ไม่สามารถแก้ไขได้) -->
+          <div class="bg-slate-50/80 rounded-2xl p-4 border border-slate-200/80 space-y-3">
+            <div class="flex items-center justify-between border-b border-slate-200/60 pb-2">
+              <div class="flex items-center space-x-2 text-xs font-bold text-slate-800 uppercase tracking-wider">
+                <i class="fa-solid fa-lock text-emerald-600"></i>
+                <span>ข้อมูลเสนอขอจัดอบรมจากทีม A (ฝ่ายขาย) • อ่านอย่างเดียว (Read-Only)</span>
+              </div>
+              <span class="text-[11px] text-slate-500 font-medium">เสนอโดย: <strong>${req.createdBy || req.saleName}</strong> (${req.province})</span>
             </div>
-            <div class="bg-white p-3 rounded-xl border border-slate-200">
-              <span class="text-slate-400 block">งบที่ขอ (ทีม A):</span>
-              <span class="font-bold text-slate-800 text-sm">฿${(req.estBudget || 0).toLocaleString()}</span>
+
+            <!-- Profile & Target Account Details -->
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs">
+              <div class="bg-white p-3 rounded-xl border border-slate-200/60">
+                <span class="text-slate-400 block text-[11px]">โรงเรียน / หน่วยงานเป้าหมาย:</span>
+                <span class="font-bold text-slate-900 text-sm block mt-0.5">${req.schoolName}</span>
+                <span class="text-[11px] text-blue-600 font-semibold">${req.province} • เกรด [${req.schoolTier || 'Tier A'}]</span>
+              </div>
+              <div class="bg-white p-3 rounded-xl border border-slate-200/60">
+                <span class="text-slate-400 block text-[11px]">ผู้แทนขายผู้รับผิดชอบ (ทีม A):</span>
+                <span class="font-bold text-slate-900 text-sm block mt-0.5">${req.saleName}</span>
+                <span class="text-[11px] text-slate-500">เสนอเมื่อ: ${req.createdAt ? new Date(req.createdAt).toLocaleDateString('th-TH') : '-'}</span>
+              </div>
+              <div class="bg-white p-3 rounded-xl border border-slate-200/60">
+                <span class="text-slate-400 block text-[11px]">จำนวนผู้เข้าอบรมที่คาดการณ์:</span>
+                <span class="font-bold text-indigo-700 text-sm block mt-0.5">${(req.expectedTrainees || 50).toLocaleString()} คน</span>
+                <span class="text-[11px] text-slate-500">สถานที่: ${req.venueType || 'โรงเรียน'}</span>
+              </div>
             </div>
-            <div class="bg-white p-3 rounded-xl border border-slate-200">
-              <span class="text-slate-400 block">เป้าหมายยอดขาย:</span>
-              <span class="font-bold text-emerald-600 text-sm">฿${(req.targetSales || 0).toLocaleString()}</span>
+
+            <!-- Strategic Objective -->
+            <div class="bg-white p-3 rounded-xl border border-slate-200/60 text-xs">
+              <span class="text-slate-400 block text-[11px] font-semibold">วัตถุประสงค์เชิงกลยุทธ์ของโครงการ:</span>
+              <p class="text-slate-800 mt-1 leading-relaxed">${req.objective || 'ขยายผลการใช้งานสื่อการสอนและสร้างความสัมพันธ์กับสถาบันการศึกษาเป้าหมาย'}</p>
+            </div>
+
+            <!-- Financials & Logistics Metrics -->
+            <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5 text-xs">
+              <div class="bg-white p-2.5 rounded-xl border border-slate-200/60 text-center">
+                <span class="text-slate-400 block text-[10px]">งบประมาณที่ขอ</span>
+                <span class="font-bold text-slate-900 text-sm">฿${(req.estBudget || 0).toLocaleString()}</span>
+              </div>
+              <div class="bg-white p-2.5 rounded-xl border border-slate-200/60 text-center">
+                <span class="text-slate-400 block text-[10px]">เป้าหมายยอดขาย</span>
+                <span class="font-bold text-emerald-600 text-sm font-mono">฿${(req.targetSales || 0).toLocaleString()}</span>
+              </div>
+              <div class="bg-white p-2.5 rounded-xl border border-slate-200/60 text-center">
+                <span class="text-slate-400 block text-[10px]">สัดส่วนงบต่อยอด (ROI)</span>
+                <span class="font-bold text-blue-700 text-sm font-mono">${costRatio}</span>
+              </div>
+              <div class="bg-white p-2.5 rounded-xl border border-slate-200/60 text-center">
+                <span class="text-slate-400 block text-[10px]">วิทยากรเสนอเบื้องต้น</span>
+                <span class="font-semibold text-slate-700 text-xs truncate block">${req.speakerType || 'วิทยากร'}</span>
+              </div>
+            </div>
+
+            <!-- Accommodation & Transport Logistics -->
+            <div class="bg-indigo-50/70 p-3 rounded-xl border border-indigo-100/80 text-xs text-indigo-950 flex flex-wrap gap-x-6 gap-y-1.5 items-center">
+              <div>
+                <i class="fa-solid fa-hotel text-indigo-600 mr-1.5"></i>
+                <span class="font-semibold">ความต้องการห้องพัก:</span>
+                <span>${(req.needAccommodation === 'YES' || req.roomCount > 0) ? `ต้องการ (${req.roomCount} ห้อง)` : 'ไม่ต้องการ'}</span>
+              </div>
+              <div>
+                <i class="fa-solid fa-van-shuttle text-sky-600 mr-1.5"></i>
+                <span class="font-semibold">ความต้องการรถรับ-ส่ง:</span>
+                <span>${(req.needTransportation === 'YES' || req.transportDetails) ? `ต้องการ (${req.transportDetails || 'รถตู้ตามกำหนดการ'})` : 'ไม่ต้องการ'}</span>
+              </div>
             </div>
           </div>
 
-          <div class="bg-indigo-50/60 p-3 rounded-xl border border-indigo-100 text-xs text-indigo-950 flex flex-wrap gap-x-6 gap-y-1.5 items-center">
-            <div>
-              <i class="fa-solid fa-hotel text-indigo-600 mr-1.5"></i>
-              <span class="font-semibold">ห้องพัก:</span>
-              <span>${(req.needAccommodation === 'YES' || req.roomCount > 0) ? `ต้องการ ${req.roomCount} ห้อง` : 'ไม่ต้องการ'}</span>
-            </div>
-            <div>
-              <i class="fa-solid fa-van-shuttle text-sky-600 mr-1.5"></i>
-              <span class="font-semibold">รถรับ-ส่ง:</span>
-              <span>${(req.needTransportation === 'YES' || req.transportDetails) ? `ต้องการ (${req.transportDetails || 'รถรับ-ส่ง'})` : 'ไม่ต้องการ'}</span>
-            </div>
-          </div>
-
-          <div class="bg-white p-4 rounded-xl border border-slate-200 space-y-3">
-            <div class="text-xs font-bold text-slate-700 uppercase flex items-center space-x-1.5">
-              <i class="fa-solid fa-user-graduate text-purple-600"></i>
-              <span>ส่วนการกลั่นกรองและสรุปผล (ฝ่ายวิชาการ ทีม B)</span>
+          <!-- TEAM B REVIEW & ACTION SECTION (แก้ไขได้เฉพาะส่วนของทีม B) -->
+          <div class="bg-purple-50/40 p-5 rounded-2xl border border-purple-200/80 space-y-4">
+            <div class="text-xs font-bold text-purple-900 uppercase flex items-center justify-between">
+              <div class="flex items-center space-x-1.5">
+                <i class="fa-solid fa-user-graduate text-purple-600"></i>
+                <span>ส่วนการกลั่นกรองและสรุปผล (ฝ่ายวิชาการ ทีม B)</span>
+              </div>
+              <span class="text-[11px] text-purple-700 font-semibold bg-purple-100 px-2.5 py-0.5 rounded-full">ยืนยันความพร้อมวิชาการ</span>
             </div>
 
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
                 <label class="block text-xs font-semibold text-slate-700 mb-1 flex items-center justify-between">
                   <span>วิทยากรผู้บรรยายที่ยืนยัน *</span>
                   <span class="text-[10px] text-purple-600 font-medium"><i class="fa-solid fa-pen-to-square mr-1"></i>เลือกหรือพิมพ์เอง</span>
                 </label>
-                <input type="text" id="teamBSpeaker-${req.eventId}" list="teamBSpeakerList" value="${req.teamBSpeaker || ''}" placeholder="เลือกจากประวัติ หรือพิมพ์ชื่อวิทยากร..." class="w-full bg-slate-50 border border-slate-300 rounded-lg p-2 text-xs focus:ring-2 focus:ring-purple-500 focus:outline-none">
+                <input type="text" id="teamBSpeaker-${req.eventId}" list="teamBSpeakerList" value="${req.teamBSpeaker || ''}" placeholder="เลือกจากประวัติ หรือพิมพ์ชื่อวิทยากร..." class="w-full bg-white border border-slate-300 rounded-xl p-2.5 text-xs focus:ring-2 focus:ring-purple-500 focus:outline-none">
               </div>
               <div>
                 <label class="block text-xs font-semibold text-slate-700 mb-1">งบประมาณจริงที่ตัดจ่าย (บาท) *</label>
-                <input type="number" id="actualBudget-${req.eventId}" value="${req.actualBudget || req.estBudget}" class="w-full bg-slate-50 border border-slate-300 rounded-lg p-2 text-xs font-mono focus:ring-2 focus:ring-purple-500 focus:outline-none">
+                <input type="number" id="actualBudget-${req.eventId}" value="${req.actualBudget || req.estBudget}" class="w-full bg-white border border-slate-300 rounded-xl p-2.5 text-xs font-mono focus:ring-2 focus:ring-purple-500 focus:outline-none">
               </div>
             </div>
 
             <div>
               <label class="block text-xs font-semibold text-slate-700 mb-1">ข้อเสนอแนะเพิ่มเติมเชิงวิชาการ</label>
-              <textarea id="teamBNotes-${req.eventId}" rows="2" placeholder="ระบุความเห็นด้านหลักสูตร เอกสาร หรือการเตรียมการ..." class="w-full bg-slate-50 border border-slate-300 rounded-lg p-2 text-xs focus:ring-2 focus:ring-purple-500 focus:outline-none">${req.teamBNotes || ''}</textarea>
+              <textarea id="teamBNotes-${req.eventId}" rows="2" placeholder="ระบุความเห็นด้านหลักสูตร เอกสาร หรือการเตรียมการ..." class="w-full bg-white border border-slate-300 rounded-xl p-2.5 text-xs focus:ring-2 focus:ring-purple-500 focus:outline-none">${req.teamBNotes || ''}</textarea>
             </div>
 
-            <div class="flex justify-end space-x-2 pt-2">
-              <button onclick="handleTeamBAction('${req.eventId}', 'RETURN_TO_A')" class="px-4 py-1.5 bg-rose-50 hover:bg-rose-100 text-rose-700 border border-rose-200 text-xs font-bold rounded-lg transition">
+            <div class="flex justify-end space-x-2 pt-2 border-t border-purple-200/50">
+              <button onclick="handleTeamBAction('${req.eventId}', 'RETURN_TO_A')" class="px-4 py-2 bg-rose-50 hover:bg-rose-100 text-rose-700 border border-rose-200 text-xs font-bold rounded-xl transition">
                 <i class="fa-solid fa-arrow-rotate-left mr-1"></i>ส่งกลับให้ทีม A ปรับปรุง
               </button>
-              <button onclick="handleTeamBAction('${req.eventId}', 'CONFIRM_TO_EXEC')" class="px-5 py-1.5 bg-purple-600 hover:bg-purple-700 text-white text-xs font-bold rounded-lg shadow transition">
-                <i class="fa-solid fa-check mr-1"></i>ยืนยันและส่งต่อผู้บริหารอนุมัติ
+              <button onclick="handleTeamBAction('${req.eventId}', 'CONFIRM_TO_EXEC')" class="px-6 py-2 bg-purple-600 hover:bg-purple-700 text-white text-xs font-bold rounded-xl shadow-md transition">
+                <i class="fa-solid fa-check mr-1.5"></i>ยืนยันและส่งต่อผู้บริหารอนุมัติ
               </button>
             </div>
           </div>
         </div>
-      `).join('');
+      `;
+      }).join('');
     }
 
     function renderExecQueue() {
@@ -3121,71 +3215,126 @@
         return;
       }
 
-      container.innerHTML = queue.map(req => `
-        <div onclick="setActiveReadingCard(this)" class="reading-card bg-slate-50 hover:bg-white rounded-2xl p-5 border border-slate-200 space-y-4 cursor-pointer transition">
-          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-200 pb-3">
+      container.innerHTML = queue.map(req => {
+        const estBudget = req.estBudget || 0;
+        const actualBudget = req.actualBudget || estBudget;
+        const targetSales = req.targetSales || 0;
+        const costRatio = targetSales > 0 ? ((actualBudget / targetSales) * 100).toFixed(1) + '%' : '-';
+        const savedAmount = Math.max(estBudget - actualBudget, 0);
+
+        return `
+        <div onclick="setActiveReadingCard(this)" class="reading-card bg-white rounded-3xl p-6 border border-slate-200 shadow-sm space-y-5 cursor-pointer transition">
+          
+          <!-- Exec Header -->
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-100 pb-3.5">
             <div>
               <div class="flex items-center space-x-2">
-                <span class="font-bold text-slate-900 text-base">${req.eventId}</span>
-                <span class="text-xs bg-amber-100 text-amber-900 font-semibold px-2 py-0.5 rounded-full">${req.activityType}</span>
+                <span class="font-black text-slate-900 text-lg font-mono">${req.eventId}</span>
+                <span class="text-xs bg-amber-100 text-amber-900 font-bold px-2.5 py-0.5 rounded-full border border-amber-200">${req.activityType}</span>
+                <span class="text-xs bg-slate-100 text-slate-600 px-2 py-0.5 rounded-md font-mono">วันที่จัด: ${req.eventDate || '-'}</span>
               </div>
-              <p class="text-xs text-slate-500 mt-0.5">โรงเรียน: <strong>${req.schoolName}</strong> | ผู้แทนขาย: <strong>${req.saleName}</strong></p>
+              <h3 class="font-bold text-slate-800 text-base mt-1">${req.courseTopic}</h3>
             </div>
             <div class="flex items-center space-x-2">
               ${formatPendingSLA(req.reviewedByBAt || req.createdAt, req.status)}
+              <button onclick="openPpcReportModal('${req.eventId}', 'MEMO')" class="px-3 py-1.5 bg-blue-50 hover:bg-blue-100 text-[#08539E] border border-blue-200 text-xs font-bold rounded-xl transition flex items-center space-x-1.5 shadow-sm" title="เปิดดูบันทึกเสนอขออนุมัติปฏิบัติงาน A4 (Preview & Sign)">
+                <i class="fa-solid fa-stamp text-amber-500"></i>
+                <span>ตรวจบันทึกขออนุมัติ A4</span>
+              </button>
               ${AppState.adminUnlocked ? `
-                <button onclick="openAdminEditRequestModal('${req.eventId}')" class="px-2 py-1 bg-amber-100 hover:bg-amber-200 text-amber-900 text-xs font-bold rounded transition ml-1" title="แก้ไขคำขอโดย Admin"><i class="fa-solid fa-pen-to-square mr-1"></i>แก้ (Admin)</button>
-                <button onclick="adminDeleteRequest('${req.eventId}')" class="px-2 py-1 bg-rose-100 hover:bg-rose-200 text-rose-800 text-xs font-bold rounded transition ml-1" title="ลบคำขอโดย Admin"><i class="fa-solid fa-trash mr-1"></i>ลบ</button>
+                <button onclick="openAdminEditRequestModal('${req.eventId}')" class="px-2 py-1 bg-amber-100 hover:bg-amber-200 text-amber-900 text-xs font-bold rounded-lg transition ml-1" title="แก้ไขคำขอโดย Admin"><i class="fa-solid fa-pen-to-square mr-1"></i>แก้ (Admin)</button>
+                <button onclick="adminDeleteRequest('${req.eventId}')" class="px-2 py-1 bg-rose-100 hover:bg-rose-200 text-rose-800 text-xs font-bold rounded-lg transition ml-1" title="ลบคำขอโดย Admin"><i class="fa-solid fa-trash mr-1"></i>ลบ</button>
               ` : ''}
             </div>
           </div>
 
-          <div class="grid grid-cols-1 sm:grid-cols-4 gap-3 text-xs">
-            <div class="bg-white p-3 rounded-xl border border-slate-200">
-              <span class="text-slate-400 block">วิทยากร (ยืนยันโดยทีม B):</span>
-              <span class="font-bold text-slate-800 text-sm">${req.teamBSpeaker || req.speakerType}</span>
+          <!-- SIDE-BY-SIDE SUMMARY: TEAM A & TEAM B DOSSIER -->
+          <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 text-xs">
+            
+            <!-- Left: Team A Submission Summary -->
+            <div class="bg-emerald-50/40 rounded-2xl p-4 border border-emerald-200/80 space-y-2.5">
+              <div class="flex items-center justify-between border-b border-emerald-200/50 pb-2">
+                <span class="font-bold text-emerald-900 uppercase flex items-center">
+                  <i class="fa-solid fa-paper-plane mr-1.5 text-emerald-600"></i>1. ข้อเสนอจากทีม A (ฝ่ายขาย)
+                </span>
+                <span class="text-[11px] text-emerald-700">ผู้แทนขาย: <strong>${req.saleName}</strong></span>
+              </div>
+              <div>
+                <span class="text-slate-400 block text-[11px]">โรงเรียน / หน่วยงานเป้าหมาย:</span>
+                <span class="font-bold text-slate-800 text-sm">${req.schoolName} (${req.province})</span>
+              </div>
+              <div class="grid grid-cols-2 gap-2 text-slate-700">
+                <div>จำนวนผู้เข้าอบรม: <strong class="text-indigo-700 font-bold">${(req.expectedTrainees || 50).toLocaleString()} คน</strong></div>
+                <div>เป้าหมายยอดขาย: <strong class="text-emerald-700 font-bold">฿${targetSales.toLocaleString()}</strong></div>
+              </div>
+              <div class="text-slate-600 text-[11px] leading-relaxed">
+                <strong>วัตถุประสงค์:</strong> ${req.objective || 'ขยายผลการใช้งานสื่อการสอนและสร้างความสัมพันธ์กับสถาบันการศึกษาเป้าหมาย'}
+              </div>
+              <div class="text-[11px] text-slate-500 pt-1 border-t border-emerald-200/40">
+                งบประมาณที่ขอ: <strong>฿${estBudget.toLocaleString()}</strong>
+              </div>
             </div>
-            <div class="bg-white p-3 rounded-xl border border-slate-200">
-              <span class="text-slate-400 block">งบสรุปตัดจ่าย:</span>
-              <span class="font-bold text-slate-800 text-sm">฿${(req.actualBudget || req.estBudget).toLocaleString()}</span>
+
+            <!-- Right: Team B Academic Endorsement -->
+            <div class="bg-purple-50/40 rounded-2xl p-4 border border-purple-200/80 space-y-2.5">
+              <div class="flex items-center justify-between border-b border-purple-200/50 pb-2">
+                <span class="font-bold text-purple-900 uppercase flex items-center">
+                  <i class="fa-solid fa-clipboard-check mr-1.5 text-purple-600"></i>2. การกลั่นกรองจากทีม B (วิชาการ)
+                </span>
+                <span class="text-[11px] text-purple-700">ผู้ตรวจ: <strong>${req.reviewedBy || 'ฝ่ายวิชาการ'}</strong></span>
+              </div>
+              <div>
+                <span class="text-slate-400 block text-[11px]">วิทยากรผู้บรรยายที่ยืนยัน:</span>
+                <span class="font-bold text-purple-900 text-sm">${req.teamBSpeaker || req.speakerType || 'วิทยากรประจำหลักสูตร'}</span>
+              </div>
+              <div>
+                <span class="text-slate-400 block text-[11px]">ความเห็นทางวิชาการ:</span>
+                <p class="text-slate-700 text-[11px] leading-relaxed">${req.teamBNotes || 'มีความพร้อมด้านเนื้อหาและสื่ออุปกรณ์ สอดคล้องตามเกณฑ์มาตรฐาน'}</p>
+              </div>
+              <div class="text-[11px] text-slate-600 pt-1 border-t border-purple-200/40 flex items-center justify-between">
+                <span>งบตัดจ่ายจริง: <strong class="text-slate-900 text-sm">฿${actualBudget.toLocaleString()}</strong></span>
+                ${savedAmount > 0 ? `<span class="text-emerald-700 font-bold bg-emerald-100 px-2 py-0.5 rounded">ประหยัดงบ: ฿${savedAmount.toLocaleString()}</span>` : ''}
+              </div>
             </div>
-            <div class="bg-white p-3 rounded-xl border border-slate-200">
-              <span class="text-slate-400 block">เป้าหมายยอดขาย:</span>
-              <span class="font-bold text-emerald-600 text-sm">฿${(req.targetSales || 0).toLocaleString()}</span>
+
+          </div>
+
+          <!-- Financial & Logistics Comparison Bar -->
+          <div class="bg-slate-50 p-4 rounded-2xl border border-slate-200 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs">
+            <div class="flex flex-wrap items-center gap-x-6 gap-y-1">
+              <div>
+                <span class="text-slate-400">งบขออนุมัติสุทธิ:</span>
+                <strong class="text-slate-900 text-sm ml-1 font-mono">฿${actualBudget.toLocaleString()}</strong>
+              </div>
+              <div>
+                <span class="text-slate-400">สัดส่วนงบต่อยอดขาย (ROI):</span>
+                <strong class="text-blue-700 text-sm ml-1 font-mono">${costRatio}</strong>
+              </div>
+              <div>
+                <span class="text-slate-400">ห้องพัก:</span>
+                <span class="text-slate-700 font-medium ml-1">${(req.needAccommodation === 'YES' || req.roomCount > 0) ? `${req.roomCount} ห้อง` : 'ไม่ต้องการ'}</span>
+              </div>
+              <div>
+                <span class="text-slate-400">รถรับ-ส่ง:</span>
+                <span class="text-slate-700 font-medium ml-1">${(req.needTransportation === 'YES' || req.transportDetails) ? `${req.transportDetails || 'รถตู้'}` : 'ไม่ต้องการ'}</span>
+              </div>
             </div>
-            <div class="bg-white p-3 rounded-xl border border-slate-200">
-              <span class="text-slate-400 block">ผู้ตรวจสอบ (ทีม B):</span>
-              <span class="font-bold text-purple-700 text-sm">${req.reviewedBy || 'ฝ่ายวิชาการ'}</span>
+
+            <!-- Exec Decision Actions -->
+            <div class="flex items-center space-x-2">
+              <button onclick="handleExecDecision('${req.eventId}', 'REJECT')" class="px-4 py-2 bg-slate-200 hover:bg-slate-300 text-slate-700 text-xs font-bold rounded-xl transition">
+                <i class="fa-solid fa-ban mr-1 text-red-500"></i>ไม่อนุมัติ
+              </button>
+              <button onclick="handleExecDecision('${req.eventId}', 'APPROVE')" class="px-6 py-2 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold rounded-xl shadow-md transition flex items-center space-x-1.5">
+                <i class="fa-solid fa-stamp mr-1 text-amber-300"></i>
+                <span>อนุมัติโครงการ (Sign & Approve)</span>
+              </button>
             </div>
           </div>
 
-          <div class="bg-indigo-50/60 p-3 rounded-xl border border-indigo-100 text-xs text-indigo-950 flex flex-wrap gap-x-6 gap-y-1.5 items-center">
-            <div>
-              <i class="fa-solid fa-hotel text-indigo-600 mr-1.5"></i>
-              <span class="font-semibold">ห้องพัก:</span>
-              <span>${(req.needAccommodation === 'YES' || req.roomCount > 0) ? `ต้องการ ${req.roomCount} ห้อง` : 'ไม่ต้องการ'}</span>
-            </div>
-            <div>
-              <i class="fa-solid fa-van-shuttle text-sky-600 mr-1.5"></i>
-              <span class="font-semibold">รถรับ-ส่ง:</span>
-              <span>${(req.needTransportation === 'YES' || req.transportDetails) ? `ต้องการ (${req.transportDetails || 'รถรับ-ส่ง'})` : 'ไม่ต้องการ'}</span>
-            </div>
-          </div>
-
-          <div class="bg-amber-50/70 p-3 rounded-xl border border-amber-200 text-xs text-amber-900">
-            <strong>ความเห็นฝ่ายวิชาการ:</strong> ${req.teamBNotes || 'มีความพร้อมทางวิชาการและวิทยากรพร้อมบรรยาย'}
-          </div>
-
-          <div class="flex justify-end space-x-2 pt-2">
-            <button onclick="handleExecDecision('${req.eventId}', 'REJECT')" class="px-4 py-2 bg-slate-200 hover:bg-slate-300 text-slate-700 text-xs font-bold rounded-xl transition">
-              <i class="fa-solid fa-ban mr-1 text-red-500"></i>ไม่อนุมัติ (Reject)
-            </button>
-            <button onclick="handleExecDecision('${req.eventId}', 'APPROVE')" class="px-6 py-2 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold rounded-xl shadow-md transition">
-              <i class="fa-solid fa-stamp mr-1.5"></i>อนุมัติโครงการ (Generate PDF & Token)
-            </button>
-          </div>
         </div>
-      `).join('');
+      `;
+      }).join('');
     }
 
     function renderEvaluationCenter() {
@@ -3483,50 +3632,86 @@
     // ------------------- PPC STANDARD A4 REPORT ENGINE (PDF & WORD) -------------------
 
     let currentReportEventId = null;
+    let currentReportDocType = 'MEMO';
 
-    function openPpcReportModal(eventId) {
+    function switchReportDocType(type) {
+      currentReportDocType = type;
+      const btnMemo = document.getElementById('btnDocTypeMemo');
+      const btnSummary = document.getElementById('btnDocTypeSummary');
+      const mainTitle = document.getElementById('reportModalMainTitle');
+
+      if (type === 'MEMO') {
+        if (btnMemo) {
+          btnMemo.className = 'px-3 py-1.5 rounded-lg bg-[#08539E] text-white shadow-sm transition';
+        }
+        if (btnSummary) {
+          btnSummary.className = 'px-3 py-1.5 rounded-lg text-slate-600 hover:text-slate-900 transition';
+        }
+        if (mainTitle) mainTitle.innerText = 'บันทึกข้อความขออนุมัติปฏิบัติงาน A4';
+      } else {
+        if (btnMemo) {
+          btnMemo.className = 'px-3 py-1.5 rounded-lg text-slate-600 hover:text-slate-900 transition';
+        }
+        if (btnSummary) {
+          btnSummary.className = 'px-3 py-1.5 rounded-lg bg-[#08539E] text-white shadow-sm transition';
+        }
+        if (mainTitle) mainTitle.innerText = 'รายงานสรุปผลการปฏิบัติงานโครงการ (PPC Summary)';
+      }
+
+      renderCurrentReportPaper();
+    }
+
+    function openPpcReportModal(eventId, docType = 'MEMO') {
       currentReportEventId = eventId;
       const modal = document.getElementById('ppcReportModal');
       const badge = document.getElementById('reportModalBadgeId');
-      const paper = document.getElementById('ppcReportPaper');
       
       badge.innerText = eventId;
       modal.classList.remove('hidden');
 
-      // Find in local memory
-      const req = AppState.requests.find(r => r.eventId === eventId) || {};
+      switchReportDocType(docType);
+    }
+
+    function renderCurrentReportPaper() {
+      const paper = document.getElementById('ppcReportPaper');
+      if (!paper || !currentReportEventId) return;
+
+      const req = AppState.requests.find(r => r.eventId === currentReportEventId) || {};
 
       const estBudget = Number(req.estBudget) || 0;
       const actualBudget = Number(req.actualBudget) || estBudget;
       const targetSales = Number(req.targetSales) || 0;
       const costRatio = targetSales > 0 ? ((actualBudget / targetSales) * 100).toFixed(1) : '0.0';
-      const evalCount = req.evalCount || 24;
+      const expectedTrainees = Number(req.expectedTrainees) || 50;
+      const evalCount = req.evalCount || expectedTrainees;
       const totalAvg = req.evalAvg > 0 ? Number(req.evalAvg).toFixed(2) : '4.89';
 
       const needAccom = req.needAccommodation === 'YES' || req.roomCount > 0;
       const needTrans = req.needTransportation === 'YES' || (req.transportDetails && req.transportDetails.length > 0);
 
       const d = {
-        eventId: eventId,
-        reportNumber: 'PPC-RPT-2026-' + eventId.replace('EVT-', ''),
-        createdAt: req.createdAt ? new Date(req.createdAt).toLocaleDateString('th-TH') : '-',
-        eventDate: req.eventDate || '-',
+        eventId: currentReportEventId,
+        reportNumber: 'TWP-EMS-2026-' + currentReportEventId.replace('EVT-', ''),
+        createdAt: req.createdAt ? new Date(req.createdAt).toLocaleDateString('th-TH') : new Date().toLocaleDateString('th-TH'),
+        eventDate: req.eventDate || new Date().toLocaleDateString('th-TH'),
         status: req.status || 'APPROVED',
         activityType: req.activityType || 'อบรมวิชาการ',
-        courseTopic: req.courseTopic || 'Active Learning',
+        courseTopic: req.courseTopic || 'Active Learning ยกระดับสมรรถนะผู้เรียน',
         province: req.province || 'กรุงเทพมหานคร',
         saleName: req.saleName || 'สมชาย มุ่งมั่น',
+        saleCompany: 'บริษัท ไทยวัฒนาพานิช จำกัด',
         schoolId: req.schoolId || 'SCH-1001',
         schoolName: req.schoolName || 'โรงเรียนสวนกุหลาบวิทยาลัย',
-        speakerType: req.speakerType || 'อาจารย์ที่ปรึกษา',
+        speakerType: req.speakerType || 'วิทยากรประจำหลักสูตร',
         venueType: req.venueType || 'โรงเรียน',
-        objective: req.objective || 'ขยายผลการใช้งานสื่อและชุดกิจกรรมของ TWP',
+        objective: req.objective || 'ขยายผลการใช้งานสื่อการสอนและชุดกิจกรรมของ TWP พร้อมพัฒนาทักษะวิชาชีพครู',
         targetSales: targetSales,
         estBudget: estBudget,
         actualBudget: actualBudget,
         costRatio: costRatio,
+        expectedTrainees: expectedTrainees,
         teamBSpeaker: req.teamBSpeaker || 'ศ.ดร.ประสาน ปัญญาเลิศ',
-        teamBNotes: req.teamBNotes || 'หลักสูตรและวิทยากรมีความพร้อม สอดคล้องตามมาตรฐานวิชาการ',
+        teamBNotes: req.teamBNotes || 'หลักสูตรและวิทยากรมีความพร้อม สอดคล้องตามมาตรฐานวิชาการของบริษัทฯ',
         needAccom: needAccom,
         roomCount: req.roomCount || 0,
         needTrans: needTrans,
@@ -3544,8 +3729,163 @@
         avgOverall: '4.92'
       };
 
-      paper.innerHTML = renderPpcReportHtmlClient(d);
+      if (currentReportDocType === 'MEMO') {
+        paper.innerHTML = renderA4MemoHtmlClient(d);
+      } else {
+        paper.innerHTML = renderPpcReportHtmlClient(d);
+      }
     }
+
+    // ------------------- OFFICIAL A4 MEMO GENERATOR (TH Sarabun 12pt) -------------------
+
+    function renderA4MemoHtmlClient(d) {
+      const savedAmount = Math.max(0, d.estBudget - d.actualBudget);
+      const isApproved = d.status === 'APPROVED';
+
+      return `
+        <div class="a4-memo-container select-text" style="font-family:'TH Sarabun New','TH Sarabun PSK','Sarabun',sans-serif; font-size:12pt; line-height:1.5; color:#0f172a;">
+          
+          <!-- MEMO LETTERHEAD (ครุฑ / ตราสัญลักษณ์ TWP และ บันทึกข้อความ) -->
+          <div style="display:flex; align-items:flex-end; justify-content:space-between; border-bottom:2.5px solid #0f172a; padding-bottom:8px; margin-bottom:12px;">
+            <div style="display:flex; align-items:center; gap:12px;">
+              <div style="width:52px; height:52px; border-radius:10px; background:#08539E; color:#ffffff; display:flex; flex-direction:column; align-items:center; justify-content:center; font-weight:900; font-size:16pt; line-height:1; box-shadow:0 2px 4px rgba(0,0,0,0.15);">
+                <span>TWP</span>
+                <span style="font-size:7pt; letter-spacing:0.5px; opacity:0.9;">1936</span>
+              </div>
+              <div>
+                <div style="font-size:11pt; font-weight:700; color:#08539E; line-height:1.2;">บริษัท ไทยวัฒนาพานิช จำกัด</div>
+                <div style="font-size:9.5pt; color:#475569;">สำนักงานใหญ่ 891 ถนนพระราม 1 แขวงวังใหม่ เขตปทุมวัน กรุงเทพฯ 10330</div>
+              </div>
+            </div>
+            <div style="text-align:right;">
+              <div class="a4-memo-title" style="font-size:24pt; font-weight:800; color:#08539E; line-height:1; margin:0;">บันทึกข้อความ</div>
+              <div style="font-size:9pt; color:#64748b; margin-top:2px;">แบบฟอร์มขออนุมัติปฏิบัติงาน (A4 Standard)</div>
+            </div>
+          </div>
+
+          <!-- MEMO OFFICIAL HEADER METADATA -->
+          <div style="margin-bottom:12px; font-size:12pt; line-height:1.45;">
+            <div style="display:flex; justify-content:space-between; margin-bottom:4px;">
+              <div style="flex:1;">
+                <span class="a4-memo-head-label" style="font-weight:700;">ส่วนงาน:</span>
+                <span style="border-bottom:1px dotted #94a3b8; padding-bottom:1px; margin-left:4px;">ฝ่ายขายและการตลาด ร่วมกับ ฝ่ายวิชาการ (โทร. 0-2222-2222 ต่อ 140)</span>
+              </div>
+            </div>
+            
+            <div style="display:flex; justify-content:space-between; margin-bottom:4px;">
+              <div style="width:48%;">
+                <span class="a4-memo-head-label" style="font-weight:700;">ที่:</span>
+                <span style="border-bottom:1px dotted #94a3b8; padding-bottom:1px; margin-left:4px;">${d.reportNumber}</span>
+              </div>
+              <div style="width:48%; text-align:right;">
+                <span class="a4-memo-head-label" style="font-weight:700;">วันที่:</span>
+                <span style="border-bottom:1px dotted #94a3b8; padding-bottom:1px; margin-left:4px;">${d.createdAt}</span>
+              </div>
+            </div>
+
+            <div style="margin-bottom:4px;">
+              <span class="a4-memo-head-label" style="font-weight:700;">เรื่อง:</span>
+              <span style="font-weight:700; margin-left:4px; color:#08539E;">ขออนุมัติปฏิบัติงานโครงการจัดกิจกรรมอบรมวิชาการ หัวข้อ "${d.courseTopic}" ณ ${d.schoolName}</span>
+            </div>
+
+            <div style="border-top:1px solid #cbd5e1; padding-top:6px; margin-top:6px;">
+              <span class="a4-memo-head-label" style="font-weight:700;">เรียน:</span>
+              <span style="margin-left:4px;">กรรมการผู้จัดการ / ประธานกรรมการบริหาร (ผ่านฝ่ายวิชาการและการตลาด)</span>
+            </div>
+          </div>
+
+          <!-- MEMO BODY PARAGRAPHS -->
+          <div style="text-align:justify; line-height:1.5; font-size:12pt;">
+
+            <!-- Paragraph 1: Background & Team A Proposal -->
+            <div class="a4-memo-section-title" style="font-weight:700; color:#08539E;">
+              ๑. ความเป็นมาและวัตถุประสงค์ (ข้อเสนอจากฝ่ายขาย - ทีม A)
+            </div>
+            <div class="a4-memo-indent" style="text-indent:2.5cm; margin-bottom:8px;">
+              ตามที่ฝ่ายขาย (ทีม A) โดย <strong>${d.saleName}</strong> (${d.saleCompany}) ได้ประสานงานร่วมกับ <strong>${d.schoolName}</strong> จังหวัด${d.province} และมีความประสงค์ขออนุมัติจัดกิจกรรมอบรมวิชาการ ประเภทกิจกรรม "${d.activityType}" ในหัวข้อเรื่อง "<strong>${d.courseTopic}</strong>" โดยมีกลุ่มเป้าหมายผู้เข้าร่วมอบรมเป็นผู้บริหารสถานศึกษา คณะครู และบุคลากรทางการศึกษาจำนวนทั้งสิ้น <strong>${(d.expectedTrainees || 50).toLocaleString()} คน</strong> ทั้งนี้ มีวัตถุประสงค์หลักเพื่อ${d.objective} และได้กำหนดเป้าหมายยอดขายสื่อการเรียนรู้สืบเนื่องจากการจัดโครงการครั้งนี้เป็นจำนวนเงิน <strong>฿${Number(d.targetSales).toLocaleString()} บาท</strong>
+            </div>
+
+            <!-- Paragraph 2: Academic Screening & Logistics Plan (Team B) -->
+            <div class="a4-memo-section-title" style="font-weight:700; color:#6b21a8;">
+              ๒. แผนการจัดกิจกรรมเชิงวิชาการและโลจิสติกส์ (การกลั่นกรองจากฝ่ายวิชาการ - ทีม B)
+            </div>
+            <div class="a4-memo-indent" style="text-indent:2.5cm; margin-bottom:8px;">
+              ฝ่ายวิชาการ (ทีม B) ได้ทำการตรวจสอบและกลั่นกรองความพร้อมของหลักสูตร สื่อการสอนประกอบการบรรยาย และมาตรฐานทางวิชาการเป็นที่เรียบร้อยแล้ว โดยกำหนดจัดกิจกรรมในวันที่ <strong>${d.eventDate}</strong> ณ ${d.venueType === 'โรงเรียน' ? d.schoolName : d.venueType} และได้ประสานงานมอบหมายให้ <strong>${d.teamBSpeaker || d.speakerType}</strong> ปฏิบัติหน้าที่เป็นวิทยากรผู้บรรยายหลัก สำหรับการเตรียมความพร้อมด้านโลจิสติกส์ ${d.needAccom ? `มีความจำเป็นต้องจัดสรรห้องพักจำนวน ${d.roomCount} ห้อง` : 'ไม่มีความจำเป็นต้องจัดสรรห้องพัก'} และ${d.needTrans ? `จัดเตรียมยานพาหนะเดินทาง (${d.transDetails || 'รถยนต์/รถตู้ส่วนกลาง'})` : 'ไม่ต้องจัดเตรียมยานพาหนะ'} โดยฝ่ายวิชาการมีความเห็นเพิ่มเติมว่า "<em>${d.teamBNotes}</em>"
+            </div>
+
+            <!-- Paragraph 3: Budget Analysis & Justification -->
+            <div class="a4-memo-section-title" style="font-weight:700; color:#0f766e;">
+              ๓. ประมาณการงบประมาณและผลตอบแทนที่คาดว่าจะได้รับ (Financial & ROI Justification)
+            </div>
+            <div class="a4-memo-indent" style="text-indent:2.5cm; margin-bottom:8px;">
+              ในการดำเนินงานครั้งนี้ ฝ่ายขาย (ทีม A) ได้เสนอของบประมาณเบื้องต้นจำนวน ฿${Number(d.estBudget).toLocaleString()} บาท และฝ่ายวิชาการ (ทีม B) ได้ตรวจสอบความเหมาะสมและตัดยอดค่าใช้จ่ายให้อยู่ในกรอบประหยัดสูงสุด โดยเสนองบประมาณตัดจ่ายจริงสุทธิจำนวน <strong>฿${Number(d.actualBudget).toLocaleString()} บาท</strong> ${savedAmount > 0 ? `(สามารถประหยัดงบประมาณของบริษัทฯ ได้จำนวน ฿${savedAmount.toLocaleString()} บาท)` : ''} ซึ่งคิดเป็นสัดส่วนงบประมาณต่องบประมาณยอดขายเป้าหมาย (Cost-to-Sales Ratio) เพียงร้อยละ <strong>${d.costRatio}%</strong> ซึ่งจัดอยู่ในเกณฑ์มาตรฐานความคุ้มค่าและความพร้อมในการสร้างยอดขายอย่างยั่งยืน
+            </div>
+
+            <!-- Paragraph 4: Proposal Recommendation -->
+            <div class="a4-memo-section-title" style="font-weight:700; color:#0f172a;">
+              ๔. ข้อพิจารณาและข้อเสนอเพื่อโปรดอนุมัติ
+            </div>
+            <div class="a4-memo-indent" style="text-indent:2.5cm; margin-bottom:12px;">
+              ฝ่ายขายและฝ่ายวิชาการพิจารณาร่วมกันแล้วเห็นว่า โครงการจัดกิจกรรมอบรมวิชาการดังกล่าวจะช่วยเสริมสร้างภาพลักษณ์ความเป็นเลิศทางวิชาการของบริษัท ไทยวัฒนาพานิช จำกัด และสนับสนุนการบรรลุเป้าหมายยอดขายของบริษัทฯ ได้อย่างมีประสิทธิภาพ จึงเห็นควรพิจารณาอนุมัติให้ดำเนินการจัดกิจกรรม พร้อมอนุมัติกรอบวงเงินงบประมาณจำนวน <strong>฿${Number(d.actualBudget).toLocaleString()} บาท</strong> เพื่อให้คณะทำงานสามารถเตรียมการปฏิบัติงานได้ตามกำหนดการ
+            </div>
+
+            <div style="text-indent:2.5cm; font-weight:700; margin-bottom:16px;">
+              จึงเรียนมาเพื่อโปรดพิจารณาอนุมัติ
+            </div>
+
+          </div>
+
+          <!-- THREE-PARTY OFFICIAL SIGNATURE BLOCKS -->
+          <div style="border-top:1.5px solid #cbd5e1; padding-top:14px; margin-top:12px; page-break-inside:avoid;">
+            <div style="display:grid; grid-template-columns: repeat(3, 1fr); gap:12px; text-align:center; font-size:10.5pt; line-height:1.35;">
+              
+              <!-- Party 1: Requester (Team A Sales) -->
+              <div style="border:1px solid #e2e8f0; border-radius:8px; padding:8px 6px; background:#f8fafc;">
+                <div style="font-weight:700; color:#08539E; margin-bottom:4px;">ผู้ขออนุมัติปฏิบัติงาน</div>
+                <div style="color:#64748b; font-size:9.5pt; margin-bottom:18px;">(ฝ่ายขายและการตลาด - ทีม A)</div>
+                <div style="color:#334155; font-weight:600;">( ${d.saleName} )</div>
+                <div style="color:#64748b; font-size:9pt; margin-top:2px;">ผู้แทนขาย / พนักงานขาย</div>
+                <div style="color:#64748b; font-size:9pt; margin-top:2px;">วันที่: ${d.createdAt}</div>
+              </div>
+
+              <!-- Party 2: Reviewer (Team B Academic) -->
+              <div style="border:1px solid #e2e8f0; border-radius:8px; padding:8px 6px; background:#f8fafc;">
+                <div style="font-weight:700; color:#6b21a8; margin-bottom:4px;">ผู้กลั่นกรอง / เห็นควรอนุมัติ</div>
+                <div style="color:#64748b; font-size:9.5pt; margin-bottom:18px;">(ฝ่ายวิชาการ - ทีม B)</div>
+                <div style="color:#334155; font-weight:600;">( ${d.reviewedBy} )</div>
+                <div style="color:#64748b; font-size:9pt; margin-top:2px;">เจ้าหน้าที่ฝ่ายวิชาการ</div>
+                <div style="color:#64748b; font-size:9pt; margin-top:2px;">วันที่: ${d.createdAt}</div>
+              </div>
+
+              <!-- Party 3: Approver (Executive Management) -->
+              <div style="border:1.5px solid ${isApproved ? '#10b981' : '#08539E'}; border-radius:8px; padding:8px 6px; background:${isApproved ? '#f0fdf4' : '#f0f7ff'};">
+                <div style="font-weight:700; color:${isApproved ? '#047857' : '#08539E'}; margin-bottom:4px;">คำสั่งการ / การอนุมัติ</div>
+                <div style="font-size:9.5pt; font-weight:700; color:${isApproved ? '#047857' : '#1e293b'}; margin-bottom:10px;">
+                  [${isApproved ? ' ✓ ' : ' &nbsp; '}] อนุมัติ &nbsp;&nbsp; [ &nbsp; ] ไม่อนุมัติ
+                </div>
+                <div style="color:#1e293b; font-weight:700;">( ${d.approvedBy} )</div>
+                <div style="color:#64748b; font-size:9pt; margin-top:2px;">กรรมการบริหาร / ผู้จัดการทั่วไป</div>
+                <div style="color:#64748b; font-size:9pt; margin-top:2px;">วันที่: ${d.approvedAt}</div>
+              </div>
+
+            </div>
+          </div>
+
+          <!-- OFFICIAL A4 FOOTER / SYSTEM AUDIT TRAIL -->
+          <div style="border-top:1px dashed #cbd5e1; margin-top:14px; padding-top:6px; display:flex; justify-content:space-between; align-items:center; font-size:8.5pt; color:#64748b;">
+            <div>
+              <i class="fa-solid fa-shield-halved" style="color:#08539E; margin-right:4px;"></i>
+              เอกสารอิเล็กทรอนิกส์มาตรฐาน A4 ออกโดย TWP Training Enterprise Management System (EMS v1.9.0)
+            </div>
+            <div>
+              รหัสอ้างอิง: <span style="font-family:monospace; font-weight:700; color:#0f172a;">${d.eventId}</span> | หน้า 1/1
+            </div>
+          </div>
+
+        </div>
+      `;
+    }
+
 
     function closePpcReportModal() {
       document.getElementById('ppcReportModal').classList.add('hidden');
@@ -3693,7 +4033,7 @@
           </table>
 
           <div style="margin-top:14px; padding-top:4px; border-top:1px solid #e2e8f0; font-size:8.5pt; color:#94a3b8; text-align:center;">
-            เอกสารฉบับนี้สร้างโดยระบบ Training Center TWP (EMS Enterprise Platform v1.8.0) • ใช้สำหรับติดตามและควบคุมผลการปฏิบัติงานภายใน (PPC Standard)
+            เอกสารฉบับนี้สร้างโดยระบบ Training Center TWP (EMS Enterprise Platform v1.9.0) • ใช้สำหรับติดตามและควบคุมผลการปฏิบัติงานภายใน (PPC Standard)
           </div>
         </div>
       `;
