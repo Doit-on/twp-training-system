@@ -2600,9 +2600,41 @@
           <span class="text-slate-400">งบอนุมัติจริง:</span>
           <strong id="sigModalBudget" class="font-mono text-emerald-700 font-bold ml-1">฿0</strong>
         </div>
-        <div>
-          <span class="text-slate-400">ผู้อนุมัติ:</span>
-          <strong id="sigModalApprover" class="text-slate-800 ml-1">ผู้บริหาร</strong>
+        <div class="flex items-center space-x-1">
+          <span class="text-slate-400">ระดับการพิจารณา:</span>
+          <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-100 text-emerald-800 border border-emerald-300">
+            <i class="fa-solid fa-user-tie mr-1"></i>ฝ่ายบริหารระดับสูง (Executive)
+          </span>
+        </div>
+      </div>
+
+      <!-- Executive Approver Selection (เลือก 2 ตำแหน่ง: กรรมการผู้จัดการ หรือ ผู้จัดการทั่วไป) -->
+      <div class="bg-gradient-to-r from-emerald-50/80 to-blue-50/60 p-3.5 rounded-2xl border border-emerald-200 text-xs space-y-2">
+        <div class="flex items-center justify-between">
+          <span class="font-bold text-slate-800 flex items-center gap-1.5">
+            <i class="fa-solid fa-stamp text-emerald-600"></i>
+            <span>ระบุตำแหน่งผู้มีอำนาจอนุมัติ (ผู้บริหารระดับสูง):</span>
+          </span>
+          <span class="text-[10px] text-emerald-800 font-bold bg-white px-2 py-0.5 rounded-md border border-emerald-200">
+            ไม่ใช่ทีม A
+          </span>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+          <!-- Position Dropdown (2 Executive Positions Only) -->
+          <div>
+            <label class="block font-bold text-slate-700 mb-1">ตำแหน่งผู้อนุมัติ *</label>
+            <select id="sigApproverRoleSelect" onchange="onSigRoleChange(this.value)" class="w-full bg-white border border-slate-300 rounded-xl p-2 text-xs font-bold text-slate-800 focus:ring-2 focus:ring-emerald-500 focus:outline-none cursor-pointer">
+              <option value="กรรมการผู้จัดการ" selected>กรรมการผู้จัดการ (Managing Director)</option>
+              <option value="ผู้จัดการทั่วไป">ผู้จัดการทั่วไป (General Manager)</option>
+            </select>
+          </div>
+
+          <!-- Approver Name Input -->
+          <div>
+            <label class="block font-bold text-slate-700 mb-1">ชื่อ-สกุล ผู้อนุมัติ *</label>
+            <input type="text" id="sigApproverNameInput" value="ดร.นิพนธ์ บริหารพัฒนา" placeholder="ระบุชื่อ-สกุล ผู้มีอำนาจอนุมัติ..." class="w-full bg-white border border-slate-300 rounded-xl p-2 text-xs font-bold text-slate-800 focus:ring-2 focus:ring-emerald-500 focus:outline-none">
+          </div>
         </div>
       </div>
 
@@ -2859,8 +2891,8 @@
       { id: 'MEM-007', name: 'ดร.สมเกียรติ นวัตกรรม', team: 'ทีม B (ฝ่ายวิชาการ)', position: 'ผู้เชี่ยวชาญด้านการพัฒนาหลักสูตร', company: 'บริษัท ไทยวัฒนาพานิช จำกัด' },
       { id: 'MEM-008', name: 'วิภา วิชาการ', team: 'ทีม B (ฝ่ายวิชาการ)', position: 'นักวิชาการศึกษาอาวุโส', company: 'บริษัท ไทยวัฒนาพานิช จำกัด' },
       { id: 'MEM-009', name: 'ศ.ดร.ประสาน ปัญญาเลิศ', team: 'ทีม B (ฝ่ายวิชาการ)', position: 'อาจารย์ที่ปรึกษาวิชาการพิเศษ', company: 'บริษัท ไทยวัฒนาพานิช จำกัด' },
-      { id: 'MEM-010', name: 'ดร.นิพนธ์ บริหารพัฒนา', team: 'ผู้บริหาร', position: 'รองกรรมการผู้จัดการสายงานปฏิบัติการ', company: 'บริษัท ไทยวัฒนาพานิช จำกัด' },
-      { id: 'MEM-011', name: 'คุณวิทวัส วัฒนาพานิช', team: 'ผู้บริหาร', position: 'กรรมการบริหาร / Chief Executive', company: 'บริษัท ไทยวัฒนาพานิช จำกัด' },
+      { id: 'MEM-010', name: 'ดร.นิพนธ์ บริหารพัฒนา', team: 'ผู้บริหาร', position: 'กรรมการผู้จัดการ', company: 'บริษัท ไทยวัฒนาพานิช จำกัด' },
+      { id: 'MEM-011', name: 'คุณวิทวัส วัฒนาพานิช', team: 'ผู้บริหาร', position: 'ผู้จัดการทั่วไป', company: 'บริษัท ไทยวัฒนาพานิช จำกัด' },
       { id: 'MEM-012', name: 'สุดาพร ควบคุมคุณภาพ', team: 'ศูนย์ประเมินผล', position: 'เจ้าหน้าที่วิเคราะห์และประเมินผล KPI', company: 'บริษัท ไทยวัฒนาพานิช จำกัด' }
     ];
 
@@ -6244,6 +6276,16 @@
     let sigCanvasElem = null;
     let sigCanvasCtx = null;
 
+    function onSigRoleChange(role) {
+      const nameInput = document.getElementById('sigApproverNameInput');
+      if (!nameInput) return;
+      if (role === 'กรรมการผู้จัดการ') {
+        nameInput.value = 'ดร.นิพนธ์ บริหารพัฒนา';
+      } else if (role === 'ผู้จัดการทั่วไป') {
+        nameInput.value = 'คุณวิทวัส วัฒนาพานิช';
+      }
+    }
+
     function openSignatureModal(eventId) {
       currentSigningEventId = eventId;
       const req = AppState.requests.find(r => r.eventId === eventId) || {};
@@ -6251,7 +6293,19 @@
       
       document.getElementById('sigModalEventId').innerText = eventId;
       document.getElementById('sigModalBudget').innerText = '฿' + (Number(req.actualBudget) || Number(req.estBudget) || 0).toLocaleString();
-      document.getElementById('sigModalApprover').innerText = AppState.operatorName;
+      
+      // Set Executive Approver Selection (ไม่ใช่ทีม A)
+      const roleSelect = document.getElementById('sigApproverRoleSelect');
+      const nameInput = document.getElementById('sigApproverNameInput');
+      if (roleSelect && nameInput) {
+        if (req.approverRole === 'ผู้จัดการทั่วไป') {
+          roleSelect.value = 'ผู้จัดการทั่วไป';
+          nameInput.value = req.approvedBy || 'คุณวิทวัส วัฒนาพานิช';
+        } else {
+          roleSelect.value = 'กรรมการผู้จัดการ';
+          nameInput.value = req.approvedBy || 'ดร.นิพนธ์ บริหารพัฒนา';
+        }
+      }
 
       modal.classList.remove('hidden');
       modal.style.display = 'flex';
@@ -6349,16 +6403,31 @@
         signatureDataUrl = sigCanvasElem.toDataURL('image/png');
       }
 
+      const roleSelect = document.getElementById('sigApproverRoleSelect');
+      const nameInput = document.getElementById('sigApproverNameInput');
+      const approverRole = roleSelect ? roleSelect.value : 'กรรมการผู้จัดการ';
+      const approverName = nameInput && nameInput.value.trim() 
+        ? nameInput.value.trim() 
+        : (approverRole === 'กรรมการผู้จัดการ' ? 'ดร.นิพนธ์ บริหารพัฒนา' : 'คุณวิทวัส วัฒนาพานิช');
+
       const eventId = currentSigningEventId;
       closeSignatureModal();
-      handleExecDecision(eventId, 'APPROVE', signatureDataUrl);
+      handleExecDecision(eventId, 'APPROVE', signatureDataUrl, { name: approverName, role: approverRole });
     }
 
-    function applyLocalExecDecision(eventId, decision, isFallback = false, signatureDataUrl = null) {
+    function applyLocalExecDecision(eventId, decision, isFallback = false, signatureDataUrl = null, approverInfo = null) {
       const req = AppState.requests.find(r => r.eventId === eventId);
       if (req) {
         req.status = decision;
-        req.approvedBy = AppState.operatorName;
+        if (approverInfo) {
+          req.approvedBy = approverInfo.name;
+          req.approverRole = approverInfo.role;
+          req.approverPosition = approverInfo.role;
+        } else {
+          req.approvedBy = req.approvedBy || 'ดร.นิพนธ์ บริหารพัฒนา';
+          req.approverRole = req.approverRole || 'กรรมการผู้จัดการ';
+          req.approverPosition = req.approverPosition || 'กรรมการผู้จัดการ';
+        }
         req.approvedAt = new Date().toISOString();
         if (signatureDataUrl) {
           req.approverSignature = signatureDataUrl;
@@ -6380,19 +6449,28 @@
       renderAll();
     }
 
-    function handleExecDecision(eventId, decision, signatureDataUrl = null) {
+    function handleExecDecision(eventId, decision, signatureDataUrl = null, approverInfo = null) {
+      const effectiveApprover = approverInfo ? approverInfo.name : 'ดร.นิพนธ์ บริหารพัฒนา';
+      const effectiveRole = approverInfo ? approverInfo.role : 'กรรมการผู้จัดการ';
+
       const payload = {
         eventId: eventId,
         decision: decision,
-        approvedBy: AppState.operatorName,
+        approvedBy: effectiveApprover,
+        approverRole: effectiveRole,
         signatureDataUrl: signatureDataUrl,
         rejectReason: decision === 'REJECT' ? 'ไม่อนุมัติจากที่ประชุม' : ''
       };
 
-      // Always save signature locally first for immediate instant display in A4 memo & reports
+      // Always save signature and approver details locally first for immediate instant display in A4 memo & reports
       const req = AppState.requests.find(r => r.eventId === eventId);
-      if (req && signatureDataUrl) {
-        req.approverSignature = signatureDataUrl;
+      if (req) {
+        if (signatureDataUrl) req.approverSignature = signatureDataUrl;
+        if (approverInfo) {
+          req.approvedBy = approverInfo.name;
+          req.approverRole = approverInfo.role;
+          req.approverPosition = approverInfo.role;
+        }
         localStorage.setItem('twp_requests_store', JSON.stringify(AppState.requests));
       }
 
@@ -6400,19 +6478,19 @@
         postToBackend('EXEC_DECISION', payload)
           .then(res => {
             if (res && res.status === 'SUCCESS') {
-              showAlert(decision === 'APPROVE' ? 'อนุมัติโครงการ พร้อมลงนามและออก Token เรียบร้อยแล้ว (ซิงค์ Google Sheets สำเร็จ)' : 'บันทึกการไม่อนุมัติเรียบร้อย', 'success');
+              showAlert(decision === 'APPROVE' ? 'อนุมัติโครงการ (' + effectiveRole + ') พร้อมลงนามเรียบร้อยแล้ว' : 'บันทึกการไม่อนุมัติเรียบร้อย', 'success');
               notifyDataUpdated('EXEC_DECISION');
               fetchInitialData();
             } else {
-              applyLocalExecDecision(eventId, decision, true, signatureDataUrl);
+              applyLocalExecDecision(eventId, decision, true, signatureDataUrl, approverInfo);
             }
           })
           .catch(err => {
             console.warn('postToBackend EXEC_DECISION failed, falling back to local storage:', err);
-            applyLocalExecDecision(eventId, decision, true, signatureDataUrl);
+            applyLocalExecDecision(eventId, decision, true, signatureDataUrl, approverInfo);
           });
       } else {
-        applyLocalExecDecision(eventId, decision, false, signatureDataUrl);
+        applyLocalExecDecision(eventId, decision, false, signatureDataUrl, approverInfo);
       }
     }
 
@@ -7041,8 +7119,9 @@
                 ` : `
                   <div style="margin:16px auto 4px; border-bottom:1px dotted #94a3b8; width:110px;"></div>
                 `}
-                <div style="color:#1e293b; font-weight:700;">( ${d.approvedBy} )</div>
-                <div style="color:#64748b; font-size:8.5pt; margin-top:1px;">กรรมการบริหาร / ผู้จัดการทั่วไป</div>
+                <div style="color:#1e293b; font-weight:700;">( ${d.approvedBy || 'ดร.นิพนธ์ บริหารพัฒนา'} )</div>
+                <div style="color:#08539E; font-size:8.5pt; font-weight:700; margin-top:1px;">${d.approverRole || d.approverPosition || 'กรรมการผู้จัดการ'}</div>
+                <div style="color:#64748b; font-size:8pt;">บริษัท ไทยวัฒนาพานิช จำกัด</div>
               </div>
 
             </div>
@@ -7211,8 +7290,9 @@
                 ` : `
                   <div style="margin:16px auto 4px; border-bottom:1px dotted #94a3b8; width:110px;"></div>
                 `}
-                <div style="color:#1e293b; font-weight:700;">( ${d.approvedBy} )</div>
-                <div style="color:#64748b; font-size:9pt; margin-top:2px;">กรรมการบริหาร / ผู้จัดการทั่วไป</div>
+                <div style="color:#1e293b; font-weight:700;">( ${d.approvedBy || 'ดร.นิพนธ์ บริหารพัฒนา'} )</div>
+                <div style="color:#08539E; font-size:9pt; font-weight:700; margin-top:2px;">${d.approverRole || d.approverPosition || 'กรรมการผู้จัดการ'}</div>
+                <div style="color:#64748b; font-size:8.5pt;">บริษัท ไทยวัฒนาพานิช จำกัด</div>
                 <div style="color:#64748b; font-size:9pt; margin-top:2px;">วันที่: ${d.approvedAt}</div>
               </div>
 
