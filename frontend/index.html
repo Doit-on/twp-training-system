@@ -395,6 +395,11 @@
           <i class="fa-solid fa-chart-pie text-blue-600"></i>
           <span>Dashboard & Analytics</span>
         </button>
+        <button onclick="switchTab('annualPlan')" id="tabBtn-annualPlan" class="tab-btn py-3 px-2 border-b-2 border-transparent hover:text-blue-600 flex items-center space-x-2 whitespace-nowrap">
+          <i class="fa-solid fa-file-shield text-indigo-600"></i>
+          <span>โครงการอนุมัติหลักการประจำปี</span>
+          <span id="badgeAnnualPlan" class="bg-indigo-100 text-indigo-800 text-[10px] font-bold px-1.5 py-0.5 rounded-full">แผนหลัก</span>
+        </button>
         <button onclick="switchTab('teamA')" id="tabBtn-teamA" class="tab-btn py-3 px-2 border-b-2 border-transparent hover:text-blue-600 flex items-center space-x-2 whitespace-nowrap">
           <i class="fa-solid fa-paper-plane text-emerald-600"></i>
           <span>ทีม A: ขอจัดอบรม (Sales)</span>
@@ -681,6 +686,119 @@
     <!-- ========================================== -->
     <!-- TAB 2: TEAM A - SALES & REQUEST SUBMISSION -->
     <!-- ========================================== -->
+    <!-- ========================================== -->
+    <!-- TAB 1.1: โครงการอนุมัติหลักการประจำปี (ANNUAL MASTER PLAN) -->
+    <!-- ========================================== -->
+    <section id="view-annualPlan" class="hidden space-y-6">
+      
+      <!-- Annual Plan Header Banner -->
+      <div class="bg-gradient-to-r from-indigo-900 via-blue-900 to-indigo-950 text-white rounded-3xl p-5 sm:p-6 shadow-lg border border-indigo-700/50 flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div class="space-y-1.5">
+          <div class="inline-flex items-center space-x-2 bg-indigo-800/80 border border-indigo-400/30 px-3 py-1 rounded-full text-xs text-indigo-200">
+            <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+            <span class="font-bold">ข้อมูลโครงการประจำปี 2569</span>
+            <span class="text-white/60">•</span>
+            <span>Principle-Approved Master Plan</span>
+          </div>
+          <h2 class="text-lg sm:text-xl font-black text-white tracking-wide flex items-center gap-2">
+            <i class="fa-solid fa-file-shield text-amber-300"></i>
+            <span>โครงการอนุมัติหลักการประจำปี</span>
+          </h2>
+          <p class="text-xs text-indigo-200 max-w-2xl leading-relaxed">
+            ข้อมูลโครงการจัดอบรมประจำปีที่ได้รับอนุมัติหลักการจาก <strong>กรรมการผู้จัดการ (ผศ.อินทิรา บุนนาค)</strong> เรียบร้อยแล้ว โดยทีม A เป็นผู้บันทึกข้อมูลและสามารถเพิ่มเติมได้ตลอดเวลา เพื่อให้ทีม A เลือกดึงไปใช้เป็นฐานในการขอจัดอบรมจริง
+          </p>
+        </div>
+
+        <div class="flex flex-wrap items-center gap-2 self-start md:self-auto">
+          <button type="button" onclick="openAddAnnualPlanModal()" class="px-4 py-2.5 bg-gradient-to-r from-emerald-500 to-emerald-600 hover:from-emerald-600 hover:to-emerald-700 text-white font-bold rounded-xl text-xs shadow-md transition flex items-center space-x-1.5 btn-tactile cursor-pointer">
+            <i class="fa-solid fa-circle-plus text-amber-200"></i>
+            <span>+ เพิ่มโครงการอนุมัติหลักการ</span>
+          </button>
+          <button type="button" onclick="loadSampleAnnualPlans()" class="px-3 py-2.5 bg-white/10 hover:bg-white/20 text-indigo-100 rounded-xl text-xs font-semibold border border-white/15 transition flex items-center space-x-1 cursor-pointer">
+            <i class="fa-solid fa-rotate-left"></i>
+            <span>รีเซ็ตข้อมูลตัวอย่าง</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- KPI Summary Cards (4 Cards) -->
+      <div class="grid grid-cols-2 lg:grid-cols-4 gap-3.5 sm:gap-4">
+        <div class="bg-white rounded-2xl p-4 border border-slate-200 shadow-sm">
+          <span class="text-[11px] font-bold text-slate-400 uppercase tracking-wider block">โครงการอนุมัติหลักการ</span>
+          <strong id="annualPlanCount" class="text-2xl font-black text-slate-900 font-mono block mt-1">0 โครงการ</strong>
+          <span class="text-[10px] text-indigo-600 font-semibold block mt-0.5">แผนงานหลักปี 2569</span>
+        </div>
+
+        <div class="bg-white rounded-2xl p-4 border border-slate-200 shadow-sm">
+          <span class="text-[11px] font-bold text-slate-400 uppercase tracking-wider block">กรอบงบประมาณรวม</span>
+          <strong id="annualPlanTotalBudget" class="text-2xl font-black text-amber-700 font-mono block mt-1">฿0</strong>
+          <span class="text-[10px] text-amber-700 font-semibold block mt-0.5">เพดานงบอนุมัติหลักการ</span>
+        </div>
+
+        <div class="bg-white rounded-2xl p-4 border border-slate-200 shadow-sm">
+          <span class="text-[11px] font-bold text-slate-400 uppercase tracking-wider block">เป้าหมายยอดขายรวม</span>
+          <strong id="annualPlanTotalTargetSales" class="text-2xl font-black text-emerald-700 font-mono block mt-1">฿0</strong>
+          <span class="text-[10px] text-emerald-700 font-semibold block mt-0.5">เป้ายอดขายสืบเนื่อง</span>
+        </div>
+
+        <div class="bg-white rounded-2xl p-4 border border-emerald-200 bg-emerald-50/30 shadow-sm">
+          <span class="text-[11px] font-bold text-emerald-800 uppercase tracking-wider block">ผู้อนุมัติหลักการ</span>
+          <strong class="text-sm font-bold text-slate-900 block mt-1 truncate">ผศ.อินทิรา บุนนาค</strong>
+          <span class="text-[10px] text-emerald-700 font-bold block mt-0.5">กรรมการผู้จัดการ (TWP)</span>
+        </div>
+      </div>
+
+      <!-- Annual Principle Plans Table Card -->
+      <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden space-y-3 p-5">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between pb-3 border-b border-slate-100 gap-2">
+          <div class="flex items-center space-x-2.5">
+            <div class="w-8 h-8 rounded-lg bg-indigo-100 text-indigo-700 flex items-center justify-center font-bold text-xs">
+              <i class="fa-solid fa-list-check"></i>
+            </div>
+            <div>
+              <h3 class="text-sm font-bold text-slate-900">ทะเบียนโครงการอนุมัติหลักการประจำปี</h3>
+              <p class="text-[11px] text-slate-400">เลือกโครงการตามลำดับ เพื่อนำไปขอจัดอบรมในหน้าทีม A ได้ทันที</p>
+            </div>
+          </div>
+          <span class="text-xs bg-indigo-50 text-indigo-800 font-bold px-3 py-1 rounded-full border border-indigo-200 self-start sm:self-auto">
+            ทีม A บันทึกและเพิ่มเติมได้
+          </span>
+        </div>
+
+        <!-- Table Container -->
+        <div class="overflow-x-auto border border-slate-200 rounded-xl">
+          <table class="w-full text-left text-xs border-collapse">
+            <thead>
+              <tr class="bg-slate-100 text-slate-700 font-bold border-b border-slate-200 text-[11px]">
+                <th class="p-3 text-center w-16">ลำดับ</th>
+                <th class="p-3">รหัส / ชื่องานอบรมที่อนุมัติหลักการ</th>
+                <th class="p-3">วัตถุประสงค์และกลุ่มเป้าหมาย</th>
+                <th class="p-3 text-right">งบอนุมัติหลักการ</th>
+                <th class="p-3 text-right">เป้าหมายยอดขาย</th>
+                <th class="p-3 text-center">ช่วงเวลาตามแผน</th>
+                <th class="p-3 text-center">ผู้อนุมัติหลักการ</th>
+                <th class="p-3 text-center">การนำไปใช้</th>
+                <th class="p-3 text-center w-28">จัดการ</th>
+              </tr>
+            </thead>
+            <tbody id="annualPlanTableBody" class="divide-y divide-slate-100 bg-white">
+              <!-- Dynamically populated -->
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Table Footer Guidance Note -->
+        <div class="flex flex-col sm:flex-row items-center justify-between text-[11px] text-slate-400 pt-1 gap-1">
+          <span>* คลิกปุ่ม <strong>"นำไปขอจัดอบรม (ทีม A)"</strong> เพื่อส่งข้อมูลโครงการไปยังแบบฟอร์มทีม A อัตโนมัติ</span>
+          <span class="text-emerald-700 font-medium"><i class="fa-solid fa-check-double mr-1"></i>ทีม A สามารถปรับแก้รายละเอียดปลีกย่อยในแบบฟอร์มได้เสมอ</span>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- ========================================== -->
+    <!-- TAB 2: TEAM A REQUEST WORKFLOW            -->
+    <!-- ========================================== -->
     <section id="view-teamA" class="hidden space-y-6">
       
       <!-- Team A Collaboration & QR Banner -->
@@ -710,6 +828,44 @@
 
         <form id="teamAForm" onsubmit="handleTeamASubmit(event)" class="space-y-6">
           
+          <!-- Quick Selection from Annual Principle Plans (โครงการอนุมัติหลักการประจำปี) -->
+          <div class="bg-gradient-to-r from-indigo-50 via-blue-50 to-emerald-50 p-4 rounded-2xl border-2 border-indigo-200 space-y-2.5 shadow-xs">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-1">
+              <div class="flex items-center space-x-2">
+                <div class="w-6 h-6 rounded-lg bg-indigo-600 text-white flex items-center justify-center text-xs font-bold">
+                  <i class="fa-solid fa-file-shield"></i>
+                </div>
+                <h4 class="text-xs sm:text-sm font-bold text-indigo-950">
+                  เลือกจากโครงการอนุมัติหลักการประจำปี (กรรมการผู้จัดการอนุมัติแล้ว)
+                </h4>
+              </div>
+              <span class="text-[10px] bg-emerald-100 text-emerald-800 font-bold px-2.5 py-0.5 rounded-full border border-emerald-300 self-start sm:self-auto">
+                ผศ.อินทิรา บุนนาค อนุมัติหลักการ
+              </span>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-12 gap-2 pt-0.5">
+              <div class="sm:col-span-10">
+                <select id="annualPlanSelect" onchange="onSelectAnnualPlan(this.value)" class="w-full bg-white border border-indigo-300 rounded-xl p-2.5 text-xs font-bold text-slate-800 focus:ring-2 focus:ring-indigo-500 focus:outline-none cursor-pointer">
+                  <option value="">-- เลือกโครงการอนุมัติหลักการ เช่น ลำดับที่ 1 งานอบรมใหญ่ (หรือกรอกเองอิสระ) --</option>
+                  <!-- Populated from AppState.annualPlans -->
+                </select>
+              </div>
+              <div class="sm:col-span-2">
+                <button type="button" onclick="switchTab('annualPlan')" class="w-full py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-xs font-bold transition flex items-center justify-center gap-1 shadow-xs cursor-pointer">
+                  <i class="fa-solid fa-list-check"></i>
+                  <span>ดูทะเบียน</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- Auto-fill Indicator Alert -->
+            <div id="annualPlanSelectedNotice" class="hidden p-2.5 bg-emerald-50 border border-emerald-200 rounded-xl text-emerald-900 text-xs font-medium flex items-center justify-between">
+              <span id="annualPlanNoticeText">✓ ดึงข้อมูลโครงการอนุมัติหลักการเรียบร้อยแล้ว</span>
+              <span class="text-[10px] text-slate-500">* สามารถปรับเปลี่ยนและแก้ไขรายละเอียดในแบบฟอร์มด้านล่างได้ตามจริง</span>
+            </div>
+          </div>
+
           <!-- Cascading Selection: Province -> Sales -> School with Smart Normalization & Quick Add -->
           <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 space-y-4">
             <div class="text-xs font-bold text-slate-700 uppercase tracking-wider flex items-center justify-between">
@@ -2600,9 +2756,41 @@
           <span class="text-slate-400">งบอนุมัติจริง:</span>
           <strong id="sigModalBudget" class="font-mono text-emerald-700 font-bold ml-1">฿0</strong>
         </div>
-        <div>
-          <span class="text-slate-400">ผู้อนุมัติ:</span>
-          <strong id="sigModalApprover" class="text-slate-800 ml-1">ผู้บริหาร</strong>
+        <div class="flex items-center space-x-1">
+          <span class="text-slate-400">ระดับการพิจารณา:</span>
+          <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-100 text-emerald-800 border border-emerald-300">
+            <i class="fa-solid fa-user-tie mr-1"></i>ฝ่ายบริหารระดับสูง (Executive)
+          </span>
+        </div>
+      </div>
+
+      <!-- Executive Approver Selection (เลือก 2 ตำแหน่ง: กรรมการผู้จัดการ หรือ ผู้จัดการทั่วไป) -->
+      <div class="bg-gradient-to-r from-emerald-50/80 to-blue-50/60 p-3.5 rounded-2xl border border-emerald-200 text-xs space-y-2">
+        <div class="flex items-center justify-between">
+          <span class="font-bold text-slate-800 flex items-center gap-1.5">
+            <i class="fa-solid fa-stamp text-emerald-600"></i>
+            <span>ระบุตำแหน่งผู้มีอำนาจอนุมัติ (ผู้บริหารระดับสูง):</span>
+          </span>
+          <span class="text-[10px] text-emerald-800 font-bold bg-emerald-100/70 px-2 py-0.5 rounded-md border border-emerald-200">
+            ระดับผู้บริหาร
+          </span>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+          <!-- Position Dropdown (2 Executive Positions Only) -->
+          <div>
+            <label class="block font-bold text-slate-700 mb-1">ตำแหน่งผู้อนุมัติ *</label>
+            <select id="sigApproverRoleSelect" onchange="onSigRoleChange(this.value)" class="w-full bg-white border border-slate-300 rounded-xl p-2 text-xs font-bold text-slate-800 focus:ring-2 focus:ring-emerald-500 focus:outline-none cursor-pointer">
+              <option value="กรรมการผู้จัดการ" selected>กรรมการผู้จัดการ (Managing Director)</option>
+              <option value="ผู้จัดการทั่วไป">ผู้จัดการทั่วไป (General Manager)</option>
+            </select>
+          </div>
+
+          <!-- Approver Name Input -->
+          <div>
+            <label class="block font-bold text-slate-700 mb-1">ชื่อ-สกุล ผู้อนุมัติ *</label>
+            <input type="text" id="sigApproverNameInput" value="ผศ.อินทิรา บุนนาค" placeholder="ระบุชื่อ-สกุล ผู้มีอำนาจอนุมัติ..." class="w-full bg-white border border-slate-300 rounded-xl p-2 text-xs font-bold text-slate-800 focus:ring-2 focus:ring-emerald-500 focus:outline-none">
+          </div>
         </div>
       </div>
 
@@ -2859,8 +3047,8 @@
       { id: 'MEM-007', name: 'ดร.สมเกียรติ นวัตกรรม', team: 'ทีม B (ฝ่ายวิชาการ)', position: 'ผู้เชี่ยวชาญด้านการพัฒนาหลักสูตร', company: 'บริษัท ไทยวัฒนาพานิช จำกัด' },
       { id: 'MEM-008', name: 'วิภา วิชาการ', team: 'ทีม B (ฝ่ายวิชาการ)', position: 'นักวิชาการศึกษาอาวุโส', company: 'บริษัท ไทยวัฒนาพานิช จำกัด' },
       { id: 'MEM-009', name: 'ศ.ดร.ประสาน ปัญญาเลิศ', team: 'ทีม B (ฝ่ายวิชาการ)', position: 'อาจารย์ที่ปรึกษาวิชาการพิเศษ', company: 'บริษัท ไทยวัฒนาพานิช จำกัด' },
-      { id: 'MEM-010', name: 'ดร.นิพนธ์ บริหารพัฒนา', team: 'ผู้บริหาร', position: 'รองกรรมการผู้จัดการสายงานปฏิบัติการ', company: 'บริษัท ไทยวัฒนาพานิช จำกัด' },
-      { id: 'MEM-011', name: 'คุณวิทวัส วัฒนาพานิช', team: 'ผู้บริหาร', position: 'กรรมการบริหาร / Chief Executive', company: 'บริษัท ไทยวัฒนาพานิช จำกัด' },
+      { id: 'MEM-010', name: 'ผศ.อินทิรา บุนนาค', team: 'ผู้บริหาร', position: 'กรรมการผู้จัดการ', company: 'บริษัท ไทยวัฒนาพานิช จำกัด' },
+      { id: 'MEM-011', name: 'คุณวิทวัส วัฒนาพานิช', team: 'ผู้บริหาร', position: 'ผู้จัดการทั่วไป', company: 'บริษัท ไทยวัฒนาพานิช จำกัด' },
       { id: 'MEM-012', name: 'สุดาพร ควบคุมคุณภาพ', team: 'ศูนย์ประเมินผล', position: 'เจ้าหน้าที่วิเคราะห์และประเมินผล KPI', company: 'บริษัท ไทยวัฒนาพานิช จำกัด' }
     ];
 
@@ -2921,7 +3109,7 @@
           actualBudget: 20500,
           createdBy: 'กิตติศักดิ์ ฉันทวุฒินันท์ (ทีม A)',
           reviewedBy: 'ทีมวิชาการและพัฒนาหลักสูตร (ทีม B)',
-          approvedBy: 'ดร.นิพนธ์ บริหารพัฒนา (ประธานกรรมการบริหาร)',
+          approvedBy: 'ผศ.อินทิรา บุนนาค (ประธานกรรมการบริหาร)',
           lastModifiedBy: 'ทีมวิชาการและพัฒนาหลักสูตร (ทีม B)',
           submittedToBAt: '2026-11-01T10:15:00.000Z',
           reviewedByBAt: '2026-11-02T14:20:00.000Z',
@@ -3079,8 +3267,8 @@
           actualBudget: 28000,
           createdBy: 'ควรชิด จัตตุพร',
           reviewedBy: 'ดร.สมเกียรติ นวัตกรรม',
-          approvedBy: 'ดร.นิพนธ์ บริหารพัฒนา',
-          lastModifiedBy: 'ดร.นิพนธ์ บริหารพัฒนา',
+          approvedBy: 'ผศ.อินทิรา บุนนาค',
+          lastModifiedBy: 'ผศ.อินทิรา บุนนาค',
           submittedToBAt: new Date(Date.now() - 50 * 3600 * 1000).toISOString(),
           reviewedByBAt: new Date(Date.now() - 30 * 3600 * 1000).toISOString(),
           approvedAt: new Date(Date.now() - 12 * 3600 * 1000).toISOString(),
@@ -3929,7 +4117,7 @@
       const activeBtn = document.getElementById('tabBtn-' + tabId);
       if (activeBtn) activeBtn.classList.add('tab-active');
 
-      ['dashboard', 'teamA', 'teamB', 'exec', 'evaluation', 'teamBExpenses', 'fy2569Tu'].forEach(id => {
+      ['dashboard', 'annualPlan', 'teamA', 'teamB', 'exec', 'evaluation', 'teamBExpenses', 'fy2569Tu'].forEach(id => {
         const view = document.getElementById('view-' + id);
         if (view) {
           if (id === tabId) view.classList.remove('hidden');
@@ -3937,7 +4125,9 @@
         }
       });
 
-      if (tabId === 'teamBExpenses') {
+      if (tabId === 'annualPlan') {
+        renderAnnualPlanView();
+      } else if (tabId === 'teamBExpenses') {
         renderTeamBExpensesView();
       } else if (tabId === 'fy2569Tu') {
         renderFy2569TuView();
@@ -6244,6 +6434,16 @@
     let sigCanvasElem = null;
     let sigCanvasCtx = null;
 
+    function onSigRoleChange(role) {
+      const nameInput = document.getElementById('sigApproverNameInput');
+      if (!nameInput) return;
+      if (role === 'กรรมการผู้จัดการ') {
+        nameInput.value = 'ผศ.อินทิรา บุนนาค';
+      } else if (role === 'ผู้จัดการทั่วไป') {
+        nameInput.value = 'คุณวิทวัส วัฒนาพานิช';
+      }
+    }
+
     function openSignatureModal(eventId) {
       currentSigningEventId = eventId;
       const req = AppState.requests.find(r => r.eventId === eventId) || {};
@@ -6251,7 +6451,19 @@
       
       document.getElementById('sigModalEventId').innerText = eventId;
       document.getElementById('sigModalBudget').innerText = '฿' + (Number(req.actualBudget) || Number(req.estBudget) || 0).toLocaleString();
-      document.getElementById('sigModalApprover').innerText = AppState.operatorName;
+      
+      // Set Executive Approver Selection (ไม่ใช่ทีม A)
+      const roleSelect = document.getElementById('sigApproverRoleSelect');
+      const nameInput = document.getElementById('sigApproverNameInput');
+      if (roleSelect && nameInput) {
+        if (req.approverRole === 'ผู้จัดการทั่วไป') {
+          roleSelect.value = 'ผู้จัดการทั่วไป';
+          nameInput.value = req.approvedBy || 'คุณวิทวัส วัฒนาพานิช';
+        } else {
+          roleSelect.value = 'กรรมการผู้จัดการ';
+          nameInput.value = req.approvedBy || 'ผศ.อินทิรา บุนนาค';
+        }
+      }
 
       modal.classList.remove('hidden');
       modal.style.display = 'flex';
@@ -6349,16 +6561,31 @@
         signatureDataUrl = sigCanvasElem.toDataURL('image/png');
       }
 
+      const roleSelect = document.getElementById('sigApproverRoleSelect');
+      const nameInput = document.getElementById('sigApproverNameInput');
+      const approverRole = roleSelect ? roleSelect.value : 'กรรมการผู้จัดการ';
+      const approverName = nameInput && nameInput.value.trim() 
+        ? nameInput.value.trim() 
+        : (approverRole === 'กรรมการผู้จัดการ' ? 'ผศ.อินทิรา บุนนาค' : 'คุณวิทวัส วัฒนาพานิช');
+
       const eventId = currentSigningEventId;
       closeSignatureModal();
-      handleExecDecision(eventId, 'APPROVE', signatureDataUrl);
+      handleExecDecision(eventId, 'APPROVE', signatureDataUrl, { name: approverName, role: approverRole });
     }
 
-    function applyLocalExecDecision(eventId, decision, isFallback = false, signatureDataUrl = null) {
+    function applyLocalExecDecision(eventId, decision, isFallback = false, signatureDataUrl = null, approverInfo = null) {
       const req = AppState.requests.find(r => r.eventId === eventId);
       if (req) {
         req.status = decision;
-        req.approvedBy = AppState.operatorName;
+        if (approverInfo) {
+          req.approvedBy = approverInfo.name;
+          req.approverRole = approverInfo.role;
+          req.approverPosition = approverInfo.role;
+        } else {
+          req.approvedBy = req.approvedBy || 'ผศ.อินทิรา บุนนาค';
+          req.approverRole = req.approverRole || 'กรรมการผู้จัดการ';
+          req.approverPosition = req.approverPosition || 'กรรมการผู้จัดการ';
+        }
         req.approvedAt = new Date().toISOString();
         if (signatureDataUrl) {
           req.approverSignature = signatureDataUrl;
@@ -6380,19 +6607,28 @@
       renderAll();
     }
 
-    function handleExecDecision(eventId, decision, signatureDataUrl = null) {
+    function handleExecDecision(eventId, decision, signatureDataUrl = null, approverInfo = null) {
+      const effectiveApprover = approverInfo ? approverInfo.name : 'ผศ.อินทิรา บุนนาค';
+      const effectiveRole = approverInfo ? approverInfo.role : 'กรรมการผู้จัดการ';
+
       const payload = {
         eventId: eventId,
         decision: decision,
-        approvedBy: AppState.operatorName,
+        approvedBy: effectiveApprover,
+        approverRole: effectiveRole,
         signatureDataUrl: signatureDataUrl,
         rejectReason: decision === 'REJECT' ? 'ไม่อนุมัติจากที่ประชุม' : ''
       };
 
-      // Always save signature locally first for immediate instant display in A4 memo & reports
+      // Always save signature and approver details locally first for immediate instant display in A4 memo & reports
       const req = AppState.requests.find(r => r.eventId === eventId);
-      if (req && signatureDataUrl) {
-        req.approverSignature = signatureDataUrl;
+      if (req) {
+        if (signatureDataUrl) req.approverSignature = signatureDataUrl;
+        if (approverInfo) {
+          req.approvedBy = approverInfo.name;
+          req.approverRole = approverInfo.role;
+          req.approverPosition = approverInfo.role;
+        }
         localStorage.setItem('twp_requests_store', JSON.stringify(AppState.requests));
       }
 
@@ -6400,19 +6636,19 @@
         postToBackend('EXEC_DECISION', payload)
           .then(res => {
             if (res && res.status === 'SUCCESS') {
-              showAlert(decision === 'APPROVE' ? 'อนุมัติโครงการ พร้อมลงนามและออก Token เรียบร้อยแล้ว (ซิงค์ Google Sheets สำเร็จ)' : 'บันทึกการไม่อนุมัติเรียบร้อย', 'success');
+              showAlert(decision === 'APPROVE' ? 'อนุมัติโครงการ (' + effectiveRole + ') พร้อมลงนามเรียบร้อยแล้ว' : 'บันทึกการไม่อนุมัติเรียบร้อย', 'success');
               notifyDataUpdated('EXEC_DECISION');
               fetchInitialData();
             } else {
-              applyLocalExecDecision(eventId, decision, true, signatureDataUrl);
+              applyLocalExecDecision(eventId, decision, true, signatureDataUrl, approverInfo);
             }
           })
           .catch(err => {
             console.warn('postToBackend EXEC_DECISION failed, falling back to local storage:', err);
-            applyLocalExecDecision(eventId, decision, true, signatureDataUrl);
+            applyLocalExecDecision(eventId, decision, true, signatureDataUrl, approverInfo);
           });
       } else {
-        applyLocalExecDecision(eventId, decision, false, signatureDataUrl);
+        applyLocalExecDecision(eventId, decision, false, signatureDataUrl, approverInfo);
       }
     }
 
@@ -7041,8 +7277,9 @@
                 ` : `
                   <div style="margin:16px auto 4px; border-bottom:1px dotted #94a3b8; width:110px;"></div>
                 `}
-                <div style="color:#1e293b; font-weight:700;">( ${d.approvedBy} )</div>
-                <div style="color:#64748b; font-size:8.5pt; margin-top:1px;">กรรมการบริหาร / ผู้จัดการทั่วไป</div>
+                <div style="color:#1e293b; font-weight:700;">( ${d.approvedBy || 'ผศ.อินทิรา บุนนาค'} )</div>
+                <div style="color:#08539E; font-size:8.5pt; font-weight:700; margin-top:1px;">${d.approverRole || d.approverPosition || 'กรรมการผู้จัดการ'}</div>
+                <div style="color:#64748b; font-size:8pt;">บริษัท ไทยวัฒนาพานิช จำกัด</div>
               </div>
 
             </div>
@@ -7211,8 +7448,9 @@
                 ` : `
                   <div style="margin:16px auto 4px; border-bottom:1px dotted #94a3b8; width:110px;"></div>
                 `}
-                <div style="color:#1e293b; font-weight:700;">( ${d.approvedBy} )</div>
-                <div style="color:#64748b; font-size:9pt; margin-top:2px;">กรรมการบริหาร / ผู้จัดการทั่วไป</div>
+                <div style="color:#1e293b; font-weight:700;">( ${d.approvedBy || 'ผศ.อินทิรา บุนนาค'} )</div>
+                <div style="color:#08539E; font-size:9pt; font-weight:700; margin-top:2px;">${d.approverRole || d.approverPosition || 'กรรมการผู้จัดการ'}</div>
+                <div style="color:#64748b; font-size:8.5pt;">บริษัท ไทยวัฒนาพานิช จำกัด</div>
                 <div style="color:#64748b; font-size:9pt; margin-top:2px;">วันที่: ${d.approvedAt}</div>
               </div>
 
@@ -8150,6 +8388,405 @@
       setTimeout(() => {
         box.className = 'hidden';
       }, 5000);
+    }
+  </script>
+
+  <!-- MODAL: ADD / EDIT ANNUAL PRINCIPLE-APPROVED PLAN -->
+  <div id="annualPlanModal" class="hidden fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4">
+    <div class="bg-white rounded-3xl max-w-lg w-full p-5 sm:p-6 space-y-4 shadow-2xl border border-slate-200 max-h-[92vh] overflow-y-auto custom-scrollbar" onclick="event.stopPropagation()">
+      
+      <div class="flex items-center justify-between pb-3 border-b border-slate-100">
+        <div class="flex items-center space-x-2.5">
+          <div class="w-9 h-9 rounded-xl bg-indigo-100 text-indigo-700 flex items-center justify-center font-bold text-sm">
+            <i class="fa-solid fa-file-circle-check"></i>
+          </div>
+          <div>
+            <h3 id="annualPlanModalTitle" class="font-bold text-slate-800 text-sm">บันทึกโครงการอนุมัติหลักการประจำปี</h3>
+            <p class="text-[11px] text-slate-400">กรอกข้อมูลโครงการที่ได้รับอนุมัติหลักการจากกรรมการผู้จัดการแล้ว</p>
+          </div>
+        </div>
+        <button onclick="closeAnnualPlanModal()" class="text-slate-400 hover:text-slate-600 text-lg"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+
+      <form id="annualPlanForm" onsubmit="handleSaveAnnualPlan(event)" class="space-y-3 text-xs">
+        <input type="hidden" id="planEditId" value="">
+
+        <div class="grid grid-cols-2 gap-2.5">
+          <div>
+            <label class="block font-bold text-slate-700 mb-1">ลำดับที่ *</label>
+            <input type="number" id="planSeqInput" min="1" required placeholder="เช่น 1, 2, 3..." class="w-full bg-white border border-slate-300 rounded-xl p-2 font-mono font-bold focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+          </div>
+          <div>
+            <label class="block font-bold text-slate-700 mb-1">รหัสโครงการหลักการ *</label>
+            <input type="text" id="planCodeInput" required placeholder="เช่น PLAN-2569-01" class="w-full bg-white border border-slate-300 rounded-xl p-2 font-mono font-bold focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+          </div>
+        </div>
+
+        <div>
+          <label class="block font-bold text-slate-700 mb-1">ชื่องานอบรม / โครงการที่ได้รับอนุมัติหลักการ *</label>
+          <input type="text" id="planTitleInput" required placeholder="เช่น งานอบรมใหญ่ Active Learning สู่สมรรถนะผู้เรียนระดับชาติ..." class="w-full bg-white border border-slate-300 rounded-xl p-2 text-xs font-bold text-slate-800 focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+        </div>
+
+        <div>
+          <label class="block font-semibold text-slate-700 mb-1">วัตถุประสงค์และกลุ่มเป้าหมาย</label>
+          <input type="text" id="planTargetAudienceInput" placeholder="เช่น ครูผู้สอนระดับมัธยมศึกษา 500 คน ทั่วประเทศ..." class="w-full bg-white border border-slate-300 rounded-xl p-2 focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+        </div>
+
+        <div class="grid grid-cols-2 gap-2.5">
+          <div>
+            <label class="block font-bold text-slate-700 mb-1">กรอบงบประมาณที่อนุมัติ (บาท) *</label>
+            <input type="number" id="planBudgetInput" min="0" required placeholder="เช่น 150000" class="w-full bg-white border border-slate-300 rounded-xl p-2 font-mono font-bold text-amber-700 focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+          </div>
+          <div>
+            <label class="block font-bold text-slate-700 mb-1">เป้าหมายยอดขายที่คาดหวัง (บาท) *</label>
+            <input type="number" id="planTargetSalesInput" min="0" required placeholder="เช่น 1500000" class="w-full bg-white border border-slate-300 rounded-xl p-2 font-mono font-bold text-emerald-700 focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+          </div>
+        </div>
+
+        <div class="grid grid-cols-2 gap-2.5">
+          <div>
+            <label class="block font-semibold text-slate-700 mb-1">ช่วงเวลาจัดงานตามแผน</label>
+            <input type="text" id="planQuarterInput" placeholder="เช่น พฤศจิกายน 2569 (ไตรมาส 1)" class="w-full bg-white border border-slate-300 rounded-xl p-2 focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+          </div>
+          <div>
+            <label class="block font-semibold text-slate-700 mb-1">ผู้อนุมัติหลักการ</label>
+            <input type="text" id="planApproverInput" readonly value="ผศ.อินทิรา บุนนาค (กรรมการผู้จัดการ)" class="w-full bg-slate-50 border border-slate-200 rounded-xl p-2 text-slate-600 font-medium">
+          </div>
+        </div>
+
+        <div>
+          <label class="block font-semibold text-slate-700 mb-1">หมายเหตุเพิ่มเติม</label>
+          <textarea id="planNotesInput" rows="2" placeholder="ระบุรายละเอียดเพิ่มเติม..." class="w-full bg-white border border-slate-300 rounded-xl p-2 focus:ring-2 focus:ring-indigo-500 focus:outline-none"></textarea>
+        </div>
+
+        <div class="flex items-center justify-end space-x-2 pt-2 border-t border-slate-100">
+          <button type="button" onclick="closeAnnualPlanModal()" class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold rounded-xl transition">
+            ยกเลิก
+          </button>
+          <button type="submit" class="px-5 py-2 bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded-xl shadow-sm transition btn-tactile">
+            <i class="fa-solid fa-floppy-disk mr-1"></i>บันทึกโครงการอนุมัติหลักการ
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    // ------------------- ANNUAL PRINCIPLE-APPROVED PLANS ENGINE -------------------
+    
+    function getInitialSampleAnnualPlans() {
+      return [
+        {
+          seqNo: 1,
+          planId: 'PLAN-2569-01',
+          title: 'งานอบรมใหญ่ Active Learning สู่สมรรถนะผู้เรียนระดับชาติ',
+          targetAudience: 'ครูผู้สอนระดับมัธยมศึกษา 500 คน ทั่วประเทศ',
+          principleBudget: 150000,
+          targetSales: 1500000,
+          quarterOrDate: 'พฤศจิกายน 2569 (ไตรมาส 1)',
+          approverName: 'ผศ.อินทิรา บุนนาค',
+          approverRole: 'กรรมการผู้จัดการ',
+          status: 'APPROVED_PRINCIPLE',
+          notes: 'โครงการยุทธศาสตร์หลักประจำปี เน้นสื่อและแบบฝึก Active Learning'
+        },
+        {
+          seqNo: 2,
+          planId: 'PLAN-2569-02',
+          title: 'โครงการสัมมนาเชิงปฏิบัติการ STEM & Coding สู่ห้องเรียนนวัตกรรม',
+          targetAudience: 'ครูกลุ่มสาระวิทยาศาสตร์และเทคโนโลยี 200 โรงเรียน',
+          principleBudget: 80000,
+          targetSales: 850000,
+          quarterOrDate: 'ธันวาคม 2569 (ไตรมาส 1)',
+          approverName: 'ผศ.อินทิรา บุนนาค',
+          approverRole: 'กรรมการผู้จัดการ',
+          status: 'APPROVED_PRINCIPLE',
+          notes: 'ขยายฐานโรงเรียน Tier A และจัดจำหน่ายชุดบอร์ด Coding'
+        },
+        {
+          seqNo: 3,
+          planId: 'PLAN-2569-03',
+          title: 'อบรมเชิงลึกการวัดและประเมินผลตามแนวทาง PISA และ O-NET',
+          targetAudience: 'ผู้บริหารและครูวิชาการเขตพื้นที่การศึกษา',
+          principleBudget: 60000,
+          targetSales: 650000,
+          quarterOrDate: 'มกราคม 2570 (ไตรมาส 2)',
+          approverName: 'ผศ.อินทิรา บุนนาค',
+          approverRole: 'กรรมการผู้จัดการ',
+          status: 'APPROVED_PRINCIPLE',
+          notes: 'มุ่งเน้นการใช้คลังข้อสอบและเครื่องมือวัดผลมาตรฐาน TWP'
+        },
+        {
+          seqNo: 4,
+          planId: 'PLAN-2569-04',
+          title: 'เวิร์กช็อปพัฒนาศักยภาพผู้บริหารสถานศึกษา ยุค AI & Digital Transformation',
+          targetAudience: 'ผู้อำนวยการและรองผู้อำนวยการสถานศึกษา 100 ท่าน',
+          principleBudget: 100000,
+          targetSales: 1200000,
+          quarterOrDate: 'กุมภาพันธ์ 2570 (ไตรมาส 2)',
+          approverName: 'ผศ.อินทิรา บุนนาค',
+          approverRole: 'กรรมการผู้จัดการ',
+          status: 'APPROVED_PRINCIPLE',
+          notes: 'สัมมนาผู้บริหารระดับสูง สร้างเครือข่ายความร่วมมือการใช้สื่อดิจิทัล'
+        }
+      ];
+    }
+
+    function getPersistedAnnualPlans() {
+      const stored = localStorage.getItem('twp_annual_principle_plans');
+      if (stored) {
+        try {
+          const parsed = JSON.parse(stored);
+          if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+        } catch(e) {}
+      }
+      return getInitialSampleAnnualPlans();
+    }
+
+    // Attach to AppState
+    AppState.annualPlans = getPersistedAnnualPlans();
+
+    function renderAnnualPlanView() {
+      const plans = AppState.annualPlans || [];
+      const tbody = document.getElementById('annualPlanTableBody');
+      const countElem = document.getElementById('annualPlanCount');
+      const budgetElem = document.getElementById('annualPlanTotalBudget');
+      const salesElem = document.getElementById('annualPlanTotalTargetSales');
+
+      let totalBudget = 0;
+      let totalSales = 0;
+
+      plans.forEach(p => {
+        totalBudget += Number(p.principleBudget) || 0;
+        totalSales += Number(p.targetSales) || 0;
+      });
+
+      if (countElem) countElem.innerText = plans.length + ' โครงการ';
+      if (budgetElem) budgetElem.innerText = '฿' + totalBudget.toLocaleString();
+      if (salesElem) salesElem.innerText = '฿' + totalSales.toLocaleString();
+
+      if (tbody) {
+        if (plans.length === 0) {
+          tbody.innerHTML = '<tr><td colspan="9" class="p-8 text-center text-slate-400">ยังไม่มีข้อมูลโครงการอนุมัติหลักการ คลิกปุ่ม "+ เพิ่มโครงการอนุมัติหลักการ" ด้านบน</td></tr>';
+        } else {
+          tbody.innerHTML = plans.map(p => {
+            const b = Number(p.principleBudget) || 0;
+            const s = Number(p.targetSales) || 0;
+            return `
+              <tr class="hover:bg-slate-50 transition">
+                <td class="p-3 text-center font-mono font-bold text-indigo-700">ลำดับที่ ${p.seqNo}</td>
+                <td class="p-3">
+                  <div class="font-bold text-slate-900">${p.title}</div>
+                  <div class="text-[10px] text-slate-400 font-mono">${p.planId}</div>
+                </td>
+                <td class="p-3 text-slate-600">${p.targetAudience || '-'}</td>
+                <td class="p-3 text-right font-mono font-bold text-amber-700">฿${b.toLocaleString()}</td>
+                <td class="p-3 text-right font-mono font-bold text-emerald-700">฿${s.toLocaleString()}</td>
+                <td class="p-3 text-center text-slate-600 font-medium">${p.quarterOrDate || '-'}</td>
+                <td class="p-3 text-center">
+                  <span class="text-[10px] bg-emerald-50 text-emerald-800 font-bold px-2 py-0.5 rounded-full border border-emerald-200">
+                    ${p.approverName || 'ผศ.อินทิรา บุนนาค'}
+                  </span>
+                </td>
+                <td class="p-3 text-center">
+                  <button type="button" onclick="useAnnualPlanInTeamA('${p.planId}')" class="px-2.5 py-1 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white rounded-lg font-bold text-[10px] shadow-xs flex items-center justify-center space-x-1 mx-auto btn-tactile cursor-pointer" title="นำโครงการนี้ไปขอจัดอบรมในหน้าทีม A">
+                    <i class="fa-solid fa-paper-plane text-[9px]"></i>
+                    <span>นำไปขอจัดอบรม (ทีม A)</span>
+                  </button>
+                </td>
+                <td class="p-3 text-center space-x-1 whitespace-nowrap">
+                  <button onclick="openAddAnnualPlanModal('${p.planId}')" title="แก้ไข" class="p-1.5 text-blue-600 hover:bg-blue-50 rounded-lg transition cursor-pointer"><i class="fa-solid fa-pen-to-square"></i></button>
+                  <button onclick="deleteAnnualPlan('${p.planId}')" title="ลบ" class="p-1.5 text-rose-500 hover:bg-rose-50 rounded-lg transition cursor-pointer"><i class="fa-solid fa-trash-can"></i></button>
+                </td>
+              </tr>
+            `;
+          }).join('');
+        }
+      }
+
+      renderAnnualPlanSelectOptions();
+    }
+
+    function renderAnnualPlanSelectOptions() {
+      const select = document.getElementById('annualPlanSelect');
+      if (!select) return;
+      const plans = AppState.annualPlans || [];
+      const currentVal = select.value;
+
+      select.innerHTML = '<option value="">-- เลือกโครงการอนุมัติหลักการ เช่น ลำดับที่ 1 งานอบรมใหญ่ (หรือกรอกเองอิสระ) --</option>' +
+        plans.map(p => {
+          return `<option value="${p.planId}">ลำดับที่ ${p.seqNo}: ${p.title} (งบหลักการ ฿${Number(p.principleBudget).toLocaleString()} / เป้าขาย ฿${Number(p.targetSales).toLocaleString()})</option>`;
+        }).join('');
+
+      if (currentVal) select.value = currentVal;
+    }
+
+    function onSelectAnnualPlan(planId) {
+      const noticeBox = document.getElementById('annualPlanSelectedNotice');
+      const noticeText = document.getElementById('annualPlanNoticeText');
+
+      if (!planId) {
+        if (noticeBox) noticeBox.classList.add('hidden');
+        return;
+      }
+
+      const plan = (AppState.annualPlans || []).find(p => p.planId === planId);
+      if (!plan) return;
+
+      // Auto-fill Team A Form
+      const customTopicInput = document.getElementById('customTopicInput');
+      const topicSelect = document.getElementById('topicSelect');
+      const budgetInput = document.getElementById('estBudget');
+      const targetSalesInput = document.getElementById('targetSales');
+
+      if (topicSelect) {
+        // Look for matching topic or set to custom
+        let matched = false;
+        for (let i = 0; i < topicSelect.options.length; i++) {
+          if (topicSelect.options[i].value === plan.title) {
+            topicSelect.selectedIndex = i;
+            matched = true;
+            break;
+          }
+        }
+        if (!matched) {
+          topicSelect.value = 'อื่นๆ';
+          if (customTopicInput) {
+            customTopicInput.classList.remove('hidden');
+            customTopicInput.value = plan.title;
+          }
+        } else {
+          if (customTopicInput) customTopicInput.classList.add('hidden');
+        }
+      }
+
+      if (budgetInput) budgetInput.value = plan.principleBudget || '';
+      if (targetSalesInput) targetSalesInput.value = plan.targetSales || '';
+
+      // Trigger ROI recalculation
+      calculateRealtimeROI();
+
+      if (noticeBox && noticeText) {
+        noticeText.innerHTML = `<i class="fa-solid fa-circle-check text-emerald-600 mr-1.5"></i>ดึงข้อมูลจาก: <strong>ลำดับที่ ${plan.seqNo} ${plan.title}</strong> (อนุมัติหลักการโดย ${plan.approverName || 'ผศ.อินทิรา บุนนาค'} กรรมการผู้จัดการ) เรียบร้อยแล้ว`;
+        noticeBox.classList.remove('hidden');
+      }
+
+      showAlert('ดึงข้อมูลโครงการอนุมัติหลักการ ลำดับที่ ' + plan.seqNo + ' เรียบร้อยแล้ว (สามารถปรับเปลี่ยนหรือแก้ไขรายละเอียดได้ตามจริง)', 'success');
+    }
+
+    function useAnnualPlanInTeamA(planId) {
+      switchTab('teamA');
+      const select = document.getElementById('annualPlanSelect');
+      if (select) {
+        select.value = planId;
+        onSelectAnnualPlan(planId);
+      }
+      const form = document.getElementById('teamAForm');
+      if (form) form.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+
+    function openAddAnnualPlanModal(editPlanId = null) {
+      const modal = document.getElementById('annualPlanModal');
+      const form = document.getElementById('annualPlanForm');
+      const titleElem = document.getElementById('annualPlanModalTitle');
+      if (!modal || !form) return;
+
+      form.reset();
+      document.getElementById('planApproverInput').value = 'ผศ.อินทิรา บุนนาค (กรรมการผู้จัดการ)';
+
+      if (editPlanId) {
+        const p = (AppState.annualPlans || []).find(x => x.planId === editPlanId);
+        if (p) {
+          titleElem.innerText = 'แก้ไขโครงการอนุมัติหลักการ: ' + p.planId;
+          document.getElementById('planEditId').value = p.planId;
+          document.getElementById('planSeqInput').value = p.seqNo;
+          document.getElementById('planCodeInput').value = p.planId;
+          document.getElementById('planTitleInput').value = p.title;
+          document.getElementById('planTargetAudienceInput').value = p.targetAudience || '';
+          document.getElementById('planBudgetInput').value = p.principleBudget || '';
+          document.getElementById('planTargetSalesInput').value = p.targetSales || '';
+          document.getElementById('planQuarterInput').value = p.quarterOrDate || '';
+          document.getElementById('planNotesInput').value = p.notes || '';
+        }
+      } else {
+        const nextSeq = (AppState.annualPlans || []).length + 1;
+        titleElem.innerText = 'บันทึกโครงการอนุมัติหลักการประจำปี (โดยทีม A)';
+        document.getElementById('planEditId').value = '';
+        document.getElementById('planSeqInput').value = nextSeq;
+        document.getElementById('planCodeInput').value = 'PLAN-2569-' + String(nextSeq).padStart(2, '0');
+        document.getElementById('planTitleInput').value = '';
+        document.getElementById('planTargetAudienceInput').value = '';
+        document.getElementById('planBudgetInput').value = '';
+        document.getElementById('planTargetSalesInput').value = '';
+        document.getElementById('planQuarterInput').value = '';
+        document.getElementById('planNotesInput').value = '';
+      }
+
+      modal.classList.remove('hidden');
+    }
+
+    function closeAnnualPlanModal() {
+      const modal = document.getElementById('annualPlanModal');
+      if (modal) modal.classList.add('hidden');
+    }
+
+    function handleSaveAnnualPlan(e) {
+      e.preventDefault();
+      const editId = document.getElementById('planEditId').value;
+      const seq = Number(document.getElementById('planSeqInput').value) || 1;
+      const code = document.getElementById('planCodeInput').value.trim();
+      const title = document.getElementById('planTitleInput').value.trim();
+      const targetAudience = document.getElementById('planTargetAudienceInput').value.trim();
+      const budget = Number(document.getElementById('planBudgetInput').value) || 0;
+      const targetSales = Number(document.getElementById('planTargetSalesInput').value) || 0;
+      const quarter = document.getElementById('planQuarterInput').value.trim();
+      const notes = document.getElementById('planNotesInput').value.trim();
+
+      const newPlan = {
+        seqNo: seq,
+        planId: code,
+        title: title,
+        targetAudience: targetAudience,
+        principleBudget: budget,
+        targetSales: targetSales,
+        quarterOrDate: quarter,
+        approverName: 'ผศ.อินทิรา บุนนาค',
+        approverRole: 'กรรมการผู้จัดการ',
+        status: 'APPROVED_PRINCIPLE',
+        notes: notes
+      };
+
+      let plans = AppState.annualPlans || [];
+      if (editId) {
+        const idx = plans.findIndex(p => p.planId === editId);
+        if (idx >= 0) plans[idx] = newPlan;
+      } else {
+        plans.push(newPlan);
+      }
+
+      // Sort by seqNo
+      plans.sort((a, b) => a.seqNo - b.seqNo);
+      AppState.annualPlans = plans;
+      localStorage.setItem('twp_annual_principle_plans', JSON.stringify(plans));
+
+      closeAnnualPlanModal();
+      showAlert('บันทึกโครงการอนุมัติหลักการ ' + code + ' เรียบร้อยแล้ว', 'success');
+      renderAnnualPlanView();
+    }
+
+    function deleteAnnualPlan(planId) {
+      if (!confirm('ต้องการลบโครงการอนุมัติหลักการ ' + planId + ' ใช่หรือไม่?')) return;
+      let plans = (AppState.annualPlans || []).filter(p => p.planId !== planId);
+      AppState.annualPlans = plans;
+      localStorage.setItem('twp_annual_principle_plans', JSON.stringify(plans));
+      showAlert('ลบโครงการอนุมัติหลักการ ' + planId + ' เรียบร้อยแล้ว', 'info');
+      renderAnnualPlanView();
+    }
+
+    function loadSampleAnnualPlans() {
+      AppState.annualPlans = getInitialSampleAnnualPlans();
+      localStorage.setItem('twp_annual_principle_plans', JSON.stringify(AppState.annualPlans));
+      showAlert('โหลดข้อมูลตัวอย่างโครงการอนุมัติหลักการเรียบร้อยแล้ว', 'success');
+      renderAnnualPlanView();
     }
   </script>
 </body>
