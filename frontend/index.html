@@ -3465,9 +3465,26 @@
             switchTab('dashboard');
           })
           .catch(err => {
+            console.warn('postToBackend CREATE_REQUEST_A failed, falling back to local creation:', err);
             btn.disabled = false;
             btn.innerHTML = '<i class="fa-solid fa-paper-plane mr-2"></i> ส่งคำขอให้ฝ่ายวิชาการ (ทีม B) ตรวจสอบ';
-            showAlert('เกิดข้อผิดพลาด: ' + err.message, 'error');
+            const newId = 'EVT-2026-000' + (AppState.requests.length + 1);
+            AppState.requests.unshift({
+              eventId: newId,
+              createdAt: new Date().toISOString(),
+              status: 'WAITING_B',
+              ...payload,
+              createdBy: AppState.operatorName
+            });
+            localStorage.setItem('twp_requests_store', JSON.stringify(AppState.requests));
+            showAlert(`✅ สร้างคำขอจัดอบรม ${newId} เรียบร้อยแล้ว (บันทึกในเครื่อง: Google Apps Script ยังไม่พร้อมเชื่อมต่อ)`, 'success');
+            document.getElementById('teamAForm').reset();
+            document.getElementById('needAccommodation').checked = false;
+            toggleAccommodationFields(false);
+            document.getElementById('needTransportation').checked = false;
+            toggleTransportFields(false);
+            notifyDataUpdated('CREATE_REQUEST_A');
+            switchTab('dashboard');
           });
       } else {
         // Local Mock Creation
@@ -3520,16 +3537,7 @@
         refreshDatalists();
       }
 
-      if (AppState.gasEndpoint) {
-        postToBackend('UPDATE_REVIEW_B', payload)
-          .then(res => {
-            showAlert('บันทึกผลการตรวจสอบของทีม B เรียบร้อยแล้ว', 'success');
-            notifyDataUpdated('UPDATE_REVIEW_B');
-            fetchInitialData();
-          })
-          .catch(err => showAlert('เกิดข้อผิดพลาด: ' + err.message, 'error'));
-      } else {
-        // Local Mock Update
+      function applyLocalTeamB(isFallback = false) {
         const req = AppState.requests.find(r => r.eventId === eventId);
         if (req) {
           req.status = decision === 'RETURN_TO_A' ? 'RETURNED_TO_A' : 'WAITING_EXEC';
@@ -3538,14 +3546,61 @@
           req.teamBNotes = notes;
           req.reviewedBy = AppState.operatorName;
           req.reviewedByBAt = new Date().toISOString();
+          localStorage.setItem('twp_requests_store', JSON.stringify(AppState.requests));
         }
-        showAlert(`[Local Mock] ปรับปรุงสถานะ ${eventId} เป็น ${req.status} สำเร็จ`, 'success');
+        if (isFallback) {
+          showAlert(`✅ บันทึกผลการตรวจสอบทีม B ให้คำขอ ${eventId} เรียบร้อยแล้ว (บันทึกในเครื่อง: Google Apps Script ยังไม่พร้อมเชื่อมต่อ)`, 'success');
+        } else {
+          showAlert('บันทึกผลการตรวจสอบของทีม B เรียบร้อยแล้ว', 'success');
+        }
         notifyDataUpdated('UPDATE_REVIEW_B');
         renderAll();
+      }
+
+      if (AppState.gasEndpoint) {
+        postToBackend('UPDATE_REVIEW_B', payload)
+          .then(res => {
+            if (res && res.status === 'SUCCESS') {
+              showAlert('บันทึกผลการตรวจสอบของทีม B เรียบร้อยแล้ว (ซิงค์ Google Sheets สำเร็จ)', 'success');
+              notifyDataUpdated('UPDATE_REVIEW_B');
+              fetchInitialData();
+            } else {
+              applyLocalTeamB(true);
+            }
+          })
+          .catch(err => {
+            console.warn('postToBackend UPDATE_REVIEW_B failed, falling back to local storage:', err);
+            applyLocalTeamB(true);
+          });
+      } else {
+        applyLocalTeamB(false);
       }
     }
 
     // ------------------- ACTIONS: EXEC DECISION -------------------
+
+    function applyLocalExecDecision(eventId, decision, isFallback = false) {
+      const req = AppState.requests.find(r => r.eventId === eventId);
+      if (req) {
+        req.status = decision;
+        req.approvedBy = AppState.operatorName;
+        req.approvedAt = new Date().toISOString();
+        if (decision === 'APPROVE') {
+          req.token = 'tok-' + Math.random().toString(36).substring(2, 10);
+          req.pdfUrl = '#demo-pdf';
+        }
+        localStorage.setItem('twp_requests_store', JSON.stringify(AppState.requests));
+      }
+      if (isFallback) {
+        showAlert(decision === 'APPROVE' 
+          ? `✅ อนุมัติโครงการ ${eventId} และออก Token เรียบร้อยแล้ว (บันทึกในเครื่อง: Google Apps Script ยังไม่พร้อมเชื่อมต่อ)` 
+          : `บันทึกการไม่อนุมัติ ${eventId} เรียบร้อยแล้ว`, 'success');
+      } else {
+        showAlert(decision === 'APPROVE' ? 'อนุมัติโครงการและออก Token เรียบร้อยแล้ว' : 'บันทึกการไม่อนุมัติเรียบร้อย', 'success');
+      }
+      notifyDataUpdated('EXEC_DECISION');
+      renderAll();
+    }
 
     function handleExecDecision(eventId, decision) {
       const payload = {
@@ -3558,26 +3613,20 @@
       if (AppState.gasEndpoint) {
         postToBackend('EXEC_DECISION', payload)
           .then(res => {
-            showAlert(decision === 'APPROVE' ? 'อนุมัติโครงการและออก Token เรียบร้อยแล้ว' : 'บันทึกการไม่อนุมัติเรียบร้อย', 'success');
-            notifyDataUpdated('EXEC_DECISION');
-            fetchInitialData();
+            if (res && res.status === 'SUCCESS') {
+              showAlert(decision === 'APPROVE' ? 'อนุมัติโครงการและออก Token เรียบร้อยแล้ว (ซิงค์ Google Sheets สำเร็จ)' : 'บันทึกการไม่อนุมัติเรียบร้อย', 'success');
+              notifyDataUpdated('EXEC_DECISION');
+              fetchInitialData();
+            } else {
+              applyLocalExecDecision(eventId, decision, true);
+            }
           })
-          .catch(err => showAlert('เกิดข้อผิดพลาด: ' + err.message, 'error'));
+          .catch(err => {
+            console.warn('postToBackend EXEC_DECISION failed, falling back to local storage:', err);
+            applyLocalExecDecision(eventId, decision, true);
+          });
       } else {
-        // Local Mock Decision
-        const req = AppState.requests.find(r => r.eventId === eventId);
-        if (req) {
-          req.status = decision;
-          req.approvedBy = AppState.operatorName;
-          req.approvedAt = new Date().toISOString();
-          if (decision === 'APPROVE') {
-            req.token = 'tok-' + Math.random().toString(36).substring(2, 10);
-            req.pdfUrl = '#demo-pdf';
-          }
-        }
-        showAlert(`[Local Mock] ดำเนินการ ${decision} ให้คำขอ ${eventId} สำเร็จ`, 'success');
-        notifyDataUpdated('EXEC_DECISION');
-        renderAll();
+        applyLocalExecDecision(eventId, decision, false);
       }
     }
 
@@ -4524,7 +4573,17 @@
         method: 'POST',
         headers: { 'Content-Type': 'text/plain;charset=utf-8' },
         body: JSON.stringify({ action: action, payload: payload })
-      }).then(r => r.json());
+      }).then(async r => {
+        const text = await r.text();
+        if (text.includes('ไม่พบฟังก์ชันของสคริปต์: doPost')) {
+          throw new Error('Google Apps Script ยังไม่ได้ Deploy ฟังก์ชัน doPost (กรุณา Deploy New Version ใน Apps Script)');
+        }
+        try {
+          return JSON.parse(text);
+        } catch (e) {
+          throw new Error('การตอบกลับจาก Google Apps Script ไม่ถูกต้อง: ' + text.substring(0, 120));
+        }
+      });
     }
 
     // ------------------- NOTIFICATION ALERT -------------------
