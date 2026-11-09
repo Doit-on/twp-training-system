@@ -1,17 +1,28 @@
 # Training Center TWP (EMS Enterprise Platform)
 
-[![Version](https://img.shields.io/badge/version-1.5.1-blue.svg)](VERSION)
+[![Version](https://img.shields.io/badge/version-1.6.0-blue.svg)](VERSION)
 [![Runtime](https://img.shields.io/badge/runtime-Google%20Apps%20Script%20V8-green.svg)](https://developers.google.com/apps-script)
 [![Database](https://img.shields.io/badge/database-Google%20Sheets-success.svg)](data/Database_Schema.md)
 [![License](https://img.shields.io/badge/license-MIT-lightgrey.svg)](LICENSE)
 
-> ระบบบริหารจัดการคำขอจัดกิจกรรมอบรม และประเมินผลความพึงพอใจแบบปิดลูป (Training Center TWP / EMS Enterprise) ขับเคลื่อนด้วยสถาปัตยกรรม Serverless บน Google Apps Script และ Google Sheets มาพร้อมหน้า Landing Page โลโก้ TWP ทางการ, Modernized Tactile UX/UI Design, ระบบสแกน **QR Code ประจำทีม**, ระบบ **Real-Time Multi-Device Data Sync**, **ระบบสร้างรายงานสรุปการปฏิบัติงาน A4 มาตรฐาน PPC ที่ส่งออกได้ทั้ง PDF และ Microsoft Word (.docx)** และ **การฝัง Production Apps Script Web App Endpoint อัตโนมัติ** ทำให้สแกนและใช้งานได้ทันทีทั่วทั้งองค์กร
+> ระบบบริหารจัดการคำขอจัดกิจกรรมอบรม และประเมินผลความพึงพอใจแบบปิดลูป (Training Center TWP / EMS Enterprise) ขับเคลื่อนด้วยสถาปัตยกรรม Serverless บน Google Apps Script และ Google Sheets มาพร้อมหน้า Landing Page โลโก้ TWP ทางการ, Modernized Tactile UX/UI Design, ระบบสแกน **QR Code ประจำทีม**, ระบบ **Real-Time Multi-Device Data Sync**, **ระบบสร้างรายงานสรุปการปฏิบัติงาน A4 มาตรฐาน PPC ที่ส่งออกได้ทั้ง PDF และ Microsoft Word (.docx)**, **ระบบตรวจสอบชื่อโรงเรียนและตัวย่ออัจฉริยะ (Smart Normalization & Quick Add)**, **ฐานข้อมูลพนักงานขายมาตรฐานจาก PPC** และ **Dashboard สรุปจำนวนผู้เข้าอบรมพร้อมประเมินความพึงพอใจแยกตามหัวข้ออบรม (v1.6.0)**
 
 ---
 
 ## 🌟 จุดเด่นและฟีเจอร์สำคัญ (Key Features)
 
-1. **Embedded Production Apps Script Endpoint (v1.5.1):**
+1. **Dashboard สรุปผลการดำเนินงาน & ประเมินความพึงพอใจรายหัวข้อ (v1.6.0):**
+   - แสดง KPI สรุป **จำนวนผู้เข้าอบรมรวม (Total Trainees)** สะสมจากทุกโครงการ
+   - ตารางและชาร์ตแจกแจง **การดำเนินงานและจำนวนผู้เข้าอบรมรายหัวข้อ (Topic Evaluation Breakdown)**
+   - สรุป **คะแนนความพึงพอใจแยกตามหัวข้ออบรม (Topic Satisfaction Rating)** เทียบเกณฑ์ 5.00 คะแนน พร้อมแถบ Visual Progress Bar และระดับคุณภาพ (ดีเยี่ยม, ดีมาก, ปานกลาง)
+
+2. **ระบบจัดการพนักงานขายจาก PPC และ Normalization อัจฉริยะ (v1.6.0):**
+   - ดึงและจัดการรายชื่อผู้แทนขายมาตรฐานจาก PPC ครบทั้ง 13 ท่านในทุกภูมิภาค
+   - เพิ่มเมนูจัดการรายชื่อพนักงานขายใน Settings หลังบ้าน (`admin0000`)
+   - ระบบตรวจจับและแปลงตัวย่อ `ร.ร.` / `รร.` เป็น `โรงเรียน` อัตโนมัติ พร้อมตรวจการเว้นวรรค
+   - พิมพ์ค้นหาและตรวจสอบฐานข้อมูล PPC แบบเรียลไทม์ หากไม่พบระบบจะเสนอให้เพิ่มเป็นโรงเรียนใหม่หรือพนักงานขายใหม่ได้ทันที
+
+3. **Embedded Production Apps Script Endpoint (v1.5.1):**
    - ฝัง URL ของ Google Apps Script Web App ประจำองค์กรลงในระบบโดยตรง:
      `https://script.google.com/macros/s/AKfycby-D2AvgHXO_y4tVxg8wgkDP9ARBnRpiVp47-vnF7AiA1TA4AqwKGbelJTyI68tKfmx6g/exec`
    - เมื่อสร้าง QR Code หรือแชร์ลิงก์ประจำทีม (ทีม A, ทีม B, ผู้บริหาร, แดชบอร์ด) ค่า URL Endpoint นี้จะแนบติดไปในพารามิเตอร์ `&ep=` เสมอ ทำให้ผู้ร่วมงานที่สแกนด้วยโทรศัพท์มือถือเชื่อมต่อและซิงก์ข้อมูลกับ Google Sheet ได้ทันที ไม่ต้องกรอก URL เอง
@@ -85,7 +96,7 @@
 ├── CHANGELOG.md                  # บันทึกประวัติการปรับปรุงแต่ละเวอร์ชัน
 ├── MANUAL.md                     # คู่มือการใช้งานระบบสำหรับผู้ใช้ทุกระดับ
 ├── README.md                     # ภาพรวมระบบและการติดตั้ง
-└── VERSION                       # หมายเลขเวอร์ชันปัจจุบัน (1.5.1)
+└── VERSION                       # หมายเลขเวอร์ชันปัจจุบัน (1.6.0)
 ```
 
 ---
