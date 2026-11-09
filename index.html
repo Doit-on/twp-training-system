@@ -1352,7 +1352,7 @@
         </button>
         <button id="qrTabResourceBtn" onclick="switchQrModalMode('RESOURCE')" class="py-2 px-3 rounded-lg text-slate-600 hover:text-slate-900 flex items-center justify-center space-x-1.5 transition">
           <i class="fa-brands fa-google-drive text-amber-600"></i>
-          <span>๒. แหล่งเก็บไฟล์ / ไดรฟ์</span>
+          <span>๒. แหล่งเก็บไฟล์ (ปลดล็อกหลังประเมิน)</span>
         </button>
       </div>
 
@@ -5078,6 +5078,25 @@
       modal.classList.remove('hidden');
     }
 
+    function getSurveyFullUrl(token) {
+      let path = window.location.pathname || '/';
+      if (path.endsWith('/')) {
+        path = path + 'survey.html';
+      } else if (path.endsWith('index.html')) {
+        path = path.slice(0, -10) + 'survey.html';
+      } else if (!path.endsWith('survey.html')) {
+        const lastSlash = path.lastIndexOf('/');
+        path = path.substring(0, lastSlash + 1) + 'survey.html';
+      }
+      const baseUrl = window.location.origin + path;
+      const activeEp = AppState.gasEndpoint || DEFAULT_GAS_ENDPOINT;
+      let url = baseUrl + '?t=' + encodeURIComponent(token);
+      if (activeEp) {
+        url += '&ep=' + encodeURIComponent(activeEp);
+      }
+      return url;
+    }
+
     function switchQrModalMode(mode) {
       activeQrModalMode = mode;
       const req = AppState.requests.find(r => r.eventId === activeQrModalEventId);
@@ -5104,15 +5123,12 @@
         resEditBox.classList.add('hidden');
 
         const token = req.token || 'tok-' + req.eventId.replace(/-/g, '').toLowerCase();
-        const baseUrl = window.location.origin + window.location.pathname.replace('index.html', 'survey.html');
-        const activeEp = AppState.gasEndpoint || DEFAULT_GAS_ENDPOINT;
-        targetUrl = `${baseUrl}?t=${token}`;
-        if (activeEp) targetUrl += `&ep=${encodeURIComponent(activeEp)}`;
+        targetUrl = getSurveyFullUrl(token);
         darkColor = '#1e3a8a';
       } else {
         resBtn.className = 'py-2 px-3 rounded-lg bg-white text-amber-700 shadow-sm flex items-center justify-center space-x-1.5 transition';
         surveyBtn.className = 'py-2 px-3 rounded-lg text-slate-600 hover:text-slate-900 flex items-center justify-center space-x-1.5 transition';
-        subtitle.innerText = 'สแกนเพื่อเข้าถึงเอกสาร สื่อการสอน และภาพถ่ายโครงการ (Cloud Storage)';
+        subtitle.innerHTML = '<span class="text-amber-700 font-bold"><i class="fa-solid fa-lock mr-1"></i>ผู้เข้าอบรมจะสแกนเข้าถึงไฟล์ได้ต่อเมื่อ "ทำแบบประเมินเสร็จแล้วเท่านั้น"</span><br><span class="text-slate-500 text-[10px]">(ระบบจะปลดล็อกปุ่มและ QR Code คลังไฟล์ในหน้าวุฒิบัตรทันทีหลังส่งประเมิน)</span>';
         linkTag.innerText = 'Google Drive / OneDrive';
         linkTag.className = 'text-[10px] text-amber-700 bg-amber-50 px-1.5 py-0.5 rounded';
         resEditBox.classList.remove('hidden');
@@ -5157,8 +5173,8 @@
       const req = AppState.requests.find(r => r.eventId === activeQrModalEventId);
       if (!req) return;
 
-      const title = activeQrModalMode === 'SURVEY' ? 'แบบประเมินผลการจัดอบรม ๑๐ ข้อ' : 'คลังเอกสารและสื่อการเรียนรู้';
-      const sub = activeQrModalMode === 'SURVEY' ? 'กรุณาสแกน QR Code ด้วยสมาร์ทโฟนเพื่อตอบแบบประเมินความพึงพอใจ' : 'สแกนเพื่อดาวน์โหลดสไลด์ คู่มือ และชุดสื่อการสอน';
+      const title = 'แบบประเมินผลการจัดอบรม ๑๐ ข้อ';
+      const sub = 'กรุณาสแกน QR Code เพื่อทำแบบประเมิน ๑๐ ข้อ และรับวุฒิบัตร e-Certificate พร้อมปลดล็อกคลังดาวน์โหลดไฟล์เอกสารประกอบโครงการ';
       const url = document.getElementById('modalShareUrl').value;
 
       const printWin = window.open('', '_blank');
@@ -5613,7 +5629,7 @@
               <!-- QR Code 1: 10-Question Evaluation Survey -->
               <div style="background:#f8fafc; border:1px solid #cbd5e1; border-radius:6px; padding:8px 12px; display:flex; align-items:center; gap:12px;">
                 <div style="background:#ffffff; padding:4px; border-radius:6px; border:1px solid #94a3b8; display:flex; align-items:center; justify-content:center;">
-                  <img src="https://api.qrserver.com/v1/create-qr-code/?size=110x110&data=${encodeURIComponent(window.location.origin + window.location.pathname.replace('index.html', 'survey.html') + '?t=' + (d.eventId === 'EVT-DEMO-2026' ? 'demo-active-learning-2026' : d.eventId))}" style="width:78px; height:78px; display:block;" alt="QR แบบประเมิน 10 ข้อ">
+                  <img src="https://api.qrserver.com/v1/create-qr-code/?size=110x110&data=${encodeURIComponent(window.location.origin + (window.location.pathname.endsWith('/') ? window.location.pathname + 'survey.html' : window.location.pathname.replace(/index\.html$/, 'survey.html')) + '?t=' + (d.eventId === 'EVT-DEMO-2026' ? 'demo-active-learning-2026' : d.eventId))}" style="width:78px; height:78px; display:block;" alt="QR แบบประเมิน 10 ข้อ">
                 </div>
                 <div>
                   <div style="font-size:10.5pt; font-weight:700; color:#1e3a8a;">๑. QR แบบประเมินผล ๑๐ ข้อ</div>
