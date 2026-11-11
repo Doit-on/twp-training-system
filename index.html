@@ -5518,7 +5518,7 @@
             <td class="p-3 text-center text-slate-400 font-mono">${idx + 1}</td>
             <td class="p-3">
               <div class="font-bold text-slate-900">${p.schoolName}</div>
-              <div class="text-[10px] text-slate-400 font-mono">${p.id} • ${p.province}</div>
+              <div class="text-[10px] text-slate-400 font-mono flex items-center">${p.id} • ${p.province} ${getSampleBadgeHtml(p)}</div>
             </td>
             <td class="p-3 font-medium text-slate-700">${p.salesRep}</td>
             <td class="p-3 text-center font-mono text-slate-600">${p.eventDate}</td>
@@ -6212,6 +6212,30 @@
       }
     }
 
+    
+    // ------------------- SAMPLE RECORD IDENTIFIER -------------------
+    function isSampleRecord(item) {
+      if (!item) return false;
+      if (item.isDemoCase || item.isSample) return true;
+      const id = String(item.eventId || item.planId || item.id || item.projectId || '');
+      if (id === 'EVT-DEMO-2026' || id === 'EVT-2026-0001' || id === 'EVT-20261111-7914') return true;
+      if (id.startsWith('PLAN-2569-') || id.startsWith('EVT-2569-') || id.startsWith('EVT-DEMO-')) return true;
+      return false;
+    }
+
+    function getSampleBadgeHtml(item) {
+      if (!isSampleRecord(item)) return '';
+      return '<span class="inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-bold bg-rose-50 text-rose-600 border border-rose-200/80 shadow-xs ml-1.5" title="ข้อมูลจำลองสำหรับทดสอบระบบ - สามารถลบทิ้งได้"><i class="fa-solid fa-flask-vial mr-1 text-[9px]"></i>ตัวอย่าง</span>';
+    }
+
+    function deleteRequestItem(eventId) {
+      if (!confirm('ต้องการลบคำขอ ' + eventId + ' ใช่หรือไม่?')) return;
+      AppState.requests = (AppState.requests || []).filter(r => r.eventId !== eventId);
+      localStorage.setItem('twp_requests_store', JSON.stringify(AppState.requests));
+      showAlert('ลบคำขอ ' + eventId + ' เรียบร้อยแล้ว', 'info');
+      renderAll();
+    }
+  
     // ------------------- RENDER VIEWS -------------------
 
     function renderDashboard() {
@@ -6280,7 +6304,7 @@
 
         tr.innerHTML = `
           <td class="px-6 py-4">
-            <div class="font-bold text-slate-800 text-sm">${req.eventId}</div>
+            <div class="font-bold text-slate-800 text-sm flex items-center">${req.eventId} ${getSampleBadgeHtml(req)}</div>
             <div class="text-xs text-blue-600 font-medium">${req.courseTopic}</div>
             <div class="mt-1 flex flex-wrap gap-1">${logisHtml}</div>
             <div class="text-[11px] text-slate-400 mt-0.5">วันจัดงาน: ${req.eventDate || '-'}</div>
@@ -6306,6 +6330,7 @@
             </button>
             ${req.pdfUrl ? `<a href="${req.pdfUrl}" target="_blank" class="inline-flex items-center px-2 py-1 bg-blue-50 text-blue-700 text-xs font-semibold rounded hover:bg-blue-100 transition mr-1"><i class="fa-solid fa-file-pdf mr-1 text-red-500"></i>Memo</a>` : ''}
             ${req.status === 'APPROVED' ? `<button onclick="openQrModalFor('${req.eventId}')" class="inline-flex items-center px-2 py-1 bg-indigo-50 text-indigo-700 text-xs font-semibold rounded hover:bg-indigo-100 transition"><i class="fa-solid fa-qrcode mr-1"></i>QR Code</button>` : ''}
+            <button onclick="deleteRequestItem('${req.eventId}')" class="inline-flex items-center p-1.5 text-rose-500 hover:bg-rose-50 rounded-lg transition ml-1 cursor-pointer" title="ลบรายการนี้"><i class="fa-solid fa-trash-can text-xs"></i></button>
             ${AppState.adminUnlocked ? `
               <button onclick="openAdminEditRequestModal('${req.eventId}')" class="inline-flex items-center px-2 py-1 bg-amber-100 hover:bg-amber-200 text-amber-900 text-xs font-bold rounded transition ml-1" title="แก้ไขคำขอโดย Admin"><i class="fa-solid fa-pen-to-square mr-1"></i>แก้ (Admin)</button>
               <button onclick="adminDeleteRequest('${req.eventId}')" class="inline-flex items-center px-2 py-1 bg-rose-100 hover:bg-rose-200 text-rose-800 text-xs font-bold rounded transition ml-1" title="ลบคำขอโดย Admin"><i class="fa-solid fa-trash mr-1"></i>ลบ</button>
@@ -6433,7 +6458,7 @@
           <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-100 pb-3.5">
             <div>
               <div class="flex items-center space-x-2">
-                <span class="font-black text-slate-900 text-lg font-mono">${req.eventId}</span>
+                <span class="font-black text-slate-900 text-lg font-mono flex items-center">${req.eventId} ${getSampleBadgeHtml(req)}</span>
                 <span class="text-xs bg-purple-100 text-purple-800 font-bold px-2.5 py-0.5 rounded-full border border-purple-200">${req.activityType}</span>
                 <span class="text-xs bg-slate-100 text-slate-600 px-2 py-0.5 rounded-md font-mono">วันที่จัด: ${req.eventDate || '-'}</span>
               </div>
@@ -6588,7 +6613,7 @@
           <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-100 pb-3.5">
             <div>
               <div class="flex items-center space-x-2">
-                <span class="font-black text-slate-900 text-lg font-mono">${req.eventId}</span>
+                <span class="font-black text-slate-900 text-lg font-mono flex items-center">${req.eventId} ${getSampleBadgeHtml(req)}</span>
                 <span class="text-xs bg-amber-100 text-amber-900 font-bold px-2.5 py-0.5 rounded-full border border-amber-200">${req.activityType}</span>
                 <span class="text-xs bg-slate-100 text-slate-600 px-2 py-0.5 rounded-md font-mono">วันที่จัด: ${req.eventDate || '-'}</span>
               </div>
@@ -9008,7 +9033,7 @@
                 <td class="p-3 text-center font-mono font-bold text-indigo-700">ลำดับที่ ${p.seqNo}</td>
                 <td class="p-3">
                   <div class="font-bold text-slate-900">${p.title}</div>
-                  <div class="text-[10px] text-slate-400 font-mono">${p.planId}</div>
+                  <div class="text-[10px] text-slate-400 font-mono flex items-center">${p.planId} ${getSampleBadgeHtml(p)}</div>
                 </td>
                 <td class="p-3 text-slate-600">${p.targetAudience || '-'}</td>
                 <td class="p-3 text-right font-mono font-bold text-amber-700">฿${b.toLocaleString()}</td>
