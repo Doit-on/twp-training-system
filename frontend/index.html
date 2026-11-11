@@ -188,12 +188,33 @@
       vertical-align: middle;
     }
   
-    /* Enterprise Collapsible Sidebar Styles (v1.17.0) */
+    /* Enterprise Layout Architecture (v1.17.1 Professional Fix) */
+    #mainPortalView {
+      display: flex !important;
+      flex-direction: row !important;
+      width: 100% !important;
+      min-width: 100% !important;
+      max-width: 100vw !important;
+      min-height: 100vh !important;
+      background-color: #f8fafc;
+      overflow-x: hidden !important;
+    }
+    #mainPortalView.hidden {
+      display: none !important;
+    }
     #appSidebar {
-      transition: width 0.25s cubic-bezier(0.4, 0, 0.2, 1), transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+      width: 16rem !important; /* 256px */
+      min-width: 16rem !important;
+      flex-shrink: 0 !important;
+      height: 100vh !important;
+      position: sticky !important;
+      top: 0 !important;
+      z-index: 40 !important;
+      transition: width 0.2s cubic-bezier(0.4, 0, 0.2, 1), min-width 0.2s cubic-bezier(0.4, 0, 0.2, 1) !important;
     }
     #appSidebar.sidebar-collapsed {
-      width: 5rem !important; /* 80px */
+      width: 4.5rem !important; /* 72px */
+      min-width: 4.5rem !important;
     }
     #appSidebar.sidebar-collapsed .sidebar-text,
     #appSidebar.sidebar-collapsed .sidebar-group-title,
@@ -209,7 +230,7 @@
     }
     #appSidebar.sidebar-collapsed .sidebar-icon {
       margin-right: 0 !important;
-      font-size: 1.15rem !important;
+      font-size: 1.2rem !important;
     }
     #appSidebar.sidebar-collapsed .sidebar-brand-container {
       justify-content: center !important;
@@ -229,7 +250,38 @@
       border-left: 4px solid #f59e0b !important;
       box-shadow: inset 0 1px 2px rgba(0,0,0,0.1) !important;
     }
+    #appMainWrapper {
+      flex: 1 1 0% !important;
+      min-width: 0 !important;
+      width: calc(100% - 16rem) !important;
+      max-width: 100% !important;
+      display: flex !important;
+      flex-direction: column !important;
+      min-height: 100vh !important;
+      background-color: #f8fafc;
+    }
+    #appSidebar.sidebar-collapsed ~ #appMainWrapper {
+      width: calc(100% - 4.5rem) !important;
+    }
 
+    @media (max-width: 768px) {
+      #mainPortalView {
+        flex-direction: column !important;
+      }
+      #appSidebar {
+        position: fixed !important;
+        inset: 0 auto 0 0 !important;
+        height: 100vh !important;
+        z-index: 50 !important;
+        transform: translateX(-100%);
+      }
+      #appSidebar.drawer-open {
+        transform: translateX(0) !important;
+      }
+      #appMainWrapper {
+        width: 100% !important;
+      }
+    }
   </style>
 </head>
 <body class="bg-slate-100 text-slate-800 min-h-screen flex flex-col antialiased">
@@ -349,13 +401,13 @@
   <!-- ========================================== -->
   <!-- MAIN PORTAL APPLICATION VIEW (SPA)         -->
   <!-- ========================================== -->
-    <div id="mainPortalView" class="hidden min-h-screen bg-slate-100 flex flex-col lg:flex-row">
+    <div id="mainPortalView" class="hidden min-h-screen w-full bg-slate-50 flex flex-row overflow-x-hidden">
 
     <!-- Mobile Drawer Backdrop -->
     <div id="sidebarBackdrop" onclick="toggleSidebar(false)" class="hidden fixed inset-0 z-40 bg-slate-900/60 backdrop-blur-xs transition-opacity lg:hidden"></div>
 
     <!-- Left Collapsible Sidebar -->
-    <aside id="appSidebar" class="fixed inset-y-0 left-0 z-50 flex flex-col bg-[#05315e] text-white transition-all duration-300 ease-in-out w-64 -translate-x-full lg:translate-x-0 lg:static lg:h-screen lg:sticky lg:top-0 border-r border-blue-900/40 shadow-2xl select-none">
+    <aside id="appSidebar" class="flex flex-col bg-[#05315e] text-white select-none border-r border-blue-900/50 shadow-xl">
       
       <!-- Brand & Platform Header -->
       <div class="h-16 px-4 flex items-center justify-between border-b border-blue-900/60 sidebar-brand-container">
@@ -517,71 +569,71 @@
     <div id="appMainWrapper" class="flex-1 flex flex-col min-w-0 min-h-screen">
       
       <!-- Top Action Bar -->
-      <header class="sticky top-0 z-30 bg-white/95 backdrop-blur-md border-b border-slate-200 px-4 sm:px-6 py-2.5 flex items-center justify-between shadow-xs">
+      <header class="sticky top-0 z-30 bg-white/95 backdrop-blur-md border-b border-slate-200/80 px-4 sm:px-6 py-3 flex items-center justify-between shadow-xs w-full">
         
-        <!-- Left: Mobile Hamburger & Current Page Badge -->
-        <div class="flex items-center space-x-3">
-          <button onclick="toggleSidebar()" class="lg:hidden text-slate-600 hover:text-slate-900 p-2 rounded-lg hover:bg-slate-100 transition cursor-pointer" title="เปิดแถบเมนู">
-            <i class="fa-solid fa-bars text-lg"></i>
+        <!-- Left: Toggle & Current Page Title (Single line, robust) -->
+        <div class="flex items-center space-x-3 shrink-0">
+          <button onclick="toggleSidebar()" class="p-2 rounded-xl text-slate-500 hover:text-slate-800 hover:bg-slate-100 transition cursor-pointer" title="ย่อ/ขยายแถบเมนู (Toggle Sidebar)">
+            <i class="fa-solid fa-bars-staggered text-base"></i>
           </button>
           
           <div class="flex items-center space-x-2.5">
-            <div id="topBarActiveIcon" class="w-8 h-8 rounded-lg bg-blue-50 text-[#08539E] flex items-center justify-center text-sm font-bold border border-blue-100 shadow-xs">
+            <div id="topBarActiveIcon" class="w-9 h-9 rounded-xl bg-blue-50 text-[#08539E] flex items-center justify-center text-base font-bold border border-blue-100 shadow-xs shrink-0">
               <i class="fa-solid fa-chart-pie"></i>
             </div>
-            <div>
-              <h2 id="topBarActiveTitle" class="text-sm sm:text-base font-extrabold text-slate-800 leading-tight">Dashboard & Analytics</h2>
-              <p id="topBarActiveSub" class="text-[10px] text-slate-400 hidden sm:block">ภาพรวมสถิติ คำขอ และผลประเมินปิดลูปทั่วประเทศ</p>
+            <div class="overflow-hidden">
+              <h2 id="topBarActiveTitle" class="text-sm sm:text-base font-extrabold text-slate-900 leading-tight whitespace-nowrap">Dashboard & Analytics</h2>
+              <p id="topBarActiveSub" class="text-[11px] text-slate-400 hidden xl:block truncate max-w-sm">ภาพรวมสถิติ คำขอ และผลประเมินปิดลูปทั่วประเทศ</p>
             </div>
           </div>
         </div>
 
         <!-- Center: Quick Search Input (Desktop) -->
-        <div class="hidden md:flex items-center max-w-xs lg:max-w-md w-full mx-4">
+        <div class="hidden lg:flex items-center flex-1 max-w-sm mx-6">
           <div class="relative w-full">
-            <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i>
-            <input type="text" id="globalQuickSearch" oninput="handleGlobalSearch(this.value)" placeholder="ค้นหาด่วน: เลขที่คำขอ, โรงเรียน, จังหวัด..." class="w-full pl-8 pr-3 py-1.5 text-xs bg-slate-100 hover:bg-slate-50 focus:bg-white border border-slate-200 focus:border-blue-500 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-100 transition">
+            <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i>
+            <input type="text" id="globalQuickSearch" oninput="handleGlobalSearch(this.value)" placeholder="ค้นหาด่วน: เลขที่คำขอ, โรงเรียน, จังหวัด..." class="w-full pl-9 pr-3 py-1.5 text-xs bg-slate-100 hover:bg-slate-50 focus:bg-white border border-slate-200 focus:border-blue-500 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-100 transition">
           </div>
         </div>
 
-        <!-- Right: Action Buttons (Briefing Bell, Sync, School Directory, Landing) -->
-        <div class="flex items-center space-x-2">
+        <!-- Right: Action Buttons (No wrapping, clean enterprise pills) -->
+        <div class="flex items-center space-x-2 shrink-0">
           
           <!-- Daily Briefing Bell Button -->
-          <button onclick="openBriefingModal()" id="briefingBellBtn" title="เปิดหน้าต่างสรุปงานค้างประจำวัน (Daily Action Briefing)" class="relative p-2 rounded-xl bg-amber-50 hover:bg-amber-100 text-amber-700 border border-amber-200 transition cursor-pointer btn-tactile">
+          <button onclick="openBriefingModal()" id="briefingBellBtn" title="เปิดหน้าต่างสรุปงานค้างประจำวัน (Daily Action Briefing)" class="relative p-2 rounded-xl bg-amber-50 hover:bg-amber-100 text-amber-700 border border-amber-200 transition cursor-pointer btn-tactile shrink-0">
             <i class="fa-solid fa-bell text-sm"></i>
             <span id="topBriefingBadge" class="absolute -top-1 -right-1 bg-rose-600 text-white text-[9px] font-extrabold w-4 h-4 rounded-full flex items-center justify-center shadow-xs">0</span>
           </button>
 
           <!-- Schools Directory Button -->
-          <button onclick="openCustomerDirectoryModal()" title="ค้นหาฐานข้อมูลโรงเรียนและลูกค้า 2,363 แห่งทั่วประเทศ" class="hidden sm:flex items-center space-x-1.5 px-3 py-1.5 rounded-xl bg-blue-50 hover:bg-blue-100 text-[#08539E] border border-blue-200 text-xs font-bold transition cursor-pointer btn-tactile">
+          <button onclick="openCustomerDirectoryModal()" title="ค้นหาฐานข้อมูลโรงเรียนและลูกค้า 2,363 แห่งทั่วประเทศ" class="hidden sm:inline-flex items-center space-x-1.5 px-3 py-1.5 rounded-xl bg-blue-50 hover:bg-blue-100 text-[#08539E] border border-blue-200 text-xs font-bold transition cursor-pointer btn-tactile whitespace-nowrap shrink-0">
             <i class="fa-solid fa-school text-blue-600"></i>
-            <span class="hidden xl:inline">ฐานข้อมูล 2,363 รร.</span>
+            <span>ฐานข้อมูล 2,363 รร.</span>
           </button>
 
           <!-- Real-Time Sync Indicator & Button -->
-          <button onclick="manualSyncData()" id="topManualSyncBtn" title="ดึงข้อมูลล่าสุดจากเซิร์ฟเวอร์" class="flex items-center space-x-1.5 px-3 py-1.5 rounded-xl bg-emerald-50 hover:bg-emerald-100 text-emerald-700 border border-emerald-200 text-xs font-bold transition cursor-pointer btn-tactile">
+          <button onclick="manualSyncData()" id="topManualSyncBtn" title="ดึงข้อมูลล่าสุดจากเซิร์ฟเวอร์" class="inline-flex items-center space-x-1.5 px-3 py-1.5 rounded-xl bg-emerald-50 hover:bg-emerald-100 text-emerald-700 border border-emerald-200 text-xs font-bold transition cursor-pointer btn-tactile whitespace-nowrap shrink-0">
             <i class="fa-solid fa-arrows-rotate text-emerald-600" id="topManualSyncIcon"></i>
-            <span class="hidden sm:inline">ซิงค์</span>
+            <span>ซิงค์</span>
           </button>
 
           <!-- Active Devices / Users Presence -->
-          <div onclick="openActiveDevicesModal()" title="คลิกเพื่อดูรายละเอียดเครื่องที่ออนไลน์อยู่" class="hidden md:flex items-center space-x-1 px-2.5 py-1.5 bg-slate-100 hover:bg-slate-200 rounded-xl text-slate-600 text-xs font-bold border border-slate-200 cursor-pointer transition">
+          <div onclick="openActiveDevicesModal()" title="คลิกเพื่อดูรายละเอียดเครื่องที่ออนไลน์อยู่" class="hidden md:inline-flex items-center space-x-1.5 px-2.5 py-1.5 bg-slate-100 hover:bg-slate-200 rounded-xl text-slate-600 text-xs font-bold border border-slate-200 cursor-pointer transition whitespace-nowrap shrink-0">
             <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
             <span id="onlineDevicesCount">1 เครื่อง</span>
           </div>
 
           <!-- Landing Page Button -->
-          <button onclick="showLandingPage()" title="กลับหน้าแรก Landing Page" class="p-2 sm:px-2.5 sm:py-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-200 text-xs font-bold flex items-center space-x-1 transition cursor-pointer">
-            <i class="fa-solid fa-house"></i>
-            <span class="hidden lg:inline">หน้าแรก</span>
+          <button onclick="showLandingPage()" title="กลับหน้าแรก Landing Page" class="inline-flex items-center space-x-1.5 px-3 py-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-200 text-xs font-bold transition cursor-pointer whitespace-nowrap shrink-0">
+            <i class="fa-solid fa-house text-slate-600"></i>
+            <span>หน้าแรก</span>
           </button>
 
         </div>
       </header>
 
       <!-- Main Content Container -->
-<main class="flex-1 max-w-7xl w-full mx-auto p-4 sm:p-6 lg:p-8 space-y-6">
+<main class="flex-1 max-w-[1600px] w-full mx-auto p-4 sm:p-6 lg:p-8 space-y-6">
 
     <!-- Real-Time Sync Notification Toast Banner -->
     <div id="syncToastBox" class="hidden items-center justify-between p-3.5 bg-gradient-to-r from-emerald-600 via-emerald-700 to-teal-800 text-white rounded-xl shadow-xl text-xs font-semibold animate-pulse">
@@ -1288,16 +1340,16 @@
             <strong>จังหวะที่ 2 (หลังอนุมัติ):</strong> นำ QR ฉายขึ้นจอหน้างาน, สแกนประเมินสด และบันทึกค่าใช้จ่ายจริง 7 หมวด
           </p>
         </div>
-        <div class="flex flex-wrap items-center gap-2">
-          <button type="button" onclick="scrollToTeamBSection('STAGE1')" class="px-3.5 py-2 bg-purple-600/80 hover:bg-purple-600 text-white text-xs font-bold rounded-xl border border-purple-300/40 transition flex items-center space-x-1.5 shadow-sm btn-tactile cursor-pointer">
+        <div class="flex flex-wrap items-center gap-2 shrink-0">
+          <button type="button" onclick="scrollToTeamBSection('STAGE1')" class="px-3.5 py-2 bg-purple-600/80 hover:bg-purple-600 text-white text-xs font-bold rounded-xl border border-purple-300/40 transition flex items-center space-x-1.5 shadow-sm btn-tactile cursor-pointer whitespace-nowrap">
             <i class="fa-solid fa-list-check"></i>
             <span>1. คิวรอตรวจ (<span id="teamBStage1Count">0</span>)</span>
           </button>
-          <button type="button" onclick="scrollToTeamBSection('STAGE2')" class="px-3.5 py-2 bg-gradient-to-r from-amber-400 to-amber-500 hover:from-amber-300 hover:to-amber-400 text-slate-950 text-xs font-black rounded-xl shadow-md transition flex items-center space-x-1.5 btn-tactile cursor-pointer">
+          <button type="button" onclick="scrollToTeamBSection('STAGE2')" class="px-3.5 py-2 bg-gradient-to-r from-amber-400 to-amber-500 hover:from-amber-300 hover:to-amber-400 text-slate-950 text-xs font-black rounded-xl shadow-md transition flex items-center space-x-1.5 btn-tactile cursor-pointer whitespace-nowrap">
             <i class="fa-solid fa-qrcode"></i>
             <span>2. แท่นจัดงาน & QR (<span id="teamBStage2Count">0</span>)</span>
           </button>
-          <button type="button" onclick="openTeamQrModal('teamB')" class="px-3 py-2 bg-white/10 hover:bg-white/20 text-white text-xs font-bold rounded-xl border border-white/20 transition flex items-center space-x-1.5 shadow-xs btn-tactile cursor-pointer">
+          <button type="button" onclick="openTeamQrModal('teamB')" class="px-3 py-2 bg-white/10 hover:bg-white/20 text-white text-xs font-bold rounded-xl border border-white/20 transition flex items-center space-x-1.5 shadow-xs btn-tactile cursor-pointer whitespace-nowrap">
             <i class="fa-solid fa-users"></i>
             <span>QR ทีม B</span>
           </button>
@@ -3425,16 +3477,7 @@
     </div>
   </div>
 
-    <!-- Footer -->
-  <footer class="bg-white border-t border-slate-200 text-slate-500 text-xs py-4 px-6 mt-auto">
-    <div class="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-2">
-      <div>Training Center TWP (EMS Enterprise v1.17.0) &copy; 2026 - บริษัท ไทยวัฒนาพานิช จำกัด</div>
-      <div class="flex items-center space-x-4">
-        <button onclick="showLandingPage()" class="hover:text-blue-600 transition"><i class="fa-solid fa-house mr-1"></i>กลับหน้าแรก</button>
-        <span>Google Apps Script + Google Sheets Architecture (PPC Standard)</span>
-      </div>
-    </div>
-  </footer>
+
   </div><!-- /mainPortalView -->
 
   <!-- ========================================== -->
@@ -5182,7 +5225,7 @@
       const icon = document.getElementById('sidebarCollapseIcon');
       if (!sidebar) return;
 
-      const isDesktop = window.innerWidth >= 1024;
+      const isDesktop = window.innerWidth >= 768;
 
       if (isDesktop) {
         let shouldCollapse;
@@ -5206,16 +5249,14 @@
         if (typeof forceState === 'boolean') {
           shouldOpen = forceState;
         } else {
-          shouldOpen = sidebar.classList.contains('-translate-x-full');
+          shouldOpen = !sidebar.classList.contains('drawer-open');
         }
 
         if (shouldOpen) {
-          sidebar.classList.remove('-translate-x-full');
-          sidebar.classList.add('translate-x-0');
+          sidebar.classList.add('drawer-open');
           if (backdrop) backdrop.classList.remove('hidden');
         } else {
-          sidebar.classList.add('-translate-x-full');
-          sidebar.classList.remove('translate-x-0');
+          sidebar.classList.remove('drawer-open');
           if (backdrop) backdrop.classList.add('hidden');
         }
       }
