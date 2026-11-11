@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-  <title>Training Center TWP - ระบบบริหารคำขอจัดอบรมและประเมินผล v1.15.2</title>
+  <title>Training Center TWP - ระบบบริหารคำขอจัดอบรมและประเมินผล v1.16.0</title>
   <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
   <!-- Google Fonts: Sarabun -->
@@ -217,7 +217,7 @@
       <div class="flex items-center space-x-3 text-xs">
         <span class="bg-white/15 px-3 py-1.5 rounded-full border border-white/20 backdrop-blur-sm font-mono text-blue-100 flex items-center">
           <span class="w-2 h-2 rounded-full bg-emerald-400 mr-2 animate-pulse"></span>
-          System v1.15.2
+          System v1.16.0
         </span>
       </div>
     </div>
@@ -298,7 +298,7 @@
     <!-- Bottom Footer on Landing Page -->
     <div class="max-w-7xl mx-auto w-full px-6 py-4 flex flex-col sm:flex-row items-center justify-between text-xs text-blue-200 border-t border-white/10 relative z-10 gap-2">
       <div>&copy; 2026 Training Center TWP - บริษัท ไทยวัฒนาพานิช จำกัด. All rights reserved.</div>
-      <div class="font-mono text-[11px] bg-white/10 px-3 py-1 rounded-full border border-white/15">EMS Enterprise Platform v1.15.2 (Live Apps Script Engine)</div>
+      <div class="font-mono text-[11px] bg-white/10 px-3 py-1 rounded-full border border-white/15">EMS Enterprise Platform v1.16.0 (Live Apps Script Engine)</div>
     </div>
 
   </div>
@@ -321,7 +321,7 @@
             <div>
               <div class="flex items-center space-x-2">
                 <span class="font-extrabold text-lg tracking-wide text-white">Training Center TWP</span>
-                <span class="bg-blue-400/20 text-blue-200 text-[10px] font-mono px-2 py-0.5 rounded-full border border-blue-300/30">v1.15.2</span>
+                <span onclick="openVersionReleaseModal()" class="bg-blue-400/20 hover:bg-blue-400/30 text-blue-200 text-[10px] font-mono px-2 py-0.5 rounded-full border border-blue-300/30 cursor-pointer transition flex items-center gap-1" title="คลิกเพื่อดูรายละเอียดการปรับปรุงเวอร์ชัน 1.16.0"><i class="fa-solid fa-sparkles text-amber-300 text-[9px]"></i>v1.16.0</span>
               </div>
               <p class="text-[11px] text-blue-200 hidden sm:block">ระบบบริหารคำขอจัดอบรมและประเมินผลปิดลูป</p>
             </div>
@@ -334,6 +334,14 @@
             <button onclick="manualSyncData()" id="manualSyncHeaderBtn" title="ดึงข้อมูลล่าสุดจากเซิร์ฟเวอร์ทันที" class="bg-emerald-600 hover:bg-emerald-700 text-white px-2.5 sm:px-3 py-1.5 rounded-lg border border-emerald-400/40 text-xs font-bold flex items-center space-x-1.5 shadow-sm transition btn-tactile cursor-pointer">
               <i class="fa-solid fa-arrows-rotate text-emerald-200" id="manualSyncIcon"></i>
               <span class="hidden md:inline">ดึงข้อมูลล่าสุด</span>
+            </button>
+            <button type="button" onclick="openManualModal()" title="เปิดคู่มือการใช้งานระบบแยกตามทีม" class="bg-indigo-500/20 hover:bg-indigo-500/30 text-indigo-200 hover:text-white px-2.5 py-1.5 rounded-lg border border-indigo-400/30 text-xs font-semibold flex items-center space-x-1.5 transition btn-tactile cursor-pointer">
+              <i class="fa-solid fa-book-open text-indigo-300"></i>
+              <span class="hidden sm:inline">คู่มือ</span>
+            </button>
+            <button type="button" onclick="toggleNavCollapse()" id="navToggleBtn" title="ซ่อน/แสดงแถบเมนูเพื่อเพิ่มพื้นที่จอ" class="bg-white/10 hover:bg-white/20 text-white px-2.5 py-1.5 rounded-lg border border-white/20 text-xs font-semibold flex items-center space-x-1.5 transition btn-tactile cursor-pointer">
+              <i class="fa-solid fa-arrows-up-to-line" id="navToggleIcon"></i>
+              <span class="hidden md:inline" id="navToggleText">ซ่อนเมนู</span>
             </button>
             <button onclick="showLandingPage()" title="กลับหน้าแรก" class="bg-[#08539E] hover:bg-[#07488a] text-white px-2.5 py-1.5 rounded-lg border border-blue-400/30 text-xs font-semibold flex items-center space-x-1.5 transition btn-tactile">
               <i class="fa-solid fa-house"></i>
@@ -401,8 +409,8 @@
         </div>
       </div>
 
-    <!-- Navigation Tabs -->
-    <div class="bg-white border-b border-slate-200 text-slate-600 px-4 sm:px-6 lg:px-8 shadow-sm">
+    <!-- Navigation Tabs (Collapsible) -->
+    <div id="mainNavContainer" class="bg-white border-b border-slate-200 text-slate-600 px-4 sm:px-6 lg:px-8 shadow-sm transition-all duration-300">
       <div class="max-w-7xl mx-auto flex space-x-2 sm:space-x-8 overflow-x-auto custom-scrollbar text-sm font-medium">
         <button onclick="switchTab('dashboard')" id="tabBtn-dashboard" class="tab-btn py-3 px-2 border-b-2 border-transparent hover:text-blue-600 flex items-center space-x-2 whitespace-nowrap tab-active">
           <i class="fa-solid fa-chart-pie text-blue-600"></i>
@@ -417,10 +425,11 @@
           <i class="fa-solid fa-paper-plane text-emerald-600"></i>
           <span>ทีม A: ขอจัดอบรม (Sales)</span>
         </button>
-        <button onclick="switchTab('teamB')" id="tabBtn-teamB" class="tab-btn py-3 px-2 border-b-2 border-transparent hover:text-blue-600 flex items-center space-x-2 whitespace-nowrap">
+        <button onclick="switchTab('teamB')" id="tabBtn-teamB" class="tab-btn py-3 px-2 border-b-2 border-transparent hover:text-purple-600 flex items-center space-x-2 whitespace-nowrap">
           <i class="fa-solid fa-clipboard-check text-purple-600"></i>
-          <span>ทีม B: ตรวจวิชาการ</span>
-          <span id="badgeWaitingB" class="bg-purple-100 text-purple-700 text-[10px] font-bold px-1.5 py-0.5 rounded-full">0</span>
+          <span>ทีม B: วิชาการ & จัดงาน</span>
+          <span id="badgeWaitingB" class="bg-purple-100 text-purple-700 text-[10px] font-bold px-1.5 py-0.5 rounded-full" title="รอตรวจวิชาการ">0</span>
+          <span id="badgeApprovedB" class="bg-sky-100 text-sky-800 text-[10px] font-bold px-1.5 py-0.5 rounded-full ml-1" title="อนุมัติแล้ว พร้อมจัดงานจริง & QR">0 พร้อมจัด</span>
         </button>
         <button onclick="switchTab('exec')" id="tabBtn-exec" class="tab-btn py-3 px-2 border-b-2 border-transparent hover:text-blue-600 flex items-center space-x-2 whitespace-nowrap">
           <i class="fa-solid fa-stamp text-amber-600"></i>
@@ -442,6 +451,25 @@
           <span class="bg-rose-100 text-rose-700 text-[10px] font-bold px-2 py-0.5 rounded-full ml-1 inline-flex items-center">แผนยุทธศาสตร์</span>
         </button>
       </div>
+    </div>
+
+    <!-- Mini Collapsed Navigation Bar (Sticky Bar เมื่อซ่อนเมนูหลัก เพื่อเพิ่มพื้นที่จอสูงสุด) -->
+    <div id="miniCollapsedBar" class="hidden bg-slate-900/95 text-white border-b border-slate-700 px-4 py-2 flex items-center justify-between text-xs backdrop-blur-md shadow-sm z-20">
+      <div class="flex items-center space-x-2 overflow-x-auto custom-scrollbar py-0.5">
+        <span class="text-[11px] text-amber-300 font-bold uppercase tracking-wider flex items-center">
+          <i class="fa-solid fa-desktop mr-1.5"></i>โหมดขยายพื้นที่จอ:
+        </span>
+        <button onclick="switchTab('dashboard')" class="px-2.5 py-1 rounded-lg bg-white/10 hover:bg-white/20 text-xs font-semibold whitespace-nowrap cursor-pointer">Dashboard</button>
+        <button onclick="switchTab('annualPlan')" class="px-2.5 py-1 rounded-lg bg-white/10 hover:bg-white/20 text-xs font-semibold whitespace-nowrap cursor-pointer">แผนหลักการ</button>
+        <button onclick="switchTab('teamA')" class="px-2.5 py-1 rounded-lg bg-emerald-600/40 hover:bg-emerald-600 text-emerald-200 text-xs font-semibold whitespace-nowrap cursor-pointer">ทีม A</button>
+        <button onclick="switchTab('teamB')" class="px-2.5 py-1 rounded-lg bg-purple-600/40 hover:bg-purple-600 text-purple-200 text-xs font-semibold whitespace-nowrap cursor-pointer">ทีม B (ตรวจ & จัดงาน)</button>
+        <button onclick="switchTab('exec')" class="px-2.5 py-1 rounded-lg bg-amber-600/40 hover:bg-amber-600 text-amber-200 text-xs font-semibold whitespace-nowrap cursor-pointer">ผู้บริหาร</button>
+        <button onclick="switchTab('teamBExpenses')" class="px-2.5 py-1 rounded-lg bg-teal-600/40 hover:bg-teal-600 text-teal-200 text-xs font-semibold whitespace-nowrap cursor-pointer">ค่าใช้จ่าย 7 หมวด</button>
+      </div>
+      <button onclick="toggleNavCollapse()" class="ml-2 px-2.5 py-1 bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 rounded-lg border border-amber-400/40 text-[11px] font-bold flex items-center space-x-1 whitespace-nowrap cursor-pointer">
+        <i class="fa-solid fa-arrows-down-to-line"></i>
+        <span>แสดงเมนูเต็ม</span>
+      </button>
     </div>
   </header>
 
@@ -672,7 +700,27 @@
           </div>
         </div>
 
-        <div class="overflow-x-auto">
+        <!-- View Mode Switcher: Workflow Status vs Document Archives -->
+        <div class="p-4 bg-slate-50/80 border-b border-slate-200 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+          <div class="flex items-center space-x-2">
+            <button type="button" onclick="switchDashboardView('TABLE')" id="dashViewBtn-TABLE" class="px-3.5 py-2 rounded-xl text-xs font-bold transition flex items-center space-x-2 bg-blue-600 text-white shadow-xs cursor-pointer">
+              <i class="fa-solid fa-table-list"></i>
+              <span>ตารางติดตามสถานะงาน</span>
+            </button>
+            <button type="button" onclick="switchDashboardView('ARCHIVES')" id="dashViewBtn-ARCHIVES" class="px-3.5 py-2 rounded-xl text-xs font-bold transition flex items-center space-x-2 bg-white hover:bg-slate-100 text-slate-700 border border-slate-200 shadow-xs cursor-pointer">
+              <i class="fa-solid fa-folder-open text-[#08539E]"></i>
+              <span>ศูนย์คลังเอกสารและรายงาน A4</span>
+              <span class="bg-blue-100 text-[#08539E] text-[10px] font-bold px-1.5 py-0.5 rounded-full" id="dashArchivesBadgeCount">0</span>
+            </button>
+          </div>
+          <div class="text-[11px] text-slate-500 flex items-center space-x-1.5">
+            <i class="fa-solid fa-shield-halved text-emerald-600"></i>
+            <span>เอกสารบันทึกข้อความและรายงานผลได้รับการจัดเก็บบนคลาวด์ถาวร ไม่สูญหาย 100%</span>
+          </div>
+        </div>
+
+        <!-- Requests List Table (Workflow View) -->
+        <div id="dashboardTableViewContainer" class="overflow-x-auto">
           <table class="w-full text-left text-sm text-slate-600">
             <thead class="bg-slate-50 text-slate-500 text-xs uppercase font-semibold border-b border-slate-100">
               <tr>
@@ -691,6 +739,24 @@
               </tr>
             </tbody>
           </table>
+        </div>
+      </div>
+
+      <!-- Centralized A4 Document & Report Archives View (คลังเอกสารทางการ) -->
+      <div id="dashboardArchivesView" class="hidden bg-white rounded-3xl border border-slate-200 shadow-sm p-5 sm:p-6 space-y-4">
+        <div class="p-4 bg-gradient-to-r from-blue-900 to-indigo-900 text-white rounded-2xl shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+          <div class="space-y-1">
+            <h3 class="font-bold text-base flex items-center gap-2">
+              <i class="fa-solid fa-file-invoice text-blue-300"></i>
+              <span>ศูนย์คลังเอกสารและรายงานทางการ (A4 Official Document & Report Archives)</span>
+            </h3>
+            <p class="text-xs text-blue-200">รวบรวมเอกสารขออนุมัติปฏิบัติงาน A4 (Memo), รายงานสรุปผลการประเมิน, รายงานวิเคราะห์ผู้บริหาร และวุฒิบัตร ทุกโครงการอย่างถาวร 24 ชม.</p>
+          </div>
+          <span class="text-xs bg-white/20 px-3 py-1 rounded-full border border-white/30 font-mono">24/7 Permanent Access</span>
+        </div>
+
+        <div id="dashboardArchivesCardsContainer" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          <!-- Rendered dynamically via renderDashboardArchives -->
         </div>
       </div>
 
@@ -1102,38 +1168,89 @@
     <!-- ========================================== -->
     <section id="view-teamB" class="hidden space-y-6">
       
-      <!-- Team B Collaboration & QR Banner -->
-      <div class="bg-gradient-to-r from-purple-500/10 via-purple-500/5 to-transparent p-4 rounded-2xl border border-purple-200/80 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
-        <div class="flex items-center space-x-3 text-xs text-purple-950 font-medium">
-          <span class="w-2.5 h-2.5 rounded-full bg-purple-500 animate-pulse"></span>
-          <span><strong>ทีมวิชาการ (Academic Team B):</strong> ตรวจสอบเนื้อหาและจัดสรรวิทยากร อัปเดตข้อมูลตรงกันทุกเครื่องแบบ Real-Time</span>
+      <!-- Team B Role Banner & Stage Selector -->
+      <div class="bg-gradient-to-r from-purple-900 via-indigo-900 to-[#08539E] text-white p-5 rounded-3xl shadow-lg border border-purple-400/30 flex flex-col lg:flex-row lg:items-center justify-between gap-4">
+        <div class="space-y-1">
+          <div class="flex items-center space-x-2 text-xs text-purple-200">
+            <span class="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse"></span>
+            <span class="font-bold uppercase tracking-wider">ฝ่ายวิชาการและปฏิบัติการจัดอบรม (Academic & Operations Hub)</span>
+          </div>
+          <h2 class="text-xl font-black text-white tracking-wide">ระบบบริหารงานวิชาการ 2 จังหวะ (Two-Stage Pipeline)</h2>
+          <p class="text-xs text-purple-100/90 leading-relaxed max-w-2xl">
+            <strong>จังหวะที่ 1:</strong> กลั่นกรองคำขอ จัดสรรวิทยากร และเสนองบประมาณ &rarr; 
+            <strong>จังหวะที่ 2 (หลังอนุมัติ):</strong> นำ QR ฉายขึ้นจอหน้างาน, สแกนประเมินสด และบันทึกค่าใช้จ่ายจริง 7 หมวด
+          </p>
         </div>
-        <button type="button" onclick="openTeamQrModal('teamB')" class="inline-flex items-center px-3 py-1.5 bg-purple-600 hover:bg-purple-700 text-white text-xs font-bold rounded-xl transition btn-tactile shadow-sm whitespace-nowrap self-start sm:self-auto">
-          <i class="fa-solid fa-qrcode mr-1.5 text-purple-200"></i>
-          <span>สร้าง QR ให้เพื่อนทีม B สแกน</span>
-        </button>
+        <div class="flex flex-wrap items-center gap-2">
+          <button type="button" onclick="scrollToTeamBSection('STAGE1')" class="px-3.5 py-2 bg-purple-600/80 hover:bg-purple-600 text-white text-xs font-bold rounded-xl border border-purple-300/40 transition flex items-center space-x-1.5 shadow-sm btn-tactile cursor-pointer">
+            <i class="fa-solid fa-list-check"></i>
+            <span>1. คิวรอตรวจ (<span id="teamBStage1Count">0</span>)</span>
+          </button>
+          <button type="button" onclick="scrollToTeamBSection('STAGE2')" class="px-3.5 py-2 bg-gradient-to-r from-amber-400 to-amber-500 hover:from-amber-300 hover:to-amber-400 text-slate-950 text-xs font-black rounded-xl shadow-md transition flex items-center space-x-1.5 btn-tactile cursor-pointer">
+            <i class="fa-solid fa-qrcode"></i>
+            <span>2. แท่นจัดงาน & QR (<span id="teamBStage2Count">0</span>)</span>
+          </button>
+          <button type="button" onclick="openTeamQrModal('teamB')" class="px-3 py-2 bg-white/10 hover:bg-white/20 text-white text-xs font-bold rounded-xl border border-white/20 transition flex items-center space-x-1.5 shadow-xs btn-tactile cursor-pointer">
+            <i class="fa-solid fa-users"></i>
+            <span>QR ทีม B</span>
+          </button>
+        </div>
       </div>
 
-      <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-6">
-        <div class="border-b border-slate-100 pb-4 mb-6 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+      <!-- STAGE 1: PENDING ACADEMIC REVIEW QUEUE (ก่อนผู้บริหารอนุมัติ) -->
+      <div id="teamBStage1Section" class="bg-white rounded-3xl border-2 border-purple-100 shadow-sm p-5 sm:p-6 space-y-4">
+        <div class="border-b border-purple-100 pb-3 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
           <div class="flex items-center space-x-3">
-            <div class="w-9 h-9 rounded-xl bg-purple-100 text-purple-700 flex items-center justify-center">
-              <i class="fa-solid fa-list-check text-lg"></i>
+            <div class="w-10 h-10 rounded-2xl bg-purple-100 text-purple-700 flex items-center justify-center text-lg shadow-xs">
+              <i class="fa-solid fa-file-signature"></i>
             </div>
             <div>
-              <h2 class="text-lg font-bold text-slate-900">คิวตรวจสอบคำขอของฝ่ายวิชาการ (ทีม B)</h2>
-              <p class="text-xs text-slate-400">ตรวจสอบความพร้อมวิทยากร ปรับยอดตัดจ่ายจริง และให้ข้อเสนอแนะเชิงวิชาการ</p>
+              <div class="flex items-center space-x-2">
+                <span class="text-[10px] bg-purple-100 text-purple-800 font-bold px-2 py-0.5 rounded-full uppercase">จังหวะที่ 1 (ก่อนอนุมัติ)</span>
+                <h3 class="text-base sm:text-lg font-bold text-slate-900">คิวตรวจสอบคำขอของฝ่ายวิชาการ (Pending Review)</h3>
+              </div>
+              <p class="text-xs text-slate-500">ตรวจสอบความพร้อมวิทยากร ปรับยอดงบตัดจ่ายจริง และส่งต่อให้ผู้บริหารพิจารณาอนุมัติ</p>
             </div>
           </div>
-          <span class="text-xs bg-purple-50 text-purple-700 font-semibold px-3 py-1.5 rounded-full border border-purple-200">
-            สถานะเป้าหมาย: WAITING_B
-          </span>
+          <div class="flex items-center space-x-2">
+            <span class="text-xs bg-purple-50 text-purple-700 font-bold px-3 py-1 rounded-full border border-purple-200">
+              สถานะ: WAITING_B
+            </span>
+          </div>
         </div>
 
         <div id="teamBQueueContainer" class="space-y-4">
-          <!-- Rendered dynamically -->
+          <!-- Rendered dynamically via renderTeamBQueue -->
         </div>
       </div>
+
+      <!-- STAGE 2: ON-SITE EXECUTION, QR TOOLKITS & EXPENSE CLEARANCE (หลังผู้บริหารอนุมัติ) -->
+      <div id="teamBStage2Section" class="bg-white rounded-3xl border-2 border-sky-200 shadow-sm p-5 sm:p-6 space-y-4">
+        <div class="border-b border-sky-100 pb-3 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+          <div class="flex items-center space-x-3">
+            <div class="w-10 h-10 rounded-2xl bg-gradient-to-br from-sky-500 to-indigo-600 text-white flex items-center justify-center text-lg shadow-sm">
+              <i class="fa-solid fa-qrcode"></i>
+            </div>
+            <div>
+              <div class="flex items-center space-x-2">
+                <span class="text-[10px] bg-emerald-100 text-emerald-800 font-bold px-2 py-0.5 rounded-full uppercase">จังหวะที่ 2 (หลังผู้บริหารอนุมัติแล้ว)</span>
+                <h3 class="text-base sm:text-lg font-bold text-slate-900">แท่นปฏิบัติการจัดอบรมจริง & เครื่องมือ QR หน้างาน (On-Site Execution)</h3>
+              </div>
+              <p class="text-xs text-slate-500">งานที่ได้รับอนุมัติเรียบร้อย จะมาตั้งแท่นรอที่นี่ทันที &bull; ฉาย QR จอใหญ่ &bull; พิมพ์ป้าย A4 &bull; บันทึกค่าใช้จ่าย 7 หมวดเพื่อปิดงาน</p>
+            </div>
+          </div>
+          <div class="flex items-center space-x-2">
+            <span class="text-xs bg-emerald-50 text-emerald-800 font-bold px-3 py-1 rounded-full border border-emerald-300">
+              สถานะ: APPROVED / COMPLETED
+            </span>
+          </div>
+        </div>
+
+        <div id="teamBExecutionQueueContainer" class="space-y-4">
+          <!-- Rendered dynamically via renderTeamBExecutionQueue -->
+        </div>
+      </div>
+
     </section>
 
     <!-- ========================================== -->
@@ -2195,6 +2312,27 @@
       <!-- Admin Panel Content (Unlocked) -->
       <div id="adminPanelContent" class="hidden space-y-6">
         
+        <!-- System Architecture & Version Release Inspector (v1.16.0) -->
+        <div class="bg-gradient-to-r from-blue-900 to-indigo-900 text-white p-4 rounded-2xl shadow-sm space-y-2.5">
+          <div class="flex items-center justify-between">
+            <div class="flex items-center space-x-2">
+              <i class="fa-solid fa-code-compare text-amber-300"></i>
+              <span class="text-xs font-bold uppercase tracking-wider">รายละเอียดการปรับปรุงเวอร์ชัน (Version Release Notes)</span>
+            </div>
+            <span class="text-[10px] bg-amber-400 text-slate-950 font-black px-2 py-0.5 rounded-full">v1.16.0 Live</span>
+          </div>
+          <p class="text-xs text-blue-100 leading-relaxed">
+            <strong>v1.16.0:</strong> ปรับปรุงการเชื่อมต่อแท่นปฏิบัติการจัดอบรมจริง & QR หน้างานสู่มือทีม B (Two-Stage Academic Pipeline), เพิ่มชุดเครื่องมือ QR ฉายจอใหญ่และพิมพ์ใบตั้งโต๊ะ A4, เพิ่มปุ่มทางลัดบันทึกค่าใช้จ่ายจริง 7 หมวด, เพิ่มศูนย์คลังเอกสารและรายงาน A4 ทั้งระบบตลอด 24 ชม., และเพิ่มระบบซ่อน/แสดงเมนูเพื่อขยายพื้นที่จอ
+          </p>
+          <div class="pt-1 flex items-center justify-between text-[11px] text-blue-200">
+            <span>ฐานข้อมูล: Google Sheets + Local Offline Cache</span>
+            <button type="button" onclick="openVersionReleaseModal()" class="px-2.5 py-1 bg-white/20 hover:bg-white/30 text-white rounded-lg font-bold transition flex items-center space-x-1 cursor-pointer">
+              <i class="fa-solid fa-list-check"></i>
+              <span>ดูประวัติทั้งหมด</span>
+            </button>
+          </div>
+        </div>
+        
         <!-- WebApp Endpoint Configuration -->
         <!-- System Safety Shield: 1-Click Backup & Factory Restore -->
         <div class="bg-emerald-50/70 p-4 rounded-xl border border-emerald-300 space-y-3">
@@ -3169,7 +3307,7 @@
     <!-- Footer -->
   <footer class="bg-white border-t border-slate-200 text-slate-500 text-xs py-4 px-6 mt-auto">
     <div class="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-2">
-      <div>Training Center TWP (EMS Enterprise v1.15.2) &copy; 2026 - บริษัท ไทยวัฒนาพานิช จำกัด</div>
+      <div>Training Center TWP (EMS Enterprise v1.16.0) &copy; 2026 - บริษัท ไทยวัฒนาพานิช จำกัด</div>
       <div class="flex items-center space-x-4">
         <button onclick="showLandingPage()" class="hover:text-blue-600 transition"><i class="fa-solid fa-house mr-1"></i>กลับหน้าแรก</button>
         <span>Google Apps Script + Google Sheets Architecture (PPC Standard)</span>
@@ -3716,7 +3854,7 @@
 
     // System Global State (Synchronously initialized with complete Master Data)
     const AppState = {
-      version: '1.15.2',
+      version: '1.16.0',
       clientId: 'DEV-' + Math.random().toString(36).substring(2, 7).toUpperCase(),
       activeTab: 'dashboard',
       activeDevices: {},
@@ -4678,6 +4816,334 @@
       renderAll();
     }
 
+
+    // ========================================================
+    // v1.16.0 ENHANCEMENTS: TWO-STAGE ACADEMIC, ARCHIVES & UI
+    // ========================================================
+
+    let currentDashboardViewMode = 'TABLE'; // 'TABLE' or 'ARCHIVES'
+
+    function toggleNavCollapse() {
+      const nav = document.getElementById('mainNavContainer');
+      const mini = document.getElementById('miniCollapsedBar');
+      const icon = document.getElementById('navToggleIcon');
+      const text = document.getElementById('navToggleText');
+      if (!nav) return;
+
+      const isHidden = nav.classList.contains('hidden');
+      if (isHidden) {
+        nav.classList.remove('hidden');
+        if (mini) mini.classList.add('hidden');
+        if (icon) icon.className = 'fa-solid fa-arrows-up-to-line';
+        if (text) text.innerText = 'ซ่อนเมนู';
+        localStorage.setItem('twp_nav_collapsed', 'false');
+      } else {
+        nav.classList.add('hidden');
+        if (mini) mini.classList.remove('hidden');
+        if (icon) icon.className = 'fa-solid fa-arrows-down-to-line';
+        if (text) text.innerText = 'แสดงเมนู';
+        localStorage.setItem('twp_nav_collapsed', 'true');
+      }
+    }
+
+    function openManualModal(roleTab = 'TEAMA') {
+      const modal = document.getElementById('manualModal');
+      if (modal) {
+        modal.classList.remove('hidden');
+        switchManualRole(roleTab);
+      }
+    }
+
+    function closeManualModal() {
+      const modal = document.getElementById('manualModal');
+      if (modal) modal.classList.add('hidden');
+    }
+
+    function switchManualRole(role) {
+      ['TEAMA', 'TEAMB', 'EXEC', 'DOCS'].forEach(r => {
+        const btn = document.getElementById('manualTab-' + r);
+        const content = document.getElementById('manualContent-' + r);
+        if (btn) {
+          if (r === role) {
+            btn.className = 'px-4 py-2 rounded-xl text-xs font-bold transition flex items-center space-x-1.5 bg-indigo-600 text-white shadow-xs cursor-pointer';
+          } else {
+            btn.className = 'px-4 py-2 rounded-xl text-xs font-bold transition flex items-center space-x-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 cursor-pointer';
+          }
+        }
+        if (content) {
+          if (r === role) content.classList.remove('hidden');
+          else content.classList.add('hidden');
+        }
+      });
+    }
+
+    function openVersionReleaseModal() {
+      const modal = document.getElementById('versionReleaseModal');
+      if (modal) modal.classList.remove('hidden');
+    }
+
+    function closeVersionReleaseModal() {
+      const modal = document.getElementById('versionReleaseModal');
+      if (modal) modal.classList.add('hidden');
+    }
+
+    function scrollToTeamBSection(stage) {
+      const targetId = stage === 'STAGE1' ? 'teamBStage1Section' : 'teamBStage2Section';
+      const elem = document.getElementById(targetId);
+      if (elem) elem.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+
+    function switchDashboardView(mode) {
+      currentDashboardViewMode = mode;
+      const btnTable = document.getElementById('dashViewBtn-TABLE');
+      const btnArchives = document.getElementById('dashViewBtn-ARCHIVES');
+      const tableContainer = document.getElementById('dashboardTableViewContainer');
+      const archivesContainer = document.getElementById('dashboardArchivesView');
+
+      if (mode === 'TABLE') {
+        if (btnTable) btnTable.className = 'px-3.5 py-2 rounded-xl text-xs font-bold transition flex items-center space-x-2 bg-blue-600 text-white shadow-xs cursor-pointer';
+        if (btnArchives) btnArchives.className = 'px-3.5 py-2 rounded-xl text-xs font-bold transition flex items-center space-x-2 bg-white hover:bg-slate-100 text-slate-700 border border-slate-200 shadow-xs cursor-pointer';
+        if (tableContainer) tableContainer.classList.remove('hidden');
+        if (archivesContainer) archivesContainer.classList.add('hidden');
+      } else {
+        if (btnTable) btnTable.className = 'px-3.5 py-2 rounded-xl text-xs font-bold transition flex items-center space-x-2 bg-white hover:bg-slate-100 text-slate-700 border border-slate-200 shadow-xs cursor-pointer';
+        if (btnArchives) btnArchives.className = 'px-3.5 py-2 rounded-xl text-xs font-bold transition flex items-center space-x-2 bg-blue-600 text-white shadow-xs cursor-pointer';
+        if (tableContainer) tableContainer.classList.add('hidden');
+        if (archivesContainer) archivesContainer.classList.remove('hidden');
+        renderDashboardArchives();
+      }
+    }
+
+    function renderDashboardArchives() {
+      const container = document.getElementById('dashboardArchivesCardsContainer');
+      const countBadge = document.getElementById('dashArchivesBadgeCount');
+      if (!container) return;
+
+      const requests = AppState.requests || [];
+      if (countBadge) countBadge.innerText = requests.length;
+
+      if (requests.length === 0) {
+        container.innerHTML = '<div class="col-span-full p-8 text-center text-slate-400 bg-white rounded-2xl border border-dashed border-slate-200">ยังไม่มีโครงการในระบบ</div>';
+        return;
+      }
+
+      container.innerHTML = requests.map(req => {
+        const isApproved = req.status === 'APPROVED' || req.status === 'COMPLETED';
+        const isOut = req.isOutOfPlan === 'YES' || req.outOfPlanReason;
+        return `
+          <div class="bg-white rounded-2xl p-5 border border-slate-200/90 shadow-xs hover:shadow-md transition space-y-3.5">
+            <div class="flex items-center justify-between border-b border-slate-100 pb-2.5">
+              <span class="font-mono font-bold text-slate-900 text-sm flex items-center">${req.eventId} ${getSampleBadgeHtml(req)}</span>
+              ${getStatusBadge(req.status)}
+            </div>
+            <div>
+              <h4 class="font-bold text-slate-800 text-sm line-clamp-1">${req.courseTopic}</h4>
+              <p class="text-xs text-blue-700 font-medium mt-0.5">${req.schoolName} (${req.province})</p>
+              <div class="text-[11px] text-slate-400 mt-1 flex flex-wrap gap-2">
+                <span>วันจัด: <strong>${req.eventDate || '-'}</strong></span>
+                <span>งบ: <strong>฿${Number(req.actualBudget || req.estBudget || 0).toLocaleString()}</strong></span>
+              </div>
+            </div>
+            
+            <!-- Quick Documents Drawer -->
+            <div class="pt-2 border-t border-slate-100 grid grid-cols-2 gap-2 text-xs">
+              <button type="button" onclick="openPpcReportModal('${req.eventId}', 'MEMO')" class="py-2 px-2.5 bg-blue-50 hover:bg-blue-100 text-[#08539E] border border-blue-200 rounded-xl font-bold flex items-center justify-center space-x-1 transition shadow-2xs cursor-pointer" title="เปิดดู/พิมพ์บันทึกข้อความขออนุมัติปฏิบัติงาน A4">
+                <i class="fa-solid fa-file-invoice text-blue-600"></i>
+                <span>บันทึก A4</span>
+              </button>
+              <button type="button" onclick="openPpcReportModal('${req.eventId}', 'EVAL_REPORT')" class="py-2 px-2.5 bg-purple-50 hover:bg-purple-100 text-purple-900 border border-purple-200 rounded-xl font-bold flex items-center justify-center space-x-1 transition shadow-2xs cursor-pointer" title="เปิดดู/พิมพ์รายงานผลการประเมินโครงการ A4">
+                <i class="fa-solid fa-chart-column text-purple-600"></i>
+                <span>รายงานประเมิน</span>
+              </button>
+              <button type="button" onclick="openPpcReportModal('${req.eventId}', 'DOSSIER')" class="py-2 px-2.5 bg-slate-50 hover:bg-slate-100 text-slate-800 border border-slate-200 rounded-xl font-bold flex items-center justify-center space-x-1 transition shadow-2xs cursor-pointer" title="เปิดดูรายงานผลการปฏิบัติงานผู้บริหาร (PPC Dossier)">
+                <i class="fa-solid fa-briefcase text-slate-600"></i>
+                <span>รายงานผู้บริหาร</span>
+              </button>
+              <button type="button" onclick="openPpcReportModal('${req.eventId}', 'CERTIFICATE')" class="py-2 px-2.5 bg-amber-50 hover:bg-amber-100 text-amber-900 border border-amber-300 rounded-xl font-bold flex items-center justify-center space-x-1 transition shadow-2xs cursor-pointer" title="เปิดดูและสั่งพิมพ์วุฒิบัตร">
+                <i class="fa-solid fa-award text-amber-600"></i>
+                <span>วุฒิบัตร</span>
+              </button>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function renderTeamBExecutionQueue() {
+      const container = document.getElementById('teamBExecutionQueueContainer');
+      const stage1Badge = document.getElementById('teamBStage1Count');
+      const stage2Badge = document.getElementById('teamBStage2Count');
+      if (!container) return;
+
+      const waitBCount = (AppState.requests || []).filter(r => r.status === 'WAITING_B').length;
+      const approved = (AppState.requests || []).filter(r => r.status === 'APPROVED' || r.status === 'COMPLETED');
+
+      if (stage1Badge) stage1Badge.innerText = waitBCount;
+      if (stage2Badge) stage2Badge.innerText = approved.length;
+
+      if (approved.length === 0) {
+        container.innerHTML = `
+          <div class="p-8 text-center bg-sky-50/50 rounded-2xl border border-dashed border-sky-200 text-slate-400 space-y-2">
+            <i class="fa-solid fa-calendar-check text-sky-400 text-3xl"></i>
+            <p class="text-sm font-semibold text-slate-600">ยังไม่มีโครงการที่ผู้บริหารอนุมัติ</p>
+            <p class="text-xs text-slate-400">เมื่อผู้บริหารลงนามอนุมัติในแท็บ "ผู้บริหาร" โครงการจะมาตั้งแท่นรอใช้งาน QR ที่นี่ทันที</p>
+          </div>`;
+        return;
+      }
+
+      container.innerHTML = approved.map(req => {
+        const isCompleted = req.status === 'COMPLETED';
+        const evalCount = req.evalCount || 0;
+        const targetCount = req.expectedTrainees || 50;
+        const evalPct = Math.min(100, Math.round((evalCount / targetCount) * 100));
+        const isOutOfPlan = req.isOutOfPlan === 'YES' || req.outOfPlanReason;
+        
+        return `
+          <div class="bg-gradient-to-br from-white via-sky-50/20 to-indigo-50/30 rounded-3xl p-5 sm:p-6 border ${isCompleted ? 'border-emerald-300' : 'border-indigo-200'} shadow-sm hover:shadow-md transition space-y-4">
+            
+            <!-- Header -->
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-100 pb-3">
+              <div>
+                <div class="flex flex-wrap items-center gap-2">
+                  <span class="font-black text-slate-900 font-mono text-base">${req.eventId} ${getSampleBadgeHtml(req)}</span>
+                  ${isCompleted ? 
+                    '<span class="text-xs bg-emerald-100 text-emerald-800 font-bold px-2.5 py-0.5 rounded-full border border-emerald-300 flex items-center"><i class="fa-solid fa-circle-check mr-1 text-emerald-600"></i>ปิดโครงการสมบูรณ์ (COMPLETED)</span>' : 
+                    '<span class="text-xs bg-sky-100 text-sky-800 font-bold px-2.5 py-0.5 rounded-full border border-sky-300 flex items-center"><i class="fa-solid fa-circle-play mr-1 text-sky-600 animate-pulse"></i>อนุมัติแล้ว &bull; พร้อมจัดงานจริง</span>'}
+                  ${isOutOfPlan ? '<span class="text-xs bg-amber-100 text-amber-900 font-bold px-2 py-0.5 rounded-full border border-amber-300">⚡ นอกแผนหลักการ</span>' : ''}
+                  <span class="text-xs bg-slate-100 text-slate-600 px-2 py-0.5 rounded-md font-mono">จัดวันที่: ${req.eventDate || '-'}</span>
+                </div>
+                <h3 class="font-bold text-slate-900 text-base mt-1.5">${req.courseTopic}</h3>
+                <p class="text-xs text-blue-700 font-medium">${req.schoolName} (${req.province}) &bull; ผู้แทนขาย: <strong>${req.saleName}</strong></p>
+              </div>
+              
+              <div class="text-right">
+                <span class="text-[11px] text-slate-400 block">งบตัดจ่ายจริง / เป้าหมายขาย:</span>
+                <span class="text-sm font-bold text-slate-900">฿${Number(req.actualBudget || req.estBudget || 0).toLocaleString()}</span>
+                <span class="text-xs text-emerald-700 font-semibold block">เป้า ฿${Number(req.targetSales || 0).toLocaleString()}</span>
+              </div>
+            </div>
+
+            <!-- Academic & Execution Logistics info -->
+            <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5 text-xs">
+              <div class="bg-white p-2.5 rounded-xl border border-slate-200/80">
+                <span class="text-slate-400 block text-[10px]">วิทยากรผู้บรรยาย:</span>
+                <span class="font-bold text-purple-900">${req.teamBSpeaker || req.speakerType || 'วิทยากร TWP'}</span>
+              </div>
+              <div class="bg-white p-2.5 rounded-xl border border-slate-200/80">
+                <span class="text-slate-400 block text-[10px]">สถานที่จัด:</span>
+                <span class="font-bold text-slate-800">${req.venueType || 'โรงเรียน'}</span>
+              </div>
+              <div class="bg-white p-2.5 rounded-xl border border-slate-200/80">
+                <span class="text-slate-400 block text-[10px]">เป้าหมายผู้เข้าอบรม:</span>
+                <span class="font-bold text-indigo-700">${targetCount.toLocaleString()} ท่าน</span>
+              </div>
+              <div class="bg-white p-2.5 rounded-xl border border-slate-200/80">
+                <span class="text-slate-400 block text-[10px]">สถานะประเมินสด:</span>
+                <span class="font-bold ${evalCount > 0 ? 'text-emerald-700' : 'text-slate-500'}">ตอบแล้ว ${evalCount} ท่าน ${req.evalAvg ? `(⭐ ${req.evalAvg})` : ''}</span>
+              </div>
+            </div>
+
+            <!-- ON-SITE EVENT QR TOOLKIT (แถบเครื่องมือหน้างาน) -->
+            <div class="bg-sky-500/10 border border-sky-200/80 rounded-2xl p-3 sm:p-4 space-y-3">
+              <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                <div class="flex items-center space-x-2 text-xs font-bold text-sky-950">
+                  <i class="fa-solid fa-qrcode text-sky-600 text-base"></i>
+                  <span>ชุดเครื่องมือ QR หน้างานสำหรับวิทยากร & ทีม B (On-Site Toolkits)</span>
+                </div>
+                <!-- Progress mini bar -->
+                <div class="flex items-center space-x-2 text-xs">
+                  <span class="text-slate-500 text-[11px]">การตอบแบบสอบถาม:</span>
+                  <div class="w-24 bg-slate-200 rounded-full h-2 overflow-hidden">
+                    <div class="bg-emerald-500 h-2 rounded-full" style="width: ${evalPct}%"></div>
+                  </div>
+                  <span class="font-bold text-emerald-700 text-xs">${evalPct}%</span>
+                </div>
+              </div>
+
+              <!-- 4 QR Action Buttons -->
+              <div class="grid grid-cols-2 sm:grid-cols-4 gap-2">
+                <button type="button" onclick="openQrModalFor('${req.eventId}', 'SURVEY')" class="py-2.5 px-3 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-xs font-bold transition flex items-center justify-center space-x-1.5 shadow-sm btn-tactile cursor-pointer" title="เปิดหน้าต่าง QR Code สแกนทำแบบประเมินและรับวุฒิบัตร">
+                  <i class="fa-solid fa-expand text-indigo-200"></i>
+                  <span>ฉาย QR จอใหญ่</span>
+                </button>
+                <button type="button" onclick="printQrDeskSign('${req.eventId}')" class="py-2.5 px-3 bg-white hover:bg-sky-50 text-sky-900 border border-sky-300 rounded-xl text-xs font-bold transition flex items-center justify-center space-x-1.5 shadow-xs btn-tactile cursor-pointer" title="พิมพ์ป้ายตั้งโต๊ะ A4 วางโต๊ะลงทะเบียน">
+                  <i class="fa-solid fa-print text-sky-600"></i>
+                  <span>พิมพ์ใบตั้งโต๊ะ A4</span>
+                </button>
+                <button type="button" onclick="shareSurveyToLine('${req.eventId}')" class="py-2.5 px-3 bg-[#06C755] hover:bg-[#05b34c] text-white rounded-xl text-xs font-bold transition flex items-center justify-center space-x-1.5 shadow-xs btn-tactile cursor-pointer" title="ส่งลิงก์แบบประเมินเข้ากลุ่ม LINE ครู">
+                  <i class="fa-brands fa-line text-base"></i>
+                  <span>ส่งต่อ LINE ครู</span>
+                </button>
+                <button type="button" onclick="openQrModalFor('${req.eventId}', 'RESOURCE')" class="py-2.5 px-3 bg-white hover:bg-purple-50 text-purple-900 border border-purple-300 rounded-xl text-xs font-bold transition flex items-center justify-center space-x-1.5 shadow-xs btn-tactile cursor-pointer" title="QR สำหรับดาวน์โหลดสื่อการสอน/เอกสารประกอบ">
+                  <i class="fa-solid fa-folder-open text-purple-600"></i>
+                  <span>QR สื่ออบรม</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- POST-EVENT FINANCIAL CLEARANCE & REPORTS (เคลียร์ค่าใช้จ่ายจริง & เอกสาร) -->
+            <div class="flex flex-wrap items-center justify-between gap-2 pt-1 border-t border-slate-100">
+              <div class="flex flex-wrap items-center gap-2">
+                <!-- 1-Click Clear Expenses Button -->
+                <button type="button" onclick="openExpensesForEvent('${req.eventId}')" class="px-3.5 py-2 ${isCompleted ? 'bg-emerald-50 hover:bg-emerald-100 text-emerald-900 border border-emerald-300' : 'bg-gradient-to-r from-emerald-600 to-teal-700 hover:from-emerald-500 hover:to-teal-600 text-white'} text-xs font-bold rounded-xl transition flex items-center space-x-1.5 shadow-sm btn-tactile cursor-pointer" title="เปิดบันทึกค่าใช้จ่ายจริง 7 หมวดตามบิลเพื่อปิดงาน">
+                  <i class="fa-solid fa-coins ${isCompleted ? 'text-emerald-600' : 'text-emerald-200'}"></i>
+                  <span>${isCompleted ? 'แก้ไขสรุปค่าใช้จ่าย 7 หมวด' : '💰 บันทึกสรุปค่าใช้จ่ายจริง 7 หมวด'}</span>
+                </button>
+
+                <!-- A4 Memo Button -->
+                <button type="button" onclick="openPpcReportModal('${req.eventId}', 'MEMO')" class="px-3 py-2 bg-blue-50 hover:bg-blue-100 text-[#08539E] border border-blue-200 text-xs font-bold rounded-xl transition flex items-center space-x-1.5 shadow-xs btn-tactile cursor-pointer" title="ดูบันทึกข้อความขออนุมัติปฏิบัติงาน A4 ที่ผู้บริหารลงนามแล้ว">
+                  <i class="fa-solid fa-file-invoice text-blue-600"></i>
+                  <span>บันทึกขออนุมัติ A4</span>
+                </button>
+
+                <!-- Evaluation Report Button -->
+                <button type="button" onclick="openPpcReportModal('${req.eventId}', 'EVAL_REPORT')" class="px-3 py-2 bg-purple-50 hover:bg-purple-100 text-purple-900 border border-purple-200 text-xs font-bold rounded-xl transition flex items-center space-x-1.5 shadow-xs btn-tactile cursor-pointer" title="ดูรายงานสรุปผลการประเมินโครงการ A4">
+                  <i class="fa-solid fa-chart-column text-purple-600"></i>
+                  <span>รายงานประเมิน A4</span>
+                </button>
+              </div>
+
+              <div>
+                <button type="button" onclick="openPpcReportModal('${req.eventId}', 'CERTIFICATE')" class="px-3 py-2 bg-amber-50 hover:bg-amber-100 text-amber-900 border border-amber-300 text-xs font-bold rounded-xl transition flex items-center space-x-1.5 shadow-xs btn-tactile cursor-pointer" title="ออกวุฒิบัตรสำหรับผู้เข้าอบรม">
+                  <i class="fa-solid fa-award text-amber-600"></i>
+                  <span>วุฒิบัตร</span>
+                </button>
+              </div>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function openExpensesForEvent(eventId) {
+      currentExpenseEventId = eventId;
+      switchTab('teamBExpenses');
+      const select = document.getElementById('expenseEventSelect');
+      if (select) {
+        select.value = eventId;
+        onExpenseEventSelect(eventId);
+      }
+      showAlert('กำลังเปิดหน้าบันทึกค่าใช้จ่ายจริง 7 หมวดสำหรับ ' + eventId, 'info');
+    }
+
+    function printQrDeskSign(eventId) {
+      openQrModalFor(eventId, 'SURVEY');
+      showAlert('เปิดหน้าต่างพิมพ์ใบตั้งโต๊ะ A4 เรียบร้อยแล้ว', 'info');
+      setTimeout(() => {
+        window.print();
+      }, 350);
+    }
+
+    function shareSurveyToLine(eventId) {
+      const req = AppState.requests.find(r => r.eventId === eventId);
+      if (!req) return;
+      const surveyUrl = getSurveyFullUrl(req.eventId);
+      const text = `📋 [แบบประเมินโครงการอบรม TWP]\n` +
+        `ขอเรียนเชิญคุณครูและผู้เข้าร่วมอบรมโครงการ: "${req.courseTopic}" ณ ${req.schoolName}\n` +
+        `สแกนหรือคลิกลิงก์ด้านล่างเพื่อทำแบบสอบถามและรับวุฒิบัตรอิเล็กทรอนิกส์:\n${surveyUrl}`;
+      window.open(`https://line.me/R/msg/text/?${encodeURIComponent(text)}`, '_blank');
+    }
+
     function renderAll() {
       refreshDatalists();
       populateProvinceDropdown();
@@ -4688,8 +5154,10 @@
       renderAnnualPlanView();
       renderAnnualPlanSelectOptions();
       renderTeamBQueue();
+      renderTeamBExecutionQueue();
       renderExecQueue();
       renderEvaluationCenter();
+      renderDashboardArchives();
       updateQueueBadges();
       if (AppState.activeTab === 'fy2569Tu') {
         renderFy2569TuView();
@@ -5221,7 +5689,7 @@
     }
 
     // ==========================================================================
-    // FY2569 STRATEGIC PROJECTS & SALES RECONCILIATION ENGINE (v1.15.2)
+    // FY2569 STRATEGIC PROJECTS & SALES RECONCILIATION ENGINE (v1.16.0)
     // ==========================================================================
 
     let fy2569SelectedMatchProjectId = null;
@@ -5689,7 +6157,7 @@
         '</style></head><body>' +
         '<div class="header">' +
         '<div><h2 style="margin:0; color:#08539E; font-size:16pt;">บริษัท ไทยวัฒนาพานิช จำกัด (TWP)</h2><div style="font-size:11pt; color:#475569;">รายงานสรุปการกระทบยอดงบประมาณจัดอบรมกับยอดขายจริง ประจำปี 2569</div></div>' +
-        '<div style="text-align:right; font-size:9pt; color:#64748b;">ออกโดยระบบ EMS Enterprise v1.15.2<br>วันที่พิมพ์: ' + new Date().toLocaleDateString('th-TH') + '</div>' +
+        '<div style="text-align:right; font-size:9pt; color:#64748b;">ออกโดยระบบ EMS Enterprise v1.16.0<br>วันที่พิมพ์: ' + new Date().toLocaleDateString('th-TH') + '</div>' +
         '</div>' +
         '<div style="display:flex; justify-content:space-between; background:#f8fafc; padding:8px 12px; border-radius:6px; margin-bottom:10px; font-size:10pt;">' +
         '<div>โครงการทั้งหมด: <strong>' + projects.length + ' โครงการ</strong></div>' +
@@ -6872,10 +7340,24 @@
     }
 
     function updateQueueBadges() {
-      const waitB = AppState.requests.filter(r => r.status === 'WAITING_B').length;
-      const waitExec = AppState.requests.filter(r => r.status === 'WAITING_EXEC').length;
-      document.getElementById('badgeWaitingB').innerText = waitB;
-      document.getElementById('badgeWaitingExec').innerText = waitExec;
+      const waitB = (AppState.requests || []).filter(r => r.status === 'WAITING_B').length;
+      const waitExec = (AppState.requests || []).filter(r => r.status === 'WAITING_EXEC').length;
+      const approvedCount = (AppState.requests || []).filter(r => r.status === 'APPROVED').length;
+      const totalApprovedAndDone = (AppState.requests || []).filter(r => r.status === 'APPROVED' || r.status === 'COMPLETED').length;
+
+      const bBadge = document.getElementById('badgeWaitingB');
+      const execBadge = document.getElementById('badgeWaitingExec');
+      const approvedBadge = document.getElementById('badgeApprovedB');
+      const stage1Badge = document.getElementById('teamBStage1Count');
+      const stage2Badge = document.getElementById('teamBStage2Count');
+      const archivesBadge = document.getElementById('dashArchivesBadgeCount');
+
+      if (bBadge) bBadge.innerText = waitB;
+      if (execBadge) execBadge.innerText = waitExec;
+      if (approvedBadge) approvedBadge.innerText = approvedCount + ' พร้อมจัด';
+      if (stage1Badge) stage1Badge.innerText = waitB;
+      if (stage2Badge) stage2Badge.innerText = totalApprovedAndDone;
+      if (archivesBadge) archivesBadge.innerText = (AppState.requests || []).length;
     }
 
     // ------------------- ACTIONS: TEAM A SUBMISSION -------------------
@@ -7983,7 +8465,7 @@
           <div style="border-top:1px dashed #cbd5e1; margin-top:10px; padding-top:4px; display:flex; justify-content:space-between; align-items:center; font-size:8.5pt; color:#64748b;">
             <div>
               <i class="fa-solid fa-file-contract mr-1 text-[#08539E]"></i>
-              รายงานประเมินและวิเคราะห์ต้นทุนการจัดอบรม A4 • ออกโดย TWP Training Enterprise Platform (v1.15.2)
+              รายงานประเมินและวิเคราะห์ต้นทุนการจัดอบรม A4 • ออกโดย TWP Training Enterprise Platform (v1.16.0)
             </div>
             <div>
               หน้า 1/1 • ${d.eventId}
@@ -8162,7 +8644,7 @@
           <div style="border-top:1px dashed #cbd5e1; margin-top:14px; padding-top:6px; display:flex; justify-content:space-between; align-items:center; font-size:8.5pt; color:#64748b;">
             <div>
               <i class="fa-solid fa-shield-halved" style="color:#08539E; margin-right:4px;"></i>
-              เอกสารอิเล็กทรอนิกส์มาตรฐาน A4 ออกโดย TWP Training Enterprise Management System (EMS v1.15.2)
+              เอกสารอิเล็กทรอนิกส์มาตรฐาน A4 ออกโดย TWP Training Enterprise Management System (EMS v1.16.0)
             </div>
             <div>
               รหัสอ้างอิง: <span style="font-family:monospace; font-weight:700; color:#0f172a;">${d.eventId}</span> | หน้า 1/1
@@ -8335,7 +8817,7 @@
           </table>
 
           <div style="margin-top:14px; padding-top:4px; border-top:1px solid #e2e8f0; font-size:8.5pt; color:#94a3b8; text-align:center;">
-            เอกสารฉบับนี้สร้างโดยระบบ Training Center TWP (EMS Enterprise Platform v1.15.2) • ใช้สำหรับติดตามและควบคุมผลการปฏิบัติงานภายใน (PPC Standard)
+            เอกสารฉบับนี้สร้างโดยระบบ Training Center TWP (EMS Enterprise Platform v1.16.0) • ใช้สำหรับติดตามและควบคุมผลการปฏิบัติงานภายใน (PPC Standard)
           </div>
         </div>
       `;
@@ -9366,5 +9848,336 @@
       renderAnnualPlanView();
     }
   </script>
+
+  <!-- ======================================================== -->
+  <!-- MODAL: INTERACTIVE ROLE-BASED USER MANUAL (คู่มือการใช้งาน) -->
+  <!-- ======================================================== -->
+  <div id="manualModal" class="hidden fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="bg-white rounded-3xl max-w-4xl w-full p-6 sm:p-8 shadow-2xl space-y-6 max-h-[92vh] overflow-y-auto custom-scrollbar border border-slate-100">
+      
+      <!-- Modal Header -->
+      <div class="flex items-center justify-between pb-4 border-b border-slate-100">
+        <div class="flex items-center space-x-3">
+          <div class="w-10 h-10 rounded-2xl bg-indigo-100 text-indigo-700 flex items-center justify-center text-xl shadow-xs">
+            <i class="fa-solid fa-book-open"></i>
+          </div>
+          <div>
+            <h3 class="font-bold text-slate-900 text-lg">คู่มือการใช้งานระบบแยกตามบทบาท (Role-Based User Manual)</h3>
+            <p class="text-xs text-slate-500">คำแนะนำขั้นตอนการปฏิบัติงานอย่างละเอียดสำหรับแต่ละทีม ตั้งแต่เสนอขอจนถึงปิดโครงการ</p>
+          </div>
+        </div>
+        <button type="button" onclick="closeManualModal()" class="w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-500 flex items-center justify-center transition cursor-pointer">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+
+      <!-- Role Tabs -->
+      <div class="flex flex-wrap items-center gap-2 border-b border-slate-200 pb-3">
+        <button type="button" onclick="switchManualRole('TEAMA')" id="manualTab-TEAMA" class="px-4 py-2 rounded-xl text-xs font-bold transition flex items-center space-x-1.5 bg-emerald-600 text-white shadow-xs cursor-pointer">
+          <i class="fa-solid fa-paper-plane text-emerald-200"></i>
+          <span>1. ฝ่ายขาย (ทีม A)</span>
+        </button>
+        <button type="button" onclick="switchManualRole('TEAMB')" id="manualTab-TEAMB" class="px-4 py-2 rounded-xl text-xs font-bold transition flex items-center space-x-1.5 bg-slate-100 hover:bg-purple-50 text-slate-700 cursor-pointer">
+          <i class="fa-solid fa-clipboard-check text-purple-600"></i>
+          <span>2. ฝ่ายวิชาการ (ทีม B)</span>
+        </button>
+        <button type="button" onclick="switchManualRole('EXEC')" id="manualTab-EXEC" class="px-4 py-2 rounded-xl text-xs font-bold transition flex items-center space-x-1.5 bg-slate-100 hover:bg-amber-50 text-slate-700 cursor-pointer">
+          <i class="fa-solid fa-stamp text-amber-600"></i>
+          <span>3. ผู้บริหาร (Executive)</span>
+        </button>
+        <button type="button" onclick="switchManualRole('DOCS')" id="manualTab-DOCS" class="px-4 py-2 rounded-xl text-xs font-bold transition flex items-center space-x-1.5 bg-slate-100 hover:bg-blue-50 text-slate-700 cursor-pointer">
+          <i class="fa-solid fa-file-invoice text-[#08539E]"></i>
+          <span>4. คลังรายงาน & วุฒิบัตร</span>
+        </button>
+      </div>
+
+      <!-- Role 1: Team A Content -->
+      <div id="manualContent-TEAMA" class="space-y-4 text-xs text-slate-700">
+        <div class="p-4 bg-emerald-50/70 border border-emerald-200 rounded-2xl space-y-2">
+          <div class="font-bold text-emerald-900 text-sm flex items-center">
+            <i class="fa-solid fa-bullseye text-emerald-600 mr-2 text-base"></i>
+            <span>บทบาทหน้าที่ของฝ่ายขาย (ทีม A)</span>
+          </div>
+          <p class="text-emerald-800 leading-relaxed">
+            ทีม A มีหน้าที่ประสานงานกับโรงเรียนเป้าหมาย เสนอขออนุมัติจัดกิจกรรมอบรมวิชาการ กำหนดเป้าหมายยอดขายสื่อการเรียนรู้ และส่งคำขอเข้าสู่ระบบเพื่อให้ฝ่ายวิชาการตรวจสอบ
+          </p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div class="p-4 bg-white border border-slate-200 rounded-2xl space-y-2 shadow-xs">
+            <div class="font-bold text-slate-900 text-xs flex items-center text-emerald-700">
+              <span class="w-5 h-5 rounded-full bg-emerald-100 flex items-center justify-center mr-2 text-[11px]">1</span>
+              <span>เลือกโครงการอนุมัติหลักการประจำปี</span>
+            </div>
+            <p class="text-slate-600 text-[11px] leading-relaxed">
+              ในแบบฟอร์ม ให้กดเลือกหัวข้อจากดรอปดาวน์ <strong>"โครงการอนุมัติหลักการประจำปี"</strong> ที่ ผศ.อินทิรา บุนนาค (กรรมการผู้จัดการ) ได้อนุมัติกรอบวงเงินไว้แล้ว ระบบจะดึงงบประมาณและเป้าขายขึ้นมาให้อัตโนมัติ (สามารถปรับเปลี่ยนได้ตามจริง)
+            </p>
+          </div>
+
+          <div class="p-4 bg-white border border-slate-200 rounded-2xl space-y-2 shadow-xs">
+            <div class="font-bold text-slate-900 text-xs flex items-center text-amber-700">
+              <span class="w-5 h-5 rounded-full bg-amber-100 flex items-center justify-center mr-2 text-[11px]">2</span>
+              <span>กรณีขอนอกแผน (กรณีพิเศษ)</span>
+            </div>
+            <p class="text-slate-600 text-[11px] leading-relaxed">
+              หากไม่มีในแผนหลักการ ให้เลือก <strong>"⚡ ไม่อยู่ในโครงการอนุมัติหลักการประจำปี (ขอจัดเป็นกรณีพิเศษ)"</strong> ระบบจะบังคับให้พิมพ์เหตุผลความจำเป็นในช่องที่กำหนด เพื่อให้ผู้บริหารใช้พิจารณา
+            </p>
+          </div>
+
+          <div class="p-4 bg-white border border-slate-200 rounded-2xl space-y-2 shadow-xs">
+            <div class="font-bold text-slate-900 text-xs flex items-center text-blue-700">
+              <span class="w-5 h-5 rounded-full bg-blue-100 flex items-center justify-center mr-2 text-[11px]">3</span>
+              <span>เลือกโรงเรียนจากฐานข้อมูล 2,363 โรงเรียน</span>
+            </div>
+            <p class="text-slate-600 text-[11px] leading-relaxed">
+              เลือกจังหวัด &rarr; เลือกผู้แทนขาย &rarr; เลือกโรงเรียน ระบบจะแสดงขนาดโรงเรียน จำนวนนักเรียน และจัดเก็บข้อมูลอย่างถูกต้อง
+            </p>
+          </div>
+
+          <div class="p-4 bg-white border border-slate-200 rounded-2xl space-y-2 shadow-xs">
+            <div class="font-bold text-slate-900 text-xs flex items-center text-purple-700">
+              <span class="w-5 h-5 rounded-full bg-purple-100 flex items-center justify-center mr-2 text-[11px]">4</span>
+              <span>ส่งต่องาน 1-Click เข้า LINE ทีม B</span>
+            </div>
+            <p class="text-slate-600 text-[11px] leading-relaxed">
+              เมื่อกดบันทึกคำขอ หน้าต่างส่งต่องานจะเด้งขึ้นมา ให้กดปุ่ม <strong>[ส่งต่อ LINE]</strong> ระบบจะเปิดแอป LINE พร้อมสรุปรายละเอียดคำขอและลิงก์เปิดตรวจงาน ส่งให้ทีม B ได้ใน 1 วินาที
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Role 2: Team B Content -->
+      <div id="manualContent-TEAMB" class="hidden space-y-4 text-xs text-slate-700">
+        <div class="p-4 bg-purple-50/70 border border-purple-200 rounded-2xl space-y-2">
+          <div class="font-bold text-purple-900 text-sm flex items-center">
+            <i class="fa-solid fa-graduation-cap text-purple-600 mr-2 text-base"></i>
+            <span>บทบาทหน้าที่ของฝ่ายวิชาการ (ทีม B) &bull; กระบวนการ 2 จังหวะ</span>
+          </div>
+          <p class="text-purple-800 leading-relaxed">
+            ทีม B ดูแลทั้งการกลั่นกรองวิชาการก่อนอนุมัติ และการปฏิบัติการจัดอบรมจริงหน้างาน รวมทั้งการรวบรวมบิลค่าใช้จ่ายจริง 7 หมวดเพื่อปิดโครงการ
+          </p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div class="p-4 bg-white border border-slate-200 rounded-2xl space-y-2 shadow-xs">
+            <div class="font-bold text-purple-900 text-xs flex items-center">
+              <span class="w-5 h-5 rounded-full bg-purple-100 flex items-center justify-center mr-2 text-[11px]">1</span>
+              <span>จังหวะที่ 1: ตรวจวิชาการ & เสนอผู้บริหาร</span>
+            </div>
+            <p class="text-slate-600 text-[11px] leading-relaxed">
+              ในคิวที่ 1 ให้ตรวจหลักสูตร ระบุชื่อวิทยากรผู้บรรยาย กำหนดงบตัดจ่ายจริง และพิมพ์ข้อเสนอแนะเชิงวิชาการ จากนั้นกดส่งต่อให้ผู้บริหารพิจารณา (มีปุ่มส่งต่อ LINE ให้ผู้บริหาร)
+            </p>
+          </div>
+
+          <div class="p-4 bg-white border border-slate-200 rounded-2xl space-y-2 shadow-xs">
+            <div class="font-bold text-sky-900 text-xs flex items-center">
+              <span class="w-5 h-5 rounded-full bg-sky-100 flex items-center justify-center mr-2 text-[11px]">2</span>
+              <span>จังหวะที่ 2: งานอนุมัติแล้ว &bull; นำ QR ไปใช้หน้างาน</span>
+            </div>
+            <p class="text-slate-600 text-[11px] leading-relaxed">
+              เมื่องานได้รับอนุมัติ จะมาโผล่ที่ <strong>"คิวที่ 2: แท่นจัดงาน & เครื่องมือ QR"</strong> ให้กดปุ่ม <strong>[ฉาย QR จอใหญ่]</strong> ขึ้นจอโปรเจกเตอร์ หรือกด <strong>[พิมพ์ใบตั้งโต๊ะ A4]</strong> ตั้งหน้าห้องอบรม เพื่อให้ผู้เข้าอบรมสแกน
+            </p>
+          </div>
+
+          <div class="p-4 bg-white border border-slate-200 rounded-2xl space-y-2 shadow-xs">
+            <div class="font-bold text-emerald-900 text-xs flex items-center">
+              <span class="w-5 h-5 rounded-full bg-emerald-100 flex items-center justify-center mr-2 text-[11px]">3</span>
+              <span>ติดตามยอดผู้ตอบประเมินสด (Real-Time)</span>
+            </div>
+            <p class="text-slate-600 text-[11px] leading-relaxed">
+              ดูเกจความคืบหน้าการตอบแบบสอบถามได้สดๆ ทันทีที่ครูกดส่งคำตอบ เกจเปอร์เซ็นต์และคะแนนเฉลี่ยจะขยับขึ้นทันที
+            </p>
+          </div>
+
+          <div class="p-4 bg-white border border-slate-200 rounded-2xl space-y-2 shadow-xs">
+            <div class="font-bold text-teal-900 text-xs flex items-center">
+              <span class="w-5 h-5 rounded-full bg-teal-100 flex items-center justify-center mr-2 text-[11px]">4</span>
+              <span>บันทึกสรุปค่าใช้จ่ายจริง 7 หมวด (ปิดโครงการ)</span>
+            </div>
+            <p class="text-slate-600 text-[11px] leading-relaxed">
+              เมื่อการอบรมเสร็จสิ้น ให้กดปุ่ม <strong>[💰 บันทึกสรุปค่าใช้จ่ายจริง 7 หมวด]</strong> ในการ์ดงานนั้น เพื่อกรอกยอดเงินตามบิลจริง และกดยืนยันปิดงาน (สถานะเปลี่ยนเป็น COMPLETED)
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Role 3: Executive Content -->
+      <div id="manualContent-EXEC" class="hidden space-y-4 text-xs text-slate-700">
+        <div class="p-4 bg-amber-50/70 border border-amber-200 rounded-2xl space-y-2">
+          <div class="font-bold text-amber-900 text-sm flex items-center">
+            <i class="fa-solid fa-stamp text-amber-600 mr-2 text-base"></i>
+            <span>บทบาทหน้าที่ของผู้บริหาร (Executive: กรรมการผู้จัดการ / ผู้จัดการทั่วไป)</span>
+          </div>
+          <p class="text-amber-800 leading-relaxed">
+            ผู้บริหารมีหน้าที่ตรวจสอบความคุ้มค่า ความพร้อมทางวิชาการ และงบประมาณ ก่อนลงนามอนุมัติอิเล็กทรอนิกส์เพื่ออนุญาตให้จัดงานได้
+          </p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div class="p-4 bg-white border border-slate-200 rounded-2xl space-y-2 shadow-xs">
+            <div class="font-bold text-amber-900 text-xs flex items-center">
+              <span class="w-5 h-5 rounded-full bg-amber-100 flex items-center justify-center mr-2 text-[11px]">1</span>
+              <span>ตรวจบันทึกขออนุมัติปฏิบัติงาน A4 (Memo)</span>
+            </div>
+            <p class="text-slate-600 text-[11px] leading-relaxed">
+              คลิกปุ่ม <strong>[ตรวจบันทึกขออนุมัติ A4]</strong> เพื่อเปิดดูเอกสารบันทึกข้อความทางการฉบับเต็ม พร้อมเหตุผลความจำเป็นของฝ่ายขาย และความเห็นวิชาการของทีม B
+            </p>
+          </div>
+
+          <div class="p-4 bg-white border border-slate-200 rounded-2xl space-y-2 shadow-xs">
+            <div class="font-bold text-slate-900 text-xs flex items-center">
+              <span class="w-5 h-5 rounded-full bg-slate-100 flex items-center justify-center mr-2 text-[11px]">2</span>
+              <span>เลือกตำแหน่งและลงนามอนุมัติ</span>
+            </div>
+            <p class="text-slate-600 text-[11px] leading-relaxed">
+              เลือกว่าลงนามในฐานะ <strong>"กรรมการผู้จัดการ"</strong> หรือ <strong>"ผู้จัดการทั่วไป"</strong> เซ็นชื่อในกล่องลายเซ็น แล้วกด <strong>[อนุมัติโครงการ]</strong> งานจะถูกส่งต่อไปยังแท่นปฏิบัติการทีม B ทันที
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Role 4: Documents Content -->
+      <div id="manualContent-DOCS" class="hidden space-y-4 text-xs text-slate-700">
+        <div class="p-4 bg-blue-50/70 border border-blue-200 rounded-2xl space-y-2">
+          <div class="font-bold text-[#08539E] text-sm flex items-center">
+            <i class="fa-solid fa-file-invoice text-blue-600 mr-2 text-base"></i>
+            <span>ศูนย์คลังเอกสารและรายงานทางการ (Official Document Archives)</span>
+          </div>
+          <p class="text-blue-900 leading-relaxed">
+            เอกสารทุกฉบับได้รับการบันทึกบนฐานข้อมูลถาวร สามารถเรียกดูและสั่งพิมพ์ได้ตลอดเวลาจากแท็บ Dashboard หรือการ์ดโครงการ
+          </p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div class="p-4 bg-white border border-slate-200 rounded-2xl space-y-1.5 shadow-xs">
+            <div class="font-bold text-slate-900 text-xs flex items-center text-blue-800">
+              <i class="fa-solid fa-file-lines mr-1.5 text-blue-600"></i>
+              <span>บันทึกข้อความขออนุมัติ A4 (Memo)</span>
+            </div>
+            <p class="text-slate-500 text-[11px]">แบบฟอร์มทางการราชการ/บริษัท พร้อมตรา TWP รายละเอียด 4 ส่วน และลายเซ็นผู้บริหาร สามารถกดพิมพ์หรือบันทึกเป็น PDF/Word ได้ทันที</p>
+          </div>
+
+          <div class="p-4 bg-white border border-slate-200 rounded-2xl space-y-1.5 shadow-xs">
+            <div class="font-bold text-slate-900 text-xs flex items-center text-purple-800">
+              <i class="fa-solid fa-chart-pie mr-1.5 text-purple-600"></i>
+              <span>รายงานสรุปผลการประเมินโครงการ A4</span>
+            </div>
+            <p class="text-slate-500 text-[11px]">สรุปผลคะแนนประเมิน 10 มิติมาตรฐาน ร้อยละความพึงพอใจ จำนวนผู้เข้าร่วม และข้อเสนอแนะ สำหรับแนบปิดเล่มโครงการ</p>
+          </div>
+
+          <div class="p-4 bg-white border border-slate-200 rounded-2xl space-y-1.5 shadow-xs">
+            <div class="font-bold text-slate-900 text-xs flex items-center text-amber-800">
+              <i class="fa-solid fa-award mr-1.5 text-amber-600"></i>
+              <span>ระบบออกและพิมพ์วุฒิบัตร (Certificates)</span>
+            </div>
+            <p class="text-slate-500 text-[11px]">พิมพ์วุฒิบัตรสำหรับครูผู้ผ่านการอบรม พร้อมลายเซ็น ผศ.อินทิรา บุนนาค กรรมการผู้จัดการ (สามารถแก้ไขชื่อ/ตำแหน่งผู้ลงนามได้)</p>
+          </div>
+
+          <div class="p-4 bg-white border border-slate-200 rounded-2xl space-y-1.5 shadow-xs">
+            <div class="font-bold text-slate-900 text-xs flex items-center text-emerald-800">
+              <i class="fa-solid fa-briefcase mr-1.5 text-emerald-600"></i>
+              <span>รายงานสรุปผู้บริหาร (Executive PPC Dossier)</span>
+            </div>
+            <p class="text-slate-500 text-[11px]">รายงานวิเคราะห์ความคุ้มค่าทางการเงิน การเปรียบเทียบงบตัดจ่าย vs ยอดขายจริง และอัตราผลตอบแทน ROI</p>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ======================================================== -->
+  <!-- MODAL: SYSTEM VERSION RELEASE NOTES & ARCHITECTURE CHANGELOG -->
+  <!-- ======================================================== -->
+  <div id="versionReleaseModal" class="hidden fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="bg-white rounded-3xl max-w-3xl w-full p-6 sm:p-8 shadow-2xl space-y-6 max-h-[92vh] overflow-y-auto custom-scrollbar border border-slate-100">
+      
+      <!-- Modal Header -->
+      <div class="flex items-center justify-between pb-4 border-b border-slate-100">
+        <div class="flex items-center space-x-3">
+          <div class="w-10 h-10 rounded-2xl bg-amber-100 text-amber-700 flex items-center justify-center text-xl shadow-xs">
+            <i class="fa-solid fa-code-compare"></i>
+          </div>
+          <div>
+            <div class="flex items-center space-x-2">
+              <h3 class="font-bold text-slate-900 text-lg">ประวัติและการปรับปรุงระบบเวอร์ชัน (Release Notes)</h3>
+              <span class="bg-blue-100 text-[#08539E] text-xs font-bold font-mono px-2 py-0.5 rounded-full">v1.16.0 Current</span>
+            </div>
+            <p class="text-xs text-slate-500">บันทึกประวัติการปรับปรุงสถาปัตยกรรมและฟังก์ชันการทำงานอย่างละเอียด</p>
+          </div>
+        </div>
+        <button type="button" onclick="closeVersionReleaseModal()" class="w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-500 flex items-center justify-center transition cursor-pointer">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+
+      <!-- Release Timeline List -->
+      <div class="space-y-4">
+        
+        <!-- v1.16.0 (Major Milestone) -->
+        <div class="p-5 bg-gradient-to-br from-indigo-50/80 via-white to-sky-50/60 border-2 border-indigo-200 rounded-3xl space-y-3 shadow-xs">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-1">
+            <div class="flex items-center space-x-2">
+              <span class="bg-indigo-600 text-white text-xs font-black px-2.5 py-0.5 rounded-lg font-mono">v1.16.0</span>
+              <span class="font-bold text-slate-900 text-sm">การเชื่อมต่อแท่น QR หน้างาน & บริหารงานวิชาการ 2 จังหวะ</span>
+            </div>
+            <span class="text-[11px] text-slate-400 font-mono">2026-11-11 &bull; Major Release</span>
+          </div>
+          <ul class="text-xs text-slate-700 space-y-2 list-disc list-inside leading-relaxed">
+            <li><strong>Two-Stage Academic Pipeline in Team B:</strong> แยกคิวของทีม B ออกเป็น 2 ขั้นตอนอย่างชัดเจน: (1) คิวรอตรวจวิชาการก่อนอนุมัติ และ (2) แท่นปฏิบัติการจัดอบรมจริง & เครื่องมือ QR หน้างานหลังผู้บริหารอนุมัติ</li>
+            <li><strong>On-Site Event QR Toolkits:</strong> ชุดเครื่องมือหน้างานสำหรับวิทยากรและทีม B รองรับการฉาย QR จอใหญ่ Fullscreen, การพิมพ์ใบตั้งโต๊ะ A4, การส่งต่อ LINE กลุ่มครู, และเกจวัดสถิติผู้ตอบแบบประเมินสด Real-time</li>
+            <li><strong>Seamless Financial Clearance:</strong> ปุ่มทางลัด <code class="bg-white px-1.5 py-0.5 rounded border">[💰 สรุปค่าใช้จ่ายจริง 7 หมวด]</code> บนการ์ดงานที่อนุมัติ เชื่อมต่อเข้าบันทึกบิลจริง 7 หมวดและปิดโครงการสมบูรณ์ในคลิกเดียว</li>
+            <li><strong>Centralized A4 Document & Report Archives:</strong> ศูนย์คลังเอกสารและรายงานทางการรวบรวมทั้งบันทึกขออนุมัติ A4, รายงานผลประเมิน, รายงานผู้บริหาร และวุฒิบัตร ทุกโครงการอย่างถาวร 24 ชม. ไม่สูญหาย</li>
+            <li><strong>Collapsible Navigation Bar:</strong> แถบเมนูนำทางสามารถซ่อน/แสดงได้ เพิ่มพื้นที่การแสดงผลและการทำงานบนหน้าจออย่างสูงสุด</li>
+            <li><strong>Interactive Role-Based User Manual:</strong> คู่มือการใช้งานระบบแยกตามบทบาททั้ง 4 ทีม เพื่อความเข้าใจในการปฏิบัติงานที่ตรงกัน</li>
+          </ul>
+        </div>
+
+        <!-- v1.15.2 -->
+        <div class="p-4 bg-white border border-slate-200 rounded-2xl space-y-2">
+          <div class="flex items-center justify-between">
+            <div class="flex items-center space-x-2">
+              <span class="bg-slate-100 text-slate-700 text-xs font-bold px-2 py-0.5 rounded-md font-mono">v1.15.2</span>
+              <span class="font-bold text-slate-800 text-xs">Out-of-Plan Request & Mandatory Justification Governance</span>
+            </div>
+            <span class="text-[11px] text-slate-400 font-mono">2026-11-11</span>
+          </div>
+          <p class="text-xs text-slate-600 leading-relaxed">
+            เพิ่มตัวเลือกขอนอกแผนหลักการประจำปี พร้อมกล่องเตือนและระบบบังคับกรอกเหตุผลความจำเป็น เชื่อมโยงข้อมูลผ่านคิวทีม B, คิวผู้บริหาร, และบันทึกข้อความ A4 ทางการ
+          </p>
+        </div>
+
+        <!-- v1.15.1 -->
+        <div class="p-4 bg-white border border-slate-200 rounded-2xl space-y-2">
+          <div class="flex items-center justify-between">
+            <div class="flex items-center space-x-2">
+              <span class="bg-slate-100 text-slate-700 text-xs font-bold px-2 py-0.5 rounded-md font-mono">v1.15.1</span>
+              <span class="font-bold text-slate-800 text-xs">1-Click LINE & Email Workflow Handoff Modal</span>
+            </div>
+            <span class="text-[11px] text-slate-400 font-mono">2026-11-09</span>
+          </div>
+          <p class="text-xs text-slate-600 leading-relaxed">
+            ระบบป๊อปอัปส่งต่องาน 1-Click เด้งอัตโนมัติเมื่อทีม A ส่งคำขอ หรือทีม B ส่งเสนอผู้บริหาร พร้อมเปิด LINE และคัดลอกข้อความสรุปพร้อม Deep Link
+          </p>
+        </div>
+
+        <!-- v1.15.0 -->
+        <div class="p-4 bg-white border border-slate-200 rounded-2xl space-y-2">
+          <div class="flex items-center justify-between">
+            <div class="flex items-center space-x-2">
+              <span class="bg-slate-100 text-slate-700 text-xs font-bold px-2 py-0.5 rounded-md font-mono">v1.15.0</span>
+              <span class="font-bold text-slate-800 text-xs">Annual Principle Master Plan Tab & Executive Assignment</span>
+            </div>
+            <span class="text-[11px] text-slate-400 font-mono">2026-11-09</span>
+          </div>
+          <p class="text-xs text-slate-600 leading-relaxed">
+            เพิ่มแท็บทะเบียนโครงการอนุมัติหลักการประจำปี (ผศ.อินทิรา บุนนาค อนุมัติหลักการ) ให้ฝ่ายขายเลือกใช้ และกำหนดตำแหน่งผู้อนุมัติเป็น กรรมการผู้จัดการ / ผู้จัดการทั่วไป
+          </p>
+        </div>
+
+      </div>
+
+    </div>
+  </div>
 </body>
 </html>

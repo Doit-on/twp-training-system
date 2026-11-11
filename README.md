@@ -1,17 +1,17 @@
 # Training Center TWP (EMS Enterprise Platform)
 
-[![Version](https://img.shields.io/badge/version-1.15.2-blue.svg)](VERSION)
+[![Version](https://img.shields.io/badge/version-1.16.0-blue.svg)](VERSION)
 [![Runtime](https://img.shields.io/badge/runtime-Google%20Apps%20Script%20V8-green.svg)](https://developers.google.com/apps-script)
 [![Database](https://img.shields.io/badge/database-Google%20Sheets-success.svg)](data/Database_Schema.md)
 [![License](https://img.shields.io/badge/license-MIT-lightgrey.svg)](LICENSE)
 
-> ระบบบริหารจัดการคำขอจัดกิจกรรมอบรม และประเมินผลความพึงพอใจแบบปิดลูป (Training Center TWP / EMS Enterprise v1.15.2) ขับเคลื่อนด้วยสถาปัตยกรรม Serverless บน Google Apps Script และ Google Sheets มาพร้อมระบบ **โครงการอนุมัติหลักการประจำปี (Tab 1)**, หน้า Landing Page โลโก้ TWP ทางการ, Modernized Tactile UX/UI Design, ระบบสแกน **QR Code ประจำทีม**, ระบบ **Real-Time Multi-Device Data Sync**, **ระบบบันทึกเสนอขออนุมัติปฏิบัติงาน A4 อักษร TH Sarabun 12pt ตามมาตรฐานงานสารบรรณ**, **ระบบป๊อปอัปเซ็นชื่อดิจิทัลสำหรับผู้บริหาร (Digital Signature Pad)**, **แบบประเมินความพึงพอใจมาตรฐาน 10 ข้อพร้อม QR Code**, **รายงานสรุปประเมิน 10 ข้อและวิเคราะห์ต้นทุน/หัวสำหรับผู้บริหาร (Executive A4 Cost-per-Head Evaluation Report)**, และ **รายงานสรุปผลการปฏิบัติงาน PPC**
+> ระบบบริหารจัดการคำขอจัดกิจกรรมอบรม และประเมินผลความพึงพอใจแบบปิดลูป (Training Center TWP / EMS Enterprise v1.16.0) ขับเคลื่อนด้วยสถาปัตยกรรม Serverless บน Google Apps Script และ Google Sheets มาพร้อมระบบ **โครงการอนุมัติหลักการประจำปี (Tab 1)**, หน้า Landing Page โลโก้ TWP ทางการ, Modernized Tactile UX/UI Design, ระบบสแกน **QR Code ประจำทีม**, ระบบ **Real-Time Multi-Device Data Sync**, **ระบบบันทึกเสนอขออนุมัติปฏิบัติงาน A4 อักษร TH Sarabun 12pt ตามมาตรฐานงานสารบรรณ**, **ระบบป๊อปอัปเซ็นชื่อดิจิทัลสำหรับผู้บริหาร (Digital Signature Pad)**, **แบบประเมินความพึงพอใจมาตรฐาน 10 ข้อพร้อม QR Code**, **รายงานสรุปประเมิน 10 ข้อและวิเคราะห์ต้นทุน/หัวสำหรับผู้บริหาร (Executive A4 Cost-per-Head Evaluation Report)**, และ **รายงานสรุปผลการปฏิบัติงาน PPC**
 
 ---
 
 ## 🌟 จุดเด่นและฟีเจอร์สำคัญ (Key Features)
 
-1. **โครงการอนุมัติหลักการประจำปี (Annual Principle-Approved Master Plan - v1.15.2):**
+1. **โครงการอนุมัติหลักการประจำปี (Annual Principle-Approved Master Plan - v1.16.0):**
    - **แท็บ 1 ถัดจาก Dashboard:** บันทึกและบริหารจัดการแผนงานอบรมที่ได้รับอนุมัติหลักการจาก **ผศ.อินทิรา บุนนาค (กรรมการผู้จัดการ)**
    - **ดึงข้อมูลเข้าสู่ฟอร์มทีม A ใน 1 คลิก:** เลือกจาก Dropdown ด้านบนของแบบฟอร์มทีม A เพื่อดึงหัวข้อ, งบประมาณหลักการ, และเป้าหมายยอดขายอัตโนมัติ โดยยังสามารถแก้ไขรายละเอียดได้ตามจริง
    - **ทางลัดหน้าแรก (Hero Shortcut):** เข้าสู่หน้าโครงการอนุมัติหลักการได้ทันทีจาก Landing Page
