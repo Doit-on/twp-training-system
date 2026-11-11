@@ -331,6 +331,10 @@
           <div class="flex items-center space-x-2 sm:space-x-2.5">
             
             <!-- Back to Landing Page Button -->
+            <button onclick="manualSyncData()" id="manualSyncHeaderBtn" title="ดึงข้อมูลล่าสุดจากเซิร์ฟเวอร์ทันที" class="bg-emerald-600 hover:bg-emerald-700 text-white px-2.5 sm:px-3 py-1.5 rounded-lg border border-emerald-400/40 text-xs font-bold flex items-center space-x-1.5 shadow-sm transition btn-tactile cursor-pointer">
+              <i class="fa-solid fa-arrows-rotate text-emerald-200" id="manualSyncIcon"></i>
+              <span class="hidden md:inline">ดึงข้อมูลล่าสุด</span>
+            </button>
             <button onclick="showLandingPage()" title="กลับหน้าแรก" class="bg-[#08539E] hover:bg-[#07488a] text-white px-2.5 py-1.5 rounded-lg border border-blue-400/30 text-xs font-semibold flex items-center space-x-1.5 transition btn-tactile">
               <i class="fa-solid fa-house"></i>
               <span class="hidden md:inline">หน้าแรก</span>
@@ -2396,6 +2400,111 @@
     </div>
   </div>
 
+
+  <!-- MODAL: WORKFLOW HANDOFF & NEXT-TEAM NOTIFICATION (DS / LMI STYLE) -->
+  <div id="handoffModal" class="hidden fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm flex items-center justify-center p-3 sm:p-4" onclick="closeHandoffModal()">
+    <div class="bg-white rounded-3xl max-w-lg w-full p-5 sm:p-6 space-y-4 shadow-2xl border border-slate-200 max-h-[92vh] overflow-y-auto custom-scrollbar" onclick="event.stopPropagation()">
+      
+      <!-- Header -->
+      <div class="flex items-center justify-between pb-3 border-b border-slate-100">
+        <div class="flex items-center space-x-2.5">
+          <div id="handoffIconBox" class="w-10 h-10 rounded-2xl bg-emerald-100 text-emerald-700 flex items-center justify-center text-lg shadow-xs">
+            <i class="fa-solid fa-paper-plane" id="handoffHeaderIcon"></i>
+          </div>
+          <div>
+            <h3 id="handoffTitle" class="font-bold text-slate-900 text-base">ส่งต่องานสำเร็จ</h3>
+            <p id="handoffSubtitle" class="text-xs text-slate-500">แจ้งเตือนฝ่ายถัดไปผ่าน LINE, อีเมล หรือคัดลอกข้อความด่วน</p>
+          </div>
+        </div>
+        <button onclick="closeHandoffModal()" class="text-slate-400 hover:text-slate-600 text-xl p-1"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+
+      <!-- Status Banner -->
+      <div id="handoffBanner" class="p-3 bg-emerald-50 border border-emerald-200 rounded-2xl text-emerald-900 text-xs font-semibold flex items-center space-x-2">
+        <i class="fa-solid fa-circle-check text-emerald-600 text-base" id="handoffBannerIcon"></i>
+        <span id="handoffBannerText">บันทึกข้อมูลเข้าสู่ระบบเรียบร้อยแล้ว</span>
+      </div>
+
+      <!-- Event Summary Card -->
+      <div class="bg-slate-50 border border-slate-200 rounded-2xl p-4 space-y-2 text-xs">
+        <div class="flex items-center justify-between">
+          <span class="text-slate-500 font-medium">รหัสคำขอ:</span>
+          <span id="handoffEventId" class="font-mono font-black text-blue-700 text-sm bg-blue-100/70 px-2.5 py-0.5 rounded-lg">EVT-2026-0001</span>
+        </div>
+        <div class="flex items-start justify-between gap-2">
+          <span class="text-slate-500 font-medium whitespace-nowrap">โรงเรียน:</span>
+          <span id="handoffSchoolName" class="font-bold text-slate-900 text-right">โรงเรียนสาธิต มศว ประสานมิตร (กทม.)</span>
+        </div>
+        <div class="flex items-start justify-between gap-2">
+          <span class="text-slate-500 font-medium whitespace-nowrap">หัวข้ออบรม:</span>
+          <span id="handoffTopic" class="text-slate-800 text-right">Active Learning สู่สมรรถนะผู้เรียน</span>
+        </div>
+        <div class="grid grid-cols-2 gap-2 pt-1 border-t border-slate-200/60 text-[11px]">
+          <div>
+            <span class="text-slate-500">งบประมาณ: </span>
+            <span id="handoffBudget" class="font-bold text-amber-700 font-mono">฿25,000</span>
+          </div>
+          <div class="text-right">
+            <span class="text-slate-500">วันที่จัด: </span>
+            <span id="handoffDate" class="font-semibold text-slate-800 font-mono">20/11/2026</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Action Buttons: LINE / Copy / Email (DS / LMI App Style) -->
+      <div class="space-y-2.5 pt-1">
+        <div class="text-xs font-bold text-slate-700 flex items-center justify-between">
+          <span>ช่องทางแจ้งเตือนฝ่ายถัดไปทันที:</span>
+          <span class="text-[10px] text-emerald-600 font-medium"><i class="fa-solid fa-bolt mr-1"></i>แตะปุ่มเดียวส่งได้ทันที</span>
+        </div>
+
+        <!-- LINE Button (Primary) -->
+        <a id="handoffLineBtn" href="#" target="_blank" class="w-full py-3 px-4 bg-[#06C755] hover:bg-[#05b34c] text-white font-bold text-sm rounded-2xl shadow-lg shadow-emerald-900/20 flex items-center justify-center space-x-2.5 transition transform active:scale-98 cursor-pointer btn-tactile">
+          <i class="fa-brands fa-line text-2xl"></i>
+          <span id="handoffLineBtnText">ส่งต่อเข้า LINE ทันที (เปิดแอป LINE)</span>
+        </a>
+
+        <!-- 1-Click Copy Message Button -->
+        <button type="button" onclick="copyHandoffMessage()" class="w-full py-2.5 px-4 bg-slate-800 hover:bg-slate-900 text-white font-bold text-xs rounded-2xl shadow flex items-center justify-center space-x-2 transition cursor-pointer btn-tactile">
+          <i class="fa-solid fa-copy text-amber-300"></i>
+          <span id="handoffCopyBtnText">คัดลอกข้อความสรุป & ลิงก์แจ้งเตือน</span>
+        </button>
+
+        <div class="grid grid-cols-2 gap-2 pt-1">
+          <!-- Email Button -->
+          <a id="handoffEmailBtn" href="#" class="py-2.5 px-3 bg-blue-50 hover:bg-blue-100 text-blue-700 border border-blue-200 font-bold text-xs rounded-xl flex items-center justify-center space-x-1.5 transition text-center cursor-pointer">
+            <i class="fa-solid fa-envelope"></i>
+            <span id="handoffEmailBtnText">ส่งอีเมลแจ้งเตือน</span>
+          </a>
+          <!-- Preview A4 Memo -->
+          <button type="button" onclick="openA4FromHandoff()" class="py-2.5 px-3 bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-200 font-bold text-xs rounded-xl flex items-center justify-center space-x-1.5 transition cursor-pointer">
+            <i class="fa-solid fa-file-invoice"></i>
+            <span>ดูบันทึก A4</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Deep Link Direct Box -->
+      <div class="p-3 bg-slate-100 rounded-2xl space-y-1 text-xs">
+        <div class="flex items-center justify-between text-[11px] text-slate-500 font-semibold">
+          <span>ลิงก์ตรงสำหรับเปิดตรวจงาน (Direct Link):</span>
+          <button type="button" onclick="copyHandoffUrl()" class="text-blue-600 hover:text-blue-800 font-bold text-[10px]">คัดลอกเฉพาะลิงก์</button>
+        </div>
+        <input type="text" id="handoffDirectUrlInput" readonly class="w-full bg-white border border-slate-200 rounded-xl px-2.5 py-1.5 font-mono text-[11px] text-slate-600 select-all cursor-pointer" onclick="this.select()">
+      </div>
+
+      <!-- Close / Done Button -->
+      <div class="pt-2 border-t border-slate-100 flex items-center justify-between">
+        <span class="text-[10px] text-slate-400">* ระบบบันทึกข้อมูลลงฐานข้อมูลกลางแล้ว</span>
+        <button type="button" onclick="closeHandoffModal()" class="px-5 py-2 bg-slate-200 hover:bg-slate-300 text-slate-700 font-bold text-xs rounded-xl transition cursor-pointer">
+          ปิดหน้าต่าง
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+
   <!-- ========================================== -->
   <!-- MODAL: QUICK ADD NEW SALES (เพิ่มพนักงานขายใหม่) -->
   <!-- ========================================== -->
@@ -4059,8 +4168,20 @@
     function handleUrlParameters() {
       const urlParams = new URLSearchParams(window.location.search);
       const targetRole = urlParams.get('role');
+      const targetTab = urlParams.get('tab') || urlParams.get('role');
+      const targetEventId = urlParams.get('eventId') || urlParams.get('id');
       const targetEp = urlParams.get('ep');
       const targetOp = urlParams.get('operator');
+
+      if (targetTab) {
+        enterPortal();
+        switchTab(targetTab);
+        if (targetEventId) {
+          setTimeout(() => {
+            highlightEventRow(targetEventId);
+          }, 600);
+        }
+      }
 
       if (targetEp) {
         try {
@@ -4105,6 +4226,277 @@
     }
 
     // ------------------- INITIALIZATION & LIFECYCLE -------------------
+
+    
+    // ------------------- WORKFLOW HANDOFF & NOTIFICATION ENGINE (DS / LMI STYLE) -------------------
+
+    let currentHandoffMessage = '';
+    let currentHandoffUrl = '';
+    let currentHandoffEventId = '';
+
+    function showHandoffModal(flowType, req, isOffline = false) {
+      if (!req) return;
+      currentHandoffEventId = req.eventId;
+
+      const modal = document.getElementById('handoffModal');
+      const titleElem = document.getElementById('handoffTitle');
+      const subElem = document.getElementById('handoffSubtitle');
+      const iconBox = document.getElementById('handoffIconBox');
+      const headerIcon = document.getElementById('handoffHeaderIcon');
+      const banner = document.getElementById('handoffBanner');
+      const bannerText = document.getElementById('handoffBannerText');
+      const bannerIcon = document.getElementById('handoffBannerIcon');
+
+      const evIdElem = document.getElementById('handoffEventId');
+      const schoolElem = document.getElementById('handoffSchoolName');
+      const topicElem = document.getElementById('handoffTopic');
+      const budgetElem = document.getElementById('handoffBudget');
+      const dateElem = document.getElementById('handoffDate');
+
+      const lineBtn = document.getElementById('handoffLineBtn');
+      const lineBtnText = document.getElementById('handoffLineBtnText');
+      const emailBtn = document.getElementById('handoffEmailBtn');
+      const emailBtnText = document.getElementById('handoffEmailBtnText');
+      const directUrlInput = document.getElementById('handoffDirectUrlInput');
+
+      if (!modal) return;
+
+      // Populate summary card
+      evIdElem.innerText = req.eventId;
+      schoolElem.innerText = (req.schoolName || '-') + (req.province ? ' (' + req.province + ')' : '');
+      topicElem.innerText = req.courseTopic || req.customTopic || '-';
+      budgetElem.innerText = '฿' + (Number(req.actualBudget || req.estBudget) || 0).toLocaleString();
+      dateElem.innerText = req.eventDate || '-';
+
+      // Base deep link URL
+      const origin = window.location.origin && window.location.origin !== 'null' ? window.location.origin : '';
+      const path = window.location.pathname || '';
+      const baseUrl = (origin + path).split('?')[0];
+
+      let targetTab = 'teamB';
+      let messageText = '';
+      let emailSubject = '';
+      let emailBody = '';
+      let targetEmail = '';
+
+      if (flowType === 'TEAM_A_TO_B') {
+        targetTab = 'teamB';
+        currentHandoffUrl = baseUrl + '?tab=teamB&eventId=' + req.eventId;
+
+        titleElem.innerText = 'ส่งคำขอให้ฝ่ายวิชาการ (ทีม B) สำเร็จ!';
+        subElem.innerText = 'แจ้งเตือนทีม B ทาง LINE เพื่อให้เข้าตรวจวิทยากรและงบประมาณทันที';
+        iconBox.className = 'w-10 h-10 rounded-2xl bg-emerald-100 text-emerald-700 flex items-center justify-center text-lg shadow-xs';
+        headerIcon.className = 'fa-solid fa-paper-plane';
+
+        if (isOffline) {
+          banner.className = 'p-3 bg-amber-50 border border-amber-200 rounded-2xl text-amber-900 text-xs font-semibold flex items-center space-x-2';
+          bannerIcon.className = 'fa-solid fa-triangle-exclamation text-amber-600 text-base';
+          bannerText.innerText = 'บันทึกในเครื่องเรียบร้อย (เซิร์ฟเวอร์ยังไม่พร้อม ให้แชร์ลิงก์นี้ให้ทีม B)';
+        } else {
+          banner.className = 'p-3 bg-emerald-50 border border-emerald-200 rounded-2xl text-emerald-900 text-xs font-semibold flex items-center space-x-2';
+          bannerIcon.className = 'fa-solid fa-circle-check text-emerald-600 text-base';
+          bannerText.innerText = 'บันทึกเข้าสู่ระบบ Google Sheets เรียบร้อยแล้ว';
+        }
+
+        lineBtnText.innerText = 'ส่งต่อเข้า LINE ฝ่ายวิชาการ (ทีม B)';
+        emailBtnText.innerText = 'ส่งอีเมลแจ้งทีม B';
+
+        messageText = `🔔 [Training TWP] มีคำขอจัดอบรมใหม่รอตรวจสอบ!\n` +
+          `━━━━━━━━━━━━━━━━━━━━\n` +
+          `📌 รหัสคำขอ: ${req.eventId}\n` +
+          `🏫 โรงเรียน: ${req.schoolName} (${req.province || '-' })\n` +
+          `📚 หัวข้อ: ${req.courseTopic || req.customTopic || '-'}\n` +
+          `📅 วันที่จัด: ${req.eventDate || '-'} | 👥 ผู้เข้าอบรม: ${req.expectedTrainees || 50} ท่าน\n` +
+          `💰 งบประมาณขอ: ฿${Number(req.estBudget || 0).toLocaleString()} | 🎯 เป้าขาย: ฿${Number(req.targetSales || 0).toLocaleString()}\n` +
+          `👤 ผู้เสนอ: ${req.saleName || req.createdBy || 'ทีม A'}\n` +
+          `━━━━━━━━━━━━━━━━━━━━\n` +
+          `👉 คลิกเพื่อเปิดตรวจวิชาการและวิทยากรทันที:\n${currentHandoffUrl}`;
+
+        emailSubject = `🔔 [TWP Training] มีคำขอจัดอบรมใหม่รอตรวจสอบ: ${req.schoolName} (${req.eventId})`;
+        emailBody = messageText;
+
+      } else if (flowType === 'TEAM_B_TO_EXEC') {
+        targetTab = 'exec';
+        currentHandoffUrl = baseUrl + '?tab=exec&eventId=' + req.eventId;
+
+        titleElem.innerText = 'ส่งต่อให้ผู้บริหารพิจารณาอนุมัติเรียบร้อย!';
+        subElem.innerText = 'แจ้งเตือนผู้บริหารทาง LINE เพื่อให้พิจารณาและลงนามอิเล็กทรอนิกส์';
+        iconBox.className = 'w-10 h-10 rounded-2xl bg-amber-100 text-amber-800 flex items-center justify-center text-lg shadow-xs';
+        headerIcon.className = 'fa-solid fa-stamp';
+
+        banner.className = 'p-3 bg-amber-50 border border-amber-200 rounded-2xl text-amber-900 text-xs font-semibold flex items-center space-x-2';
+        bannerIcon.className = 'fa-solid fa-clock text-amber-600 text-base';
+        bannerText.innerText = 'ส่งต่องานเข้าคิวอนุมัติของผู้บริหารเรียบร้อยแล้ว';
+
+        lineBtnText.innerText = 'ส่งข้อความขออนุมัติถึงผู้บริหารทาง LINE';
+        emailBtnText.innerText = 'ส่งอีเมลขออนุมัติถึงผู้บริหาร';
+
+        messageText = `📑 [Training TWP] คำขอจัดอบรมผ่านการตรวจสอบ รอท่านอนุมัติ\n` +
+          `━━━━━━━━━━━━━━━━━━━━\n` +
+          `📌 รหัสคำขอ: ${req.eventId}\n` +
+          `🏫 โรงเรียน: ${req.schoolName} (${req.province || '-' })\n` +
+          `📚 หัวข้อ: ${req.courseTopic || req.customTopic || '-'}\n` +
+          `📅 วันที่จัด: ${req.eventDate || '-'}\n` +
+          `👨‍🏫 วิทยากร: ${req.teamBSpeaker || '-'}\n` +
+          `💰 งบขอ: ฿${Number(req.estBudget || 0).toLocaleString()} ➔ ตัดจ่ายจริง: ฿${Number(req.actualBudget || 0).toLocaleString()}\n` +
+          `📋 ความเห็นวิชาการ: ${req.teamBNotes || '-'}\n` +
+          `━━━━━━━━━━━━━━━━━━━━\n` +
+          `👉 เรียนเชิญพิจารณาและลงนามอนุมัติอิเล็กทรอนิกส์:\n${currentHandoffUrl}`;
+
+        emailSubject = `📑 [TWP Training] คำขอจัดอบรมรอท่านลงนามอนุมัติ: ${req.schoolName} (${req.eventId})`;
+        emailBody = messageText;
+
+      } else if (flowType === 'EXEC_APPROVED') {
+        targetTab = 'dashboard';
+        currentHandoffUrl = baseUrl + '?tab=dashboard&eventId=' + req.eventId;
+
+        titleElem.innerText = 'ผู้บริหารลงนามอนุมัติเรียบร้อยแล้ว! 🎉';
+        subElem.innerText = 'แจ้งผลการอนุมัติให้ทีม A และทีม B ทราบเพื่อเริ่มดำเนินการ';
+        iconBox.className = 'w-10 h-10 rounded-2xl bg-emerald-100 text-emerald-800 flex items-center justify-center text-lg shadow-xs';
+        headerIcon.className = 'fa-solid fa-circle-check';
+
+        banner.className = 'p-3 bg-emerald-50 border border-emerald-200 rounded-2xl text-emerald-900 text-xs font-semibold flex items-center space-x-2';
+        bannerIcon.className = 'fa-solid fa-file-circle-check text-emerald-600 text-base';
+        bannerText.innerText = 'ออกใบบันทึกขออนุมัติ A4 และ QR ประเมินพร้อมใช้งานแล้ว';
+
+        lineBtnText.innerText = 'แชร์ผลการอนุมัติเข้ากลุ่ม LINE';
+        emailBtnText.innerText = 'ส่งอีเมลแจ้งผลการอนุมัติ';
+
+        messageText = `✅ [Training TWP] ผู้บริหารลงนามอนุมัติคำขอจัดอบรมแล้ว!\n` +
+          `━━━━━━━━━━━━━━━━━━━━\n` +
+          `📌 รหัสคำขอ: ${req.eventId}\n` +
+          `🏫 โรงเรียน: ${req.schoolName} (${req.province || '-' })\n` +
+          `✍️ ผู้อนุมัติ: ${req.approvedBy || 'ผศ.อินทิรา บุนนาค (กรรมการผู้จัดการ)'}\n` +
+          `💰 งบประมาณที่อนุมัติ: ฿${Number(req.actualBudget || req.estBudget || 0).toLocaleString()} บาท\n` +
+          `📄 บันทึกข้อความ A4 และแบบประเมิน QR Code พร้อมใช้งานแล้ว\n` +
+          `━━━━━━━━━━━━━━━━━━━━\n` +
+          `👉 คลิกดูรายละเอียดและพิมพ์เอกสาร A4:\n${currentHandoffUrl}`;
+
+        emailSubject = `✅ [TWP Training] อนุมัติแล้ว: คำขอจัดอบรม ${req.schoolName} (${req.eventId})`;
+        emailBody = messageText;
+      } else {
+        // Generic Share
+        currentHandoffUrl = baseUrl + '?eventId=' + req.eventId;
+        titleElem.innerText = 'ส่งต่อข้อมูลคำขอจัดอบรม';
+        subElem.innerText = 'แชร์ข้อมูลคำขอ ' + req.eventId + ' เข้า LINE หรืออีเมล';
+        messageText = `📌 [Training TWP] ข้อมูลคำขอจัดอบรม: ${req.eventId}\n` +
+          `🏫 โรงเรียน: ${req.schoolName}\n` +
+          `📚 หัวข้อ: ${req.courseTopic || req.customTopic || '-'}\n` +
+          `👉 เปิดดูงาน: ${currentHandoffUrl}`;
+        emailSubject = `📌 [TWP Training] คำขอจัดอบรม: ${req.schoolName} (${req.eventId})`;
+        emailBody = messageText;
+      }
+
+      currentHandoffMessage = messageText;
+      directUrlInput.value = currentHandoffUrl;
+
+      // LINE URL Scheme for Mobile & Desktop Web
+      lineBtn.href = 'https://line.me/R/msg/text/?' + encodeURIComponent(messageText);
+
+      // Email Mailto
+      emailBtn.href = 'mailto:' + targetEmail + '?subject=' + encodeURIComponent(emailSubject) + '&body=' + encodeURIComponent(emailBody);
+
+      modal.classList.remove('hidden');
+    }
+
+    function closeHandoffModal() {
+      const modal = document.getElementById('handoffModal');
+      if (modal) modal.classList.add('hidden');
+    }
+
+    function copyHandoffMessage() {
+      if (!currentHandoffMessage) return;
+      navigator.clipboard.writeText(currentHandoffMessage)
+        .then(() => {
+          const btnText = document.getElementById('handoffCopyBtnText');
+          const original = btnText ? btnText.innerText : '';
+          if (btnText) btnText.innerHTML = '<i class="fa-solid fa-check text-emerald-400 mr-1"></i> คัดลอกสำเร็จแล้ว!';
+          showAlert('✅ คัดลอกข้อความสรุปพร้อมลิงก์ส่งต่อเรียบร้อยแล้ว นำไปวางในแชต LINE ได้ทันที', 'success');
+          setTimeout(() => {
+            if (btnText) btnText.innerText = original;
+          }, 3000);
+        })
+        .catch(() => {
+          showAlert('กรุณาคัดลอกข้อความด้วยตนเองจากช่องด้านล่าง', 'info');
+        });
+    }
+
+    function copyHandoffUrl() {
+      if (!currentHandoffUrl) return;
+      navigator.clipboard.writeText(currentHandoffUrl)
+        .then(() => {
+          showAlert('✅ คัดลอกลิงก์ตรงเรียบร้อยแล้ว', 'success');
+        })
+        .catch(() => {
+          showAlert('คัดลอกลิงก์ไม่สำเร็จ', 'error');
+        });
+    }
+
+    function openA4FromHandoff() {
+      if (!currentHandoffEventId) return;
+      openPrintModal(currentHandoffEventId);
+    }
+
+    function openHandoffForEvent(eventId) {
+      const req = (AppState.requests || []).find(r => r.eventId === eventId);
+      if (!req) return;
+      let flow = 'GENERIC';
+      if (req.status === 'WAITING_B') flow = 'TEAM_A_TO_B';
+      else if (req.status === 'WAITING_EXEC') flow = 'TEAM_B_TO_EXEC';
+      else if (req.status === 'APPROVED') flow = 'EXEC_APPROVED';
+      showHandoffModal(flow, req);
+    }
+
+    // ------------------- MANUAL SYNC BUTTON -------------------
+
+    function manualSyncData() {
+      const icon = document.getElementById('manualSyncIcon');
+      if (icon) icon.classList.add('fa-spin');
+      showAlert('กำลังดึงข้อมูลล่าสุดจาก Google Sheets...', 'info');
+
+      fetchInitialData(false);
+
+      setTimeout(() => {
+        if (icon) icon.classList.remove('fa-spin');
+        showAlert('✅ ซิงค์ข้อมูลล่าสุดจาก Google Sheets สำเร็จเรียบร้อยแล้ว', 'success');
+      }, 1200);
+    }
+
+    // ------------------- DEEP LINKING & ROW HIGHLIGHT -------------------
+
+    function highlightEventRow(eventId) {
+      if (!eventId) return;
+      // Search in table rows or cards
+      const allRows = document.querySelectorAll('tr, .reading-card');
+      let foundElem = null;
+
+      allRows.forEach(row => {
+        if (row.innerText && row.innerText.includes(eventId)) {
+          foundElem = row;
+        }
+      });
+
+      if (foundElem) {
+        foundElem.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        foundElem.classList.add('is-active-reading');
+        foundElem.style.transition = 'all 0.3s ease';
+        foundElem.style.boxShadow = '0 0 0 3px #08539E, 0 10px 25px -5px rgba(8, 83, 158, 0.4)';
+        
+        // Add notice badge
+        const badgeNotice = document.createElement('span');
+        badgeNotice.className = 'inline-flex items-center px-2 py-0.5 rounded-full text-[10px] bg-indigo-600 text-white font-bold ml-2 shadow-sm animate-pulse';
+        badgeNotice.innerHTML = '<i class="fa-solid fa-arrow-pointer mr-1"></i>งานที่เปิดจากลิงก์';
+        
+        const firstCol = foundElem.querySelector('td') || foundElem;
+        if (firstCol && !firstCol.querySelector('.link-highlight-badge')) {
+          badgeNotice.classList.add('link-highlight-badge');
+          firstCol.appendChild(badgeNotice);
+        }
+
+        showAlert('🔔 เปิดงาน ' + eventId + ' เรียบร้อยแล้ว พร้อมให้ท่านดำเนินการ', 'success');
+      }
+    }
+
 
     window.addEventListener('DOMContentLoaded', () => {
       // Force ensure current production Apps Script endpoint
@@ -6475,23 +6867,41 @@
             document.getElementById('needTransportation').checked = false;
             toggleTransportFields(false);
             if (document.getElementById('resourceLink')) document.getElementById('resourceLink').value = '';
+            const createdId = res.data?.eventId || ('EVT-' + Date.now());
+            const newReqObj = {
+              eventId: createdId,
+              createdAt: new Date().toISOString(),
+              status: 'WAITING_B',
+              ...payload,
+              createdBy: AppState.operatorName,
+              submittedToBAt: new Date().toISOString()
+            };
+            // Add immediately to local requests array so it shows up with 0ms delay
+            AppState.requests.unshift(newReqObj);
+            localStorage.setItem('twp_requests_store', JSON.stringify(AppState.requests));
+            renderAll();
             notifyDataUpdated('CREATE_REQUEST_A');
-            fetchInitialData();
+            fetchInitialData(true);
             switchTab('dashboard');
+            // Trigger 1-Click Handoff Dialog (LINE, Copy, Email)
+            showHandoffModal('TEAM_A_TO_B', newReqObj, false);
           })
           .catch(err => {
             console.warn('postToBackend CREATE_REQUEST_A failed, falling back to local creation:', err);
             btn.disabled = false;
             btn.innerHTML = '<i class="fa-solid fa-paper-plane mr-2"></i> ส่งคำขอให้ฝ่ายวิชาการ (ทีม B) ตรวจสอบ';
             const newId = 'EVT-2026-000' + (AppState.requests.length + 1);
-            AppState.requests.unshift({
+            const newReqObj = {
               eventId: newId,
               createdAt: new Date().toISOString(),
               status: 'WAITING_B',
               ...payload,
-              createdBy: AppState.operatorName
-            });
+              createdBy: AppState.operatorName,
+              submittedToBAt: new Date().toISOString()
+            };
+            AppState.requests.unshift(newReqObj);
             localStorage.setItem('twp_requests_store', JSON.stringify(AppState.requests));
+            renderAll();
             showAlert(`✅ สร้างคำขอจัดอบรม ${newId} เรียบร้อยแล้ว (บันทึกในเครื่อง: Google Apps Script ยังไม่พร้อมเชื่อมต่อ)`, 'success');
             document.getElementById('teamAForm').reset();
             document.getElementById('needAccommodation').checked = false;
@@ -6500,6 +6910,8 @@
             toggleTransportFields(false);
             notifyDataUpdated('CREATE_REQUEST_A');
             switchTab('dashboard');
+            // Trigger 1-Click Handoff Dialog even in fallback
+            showHandoffModal('TEAM_A_TO_B', newReqObj, true);
           });
       } else {
         // Local Mock Creation

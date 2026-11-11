@@ -1,29 +1,22 @@
 /**
  * ============================================================================
- * EMS Enterprise - Training Center TWP (Production Apps Script Backend)
- * Version: 1.13.0
+ * EMS Enterprise - Training Center TWP
+ * Version: 1.5.0
  * Architecture: Google Apps Script Backend (Serverless) + Google Sheets Database
- * Cloud Storage: Google Drive Photo Repository (Folder: 1GxHFu2kMPwtl7j3PvnD6wHRb_YwlQGqk)
  * Security: Zero-Trust Data Isolation + Multi-Operator Stamping + Concurrency Lock
- * Features: 
- *   - 10-Dimension Evaluation Survey Persistence
- *   - International E-Certificate Delivery via Email (Thai & English Names)
- *   - Anti-Reprint Lock & Admin Security Override
- *   - Team B Photo Upload & Sync to Google Drive
- *   - PPC Standard A4 Report Engine (PDF & Word .docx)
+ * Features: Multi-Device Sync + Team QR Pairing + PPC Standard A4 Report Engine (PDF & Word .docx)
  * ============================================================================
  */
 
-const SYSTEM_VERSION = '1.13.0';
+const SYSTEM_VERSION = '1.9.0';
 const DEFAULT_ADMIN_PASS = 'admin0000';
-const GOOGLE_DRIVE_PHOTO_FOLDER_ID = '1GxHFu2kMPwtl7j3PvnD6wHRb_YwlQGqk';
 
 function getSpreadsheet() {
   return SpreadsheetApp.getActiveSpreadsheet();
 }
 
 /**
- * WebApp View Dispatcher & Ping Endpoint (doGet)
+ * WebApp View Dispatcher & Ping Endpoint
  */
 function doGet(e) {
   let spreadsheetName = 'TWP Training Center Database';
@@ -32,24 +25,24 @@ function doGet(e) {
     if (ss) spreadsheetName = ss.getName();
   } catch (err) {}
 
+  // หากเปิดลิงก์ตรงในเบราว์เซอร์ จะแสดงสถานะ Online และข้อมูลระบบทันที ให้ผู้ใช้ตรวจสอบได้ใน 1 วินาที
   return ContentService.createTextOutput(JSON.stringify({
     status: 'ONLINE',
     service: 'EMS Enterprise Backend API (Training Center TWP)',
     version: SYSTEM_VERSION,
     spreadsheet: spreadsheetName,
-    drivePhotoFolder: GOOGLE_DRIVE_PHOTO_FOLDER_ID,
     serverTime: new Date().toISOString(),
-    message: 'Google Apps Script Web App v1.13.0 ทำงานอย่างสมบูรณ์ พร้อมรับคำสั่ง doPost จากระบบเรียบร้อยแล้ว'
+    message: 'Google Apps Script Web App ทำงานอย่างสมบูรณ์ พร้อมรับคำสั่ง doPost จากระบบ v1.9.0 เรียบร้อยแล้ว'
   }, null, 2)).setMimeType(ContentService.MimeType.JSON);
 }
 
 /**
- * API Gateway รองรับคำสั่งจาก Antigravity SPA (doPost)
+ * API Gateway รองรับคำสั่งจาก Antigravity Single-Page Application (SPA)
  */
 function doPost(e) {
   const lock = LockService.getScriptLock();
   try {
-    const hasLock = lock.tryLock(30000); // Concurrency Lock 30 วินาที ป้องกันข้อมูลชนกัน
+    const hasLock = lock.tryLock(15000); // รอคิวล็อกได้สูงสุด 15 วินาที
     if (!hasLock) {
       return createJsonResponse({
         status: 'ERROR',
@@ -85,40 +78,39 @@ function doPost(e) {
       case 'SUBMIT_EVALUATION':
         result = submitEvaluationResponse(payload);
         break;
-      case 'SEND_ECERTIFICATE_EMAIL':
-        result = sendEcertificateEmail(payload);
+      case 'ADMIN_LOGIN':
+        result = handleAdminLogin(payload);
         break;
-      case 'ADMIN_UNLOCK_CERT':
-        result = adminUnlockCert(payload);
+      case 'ADMIN_INIT_SHEETS':
+        result = handleAdminInitSheets(payload);
         break;
-      case 'UPLOAD_EVENT_PHOTO':
-        result = uploadEventPhotoToDrive(payload);
+      case 'ADMIN_GET_LOGS':
+        result = handleAdminGetLogs(payload);
         break;
-      case 'INIT_SHEETS':
-        result = initializeSheets();
+      case 'ADMIN_UPDATE_SETTINGS':
+        result = handleAdminUpdateSettings(payload);
         break;
-      case 'GET_AUDIT_LOGS':
-        result = getAuditLogs();
+      case 'SETUP_ALL_PPC_SHEETS':
+        result = setupAllPpcSheets();
+        break;
+      case 'GET_PPC_REPORT_DATA':
+        result = getPpcReportData(payload.eventId);
+        break;
+      case 'EXPORT_PPC_REPORT_PDF':
+        result = exportPpcReportPdf(payload.eventId);
+        break;
+      case 'EXPORT_PPC_REPORT_DOCX':
+        result = exportPpcReportDocx(payload.eventId);
         break;
       default:
         throw new Error('ไม่พบ Action ที่ระบุ: ' + action);
     }
 
-    return createJsonResponse({
-      status: 'SUCCESS',
-      action: action,
-      data: result,
-      serverTime: new Date().toISOString()
-    });
-
-  } catch (error) {
-    Logger.log('Error in doPost: ' + error.toString());
-    return createJsonResponse({
-      status: 'ERROR',
-      message: error.toString()
-    });
+    return createJsonResponse({ status: 'SUCCESS', data: result, version: SYSTEM_VERSION });
+  } catch (err) {
+    return createJsonResponse({ status: 'ERROR', message: err.toString(), version: SYSTEM_VERSION });
   } finally {
-    lock.releaseLock();
+    try { lock.releaseLock(); } catch(e) {}
   }
 }
 
@@ -127,90 +119,385 @@ function createJsonResponse(data) {
     .setMimeType(ContentService.MimeType.JSON);
 }
 
-// ------------------- INITIAL DATA & HEALTH CHECK -------------------
+// ------------------- PING & HEALTH CHECK -------------------
 
 function handlePing() {
+  const ss = getSpreadsheet();
   return {
-    status: 'HEALTHY',
-    version: SYSTEM_VERSION,
-    timestamp: new Date().toISOString()
+    pong: true,
+    serverTime: new Date().toISOString(),
+    spreadsheetId: ss.getId(),
+    spreadsheetName: ss.getName(),
+    version: SYSTEM_VERSION
   };
 }
 
+// ------------------- INITIAL DATA FETCH -------------------
+
 function getInitialData() {
   const ss = getSpreadsheet();
-  ensureSheetsExist(ss);
+  
+  // ตรวจสอบและสร้างชีตอัตโนมัติหากยังไม่มี
+  ensureRequiredSheets(ss);
 
-  const reqSheet = ss.getSheetByName('Training_Requests');
-  const reqData = reqSheet.getDataRange().getValues();
-  const requests = [];
+  // ดึง PPC Master Data
+  const ppcSheet = ss.getSheetByName('PPC_Master');
+  const ppcData = ppcSheet.getDataRange().getValues();
+  const masterData = {
+    provinces: [],
+    sales: [],
+    schools: []
+  };
 
-  if (reqData.length > 1) {
-    const headers = reqData[0];
-    for (let i = 1; i < reqData.length; i++) {
-      const row = reqData[i];
-      if (!row[0]) continue;
-      requests.push({
-        eventId: row[0],
-        createdAt: row[1],
-        status: row[2],
-        activityType: row[3],
-        courseTopic: row[4],
-        customTopic: row[5],
-        eventDate: row[6],
-        province: row[7],
-        saleName: row[8],
-        schoolId: row[9],
-        schoolName: row[10],
-        schoolArea: row[11],
-        schoolSize: row[12],
-        speakerType: row[13],
-        targetSales: Number(row[14]) || 0,
-        estBudget: Number(row[15]) || 0,
-        teamBSpeaker: row[16],
-        teamBNotes: row[17],
-        actualBudget: Number(row[18]) || 0,
-        createdBy: row[19],
-        reviewedBy: row[20],
-        approvedBy: row[21],
-        lastModifiedBy: row[22],
-        submittedToBAt: row[23],
-        reviewedByBAt: row[24],
-        approvedAt: row[25],
-        pdfUrl: row[26],
-        needAccommodation: row[27],
-        roomCount: Number(row[28]) || 0,
-        needTransportation: row[29],
-        transportDetails: row[30],
-        evalCount: Number(row[31]) || 0,
-        evalAvgScore: Number(row[32]) || 0,
-        resourceLink: row[33] || ''
-      });
+  const provinceSet = new Set();
+  const salesMap = new Map();
+
+  for (let i = 1; i < ppcData.length; i++) {
+    const row = ppcData[i];
+    if (!row[0] && !row[1]) continue;
+    const zone = String(row[0] || '').trim();
+    const prov = String(row[1] || '').trim();
+    const saleId = String(row[2] || '').trim();
+    const saleName = String(row[3] || '').trim();
+    const schoolId = String(row[4] || '').trim();
+    const schoolName = String(row[5] || '').trim();
+    const tier = String(row[6] || '').trim();
+
+    if (prov) provinceSet.add(prov);
+    if (saleName && !salesMap.has(saleName)) {
+      salesMap.set(saleName, { saleId, saleName, province: prov, zone });
+    }
+    if (schoolId) {
+      masterData.schools.push({ schoolId, schoolName, province: prov, zone, tier, saleName });
     }
   }
 
-  return { requests: requests };
+  masterData.provinces = Array.from(provinceSet).sort();
+  masterData.sales = Array.from(salesMap.values());
+
+  // ดึง Event Requests
+  const reqSheet = ss.getSheetByName('Event_Requests');
+  const reqRows = reqSheet.getDataRange().getValues();
+  const requests = [];
+
+  for (let i = 1; i < reqRows.length; i++) {
+    const r = reqRows[i];
+    if (!r[0]) continue;
+    requests.push({
+      eventId: r[0],
+      createdAt: r[1],
+      status: r[2],
+      activityType: r[3],
+      courseTopic: r[4],
+      customTopic: r[5],
+      eventDate: r[6] ? Utilities.formatDate(new Date(r[6]), "GMT+7", "yyyy-MM-dd") : '',
+      province: r[7],
+      saleName: r[8],
+      schoolId: r[9],
+      schoolName: r[10],
+      speakerType: r[11],
+      venueType: r[12],
+      objective: r[13],
+      targetSales: Number(r[14]) || 0,
+      estBudget: Number(r[15]) || 0,
+      teamBSpeaker: r[16] || '',
+      teamBNotes: r[17] || '',
+      actualBudget: Number(r[18]) || 0,
+      createdBy: r[19] || '',
+      reviewedBy: r[20] || '',
+      approvedBy: r[21] || '',
+      lastModifiedBy: r[22] || '',
+      submittedToBAt: r[23] || '',
+      reviewedByBAt: r[24] || '',
+      approvedAt: r[25] || '',
+      pdfUrl: r[26] || '',
+      needAccommodation: r[27] || 'NO',
+      roomCount: Number(r[28]) || 0,
+      needTransportation: r[29] || 'NO',
+      transportDetails: r[30] || '',
+      docxUrl: r[31] || '',
+      rowIndex: i + 1
+    });
+  }
+
+  // ดึงสถิติ Evaluation
+  const evalSheet = ss.getSheetByName('Evaluation_Responses');
+  const evalRows = evalSheet.getDataRange().getValues();
+  const evalMap = {};
+  for (let i = 1; i < evalRows.length; i++) {
+    const er = evalRows[i];
+    const eId = er[1];
+    if (!eId) continue;
+    if (!evalMap[eId]) {
+      evalMap[eId] = { count: 0, q1: 0, q2: 0, q3: 0, q4: 0, q5: 0 };
+    }
+    evalMap[eId].count += 1;
+    evalMap[eId].q1 += Number(er[3]) || 0;
+    evalMap[eId].q2 += Number(er[4]) || 0;
+    evalMap[eId].q3 += Number(er[5]) || 0;
+    evalMap[eId].q4 += Number(er[6]) || 0;
+    evalMap[eId].q5 += Number(er[7]) || 0;
+  }
+
+  // ผูกคะแนนเฉลี่ยลงใน Requests
+  requests.forEach(function(req) {
+    const stats = evalMap[req.eventId];
+    if (stats && stats.count > 0) {
+      req.evalCount = stats.count;
+      req.evalAvg = Number(((stats.q1 + stats.q2 + stats.q3 + stats.q4 + stats.q5) / (stats.count * 5)).toFixed(2));
+    } else {
+      req.evalCount = 0;
+      req.evalAvg = 0;
+    }
+  });
+
+  // รวมตัวเลือกอัตโนมัติ (Auto-Learned Options จากประวัติที่เคยบันทึก)
+  const optionSets = {
+    activityTypes: new Set(['อบรมวิชาการ', 'Workshop เชิงปฏิบัติการ', 'Workshop Hosting', 'ติวนักเรียน', 'สัมมนาวิชาการผู้บริหาร', 'อบรมออนไลน์']),
+    courseTopics: new Set(['อบรมคศ.3-4 นวัตกรรมการเรียนรู้', 'Active Learning สู่สมรรถนะผู้เรียน', 'Coding & STEM Education', 'เทคนิคการวัดและประเมินผล', 'AI เพื่อการจัดการเรียนการสอน']),
+    speakerTypes: new Set(['อาจารย์ที่ปรึกษา', 'ทีมวิชาการภายใน', 'อาจารย์ภายนอก', 'Supplier/Partner']),
+    venueTypes: new Set(['โรงเรียน', 'โรงแรม', 'ออนไลน์ (Zoom/Meet)', 'หอประชุมประจำจังหวัด']),
+    teamBSpeakers: new Set(['ศ.ดร.ประสาน ปัญญาเลิศ', 'ดร.สมเกียรติ นวัตกรรม']),
+    transportDetails: new Set(['รถตู้รับ-ส่งสนามบิน-โรงแรม', 'รถตู้รับ-ส่งสถานีรถไฟ-โรงเรียน', 'รถตู้บริษัทพร้อมคนขับ'])
+  };
+
+  requests.forEach(function(req) {
+    if (req.activityType) optionSets.activityTypes.add(req.activityType);
+    if (req.courseTopic) optionSets.courseTopics.add(req.courseTopic);
+    if (req.speakerType) optionSets.speakerTypes.add(req.speakerType);
+    if (req.venueType) optionSets.venueTypes.add(req.venueType);
+    if (req.teamBSpeaker) optionSets.teamBSpeakers.add(req.teamBSpeaker);
+    if (req.transportDetails) optionSets.transportDetails.add(req.transportDetails);
+  });
+
+  const autoOptions = {
+    activityTypes: Array.from(optionSets.activityTypes),
+    courseTopics: Array.from(optionSets.courseTopics),
+    speakerTypes: Array.from(optionSets.speakerTypes),
+    venueTypes: Array.from(optionSets.venueTypes),
+    teamBSpeakers: Array.from(optionSets.teamBSpeakers),
+    transportDetails: Array.from(optionSets.transportDetails)
+  };
+
+  return {
+    masterData: masterData,
+    requests: requests.reverse(), // คำขอล่าสุดขึ้นก่อน
+    autoOptions: autoOptions,
+    systemVersion: SYSTEM_VERSION
+  };
 }
 
-// ------------------- SUBMIT EVALUATION (10 DIMENSIONS + PARTICIPANT) -------------------
+// ------------------- TEAM A: CREATE / EDIT REQUEST -------------------
+
+function createRequestTeamA(payload) {
+  const ss = getSpreadsheet();
+  const sheet = ss.getSheetByName('Event_Requests');
+  const now = new Date().toISOString();
+  
+  const eventId = 'EVT-' + Utilities.formatDate(new Date(), "GMT+7", "yyyyMMdd") + '-' + Math.floor(1000 + Math.random() * 9000);
+  const operator = payload.operatorName || payload.saleName || 'ทีม A (Sales)';
+
+  const rowData = [
+    eventId,
+    now,
+    'WAITING_B',
+    payload.activityType || '',
+    payload.courseTopic || '',
+    payload.customTopic || '',
+    payload.eventDate || '',
+    payload.province || '',
+    payload.saleName || '',
+    payload.schoolId || '',
+    payload.schoolName || '',
+    payload.speakerType || '',
+    payload.venueType || '',
+    payload.objective || '',
+    Number(payload.targetSales) || 0,
+    Number(payload.estBudget) || 0,
+    '', // TeamB_Speaker
+    '', // TeamB_Notes
+    0,  // Actual_Budget
+    operator, // Created_By
+    '',       // Reviewed_By
+    '',       // Approved_By
+    operator, // Last_Modified_By
+    now,      // Submitted_To_B_At
+    '',       // Reviewed_By_B_At
+    '',       // Approved_At
+    '',       // A4_PDF_Url
+    payload.needAccommodation ? 'YES' : 'NO',
+    Number(payload.roomCount) || 0,
+    payload.needTransportation ? 'YES' : 'NO',
+    payload.transportDetails || ''
+  ];
+
+  sheet.appendRow(rowData);
+
+  sendWorkflowEmailNotification('TEAM_A_CREATED', { eventId: eventId, schoolName: payload.schoolName, province: payload.province, courseTopic: payload.courseTopic || payload.customTopic, eventDate: payload.eventDate, estBudget: payload.estBudget, targetSales: payload.targetSales, saleName: payload.saleName || operator });
+
+  logSystemAction(eventId, 'TEAM_A_CREATE', operator, {
+    estBudget: payload.estBudget,
+    targetSales: payload.targetSales,
+    schoolName: payload.schoolName
+  });
+
+  return { success: true, eventId: eventId };
+}
+
+// ------------------- TEAM B: REVIEW & CONFIRM -------------------
+
+function updateReviewTeamB(payload) {
+  const { eventId, decision, teamBSpeaker, teamBNotes, actualBudget, operatorName } = payload;
+  const ss = getSpreadsheet();
+  const sheet = ss.getSheetByName('Event_Requests');
+  const data = sheet.getDataRange().getValues();
+  const now = new Date().toISOString();
+  const operator = operatorName || 'เจ้าหน้าที่วิชาการ (ทีม B)';
+
+  let targetRow = -1;
+  for (let i = 1; i < data.length; i++) {
+    if (data[i][0] === eventId) {
+      targetRow = i + 1;
+      break;
+    }
+  }
+
+  if (targetRow === -1) throw new Error('ไม่พบรหัสคำขอ ' + eventId);
+
+  const nextStatus = decision === 'RETURN_TO_A' ? 'RETURNED_TO_A' : 'WAITING_EXEC';
+
+  sheet.getRange(targetRow, 3).setValue(nextStatus);
+  sheet.getRange(targetRow, 17).setValue(teamBSpeaker || '');
+  sheet.getRange(targetRow, 18).setValue(teamBNotes || '');
+  sheet.getRange(targetRow, 19).setValue(Number(actualBudget) || 0);
+  sheet.getRange(targetRow, 21).setValue(operator);
+  sheet.getRange(targetRow, 23).setValue(operator);
+  sheet.getRange(targetRow, 25).setValue(now); // Reviewed_By_B_At
+
+  logSystemAction(eventId, decision === 'RETURN_TO_A' ? 'TEAM_B_RETURN' : 'TEAM_B_CONFIRM', operator, {
+    status: nextStatus,
+    actualBudget: actualBudget,
+    teamBSpeaker: teamBSpeaker
+  });
+
+  return { success: true, eventId: eventId, newStatus: nextStatus };
+}
+
+// ------------------- EXECUTIVE: APPROVAL / REJECTION -------------------
+
+function handleExecDecision(payload) {
+  const { eventId, decision, approvedBy, rejectReason } = payload;
+  const ss = getSpreadsheet();
+  const sheet = ss.getSheetByName('Event_Requests');
+  const data = sheet.getDataRange().getValues();
+  const now = new Date().toISOString();
+  const operator = approvedBy || 'ผู้บริหาร (Management)';
+
+  let targetRow = -1;
+  let eventRow = null;
+
+  for (let i = 1; i < data.length; i++) {
+    if (data[i][0] === eventId) {
+      targetRow = i + 1;
+      eventRow = data[i];
+      break;
+    }
+  }
+
+  if (targetRow === -1) throw new Error('ไม่พบรหัสคำขอ ' + eventId);
+
+  if (decision === 'REJECT') {
+    sheet.getRange(targetRow, 3).setValue('REJECTED');
+    sheet.getRange(targetRow, 22).setValue(operator);
+    sheet.getRange(targetRow, 23).setValue(operator);
+    sheet.getRange(targetRow, 26).setValue(now);
+
+    logSystemAction(eventId, 'EXEC_REJECT', operator, { reason: rejectReason || 'ไม่อนุมัติ' });
+    return { success: true, eventId: eventId, status: 'REJECTED' };
+  }
+
+  // กรณีอนุมัติ (APPROVE)
+  // 1. ออกรหัสลับ Token ป้องกันข้อมูลรั่วไหล (Zero-Trust)
+  const token = Utilities.getUuid().replace(/-/g, '').substring(0, 16);
+  const tokenSheet = ss.getSheetByName('QR_Tokens');
+  const courseName = eventRow[4] === 'อื่นๆ' ? eventRow[5] : eventRow[4];
+  const speakerName = eventRow[16] || eventRow[11] || 'วิทยากรผู้ทรงคุณวุฒิ';
+  const eventDate = eventRow[6] ? Utilities.formatDate(new Date(eventRow[6]), "GMT+7", "yyyy-MM-dd") : '';
+  const expiresAt = new Date(new Date().getTime() + (7 * 24 * 60 * 60 * 1000)).toISOString();
+
+  tokenSheet.appendRow([
+    token,
+    eventId,
+    courseName,
+    speakerName,
+    eventDate,
+    expiresAt,
+    'ACTIVE'
+  ]);
+
+  // 2. สร้างเอกสาร Memo A4 PDF ลง Google Drive
+  let pdfUrl = '';
+  try {
+    pdfUrl = generateA4MemoPDF(eventRow, operator);
+  } catch (pdfErr) {
+    pdfUrl = 'PDF_GEN_ERROR: ' + pdfErr.toString();
+  }
+
+  // 3. ปรับสถานะเป็น APPROVED และบันทึก Audit
+  sheet.getRange(targetRow, 3).setValue('APPROVED');
+  sheet.getRange(targetRow, 22).setValue(operator);
+  sheet.getRange(targetRow, 23).setValue(operator);
+  sheet.getRange(targetRow, 26).setValue(now);
+  sheet.getRange(targetRow, 27).setValue(pdfUrl);
+
+  logSystemAction(eventId, 'EXEC_APPROVE', operator, {
+    tokenIssued: token,
+    pdfUrl: pdfUrl
+  });
+
+  return {
+    success: true,
+    eventId: eventId,
+    status: 'APPROVED',
+    token: token,
+    pdfUrl: pdfUrl
+  };
+}
+
+// ------------------- ZERO-TRUST SURVEY VALIDATION & SUBMISSION -------------------
+
+function validateAndGetSurveyData(token) {
+  const ss = getSpreadsheet();
+  const tokenSheet = ss.getSheetByName('QR_Tokens');
+  if (!tokenSheet) return { valid: false, message: 'ระบบยังไม่พร้อมให้บริการ' };
+
+  const data = tokenSheet.getDataRange().getValues();
+  for (let i = 1; i < data.length; i++) {
+    if (data[i][0] === token) {
+      const status = data[i][6];
+      const expiresAt = new Date(data[i][5]);
+      if (status !== 'ACTIVE' || (expiresAt && expiresAt < new Date())) {
+        return { valid: false, message: 'ลิงก์การประเมินนี้หมดอายุหรือถูกปิดแล้ว' };
+      }
+      return {
+        valid: true,
+        token: token,
+        courseTitle: data[i][2],
+        speakerName: data[i][3],
+        eventDate: data[i][4] ? Utilities.formatDate(new Date(data[i][4]), "GMT+7", "dd/MM/yyyy") : '-'
+      };
+    }
+  }
+  return { valid: false, message: 'ไม่พบรหัสโครงการ หรือลิงก์การประเมินไม่ถูกต้อง' };
+}
 
 function submitEvaluationResponse(payload) {
+  const { token, q1, q2, q3, q4, q5, suggestions, clientHash } = payload;
   const ss = getSpreadsheet();
-  const token = payload.token;
-  const clientHash = payload.clientHash;
-  const nameTh = payload.nameTh || '';
-  const nameEn = payload.nameEn || '';
-  const school = payload.school || '';
-  const email = payload.email || '';
-  const certId = payload.certId || ('TWP-ECERT-' + new Date().getFullYear() + '-' + Math.floor(100000 + Math.random()*900000));
-
-  if (!token) throw new Error('ไม่พบ Token ประจำโครงการ');
-
-  // Verify target event
-  const tokenSheet = ss.getSheetByName('Public_Tokens');
+  const tokenSheet = ss.getSheetByName('QR_Tokens');
   const tokenData = tokenSheet.getDataRange().getValues();
-  let targetEventId = null;
 
+  let targetEventId = null;
   for (let i = 1; i < tokenData.length; i++) {
     if (tokenData[i][0] === token && tokenData[i][6] === 'ACTIVE') {
       targetEventId = tokenData[i][1];
@@ -218,18 +505,15 @@ function submitEvaluationResponse(payload) {
     }
   }
 
-  if (!targetEventId) {
-    // If not found in tokens, check if token is eventId itself
-    targetEventId = token;
-  }
+  if (!targetEventId) throw new Error('Token ไม่ถูกต้อง หรือหมดอายุแล้ว');
 
   const evalSheet = ss.getSheetByName('Evaluation_Responses');
   
-  // Anti-duplication check by clientHash
+  // ตรวจจับ Duplicate จาก Client Hash หากส่งมา
   if (clientHash) {
     const evalData = evalSheet.getDataRange().getValues();
     for (let i = 1; i < evalData.length; i++) {
-      if (evalData[i][1] === targetEventId && evalData[i][13] === clientHash) {
+      if (evalData[i][1] === targetEventId && evalData[i][9] === clientHash) {
         throw new Error('ท่านได้ส่งแบบประเมินสำหรับกิจกรรมนี้เรียบร้อยแล้ว ขอบคุณครับ');
       }
     }
@@ -240,214 +524,19 @@ function submitEvaluationResponse(payload) {
     responseId,
     targetEventId,
     new Date().toISOString(),
-    Number(payload.q1) || 5,
-    Number(payload.q2) || 5,
-    Number(payload.q3) || 5,
-    Number(payload.q4) || 5,
-    Number(payload.q5) || 5,
-    Number(payload.q6) || 5,
-    Number(payload.q7) || 5,
-    Number(payload.q8) || 5,
-    Number(payload.q9) || 5,
-    Number(payload.q10) || 5,
-    clientHash || '',
-    payload.suggestions || '',
-    nameTh,
-    nameEn,
-    school,
-    email,
-    certId,
-    'PENDING_SEND'
+    Number(q1) || 5,
+    Number(q2) || 5,
+    Number(q3) || 5,
+    Number(q4) || 5,
+    Number(q5) || 5,
+    suggestions || '',
+    clientHash || ''
   ]);
 
-  // Update participant count in Training_Requests
-  updateEventEvalStats(ss, targetEventId);
-
-  logSystemAction(targetEventId, 'SUBMIT_EVALUATION', nameTh || 'PARTICIPANT', {
-    responseId: responseId,
-    certId: certId,
-    email: email
-  });
-
-  return { success: true, responseId: responseId, certId: certId };
+  return { success: true, responseId: responseId };
 }
 
-// ------------------- SEND E-CERTIFICATE VIA EMAIL -------------------
-
-function sendEcertificateEmail(payload) {
-  const email = payload.email;
-  const nameTh = payload.nameTh || 'ผู้เข้าอบรม';
-  const nameEn = payload.nameEn || '';
-  const school = payload.school || 'โรงเรียน';
-  const courseTopic = payload.courseTopic || 'หลักสูตรพัฒนาวิชาชีพทางการศึกษา';
-  const certId = payload.certId || 'TWP-ECERT';
-  const eventDate = payload.eventDate || Utilities.formatDate(new Date(), 'GMT+7', 'dd/MM/yyyy');
-
-  if (!email || email.indexOf('@') === -1) {
-    throw new Error('ที่อยู่อีเมลไม่ถูกต้อง');
-  }
-
-  const subject = 'วุฒิบัตรการฝึกอบรม (e-Certificate) - ' + courseTopic + ' | สำนักพิมพ์ไทยวัฒนาพานิช';
-  
-  const htmlBody = `
-    <div style="font-family:'Sarabun',sans-serif; color:#1e293b; max-width:650px; margin:0 auto; border:1px solid #e2e8f0; border-radius:16px; overflow:hidden;">
-      <div style="background:#08539E; color:#ffffff; padding:24px 30px; text-align:center;">
-        <h1 style="margin:0; font-size:22px; font-weight:800;">สำนักพิมพ์ไทยวัฒนาพานิช</h1>
-        <p style="margin:4px 0 0 0; font-size:12px; letter-spacing:2px; opacity:0.9;">THAI WATANA PANICH PUBLISHING HOUSE</p>
-      </div>
-      <div style="padding:30px; background:#ffffff; line-height:1.6;">
-        <h2 style="color:#08539E; font-size:18px; margin-top:0;">ขอแสดงความยินดีในการสำเร็จการฝึกอบรม</h2>
-        <p>เรียน <strong>${nameTh}</strong> (${nameEn})</p>
-        <p>สำนักพิมพ์ไทยวัฒนาพานิช จำกัด ขอขอบพระคุณท่านที่ได้เข้าร่วมการฝึกอบรมเชิงปฏิบัติการและทำแบบประเมินความพึงพอใจในหลักสูตร:</p>
-        <div style="background:#f8fafc; border-left:4px solid #08539E; padding:12px 16px; margin:16px 0; font-weight:bold; color:#0f172a;">
-          “${courseTopic}”
-        </div>
-        <p>หน่วยงาน/สถานศึกษา: <strong>${school}</strong><br>
-        วันที่จัดกิจกรรม: <strong>${eventDate}</strong><br>
-        เลขที่วุฒิบัตรอ้างอิง: <strong style="color:#08539E; font-family:monospace;">${certId}</strong></p>
-        <p style="margin-top:20px;">วุฒิบัตรฉบับอิเล็กทรอนิกส์ (e-Certificate) ของท่านได้รับการลงทะเบียนรับรองอย่างเป็นทางการเรียบร้อยแล้ว</p>
-        <div style="margin-top:24px; padding-top:20px; border-top:1px solid #e2e8f0; font-size:12px; color:#64748b;">
-          * อีเมลนี้ส่งอัตโนมัติจากระบบ EMS Enterprise Platform กรุณาอย่าตอบกลับอีเมลนี้
-        </div>
-      </div>
-    </div>
-  `;
-
-  MailApp.sendEmail({
-    to: email,
-    subject: subject,
-    htmlBody: htmlBody
-  });
-
-  // Mark CERT_SENT in Evaluation_Responses sheet
-  const ss = getSpreadsheet();
-  const evalSheet = ss.getSheetByName('Evaluation_Responses');
-  if (evalSheet) {
-    const data = evalSheet.getDataRange().getValues();
-    for (let i = 1; i < data.length; i++) {
-      if (data[i][19] === certId || data[i][18] === email) {
-        evalSheet.getRange(i + 1, 21).setValue('SENT_EMAIL');
-        break;
-      }
-    }
-  }
-
-  logSystemAction(payload.token, 'SEND_ECERT_EMAIL', 'SYSTEM', {
-    certId: certId,
-    email: email,
-    recipient: nameTh
-  });
-
-  return { success: true, email: email, certId: certId };
-}
-
-// ------------------- ADMIN UNLOCK CERTIFICATE -------------------
-
-function adminUnlockCert(payload) {
-  const token = payload.token;
-  const adminPass = payload.adminPass || '';
-  if (adminPass !== DEFAULT_ADMIN_PASS) {
-    throw new Error('รหัสผ่านผู้ดูแลระบบไม่ถูกต้อง');
-  }
-
-  logSystemAction(token, 'ADMIN_UNLOCK_CERT', 'ADMIN', { token: token });
-  return { success: true, message: 'ปลดล็อกสิทธิ์วุฒิบัตรเรียบร้อยแล้ว' };
-}
-
-// ------------------- UPLOAD EVENT PHOTO TO GOOGLE DRIVE -------------------
-
-function uploadEventPhotoToDrive(payload) {
-  const eventId = payload.eventId || 'EVT-GENERAL';
-  const fileName = payload.fileName || ('photo-' + Date.now() + '.jpg');
-  const mimeType = payload.mimeType || 'image/jpeg';
-  const base64Data = payload.base64Data;
-  const caption = payload.caption || 'ภาพกิจกรรมการอบรม';
-
-  if (!base64Data) throw new Error('ไม่พบข้อมูลไฟล์รูปภาพ (Base64)');
-
-  const folder = DriveApp.getFolderById(GOOGLE_DRIVE_PHOTO_FOLDER_ID);
-  if (!folder) throw new Error('ไม่พบโฟลเดอร์ Google Drive: ' + GOOGLE_DRIVE_PHOTO_FOLDER_ID);
-
-  const cleanBase64 = base64Data.replace(/^data:image\/[a-z]+;base64,/, '');
-  const decodedBytes = Utilities.base64Decode(cleanBase64);
-  const blob = Utilities.newBlob(decodedBytes, mimeType, fileName);
-  
-  const file = folder.createFile(blob);
-  file.setDescription('โครงการ: ' + eventId + ' | ' + caption);
-
-  // Record photo in Event_Photos sheet
-  const ss = getSpreadsheet();
-  let photoSheet = ss.getSheetByName('Event_Photos');
-  if (!photoSheet) {
-    photoSheet = ss.insertSheet('Event_Photos');
-    photoSheet.appendRow(['Photo_Id', 'Event_Id', 'File_Name', 'Drive_Url', 'File_Id', 'Caption', 'Uploaded_At']);
-  }
-
-  const photoId = 'PHT-' + Date.now();
-  const fileUrl = file.getUrl();
-
-  photoSheet.appendRow([
-    photoId,
-    eventId,
-    fileName,
-    fileUrl,
-    file.getId(),
-    caption,
-    new Date().toISOString()
-  ]);
-
-  logSystemAction(eventId, 'UPLOAD_PHOTO', 'TEAM_B', {
-    photoId: photoId,
-    fileName: fileName,
-    fileUrl: fileUrl
-  });
-
-  return {
-    success: true,
-    photoId: photoId,
-    fileUrl: fileUrl,
-    downloadUrl: file.getDownloadUrl(),
-    folderUrl: folder.getUrl()
-  };
-}
-
-// ------------------- STATS & AUDIT LOGS -------------------
-
-function updateEventEvalStats(ss, eventId) {
-  try {
-    const evalSheet = ss.getSheetByName('Evaluation_Responses');
-    const reqSheet = ss.getSheetByName('Training_Requests');
-    if (!evalSheet || !reqSheet) return;
-
-    const evalData = evalSheet.getDataRange().getValues();
-    let count = 0;
-    let sumScore = 0;
-
-    for (let i = 1; i < evalData.length; i++) {
-      if (evalData[i][1] === eventId) {
-        count++;
-        let rowSum = 0;
-        for (let q = 3; q <= 12; q++) {
-          rowSum += Number(evalData[i][q]) || 5;
-        }
-        sumScore += (rowSum / 10);
-      }
-    }
-
-    const avgScore = count > 0 ? (sumScore / count).toFixed(2) : 0;
-
-    const reqData = reqSheet.getDataRange().getValues();
-    for (let i = 1; i < reqData.length; i++) {
-      if (reqData[i][0] === eventId) {
-        reqSheet.getRange(i + 1, 32).setValue(count);
-        reqSheet.getRange(i + 1, 33).setValue(Number(avgScore));
-        break;
-      }
-    }
-  } catch(e) {
-    Logger.log('Error updateEventEvalStats: ' + e.toString());
-  }
-}
+// ------------------- AUDIT LOGGING -------------------
 
 function logSystemAction(eventId, action, actionBy, detailsObj) {
   try {
@@ -468,58 +557,197 @@ function logSystemAction(eventId, action, actionBy, detailsObj) {
   }
 }
 
-function ensureSheetsExist(ss) {
-  const sheetNames = [
-    'Training_Requests',
-    'Evaluation_Responses',
-    'Event_Photos',
-    'System_Logs',
-    'Public_Tokens',
-    'Master_Schools'
-  ];
+// ------------------- PDF MEMO ENGINE (A4 / SARABUN FONT) -------------------
 
-  sheetNames.forEach(name => {
-    let sheet = ss.getSheetByName(name);
-    if (!sheet) {
-      sheet = ss.insertSheet(name);
-      if (name === 'Training_Requests') {
-        sheet.appendRow([
-          'Event_Id', 'Created_At', 'Status', 'Activity_Type', 'Course_Topic',
-          'Custom_Topic', 'Event_Date', 'Province', 'Sale_Name', 'School_Id',
-          'School_Name', 'School_Area', 'School_Size', 'Speaker_Type', 'Target_Sales',
-          'Est_Budget', 'Team_B_Speaker', 'Team_B_Notes', 'Actual_Budget', 'Created_By',
-          'Reviewed_By', 'Approved_By', 'Last_Modified_By', 'Submitted_To_B_At', 'Reviewed_By_B_At',
-          'Approved_At', 'PDF_Url', 'Need_Accommodation', 'Room_Count', 'Need_Transportation',
-          'Transport_Details', 'Eval_Count', 'Eval_Avg_Score', 'Resource_Link'
-        ]);
-      } else if (name === 'Evaluation_Responses') {
-        sheet.appendRow([
-          'Response_Id', 'Event_Id', 'Submitted_At', 'Q1', 'Q2', 'Q3', 'Q4', 'Q5',
-          'Q6', 'Q7', 'Q8', 'Q9', 'Q10', 'Client_Hash', 'Suggestions',
-          'Name_Th', 'Name_En', 'School', 'Email', 'Cert_Id', 'Status'
-        ]);
-      } else if (name === 'Event_Photos') {
-        sheet.appendRow(['Photo_Id', 'Event_Id', 'File_Name', 'Drive_Url', 'File_Id', 'Caption', 'Uploaded_At']);
-      } else if (name === 'System_Logs') {
-        sheet.appendRow(['Log_Id', 'Event_Id', 'Action', 'Action_By', 'Timestamp', 'Details']);
+function generateA4MemoPDF(eventRow, approvedBy) {
+  const eventId = eventRow[0];
+  const createdAtFormatted = eventRow[1] ? Utilities.formatDate(new Date(eventRow[1]), "GMT+7", "dd/MM/yyyy") : '-';
+  const eventDateFormatted = eventRow[6] ? Utilities.formatDate(new Date(eventRow[6]), "GMT+7", "dd/MM/yyyy") : '-';
+  const courseTopic = eventRow[4] === 'อื่นๆ' ? (eventRow[5] || eventRow[4]) : eventRow[4];
+  const schoolDisplay = (eventRow[10] || '-') + (eventRow[9] ? ' (' + eventRow[9] + ')' : '');
+  const estBudgetNum = Number(eventRow[15]) || 0;
+  const actualBudgetNum = Number(eventRow[18]) || estBudgetNum;
+  const targetSalesNum = Number(eventRow[14]) || 0;
+
+  const costRatio = targetSalesNum > 0 ? ((actualBudgetNum / targetSalesNum) * 100).toFixed(1) : 'N/A';
+
+  const needAccom = eventRow[27] === 'YES' || eventRow[27] === 'ต้องการ';
+  const roomCount = Number(eventRow[28]) || 0;
+  const accomDisplay = needAccom ? `ต้องการห้องพัก (${roomCount} ห้อง)` : 'ไม่ต้องการห้องพัก';
+
+  const needTrans = eventRow[29] === 'YES' || eventRow[29] === 'ต้องการ';
+  const transDetails = eventRow[30] || '';
+  const transDisplay = needTrans ? `ต้องการรถรับ-ส่ง ${transDetails ? '(' + transDetails + ')' : ''}` : 'ไม่ต้องการรถรับ-ส่ง';
+
+  const html = `
+    <!DOCTYPE html>
+    <html>
+    <head>
+      <meta charset="utf-8">
+      <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@400;600;700&display=swap" rel="stylesheet">
+      <style>
+        @page { size: A4 portrait; margin: 18mm; }
+        body { font-family: 'Sarabun', sans-serif; font-size: 13pt; line-height: 1.4; color: #1f2937; }
+        .header { text-align: center; border-bottom: 2px solid #2563eb; padding-bottom: 12px; margin-bottom: 16px; }
+        .org-title { font-size: 18pt; font-weight: bold; color: #1e3a8a; }
+        .doc-title { font-size: 15pt; font-weight: 600; margin-top: 4px; color: #374151; }
+        .doc-meta { font-size: 11pt; color: #6b7280; margin-top: 4px; }
+        .table-section { width: 100%; border-collapse: collapse; margin-top: 14px; margin-bottom: 16px; }
+        .table-section th, .table-section td { border: 1px solid #d1d5db; padding: 7px 10px; font-size: 12pt; }
+        .table-section th { background-color: #f3f4f6; text-align: left; font-weight: 600; }
+        .highlight-box { background-color: #eff6ff; border-left: 4px solid #3b82f6; padding: 10px 14px; margin: 14px 0; font-size: 12pt; }
+        .sign-grid { width: 100%; border-collapse: collapse; margin-top: 36px; text-align: center; font-size: 12pt; }
+        .sign-grid td { padding: 8px; vertical-align: bottom; }
+        .stamp-status { border: 2px solid #16a34a; color: #16a34a; font-weight: bold; padding: 4px 8px; border-radius: 4px; display: inline-block; }
+      </style>
+    </head>
+    <body>
+      <div class="header">
+        <div class="org-title">บันทึกข้อความขออนุมัติจัดกิจกรรมและจัดสรรงบประมาณ</div>
+        <div class="doc-title">EMS Enterprise Training & Workshop Approval Memo</div>
+        <div class="doc-meta">รหัสคำขอ: <strong>${eventId}</strong> | วันที่ทำรายการ: ${createdAtFormatted} | สถานะ: <span class="stamp-status">APPROVED</span></div>
+      </div>
+
+      <table class="table-section">
+        <tr>
+          <th width="25%">ประเภทกิจกรรม</th>
+          <td width="75%">${eventRow[3] || '-'} - <strong>${courseTopic}</strong></td>
+        </tr>
+        <tr>
+          <th>หน่วยงาน/โรงเรียน (PPC)</th>
+          <td>${schoolDisplay} | <strong>จังหวัด:</strong> ${eventRow[7] || '-'}</td>
+        </tr>
+        <tr>
+          <th>วันที่จัดกิจกรรม</th>
+          <td>${eventDateFormatted} | <strong>สถานที่:</strong> ${eventRow[12] || '-'}</td>
+        </tr>
+        <tr>
+          <th>ผู้แทนขายผู้ดูแล (ทีม A)</th>
+          <td>${eventRow[8] || '-'}</td>
+        </tr>
+        <tr>
+          <th>วัตถุประสงค์เชิงกลยุทธ์</th>
+          <td>${eventRow[13] || '-'}</td>
+        </tr>
+        <tr>
+          <th>ที่พักและยานพาหนะ</th>
+          <td><strong>ห้องพัก:</strong> ${accomDisplay} &nbsp;|&nbsp; <strong>รถรับ-ส่ง:</strong> ${transDisplay}</td>
+        </tr>
+      </table>
+
+      <table class="table-section">
+        <thead>
+          <tr>
+            <th width="34%">รายการตรวจสอบ</th>
+            <th width="33%">ข้อเสนอเบื้องต้น (ทีม A)</th>
+            <th width="33%">การกลั่นกรองวิชาการ (ทีม B)</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>วิทยากรผู้บรรยาย</strong></td>
+            <td>${eventRow[11] || '-'}</td>
+            <td><strong style="color:#2563eb;">${eventRow[16] || '-'}</strong></td>
+          </tr>
+          <tr>
+            <td><strong>งบประมาณที่ขอ / ตัดจ่าย</strong></td>
+            <td>${estBudgetNum.toLocaleString()} บาท</td>
+            <td><strong style="color:#16a34a;">${actualBudgetNum.toLocaleString()} บาท</strong></td>
+          </tr>
+          <tr>
+            <td><strong>เป้าหมายยอดขายอ้างอิง</strong></td>
+            <td>${targetSalesNum.toLocaleString()} บาท</td>
+            <td>Cost-to-Sales: <strong>${costRatio}%</strong></td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="highlight-box">
+        <strong>ความเห็นและข้อเสนอแนะเพิ่มเติมจากฝ่ายวิชาการ (ทีม B):</strong><br>
+        ${eventRow[17] || 'หลักสูตรและวิทยากรมีความพร้อม สอดคล้องตามมาตรฐานวิชาการ'}
+      </div>
+
+      <table class="sign-grid">
+        <tr>
+          <td width="33%">
+            ................................................<br>
+            ( ${eventRow[19] || eventRow[8] || 'ผู้แทนขาย'} )<br>
+            <strong>ผู้ขออนุมัติ (ทีม A)</strong><br>
+            <span style="font-size: 10pt; color: #6b7280;">วันที่: ${createdAtFormatted}</span>
+          </td>
+          <td width="33%">
+            ................................................<br>
+            ( ${eventRow[20] || 'ฝ่ายวิชาการ/ปฏิบัติการ'} )<br>
+            <strong>ผู้ตรวจสอบ (ทีม B)</strong><br>
+            <span style="font-size: 10pt; color: #6b7280;">ผ่านการตรวจสอบวิชาการ</span>
+          </td>
+          <td width="33%">
+            ................................................<br>
+            ( ${approvedBy || 'ผู้มีอำนาจลงนาม'} )<br>
+            <strong>ผู้อนุมัติ (ผู้บริหาร)</strong><br>
+            <span style="font-size: 10pt; color: #6b7280;">อนุมัติเมื่อ: ${Utilities.formatDate(new Date(), "GMT+7", "dd/MM/yyyy HH:mm")}</span>
+          </td>
+        </tr>
+      </table>
+    </body>
+    </html>
+  `;
+
+  const blob = Utilities.newBlob(html, 'text/html', eventId + '_Memo.html').getAs('application/pdf');
+  const file = DriveApp.createFile(blob).setName(eventId + '_Approval_Memo.pdf');
+  try {
+    file.setSharing(DriveApp.Access.ANYONE_WITH_LINK, DriveApp.Permission.VIEW);
+  } catch (shareErr) {
+    // โดเมนองค์กรบางแห่งอาจปิดสิทธิ์ ANYONE_WITH_LINK ให้ข้ามโดยไม่ให้ฟังก์ชันพัง
+  }
+  return file.getUrl();
+}
+
+// ------------------- ADMIN CONTROLLER (PASSWORD: admin0000) -------------------
+
+function verifyAdmin(password) {
+  const ss = getSpreadsheet();
+  const setSheet = ss.getSheetByName('System_Settings');
+  let validPass = DEFAULT_ADMIN_PASS;
+
+  if (setSheet) {
+    const data = setSheet.getDataRange().getValues();
+    for (let i = 1; i < data.length; i++) {
+      if (data[i][0] === 'ADMIN_PASS' && data[i][1]) {
+        validPass = String(data[i][1]).trim();
+        break;
       }
     }
-  });
+  }
+
+  if (password !== validPass) {
+    throw new Error('รหัสผ่าน Admin ไม่ถูกต้อง');
+  }
+  return true;
 }
 
-function initializeSheets() {
+function handleAdminLogin(payload) {
+  verifyAdmin(payload.password);
+  return { authorized: true, message: 'เข้าสู่ระบบ Admin สำเร็จ' };
+}
+
+function handleAdminInitSheets(payload) {
+  verifyAdmin(payload.password);
   const ss = getSpreadsheet();
-  ensureSheetsExist(ss);
-  return { success: true, message: 'ตรวจสอบและเตรียมตารางทั้ง 6 Sheet เรียบร้อยแล้ว' };
+  ensureRequiredSheets(ss);
+  return { success: true, message: 'ตรวจสอบและสร้างโครงสร้าง Sheet ทั้ง 6 แผ่นเรียบร้อยแล้ว' };
 }
 
-function getAuditLogs() {
+function handleAdminGetLogs(payload) {
+  verifyAdmin(payload.password);
   const ss = getSpreadsheet();
   const logSheet = ss.getSheetByName('System_Logs');
   if (!logSheet) return { logs: [] };
+
   const data = logSheet.getDataRange().getValues();
   const logs = [];
-  for (let i = Math.max(1, data.length - 100); i < data.length; i++) {
+  for (let i = 1; i < data.length; i++) {
+    if (!data[i][0]) continue;
     logs.push({
       logId: data[i][0],
       eventId: data[i][1],
@@ -529,5 +757,146 @@ function getAuditLogs() {
       details: data[i][5]
     });
   }
-  return { logs: logs.reverse() };
+  return { logs: logs.reverse().slice(0, 100) };
+}
+
+function handleAdminUpdateSettings(payload) {
+  verifyAdmin(payload.password);
+  const ss = getSpreadsheet();
+  const setSheet = ss.getSheetByName('System_Settings');
+  if (!setSheet) ensureRequiredSheets(ss);
+
+  if (payload.newPassword) {
+    setSheet.appendRow(['ADMIN_PASS', payload.newPassword, 'รหัสผ่านเข้าหลังบ้าน', new Date().toISOString()]);
+  }
+
+  logSystemAction('ADMIN', 'UPDATE_SETTINGS', 'ADMIN', { update: 'Settings modified' });
+  return { success: true, message: 'บันทึกการตั้งค่าเรียบร้อยแล้ว' };
+}
+
+// ------------------- SCHEMA AUTO-INITIALIZATION -------------------
+
+function ensureRequiredSheets(ss) {
+  const required = [
+    {
+      name: 'PPC_Master',
+      headers: ['Zone_ID', 'Province', 'Sale_ID', 'Sale_Name', 'School_ID', 'School_Name', 'Account_Tier']
+    },
+    {
+      name: 'Event_Requests',
+      headers: [
+        'Event_ID', 'Created_At', 'Status', 'Activity_Type', 'Course_Topic', 'Custom_Topic',
+        'Event_Date', 'Province', 'Sale_Name', 'School_ID', 'School_Name', 'Speaker_Type',
+        'Venue_Type', 'Objective', 'Target_Sales', 'Est_Budget', 'TeamB_Speaker', 'TeamB_Notes',
+        'Actual_Budget', 'Created_By', 'Reviewed_By', 'Approved_By', 'Last_Modified_By',
+        'Submitted_To_B_At', 'Reviewed_By_B_At', 'Approved_At', 'A4_PDF_Url',
+        'Need_Accommodation', 'Room_Count', 'Need_Transportation', 'Transport_Details', 'A4_Docx_Url'
+      ]
+    },
+    {
+      name: 'QR_Tokens',
+      headers: ['Token_ID', 'Event_ID', 'Course_Title', 'Speaker_Name', 'Event_Date', 'Expires_At', 'Status']
+    },
+    {
+      name: 'Evaluation_Responses',
+      headers: ['Response_ID', 'Event_ID', 'Timestamp', 'Score_Q1', 'Score_Q2', 'Score_Q3', 'Score_Q4', 'Score_Q5', 'Suggestions', 'Client_Hash']
+    },
+    {
+      name: 'System_Logs',
+      headers: ['Log_ID', 'Event_ID', 'Action', 'Action_By', 'Timestamp', 'Details']
+    },
+    {
+      name: 'System_Settings',
+      headers: ['Setting_Key', 'Setting_Value', 'Description', 'Updated_At']
+    }
+  ];
+
+  required.forEach(function(item) {
+    let sheet = ss.getSheetByName(item.name);
+    if (!sheet) {
+      sheet = ss.insertSheet(item.name);
+      sheet.appendRow(item.headers);
+      sheet.setFrozenRows(1);
+      sheet.getRange(1, 1, 1, item.headers.length)
+        .setBackground('#1e3a8a')
+        .setFontColor('#ffffff')
+        .setFontWeight('bold');
+    } else {
+      // ตรวจสอบและอัปเกรดคอลัมน์ใหม่หากชีตเดิมมีคอลัมน์ไม่ครบ
+      const lastCol = sheet.getLastColumn();
+      if (lastCol < item.headers.length) {
+        for (let c = lastCol; c < item.headers.length; c++) {
+          sheet.getRange(1, c + 1).setValue(item.headers[c])
+            .setBackground('#1e3a8a')
+            .setFontColor('#ffffff')
+            .setFontWeight('bold');
+        }
+      }
+    }
+  });
+
+  // ตรวจสอบและสร้างชีตสรุปภาพรวม KPI ของ PPC
+  if (typeof createPpcSummarySheet === 'function') {
+    createPpcSummarySheet(ss, '#08539E', '#FFFFFF');
+  }
+}
+
+
+// ==========================================
+// WORKFLOW NOTIFICATION SETTINGS & HELPER
+// ==========================================
+const NOTIFICATION_CONFIG = {
+  ENABLE_EMAIL: true,
+  // ระบุอีเมลทีมวิชาการ (ทีม B) เพื่อรับแจ้งเตือนเมื่อทีม A สร้างคำขอ
+  ACADEMIC_TEAM_EMAIL: '', 
+  // ระบุอีเมลผู้บริหาร (ผศ.อินทิรา บุนนาค / ผู้จัดการทั่วไป) เพื่อรับแจ้งเตือนเมื่อทีม B ตรวจสอบผ่าน
+  EXECUTIVE_EMAIL: '',
+  // URL หน้าเว็บระบบ TWP เพื่อสร้างลิงก์ตรงในอีเมล
+  WEB_APP_URL: '' 
+};
+
+function sendWorkflowEmailNotification(type, data) {
+  try {
+    if (!NOTIFICATION_CONFIG.ENABLE_EMAIL) return;
+    const scriptProps = PropertiesService.getScriptProperties();
+    const academicEmail = NOTIFICATION_CONFIG.ACADEMIC_TEAM_EMAIL || scriptProps.getProperty('ACADEMIC_TEAM_EMAIL') || '';
+    const execEmail = NOTIFICATION_CONFIG.EXECUTIVE_EMAIL || scriptProps.getProperty('EXECUTIVE_EMAIL') || '';
+    const appUrl = NOTIFICATION_CONFIG.WEB_APP_URL || scriptProps.getProperty('WEB_APP_URL') || '';
+
+    if (type === 'TEAM_A_CREATED' && academicEmail) {
+      const directLink = appUrl ? (appUrl + (appUrl.includes('?') ? '&' : '?') + 'tab=teamB&eventId=' + data.eventId) : '';
+      MailApp.sendEmail({
+        to: academicEmail,
+        subject: '🔔 [TWP Training] มีคำขอจัดอบรมใหม่รอตรวจสอบ: ' + (data.schoolName || '') + ' (' + data.eventId + ')',
+        htmlBody: '<div style="font-family: Arial, sans-serif; max-width: 600px; padding: 20px; border: 1px solid #e2e8f0; border-radius: 12px;">' +
+          '<h2 style="color: #08539E; margin-top: 0;">คำขอจัดอบรมใหม่รอฝ่ายวิชาการ (ทีม B) ตรวจสอบ</h2>' +
+          '<p><strong>รหัสคำขอ:</strong> ' + data.eventId + '</p>' +
+          '<p><strong>โรงเรียน:</strong> ' + (data.schoolName || '') + ' (' + (data.province || '') + ')</p>' +
+          '<p><strong>หัวข้ออบรม:</strong> ' + (data.courseTopic || '') + '</p>' +
+          '<p><strong>วันที่จัดงาน:</strong> ' + (data.eventDate || '-') + '</p>' +
+          '<p><strong>งบประมาณที่ขอ:</strong> ฿' + Number(data.estBudget || 0).toLocaleString() + ' บาท</p>' +
+          '<p><strong>ผู้เสนอขอ:</strong> ' + (data.saleName || '-') + '</p>' +
+          (directLink ? '<p style="margin-top: 20px;"><a href="' + directLink + '" style="background-color: #08539E; color: white; padding: 10px 18px; text-decoration: none; border-radius: 8px; font-weight: bold;">คลิกเพื่อเปิดตรวจงานทันที</a></p>' : '') +
+          '</div>'
+      });
+    } else if (type === 'TEAM_B_APPROVED' && execEmail) {
+      const directLink = appUrl ? (appUrl + (appUrl.includes('?') ? '&' : '?') + 'tab=exec&eventId=' + data.eventId) : '';
+      MailApp.sendEmail({
+        to: execEmail,
+        subject: '📑 [TWP Training] คำขอจัดอบรมผ่านการตรวจสอบ รอท่านอนุมัติ: ' + (data.schoolName || '') + ' (' + data.eventId + ')',
+        htmlBody: '<div style="font-family: Arial, sans-serif; max-width: 600px; padding: 20px; border: 1px solid #e2e8f0; border-radius: 12px;">' +
+          '<h2 style="color: #08539E; margin-top: 0;">คำขอจัดอบรมรอท่านพิจารณาลงนามอนุมัติ</h2>' +
+          '<p><strong>รหัสคำขอ:</strong> ' + data.eventId + '</p>' +
+          '<p><strong>โรงเรียน:</strong> ' + (data.schoolName || '') + ' (' + (data.province || '') + ')</p>' +
+          '<p><strong>หัวข้ออบรม:</strong> ' + (data.courseTopic || '') + '</p>' +
+          '<p><strong>วิทยากร:</strong> ' + (data.teamBSpeaker || '-') + '</p>' +
+          '<p><strong>งบประมาณตัดจ่ายจริง:</strong> ฿' + Number(data.actualBudget || 0).toLocaleString() + ' บาท</p>' +
+          '<p><strong>ความเห็นฝ่ายวิชาการ:</strong> ' + (data.teamBNotes || '-') + '</p>' +
+          (directLink ? '<p style="margin-top: 20px;"><a href="' + directLink + '" style="background-color: #d97706; color: white; padding: 10px 18px; text-decoration: none; border-radius: 8px; font-weight: bold;">คลิกเพื่อพิจารณาและลงนามอนุมัติ</a></p>' : '') +
+          '</div>'
+      });
+    }
+  } catch(err) {
+    Logger.log('sendWorkflowEmailNotification error: ' + err.message);
+  }
 }

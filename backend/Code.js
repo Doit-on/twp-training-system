@@ -333,6 +333,8 @@ function createRequestTeamA(payload) {
 
   sheet.appendRow(rowData);
 
+  sendWorkflowEmailNotification('TEAM_A_CREATED', { eventId: eventId, schoolName: payload.schoolName, province: payload.province, courseTopic: payload.courseTopic || payload.customTopic, eventDate: payload.eventDate, estBudget: payload.estBudget, targetSales: payload.targetSales, saleName: payload.saleName || operator });
+
   logSystemAction(eventId, 'TEAM_A_CREATE', operator, {
     estBudget: payload.estBudget,
     targetSales: payload.targetSales,
@@ -836,5 +838,65 @@ function ensureRequiredSheets(ss) {
   // ตรวจสอบและสร้างชีตสรุปภาพรวม KPI ของ PPC
   if (typeof createPpcSummarySheet === 'function') {
     createPpcSummarySheet(ss, '#08539E', '#FFFFFF');
+  }
+}
+
+
+// ==========================================
+// WORKFLOW NOTIFICATION SETTINGS & HELPER
+// ==========================================
+const NOTIFICATION_CONFIG = {
+  ENABLE_EMAIL: true,
+  // ระบุอีเมลทีมวิชาการ (ทีม B) เพื่อรับแจ้งเตือนเมื่อทีม A สร้างคำขอ
+  ACADEMIC_TEAM_EMAIL: '', 
+  // ระบุอีเมลผู้บริหาร (ผศ.อินทิรา บุนนาค / ผู้จัดการทั่วไป) เพื่อรับแจ้งเตือนเมื่อทีม B ตรวจสอบผ่าน
+  EXECUTIVE_EMAIL: '',
+  // URL หน้าเว็บระบบ TWP เพื่อสร้างลิงก์ตรงในอีเมล
+  WEB_APP_URL: '' 
+};
+
+function sendWorkflowEmailNotification(type, data) {
+  try {
+    if (!NOTIFICATION_CONFIG.ENABLE_EMAIL) return;
+    const scriptProps = PropertiesService.getScriptProperties();
+    const academicEmail = NOTIFICATION_CONFIG.ACADEMIC_TEAM_EMAIL || scriptProps.getProperty('ACADEMIC_TEAM_EMAIL') || '';
+    const execEmail = NOTIFICATION_CONFIG.EXECUTIVE_EMAIL || scriptProps.getProperty('EXECUTIVE_EMAIL') || '';
+    const appUrl = NOTIFICATION_CONFIG.WEB_APP_URL || scriptProps.getProperty('WEB_APP_URL') || '';
+
+    if (type === 'TEAM_A_CREATED' && academicEmail) {
+      const directLink = appUrl ? (appUrl + (appUrl.includes('?') ? '&' : '?') + 'tab=teamB&eventId=' + data.eventId) : '';
+      MailApp.sendEmail({
+        to: academicEmail,
+        subject: '🔔 [TWP Training] มีคำขอจัดอบรมใหม่รอตรวจสอบ: ' + (data.schoolName || '') + ' (' + data.eventId + ')',
+        htmlBody: '<div style="font-family: Arial, sans-serif; max-width: 600px; padding: 20px; border: 1px solid #e2e8f0; border-radius: 12px;">' +
+          '<h2 style="color: #08539E; margin-top: 0;">คำขอจัดอบรมใหม่รอฝ่ายวิชาการ (ทีม B) ตรวจสอบ</h2>' +
+          '<p><strong>รหัสคำขอ:</strong> ' + data.eventId + '</p>' +
+          '<p><strong>โรงเรียน:</strong> ' + (data.schoolName || '') + ' (' + (data.province || '') + ')</p>' +
+          '<p><strong>หัวข้ออบรม:</strong> ' + (data.courseTopic || '') + '</p>' +
+          '<p><strong>วันที่จัดงาน:</strong> ' + (data.eventDate || '-') + '</p>' +
+          '<p><strong>งบประมาณที่ขอ:</strong> ฿' + Number(data.estBudget || 0).toLocaleString() + ' บาท</p>' +
+          '<p><strong>ผู้เสนอขอ:</strong> ' + (data.saleName || '-') + '</p>' +
+          (directLink ? '<p style="margin-top: 20px;"><a href="' + directLink + '" style="background-color: #08539E; color: white; padding: 10px 18px; text-decoration: none; border-radius: 8px; font-weight: bold;">คลิกเพื่อเปิดตรวจงานทันที</a></p>' : '') +
+          '</div>'
+      });
+    } else if (type === 'TEAM_B_APPROVED' && execEmail) {
+      const directLink = appUrl ? (appUrl + (appUrl.includes('?') ? '&' : '?') + 'tab=exec&eventId=' + data.eventId) : '';
+      MailApp.sendEmail({
+        to: execEmail,
+        subject: '📑 [TWP Training] คำขอจัดอบรมผ่านการตรวจสอบ รอท่านอนุมัติ: ' + (data.schoolName || '') + ' (' + data.eventId + ')',
+        htmlBody: '<div style="font-family: Arial, sans-serif; max-width: 600px; padding: 20px; border: 1px solid #e2e8f0; border-radius: 12px;">' +
+          '<h2 style="color: #08539E; margin-top: 0;">คำขอจัดอบรมรอท่านพิจารณาลงนามอนุมัติ</h2>' +
+          '<p><strong>รหัสคำขอ:</strong> ' + data.eventId + '</p>' +
+          '<p><strong>โรงเรียน:</strong> ' + (data.schoolName || '') + ' (' + (data.province || '') + ')</p>' +
+          '<p><strong>หัวข้ออบรม:</strong> ' + (data.courseTopic || '') + '</p>' +
+          '<p><strong>วิทยากร:</strong> ' + (data.teamBSpeaker || '-') + '</p>' +
+          '<p><strong>งบประมาณตัดจ่ายจริง:</strong> ฿' + Number(data.actualBudget || 0).toLocaleString() + ' บาท</p>' +
+          '<p><strong>ความเห็นฝ่ายวิชาการ:</strong> ' + (data.teamBNotes || '-') + '</p>' +
+          (directLink ? '<p style="margin-top: 20px;"><a href="' + directLink + '" style="background-color: #d97706; color: white; padding: 10px 18px; text-decoration: none; border-radius: 8px; font-weight: bold;">คลิกเพื่อพิจารณาและลงนามอนุมัติ</a></p>' : '') +
+          '</div>'
+      });
+    }
+  } catch(err) {
+    Logger.log('sendWorkflowEmailNotification error: ' + err.message);
   }
 }
