@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-  <title>Training Center TWP - ระบบบริหารคำขอจัดอบรมและประเมินผล v1.18.0</title>
+  <title>Training Center TWP - ระบบบริหารคำขอจัดอบรมและประเมินผล v1.18.1</title>
   <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
   <!-- Google Fonts: Sarabun -->
@@ -312,7 +312,7 @@
       <div class="flex items-center space-x-3 text-xs">
         <span class="bg-white/15 px-3 py-1.5 rounded-full border border-white/20 backdrop-blur-sm font-mono text-blue-100 flex items-center">
           <span class="w-2 h-2 rounded-full bg-emerald-400 mr-2 animate-pulse"></span>
-          System v1.18.0
+          System v1.18.1
         </span>
       </div>
     </div>
@@ -393,7 +393,7 @@
     <!-- Bottom Footer on Landing Page -->
     <div class="max-w-7xl mx-auto w-full px-6 py-4 flex flex-col sm:flex-row items-center justify-between text-xs text-blue-200 border-t border-white/10 relative z-10 gap-2">
       <div>&copy; 2026 Training Center TWP - บริษัท ไทยวัฒนาพานิช จำกัด. All rights reserved.</div>
-      <div class="font-mono text-[11px] bg-white/10 px-3 py-1 rounded-full border border-white/15">EMS Enterprise Platform v1.18.0 (Live Apps Script Engine)</div>
+      <div class="font-mono text-[11px] bg-white/10 px-3 py-1 rounded-full border border-white/15">EMS Enterprise Platform v1.18.1 (Live Apps Script Engine)</div>
     </div>
 
   </div>
@@ -418,7 +418,7 @@
           <div class="sidebar-brand-text truncate">
             <div class="flex items-center space-x-1.5">
               <span class="font-extrabold text-sm tracking-wide text-white">TWP</span>
-              <span onclick="openVersionReleaseModal()" class="bg-blue-400/20 hover:bg-blue-400/30 text-blue-200 text-[9px] font-mono px-1.5 py-0.5 rounded-full border border-blue-300/30 cursor-pointer transition flex items-center gap-1" title="คลิกดูรายละเอียดเวอร์ชัน v1.18.0"><i class="fa-solid fa-sparkles text-amber-300 text-[8px]"></i>v1.18.0</span>
+              <span onclick="openVersionReleaseModal()" class="bg-blue-400/20 hover:bg-blue-400/30 text-blue-200 text-[9px] font-mono px-1.5 py-0.5 rounded-full border border-blue-300/30 cursor-pointer transition flex items-center gap-1" title="คลิกดูรายละเอียดเวอร์ชัน v1.18.1"><i class="fa-solid fa-sparkles text-amber-300 text-[8px]"></i>v1.18.1</span>
             </div>
             <p class="text-[10px] text-blue-200 truncate">ระบบบริหารงานฝึกอบรม</p>
           </div>
@@ -2338,87 +2338,102 @@
     </div>
   </div>
 
-  <div id="qrModal" class="hidden fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4">
-    <div class="bg-white rounded-2xl max-w-md w-full p-5 sm:p-6 text-center space-y-4 shadow-2xl">
-      <div class="flex items-center justify-between pb-2 border-b border-slate-100">
+  <div id="qrModal" onclick="if(event.target === this) closeQrModal()" class="hidden fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-3 sm:p-4">
+    <div class="bg-white rounded-2xl max-w-sm w-full p-4 sm:p-5 text-center shadow-2xl max-h-[92vh] flex flex-col justify-between overflow-hidden">
+      
+      <!-- Modal Header -->
+      <div class="flex items-center justify-between pb-2 border-b border-slate-100 shrink-0">
         <div class="flex items-center space-x-2">
-          <div class="w-8 h-8 rounded-lg bg-indigo-100 text-indigo-700 flex items-center justify-center text-sm">
+          <div class="w-7 h-7 rounded-lg bg-indigo-100 text-indigo-700 flex items-center justify-center text-xs">
             <i class="fa-solid fa-qrcode"></i>
           </div>
-          <h3 class="font-bold text-slate-800 text-sm text-left">ศูนย์สร้างและแชร์ QR Code โครงการ</h3>
+          <h3 class="font-bold text-slate-800 text-xs sm:text-sm text-left">ศูนย์สร้างและแชร์ QR Code</h3>
         </div>
-        <button onclick="closeQrModal()" class="text-slate-400 hover:text-slate-600"><i class="fa-solid fa-xmark text-lg"></i></button>
+        <button onclick="closeQrModal()" class="w-7 h-7 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-600 flex items-center justify-center transition cursor-pointer" title="ปิดหน้าต่าง (Esc)"><i class="fa-solid fa-xmark text-sm"></i></button>
       </div>
 
-      <!-- Mode Switcher Tabs -->
-      <div class="grid grid-cols-2 gap-1.5 p-1 bg-slate-100 rounded-xl text-xs font-semibold">
-        <button id="qrTabSurveyBtn" onclick="switchQrModalMode('SURVEY')" class="py-2 px-2.5 rounded-lg bg-white text-blue-700 shadow-sm flex items-center justify-center space-x-1.5 transition">
-          <i class="fa-solid fa-square-poll-vertical text-blue-600"></i>
-          <span>⭐ 1. QR ผู้เข้าอบรม (ประเมิน + วุฒิบัตร)</span>
-        </button>
-        <button id="qrTabResourceBtn" onclick="switchQrModalMode('RESOURCE')" class="py-2 px-2.5 rounded-lg text-slate-600 hover:text-slate-900 flex items-center justify-center space-x-1.5 transition">
-          <i class="fa-brands fa-google-drive text-amber-600"></i>
-          <span>📁 2. QR วิทยากร (คลังไฟล์ Drive)</span>
-        </button>
-      </div>
-
-      <!-- QR Code Presentation Canvas Box -->
-      <div class="p-3 bg-gradient-to-b from-slate-50 to-white border border-slate-200 rounded-2xl flex flex-col items-center justify-center shadow-inner relative">
-        <div id="qrcodeWrapper" class="p-2 bg-white rounded-xl shadow-sm border border-slate-200"></div>
-        <div id="qrModeSubtitle" class="text-[11px] font-medium text-slate-600 mt-2">
-          สแกนด้วยสมาร์ทโฟนเพื่อทำแบบประเมินผลการอบรม 10 ข้อ
+      <!-- Scrollable Body for small/laptop screens -->
+      <div class="overflow-y-auto py-2 space-y-2.5 pr-0.5" style="max-height: calc(92vh - 110px);">
+        
+        <!-- Mode Switcher Tabs -->
+        <div class="grid grid-cols-2 gap-1 p-1 bg-slate-100 rounded-xl text-[11px] font-semibold">
+          <button id="qrTabSurveyBtn" onclick="switchQrModalMode('SURVEY')" class="py-1.5 px-2 rounded-lg bg-white text-blue-700 shadow-sm flex items-center justify-center space-x-1 transition cursor-pointer">
+            <i class="fa-solid fa-square-poll-vertical text-blue-600 text-xs"></i>
+            <span class="truncate">⭐ 1. ผู้เข้าอบรม</span>
+          </button>
+          <button id="qrTabResourceBtn" onclick="switchQrModalMode('RESOURCE')" class="py-1.5 px-2 rounded-lg text-slate-600 hover:text-slate-900 flex items-center justify-center space-x-1 transition cursor-pointer">
+            <i class="fa-brands fa-google-drive text-amber-600 text-xs"></i>
+            <span class="truncate">📁 2. คลังไฟล์ Drive</span>
+          </button>
         </div>
-        <!-- Unambiguous Guidance Banner -->
-        <div class="mt-2.5 p-2 bg-blue-50/90 border border-blue-200 rounded-xl text-[10.5px] text-blue-900 text-left flex items-start gap-1.5 w-full">
-          <i class="fa-solid fa-circle-info text-blue-600 text-xs mt-0.5 shrink-0"></i>
-          <div class="leading-tight">
-            <strong>คำแนะนำสำหรับผู้เข้าอบรม:</strong> สแกน <strong>QR หมายเลข 1 อันเดียวเท่านั้น</strong> ระบบจะนำเข้าสู่แบบประเมิน ➔ ออกวุฒิบัตร ➔ และดาวน์โหลดเอกสารอบรมในที่เดียว
+
+        <!-- QR Code Presentation Canvas Box -->
+        <div class="p-2.5 bg-gradient-to-b from-slate-50 to-white border border-slate-200 rounded-2xl flex flex-col items-center justify-center shadow-inner relative">
+          <div id="qrcodeWrapper" class="p-1.5 bg-white rounded-xl shadow-xs border border-slate-200 flex items-center justify-center min-w-[144px] min-h-[144px]"></div>
+          <div id="qrModeSubtitle" class="text-[10.5px] font-medium text-slate-600 mt-1.5">
+            สแกนด้วยสมาร์ทโฟนเพื่อทำแบบประเมินผลการอบรม 10 ข้อ
+          </div>
+          <!-- Compact Guidance Banner -->
+          <div class="mt-1.5 p-1.5 bg-blue-50 border border-blue-200 rounded-xl text-[10px] text-blue-900 text-left flex items-start gap-1 w-full leading-tight">
+            <i class="fa-solid fa-circle-info text-blue-600 text-xs mt-0.5 shrink-0"></i>
+            <div>
+              <strong>คำแนะนำ:</strong> สแกน <strong>QR หมายเลข 1 อันเดียว</strong> เพื่อประเมิน ➔ รับวุฒิบัตร ➔ และโหลดไฟล์ในที่เดียว
+            </div>
           </div>
         </div>
-      </div>
-      
-      <div>
-        <div id="modalCourseTitle" class="font-bold text-slate-800 text-sm leading-tight"></div>
-        <div id="modalEventId" class="text-xs text-slate-400 mt-0.5 font-mono"></div>
-      </div>
+        
+        <div>
+          <div id="modalCourseTitle" class="font-bold text-slate-800 text-xs leading-tight"></div>
+          <div id="modalEventId" class="text-[10px] text-slate-400 mt-0.5 font-mono"></div>
+        </div>
 
-      <!-- Link URL & Copy Box -->
-      <div class="space-y-1 text-left">
-        <label id="modalLinkFieldLabel" class="block text-[11px] font-semibold text-slate-600 flex items-center justify-between">
-          <span>ลิงก์ปลายทาง (Target URL):</span>
-          <span id="modalLinkTag" class="text-[10px] text-blue-600 bg-blue-50 px-1.5 py-0.5 rounded">แบบประเมินออนไลน์</span>
-        </label>
-        <div class="bg-slate-50 p-2 rounded-xl border border-slate-200 flex items-center justify-between text-xs">
-          <input type="text" id="modalShareUrl" readonly class="bg-transparent text-slate-700 focus:outline-none w-full font-mono text-[11px]">
-          <button onclick="copyShareUrl()" class="ml-2 px-3 py-1.5 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-xs font-semibold whitespace-nowrap btn-tactile shadow-sm flex items-center space-x-1">
-            <i class="fa-solid fa-copy"></i>
-            <span>คัดลอก</span>
+        <!-- Link URL & Copy Box -->
+        <div class="space-y-0.5 text-left">
+          <label id="modalLinkFieldLabel" class="block text-[10px] font-semibold text-slate-600 flex items-center justify-between">
+            <span>ลิงก์ปลายทาง (Target URL):</span>
+            <span id="modalLinkTag" class="text-[9px] text-blue-600 bg-blue-50 px-1 py-0.5 rounded">แบบประเมินออนไลน์</span>
+          </label>
+          <div class="bg-slate-50 p-1.5 rounded-xl border border-slate-200 flex items-center justify-between text-xs">
+            <input type="text" id="modalShareUrl" readonly class="bg-transparent text-slate-700 focus:outline-none w-full font-mono text-[10px]">
+            <button onclick="copyShareUrl()" class="ml-1.5 px-2.5 py-1 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-[10px] font-semibold whitespace-nowrap btn-tactile shadow-xs flex items-center space-x-1 cursor-pointer">
+              <i class="fa-solid fa-copy"></i>
+              <span>คัดลอก</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Quick Edit Resource Link Section (when in RESOURCE mode) -->
+        <div id="qrResourceEditBox" class="hidden text-left bg-amber-50 p-2 rounded-xl border border-amber-200 space-y-1">
+          <label class="block text-[10px] font-bold text-amber-900 flex items-center justify-between">
+            <span>แก้ไข/เปลี่ยนลิงก์ Google Drive หรือ OneDrive โครงการ:</span>
+          </label>
+          <div class="flex gap-1">
+            <input type="url" id="qrResourceInput" placeholder="https://drive.google.com/..." class="flex-1 bg-white border border-amber-300 rounded-lg px-2 py-1 text-[11px] focus:ring-1 focus:ring-amber-500 focus:outline-none">
+            <button onclick="saveEventResourceLink()" class="px-2.5 py-1 bg-amber-600 hover:bg-amber-700 text-white rounded-lg text-[10px] font-bold whitespace-nowrap btn-tactile cursor-pointer">
+              บันทึก
+            </button>
+          </div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="grid grid-cols-2 gap-1.5 pt-0.5">
+          <a id="modalOpenSurveyLink" href="#" target="_blank" class="w-full py-1.5 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-xl text-[11px] transition flex items-center justify-center space-x-1 btn-tactile shadow-xs cursor-pointer">
+            <i class="fa-solid fa-arrow-up-right-from-square text-amber-300"></i>
+            <span>เปิดทดสอบแบบสอบถาม</span>
+          </a>
+          <button onclick="printQrProjectionCard()" class="w-full py-1.5 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold rounded-xl text-[11px] transition flex items-center justify-center space-x-1 btn-tactile shadow-xs cursor-pointer">
+            <i class="fa-solid fa-tv"></i>
+            <span>ฉายจอ (Slide)</span>
           </button>
         </div>
+
       </div>
 
-      <!-- Quick Edit Resource Link Section (when in RESOURCE mode) -->
-      <div id="qrResourceEditBox" class="hidden text-left bg-amber-50 p-2.5 rounded-xl border border-amber-200 space-y-1.5">
-        <label class="block text-[11px] font-bold text-amber-900 flex items-center justify-between">
-          <span>แก้ไข/เปลี่ยนลิงก์ Google Drive หรือ OneDrive โครงการ:</span>
-        </label>
-        <div class="flex gap-1.5">
-          <input type="url" id="qrResourceInput" placeholder="https://drive.google.com/..." class="flex-1 bg-white border border-amber-300 rounded-lg px-2.5 py-1 text-xs focus:ring-2 focus:ring-amber-500 focus:outline-none">
-          <button onclick="saveEventResourceLink()" class="px-3 py-1 bg-amber-600 hover:bg-amber-700 text-white rounded-lg text-xs font-bold whitespace-nowrap btn-tactile">
-            บันทึก
-          </button>
-        </div>
-      </div>
-
-      <!-- Action Buttons -->
-      <div class="grid grid-cols-2 gap-2 pt-1">
-        <a id="modalOpenSurveyLink" href="#" target="_blank" class="w-full py-2 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-xl text-xs transition flex items-center justify-center space-x-1.5 btn-tactile shadow-sm">
-          <i class="fa-solid fa-arrow-up-right-from-square text-amber-300"></i>
-          <span>เปิดทดสอบแบบสอบถามจริง</span>
-        </a>
-        <button onclick="printQrProjectionCard()" class="w-full py-2 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold rounded-xl text-xs transition flex items-center justify-center space-x-1 btn-tactile shadow-sm">
-          <i class="fa-solid fa-tv"></i>
-          <span>ฉายจอห้องอบรม (Slide)</span>
+      <!-- Bottom Quick Close Footer Button -->
+      <div class="pt-2 border-t border-slate-100 shrink-0">
+        <button onclick="closeQrModal()" class="w-full py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold rounded-xl text-xs transition flex items-center justify-center space-x-1.5 cursor-pointer">
+          <i class="fa-solid fa-xmark"></i>
+          <span>ปิดหน้าต่าง (Close)</span>
         </button>
       </div>
 
@@ -2525,10 +2540,10 @@
               <i class="fa-solid fa-code-compare text-amber-300"></i>
               <span class="text-xs font-bold uppercase tracking-wider">รายละเอียดการปรับปรุงเวอร์ชัน (Version Release Notes)</span>
             </div>
-            <span class="text-[10px] bg-amber-400 text-slate-950 font-black px-2 py-0.5 rounded-full">v1.18.0 Live</span>
+            <span class="text-[10px] bg-amber-400 text-slate-950 font-black px-2 py-0.5 rounded-full">v1.18.1 Live</span>
           </div>
           <p class="text-xs text-blue-100 leading-relaxed">
-            <strong>v1.18.0 (Enterprise Survey & Closed-Loop Edition):</strong> ปรับปรุงแบบประเมิน 2 ขั้นตอน (Step 1: ทำแบบประเมิน 10 ข้อ ➔ Step 2: ระบุชื่อรับวุฒิบัตร e-Certificate แบบ Real-Time), รวมศูนย์ QR Code สแกนอันเดียวจบครบทั้งประเมิน วุฒิบัตร และดาวน์โหลดสื่อการสอน Google Drive, พร้อมปุ่มคลิกเปิดทดสอบแบบสอบถามสด 1 คลิก
+            <strong>v1.18.1 (Enterprise Compact QR & Drive Standard):</strong> ปรับขนาดหน้าต่างแท่นแสดงผล QR Code ให้กะทัดรัด (Compact Responsive) รองรับโน้ตบุ๊กทุกขนาดหน้าจอ, เพิ่มปุ่มปิดหน้าต่างทั้งบน ล่าง และกด Esc/คลิกนอกกรอบเพื่อปิดได้ทันที, พร้อมกำหนด Google Drive โฟลเดอร์กลางสำหรับเก็บเอกสารโครงการ
           </p>
           <div class="pt-1 flex items-center justify-between text-[11px] text-blue-200">
             <span>ฐานข้อมูล: Google Sheets + Local Offline Cache</span>
@@ -3525,6 +3540,8 @@
   <script>
     // Embedded Production Apps Script Web App Endpoint
     const DEFAULT_GAS_ENDPOINT = 'https://script.google.com/macros/s/AKfycby-D2AvgHXO_y4tVxg8wgkDP9ARBnRpiVp47-vnF7AiA1TA4AqwKGbelJTyI68tKfmx6g/exec';
+    // Standard Official Google Drive Folder for Training Materials & Project Assets
+    const DEFAULT_DRIVE_FOLDER_URL = 'https://drive.google.com/drive/u/0/folders/1GxHFu2kMPwtl7j3PvnD6wHRb_YwlQGqk';
 
     // ------------------- MASTER DATA & VERIFIED CUSTOMER DIRECTORY (2,363 SCHOOLS) -------------------
     const ALL_PROVINCES = [
@@ -3858,7 +3875,7 @@
 
     // System Global State (Synchronously initialized with complete Master Data)
     const AppState = {
-      version: '1.17.0',
+      version: '1.18.1',
       clientId: 'DEV-' + Math.random().toString(36).substring(2, 7).toUpperCase(),
       activeTab: 'dashboard',
       activeDevices: {},
@@ -6591,7 +6608,7 @@
         '</style></head><body>' +
         '<div class="header">' +
         '<div><h2 style="margin:0; color:#08539E; font-size:16pt;">บริษัท ไทยวัฒนาพานิช จำกัด (TWP)</h2><div style="font-size:11pt; color:#475569;">รายงานสรุปการกระทบยอดงบประมาณจัดอบรมกับยอดขายจริง ประจำปี 2569</div></div>' +
-        '<div style="text-align:right; font-size:9pt; color:#64748b;">ออกโดยระบบ EMS Enterprise v1.18.0<br>วันที่พิมพ์: ' + new Date().toLocaleDateString('th-TH') + '</div>' +
+        '<div style="text-align:right; font-size:9pt; color:#64748b;">ออกโดยระบบ EMS Enterprise v1.18.1<br>วันที่พิมพ์: ' + new Date().toLocaleDateString('th-TH') + '</div>' +
         '</div>' +
         '<div style="display:flex; justify-content:space-between; background:#f8fafc; padding:8px 12px; border-radius:6px; margin-bottom:10px; font-size:10pt;">' +
         '<div>โครงการทั้งหมด: <strong>' + projects.length + ' โครงการ</strong></div>' +
@@ -8366,26 +8383,26 @@
       let darkColor = '#1e3a8a';
 
       if (mode === 'SURVEY') {
-        surveyBtn.className = 'py-2 px-3 rounded-lg bg-white text-blue-700 shadow-sm flex items-center justify-center space-x-1.5 transition';
-        resBtn.className = 'py-2 px-3 rounded-lg text-slate-600 hover:text-slate-900 flex items-center justify-center space-x-1.5 transition';
+        surveyBtn.className = 'py-1.5 px-2 rounded-lg bg-white text-blue-700 shadow-sm flex items-center justify-center space-x-1 transition cursor-pointer';
+        resBtn.className = 'py-1.5 px-2 rounded-lg text-slate-600 hover:text-slate-900 flex items-center justify-center space-x-1 transition cursor-pointer';
         subtitle.innerText = 'สแกนด้วยสมาร์ทโฟนเพื่อทำแบบประเมินผลการอบรม 10 ข้อ';
         linkTag.innerText = 'แบบประเมินออนไลน์ 10 ข้อ';
-        linkTag.className = 'text-[10px] text-blue-600 bg-blue-50 px-1.5 py-0.5 rounded';
+        linkTag.className = 'text-[9px] text-blue-600 bg-blue-50 px-1 py-0.5 rounded';
         resEditBox.classList.add('hidden');
 
         const token = req.token || 'tok-' + req.eventId.replace(/-/g, '').toLowerCase();
         targetUrl = getSurveyFullUrl(token, req);
         darkColor = '#1e3a8a';
       } else {
-        resBtn.className = 'py-2 px-3 rounded-lg bg-white text-amber-700 shadow-sm flex items-center justify-center space-x-1.5 transition';
-        surveyBtn.className = 'py-2 px-3 rounded-lg text-slate-600 hover:text-slate-900 flex items-center justify-center space-x-1.5 transition';
-        subtitle.innerHTML = '<span class="text-amber-700 font-bold"><i class="fa-solid fa-lock mr-1"></i>ผู้เข้าอบรมจะสแกนเข้าถึงไฟล์ได้ต่อเมื่อ "ทำแบบประเมินเสร็จแล้วเท่านั้น"</span><br><span class="text-slate-500 text-[10px]">(ระบบจะปลดล็อกปุ่มและ QR Code คลังไฟล์ในหน้าวุฒิบัตรทันทีหลังส่งประเมิน)</span>';
+        resBtn.className = 'py-1.5 px-2 rounded-lg bg-white text-amber-700 shadow-sm flex items-center justify-center space-x-1 transition cursor-pointer';
+        surveyBtn.className = 'py-1.5 px-2 rounded-lg text-slate-600 hover:text-slate-900 flex items-center justify-center space-x-1 transition cursor-pointer';
+        subtitle.innerHTML = '<span class="text-amber-700 font-bold"><i class="fa-solid fa-lock mr-1"></i>ผู้เข้าอบรมจะสแกนเข้าถึงไฟล์ได้ต่อเมื่อ "ทำแบบประเมินเสร็จแล้วเท่านั้น"</span><br><span class="text-slate-500 text-[9.5px]">(ระบบจะปลดล็อกปุ่มและ QR Code คลังไฟล์ในหน้าวุฒิบัตรทันทีหลังส่งประเมิน)</span>';
         linkTag.innerText = 'Google Drive / OneDrive';
-        linkTag.className = 'text-[10px] text-amber-700 bg-amber-50 px-1.5 py-0.5 rounded';
+        linkTag.className = 'text-[9px] text-amber-700 bg-amber-50 px-1 py-0.5 rounded';
         resEditBox.classList.remove('hidden');
 
-        targetUrl = req.resourceLink || 'https://drive.google.com';
-        document.getElementById('qrResourceInput').value = req.resourceLink || '';
+        targetUrl = req.resourceLink || DEFAULT_DRIVE_FOLDER_URL;
+        document.getElementById('qrResourceInput').value = req.resourceLink || DEFAULT_DRIVE_FOLDER_URL;
         darkColor = '#b45309';
       }
 
@@ -8396,8 +8413,8 @@
       wrap.innerHTML = '';
       new QRCode(wrap, {
         text: targetUrl,
-        width: 190,
-        height: 190,
+        width: 140,
+        height: 140,
         colorDark: darkColor,
         colorLight: '#ffffff',
         correctLevel: QRCode.CorrectLevel.M
@@ -8465,8 +8482,19 @@
     }
 
     function closeQrModal() {
-      document.getElementById('qrModal').classList.add('hidden');
+      const qm = document.getElementById('qrModal');
+      if (qm) qm.classList.add('hidden');
     }
+
+    // Keyboard Shortcut: ESC to close QR Modal
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape' || e.keyCode === 27) {
+        const qm = document.getElementById('qrModal');
+        if (qm && !qm.classList.contains('hidden')) {
+          closeQrModal();
+        }
+      }
+    });
 
     function copyShareUrl() {
       const input = document.getElementById('modalShareUrl');
@@ -8895,12 +8923,12 @@
               <!-- QR Code 2: Cloud Storage / Google Drive -->
               <div style="background:#fffbeb; border:1px solid #fde68a; border-radius:6px; padding:8px 12px; display:flex; align-items:center; gap:12px;">
                 <div style="background:#ffffff; padding:4px; border-radius:6px; border:1px solid #d97706; display:flex; align-items:center; justify-content:center;">
-                  <img src="https://api.qrserver.com/v1/create-qr-code/?size=110x110&data=${encodeURIComponent(d.resourceLink || 'https://drive.google.com')}" style="width:78px; height:78px; display:block;" alt="QR เอกสารและภาพโครงการ">
+                  <img src="https://api.qrserver.com/v1/create-qr-code/?size=110x110&data=${encodeURIComponent(d.resourceLink || DEFAULT_DRIVE_FOLDER_URL)}" style="width:78px; height:78px; display:block;" alt="QR เอกสารและภาพโครงการ">
                 </div>
                 <div>
                   <div style="font-size:10.5pt; font-weight:700; color:#b45309;">📁 2. QR คลังไฟล์สำหรับวิทยากร & ภาพกิจกรรม</div>
                   <div style="font-size:8.5pt; color:#78350f; margin-top:2px;">คลังโฟลเดอร์ Google Drive รวมไฟล์สไลด์และภาพถ่ายความละเอียดสูง</div>
-                  <div style="font-size:7.5pt; color:#b45309; font-family:monospace; margin-top:4px;">${d.resourceLink ? d.resourceLink.substring(0, 38) + '...' : 'https://drive.google.com/...'}</div>
+                  <div style="font-size:7.5pt; color:#b45309; font-family:monospace; margin-top:4px;">${(d.resourceLink || DEFAULT_DRIVE_FOLDER_URL).length > 40 ? (d.resourceLink || DEFAULT_DRIVE_FOLDER_URL).substring(0, 38) + '...' : (d.resourceLink || DEFAULT_DRIVE_FOLDER_URL)}</div>
                 </div>
               </div>
             </div>
@@ -8949,7 +8977,7 @@
           <div style="border-top:1px dashed #cbd5e1; margin-top:10px; padding-top:4px; display:flex; justify-content:space-between; align-items:center; font-size:8.5pt; color:#64748b;">
             <div>
               <i class="fa-solid fa-file-contract mr-1 text-[#08539E]"></i>
-              รายงานประเมินและวิเคราะห์ต้นทุนการจัดอบรม A4 • ออกโดย TWP Training Enterprise Platform (v1.18.0)
+              รายงานประเมินและวิเคราะห์ต้นทุนการจัดอบรม A4 • ออกโดย TWP Training Enterprise Platform (v1.18.1)
             </div>
             <div>
               หน้า 1/1 • ${d.eventId}
@@ -9128,7 +9156,7 @@
           <div style="border-top:1px dashed #cbd5e1; margin-top:14px; padding-top:6px; display:flex; justify-content:space-between; align-items:center; font-size:8.5pt; color:#64748b;">
             <div>
               <i class="fa-solid fa-shield-halved" style="color:#08539E; margin-right:4px;"></i>
-              เอกสารอิเล็กทรอนิกส์มาตรฐาน A4 ออกโดย TWP Training Enterprise Management System (EMS v1.18.0)
+              เอกสารอิเล็กทรอนิกส์มาตรฐาน A4 ออกโดย TWP Training Enterprise Management System (EMS v1.18.1)
             </div>
             <div>
               รหัสอ้างอิง: <span style="font-family:monospace; font-weight:700; color:#0f172a;">${d.eventId}</span> | หน้า 1/1
@@ -9301,7 +9329,7 @@
           </table>
 
           <div style="margin-top:14px; padding-top:4px; border-top:1px solid #e2e8f0; font-size:8.5pt; color:#94a3b8; text-align:center;">
-            เอกสารฉบับนี้สร้างโดยระบบ Training Center TWP (EMS Enterprise Platform v1.18.0) • ใช้สำหรับติดตามและควบคุมผลการปฏิบัติงานภายใน (PPC Standard)
+            เอกสารฉบับนี้สร้างโดยระบบ Training Center TWP (EMS Enterprise Platform v1.18.1) • ใช้สำหรับติดตามและควบคุมผลการปฏิบัติงานภายใน (PPC Standard)
           </div>
         </div>
       `;
@@ -10596,7 +10624,7 @@
           <div>
             <div class="flex items-center space-x-2">
               <h3 class="font-bold text-slate-900 text-lg">ประวัติและการปรับปรุงระบบเวอร์ชัน (Release Notes)</h3>
-              <span class="bg-blue-100 text-[#08539E] text-xs font-bold font-mono px-2 py-0.5 rounded-full">v1.18.0 Current</span>
+              <span class="bg-blue-100 text-[#08539E] text-xs font-bold font-mono px-2 py-0.5 rounded-full">v1.18.1 Current</span>
             </div>
             <p class="text-xs text-slate-500">บันทึกประวัติการปรับปรุงสถาปัตยกรรมและฟังก์ชันการทำงานอย่างละเอียด</p>
           </div>
@@ -10609,14 +10637,31 @@
       <!-- Release Timeline List -->
       <div class="space-y-4">
         
-        <!-- v1.18.0 (Current Major Milestone) -->
+        <!-- v1.18.1 (Current Major Milestone) -->
         <div class="p-5 bg-gradient-to-br from-blue-50 via-white to-indigo-50/70 border-2 border-blue-300 rounded-3xl space-y-3 shadow-xs">
           <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-1">
             <div class="flex items-center space-x-2">
-              <span class="bg-blue-700 text-white text-xs font-black px-2.5 py-0.5 rounded-lg font-mono">v1.18.0</span>
-              <span class="font-bold text-slate-900 text-sm">ระบบประเมิน 2 ขั้นตอน (Evaluation-First), รวมศูนย์ QR Code & Smart Expense Engine</span>
+              <span class="bg-blue-700 text-white text-xs font-black px-2.5 py-0.5 rounded-lg font-mono">v1.18.1</span>
+              <span class="font-bold text-slate-900 text-sm">แท่น QR กะทัดรัด (Compact Responsive), มาตรฐานคลังไฟล์ Google Drive & ยกระดับการปิด Modal</span>
             </div>
             <span class="text-[11px] text-blue-700 font-bold font-mono">2026-11-11 &bull; Latest Release</span>
+          </div>
+          <ul class="text-xs text-slate-700 space-y-2 list-disc list-inside leading-relaxed">
+            <li><strong>Compact Responsive QR Modal:</strong> ปรับขนาดหน้าต่างแท่นแสดงผล QR Code ให้กระชับพอดีกับทุกขนาดหน้าจอโน้ตบุ๊กและแท็บเล็ต ป้องกันปัญหาปุ่มปิดหลุดออกนอกจอ</li>
+            <li><strong>Triple-Action Modal Dismissal:</strong> รองรับการปิดหน้าต่าง QR ได้ 4 ช่องทาง: ปุ่มปิดด้านบน [✕], ปุ่มปิดด้านล่าง [✕ ปิดหน้าต่าง], คลิกพื้นที่ว่างรอบนอก (Backdrop), และกดปุ่ม Esc บนคีย์บอร์ด</li>
+            <li><strong>Standard Official Google Drive:</strong> กำหนดโฟลเดอร์ Google Drive กลางสำหรับวางเอกสารและภาพโครงการอัตโนมัติ (https://drive.google.com/drive/u/0/folders/1GxHFu2kMPwtl7j3PvnD6wHRb_YwlQGqk)</li>
+            <li><strong>Sharp & Compact QR Canvas:</strong> ย่อขนาด Canvas ให้คมชัดพอดี (140x140) สแกนติดไวทันทีโดยไม่บดบังเนื้อหาอื่น</li>
+          </ul>
+        </div>
+
+        <!-- v1.18.0 (Major Milestone) -->
+        <div class="p-5 bg-gradient-to-br from-indigo-50/80 via-white to-sky-50/60 border border-slate-200 rounded-3xl space-y-3 shadow-xs">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-1">
+            <div class="flex items-center space-x-2">
+              <span class="bg-indigo-600 text-white text-xs font-black px-2.5 py-0.5 rounded-lg font-mono">v1.18.0</span>
+              <span class="font-bold text-slate-900 text-sm">ระบบประเมิน 2 ขั้นตอน (Evaluation-First), รวมศูนย์ QR Code & Smart Expense Engine</span>
+            </div>
+            <span class="text-[11px] text-slate-400 font-mono">2026-11-11</span>
           </div>
           <ul class="text-xs text-slate-700 space-y-2 list-disc list-inside leading-relaxed">
             <li><strong>Strict 2-Step Survey Pipeline:</strong> จัดลำดับการประเมินใหม่อย่างถูกต้อง เป็นมืออาชีพ: ผู้เข้าอบรมทำแบบประเมินความพึงพอใจ 10 ข้อก่อน ➔ เมื่อเสร็จสิ้นจึงปลดล็อกหน้าจอระบุชื่อ-สกุลเพื่อออกวุฒิบัตร e-Certificate</li>
