@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-  <title>Training Center TWP - ระบบบริหารคำขอจัดอบรมและประเมินผล v1.17.0</title>
+  <title>Training Center TWP - ระบบบริหารคำขอจัดอบรมและประเมินผล v1.18.0</title>
   <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
   <!-- Google Fonts: Sarabun -->
@@ -312,7 +312,7 @@
       <div class="flex items-center space-x-3 text-xs">
         <span class="bg-white/15 px-3 py-1.5 rounded-full border border-white/20 backdrop-blur-sm font-mono text-blue-100 flex items-center">
           <span class="w-2 h-2 rounded-full bg-emerald-400 mr-2 animate-pulse"></span>
-          System v1.17.0
+          System v1.18.0
         </span>
       </div>
     </div>
@@ -393,7 +393,7 @@
     <!-- Bottom Footer on Landing Page -->
     <div class="max-w-7xl mx-auto w-full px-6 py-4 flex flex-col sm:flex-row items-center justify-between text-xs text-blue-200 border-t border-white/10 relative z-10 gap-2">
       <div>&copy; 2026 Training Center TWP - บริษัท ไทยวัฒนาพานิช จำกัด. All rights reserved.</div>
-      <div class="font-mono text-[11px] bg-white/10 px-3 py-1 rounded-full border border-white/15">EMS Enterprise Platform v1.17.0 (Live Apps Script Engine)</div>
+      <div class="font-mono text-[11px] bg-white/10 px-3 py-1 rounded-full border border-white/15">EMS Enterprise Platform v1.18.0 (Live Apps Script Engine)</div>
     </div>
 
   </div>
@@ -417,8 +417,8 @@
           </button>
           <div class="sidebar-brand-text truncate">
             <div class="flex items-center space-x-1.5">
-              <span class="font-extrabold text-sm tracking-wide text-white">TWP 1936</span>
-              <span onclick="openVersionReleaseModal()" class="bg-blue-400/20 hover:bg-blue-400/30 text-blue-200 text-[9px] font-mono px-1.5 py-0.5 rounded-full border border-blue-300/30 cursor-pointer transition flex items-center gap-1" title="คลิกดูรายละเอียดเวอร์ชัน v1.17.0"><i class="fa-solid fa-sparkles text-amber-300 text-[8px]"></i>v1.17.0</span>
+              <span class="font-extrabold text-sm tracking-wide text-white">TWP</span>
+              <span onclick="openVersionReleaseModal()" class="bg-blue-400/20 hover:bg-blue-400/30 text-blue-200 text-[9px] font-mono px-1.5 py-0.5 rounded-full border border-blue-300/30 cursor-pointer transition flex items-center gap-1" title="คลิกดูรายละเอียดเวอร์ชัน v1.18.0"><i class="fa-solid fa-sparkles text-amber-300 text-[8px]"></i>v1.18.0</span>
             </div>
             <p class="text-[10px] text-blue-200 truncate">ระบบบริหารงานฝึกอบรม</p>
           </div>
@@ -2128,9 +2128,9 @@
       <!-- Main Footer -->
       <footer class="bg-white border-t border-slate-200 py-4 px-6 text-center text-xs text-slate-500 mt-auto">
         <div class="flex flex-col sm:flex-row items-center justify-between gap-2 max-w-7xl mx-auto">
-          <p>© 2026 บริษัท ไทยวัฒนาพานิช จำกัด (TWP 1936) • ระบบบริหารจัดการงานฝึกอบรมและประเมินผลปิดลูป</p>
+          <p>© 2026 บริษัท ไทยวัฒนาพานิช จำกัด (TWP) • ระบบบริหารจัดการงานฝึกอบรมและประเมินผลปิดลูป</p>
           <div class="flex items-center space-x-3 text-slate-400">
-            <span onclick="openVersionReleaseModal()" class="hover:text-blue-600 cursor-pointer transition">เวอร์ชัน 1.17.0</span>
+            <span onclick="openVersionReleaseModal()" class="hover:text-blue-600 cursor-pointer transition">เวอร์ชัน 1.18.0</span>
             <span>•</span>
             <span onclick="openManualModal()" class="hover:text-blue-600 cursor-pointer transition">คู่มือการใช้งาน</span>
           </div>
@@ -2352,13 +2352,13 @@
 
       <!-- Mode Switcher Tabs -->
       <div class="grid grid-cols-2 gap-1.5 p-1 bg-slate-100 rounded-xl text-xs font-semibold">
-        <button id="qrTabSurveyBtn" onclick="switchQrModalMode('SURVEY')" class="py-2 px-3 rounded-lg bg-white text-blue-700 shadow-sm flex items-center justify-center space-x-1.5 transition">
+        <button id="qrTabSurveyBtn" onclick="switchQrModalMode('SURVEY')" class="py-2 px-2.5 rounded-lg bg-white text-blue-700 shadow-sm flex items-center justify-center space-x-1.5 transition">
           <i class="fa-solid fa-square-poll-vertical text-blue-600"></i>
-          <span>1. แบบประเมิน 10 ข้อ</span>
+          <span>⭐ 1. QR ผู้เข้าอบรม (ประเมิน + วุฒิบัตร)</span>
         </button>
-        <button id="qrTabResourceBtn" onclick="switchQrModalMode('RESOURCE')" class="py-2 px-3 rounded-lg text-slate-600 hover:text-slate-900 flex items-center justify-center space-x-1.5 transition">
+        <button id="qrTabResourceBtn" onclick="switchQrModalMode('RESOURCE')" class="py-2 px-2.5 rounded-lg text-slate-600 hover:text-slate-900 flex items-center justify-center space-x-1.5 transition">
           <i class="fa-brands fa-google-drive text-amber-600"></i>
-          <span>2. แหล่งเก็บไฟล์ (ปลดล็อกหลังประเมิน)</span>
+          <span>📁 2. QR วิทยากร (คลังไฟล์ Drive)</span>
         </button>
       </div>
 
@@ -2367,6 +2367,13 @@
         <div id="qrcodeWrapper" class="p-2 bg-white rounded-xl shadow-sm border border-slate-200"></div>
         <div id="qrModeSubtitle" class="text-[11px] font-medium text-slate-600 mt-2">
           สแกนด้วยสมาร์ทโฟนเพื่อทำแบบประเมินผลการอบรม 10 ข้อ
+        </div>
+        <!-- Unambiguous Guidance Banner -->
+        <div class="mt-2.5 p-2 bg-blue-50/90 border border-blue-200 rounded-xl text-[10.5px] text-blue-900 text-left flex items-start gap-1.5 w-full">
+          <i class="fa-solid fa-circle-info text-blue-600 text-xs mt-0.5 shrink-0"></i>
+          <div class="leading-tight">
+            <strong>คำแนะนำสำหรับผู้เข้าอบรม:</strong> สแกน <strong>QR หมายเลข 1 อันเดียวเท่านั้น</strong> ระบบจะนำเข้าสู่แบบประเมิน ➔ ออกวุฒิบัตร ➔ และดาวน์โหลดเอกสารอบรมในที่เดียว
+          </div>
         </div>
       </div>
       
@@ -2405,9 +2412,9 @@
 
       <!-- Action Buttons -->
       <div class="grid grid-cols-2 gap-2 pt-1">
-        <a id="modalOpenSurveyLink" href="#" target="_blank" class="w-full py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold rounded-xl text-xs transition flex items-center justify-center space-x-1 btn-tactile">
-          <i class="fa-solid fa-arrow-up-right-from-square"></i>
-          <span>เปิดลิงก์ในแท็บใหม่</span>
+        <a id="modalOpenSurveyLink" href="#" target="_blank" class="w-full py-2 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-xl text-xs transition flex items-center justify-center space-x-1.5 btn-tactile shadow-sm">
+          <i class="fa-solid fa-arrow-up-right-from-square text-amber-300"></i>
+          <span>เปิดทดสอบแบบสอบถามจริง</span>
         </a>
         <button onclick="printQrProjectionCard()" class="w-full py-2 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold rounded-xl text-xs transition flex items-center justify-center space-x-1 btn-tactile shadow-sm">
           <i class="fa-solid fa-tv"></i>
@@ -2518,10 +2525,10 @@
               <i class="fa-solid fa-code-compare text-amber-300"></i>
               <span class="text-xs font-bold uppercase tracking-wider">รายละเอียดการปรับปรุงเวอร์ชัน (Version Release Notes)</span>
             </div>
-            <span class="text-[10px] bg-amber-400 text-slate-950 font-black px-2 py-0.5 rounded-full">v1.17.0 Live</span>
+            <span class="text-[10px] bg-amber-400 text-slate-950 font-black px-2 py-0.5 rounded-full">v1.18.0 Live</span>
           </div>
           <p class="text-xs text-blue-100 leading-relaxed">
-            <strong>v1.17.0:</strong> ปรับปรุงการเชื่อมต่อแท่นปฏิบัติการจัดอบรมจริง & QR หน้างานสู่มือทีม B (Two-Stage Academic Pipeline), เพิ่มชุดเครื่องมือ QR ฉายจอใหญ่และพิมพ์ใบตั้งโต๊ะ A4, เพิ่มปุ่มทางลัดบันทึกค่าใช้จ่ายจริง 7 หมวด, เพิ่มศูนย์คลังเอกสารและรายงาน A4 ทั้งระบบตลอด 24 ชม., และเพิ่มระบบซ่อน/แสดงเมนูเพื่อขยายพื้นที่จอ
+            <strong>v1.18.0 (Enterprise Survey & Closed-Loop Edition):</strong> ปรับปรุงแบบประเมิน 2 ขั้นตอน (Step 1: ทำแบบประเมิน 10 ข้อ ➔ Step 2: ระบุชื่อรับวุฒิบัตร e-Certificate แบบ Real-Time), รวมศูนย์ QR Code สแกนอันเดียวจบครบทั้งประเมิน วุฒิบัตร และดาวน์โหลดสื่อการสอน Google Drive, พร้อมปุ่มคลิกเปิดทดสอบแบบสอบถามสด 1 คลิก
           </p>
           <div class="pt-1 flex items-center justify-between text-[11px] text-blue-200">
             <span>ฐานข้อมูล: Google Sheets + Local Offline Cache</span>
@@ -6584,7 +6591,7 @@
         '</style></head><body>' +
         '<div class="header">' +
         '<div><h2 style="margin:0; color:#08539E; font-size:16pt;">บริษัท ไทยวัฒนาพานิช จำกัด (TWP)</h2><div style="font-size:11pt; color:#475569;">รายงานสรุปการกระทบยอดงบประมาณจัดอบรมกับยอดขายจริง ประจำปี 2569</div></div>' +
-        '<div style="text-align:right; font-size:9pt; color:#64748b;">ออกโดยระบบ EMS Enterprise v1.17.0<br>วันที่พิมพ์: ' + new Date().toLocaleDateString('th-TH') + '</div>' +
+        '<div style="text-align:right; font-size:9pt; color:#64748b;">ออกโดยระบบ EMS Enterprise v1.18.0<br>วันที่พิมพ์: ' + new Date().toLocaleDateString('th-TH') + '</div>' +
         '</div>' +
         '<div style="display:flex; justify-content:space-between; background:#f8fafc; padding:8px 12px; border-radius:6px; margin-bottom:10px; font-size:10pt;">' +
         '<div>โครงการทั้งหมด: <strong>' + projects.length + ' โครงการ</strong></div>' +
@@ -8316,7 +8323,10 @@
       modal.classList.remove('hidden');
     }
 
-    function getSurveyFullUrl(token) {
+    function getSurveyFullUrl(token, req) {
+      if (!req && window.AppState && AppState.requests) {
+        req = AppState.requests.find(r => r.token === token || r.eventId === token);
+      }
       let path = window.location.pathname || '/';
       if (path.endsWith('/')) {
         path = path + 'survey.html';
@@ -8327,8 +8337,17 @@
         path = path.substring(0, lastSlash + 1) + 'survey.html';
       }
       const baseUrl = window.location.origin + path;
-      const activeEp = AppState.gasEndpoint || DEFAULT_GAS_ENDPOINT;
+      const activeEp = (window.AppState && AppState.gasEndpoint) || DEFAULT_GAS_ENDPOINT;
       let url = baseUrl + '?t=' + encodeURIComponent(token);
+      if (req) {
+        if (req.eventId) url += '&evt=' + encodeURIComponent(req.eventId);
+        if (req.courseTopic) url += '&topic=' + encodeURIComponent(req.courseTopic);
+        if (req.schoolName) url += '&school=' + encodeURIComponent(req.schoolName);
+        const spk = req.teamBSpeaker || req.speakerType || '';
+        if (spk) url += '&speaker=' + encodeURIComponent(spk);
+        if (req.eventDate) url += '&date=' + encodeURIComponent(req.eventDate);
+        if (req.resourceLink) url += '&drive=' + encodeURIComponent(req.resourceLink);
+      }
       if (activeEp) {
         url += '&ep=' + encodeURIComponent(activeEp);
       }
@@ -8361,7 +8380,7 @@
         resEditBox.classList.add('hidden');
 
         const token = req.token || 'tok-' + req.eventId.replace(/-/g, '').toLowerCase();
-        targetUrl = getSurveyFullUrl(token);
+        targetUrl = getSurveyFullUrl(token, req);
         darkColor = '#1e3a8a';
       } else {
         resBtn.className = 'py-2 px-3 rounded-lg bg-white text-amber-700 shadow-sm flex items-center justify-center space-x-1.5 transition';
@@ -8868,13 +8887,13 @@
 
             <div style="display:grid; grid-template-columns: 1fr 1fr; gap:14px; align-items:center;">
               <!-- QR Code 1: 10-Question Evaluation Survey -->
-              <div style="background:#f8fafc; border:1px solid #cbd5e1; border-radius:6px; padding:8px 12px; display:flex; align-items:center; gap:12px;">
-                <div style="background:#ffffff; padding:4px; border-radius:6px; border:1px solid #94a3b8; display:flex; align-items:center; justify-content:center;">
-                  <img src="https://api.qrserver.com/v1/create-qr-code/?size=110x110&data=${encodeURIComponent(window.location.origin + (window.location.pathname.endsWith('/') ? window.location.pathname + 'survey.html' : window.location.pathname.replace(/index\.html$/, 'survey.html')) + '?t=' + (d.eventId === 'EVT-DEMO-2026' ? 'demo-active-learning-2026' : d.eventId))}" style="width:78px; height:78px; display:block;" alt="QR แบบประเมิน 10 ข้อ">
+              <div style="background:#eff6ff; border:1.5px solid #3b82f6; border-radius:6px; padding:8px 12px; display:flex; align-items:center; gap:12px;">
+                <div style="background:#ffffff; padding:4px; border-radius:6px; border:1px solid #2563eb; display:flex; align-items:center; justify-content:center;">
+                  <img src="https://api.qrserver.com/v1/create-qr-code/?size=110x110&data=${encodeURIComponent(getSurveyFullUrl(d.token || d.eventId, d))}" style="width:78px; height:78px; display:block;" alt="QR แบบประเมิน 10 ข้อ">
                 </div>
                 <div>
-                  <div style="font-size:10.5pt; font-weight:700; color:#1e3a8a;">1. QR แบบประเมินผล 10 ข้อ</div>
-                  <div style="font-size:8.5pt; color:#475569; margin-top:2px;">สแกนเพื่อตอบแบบประเมินความพึงพอใจและรับเกียรติบัตร</div>
+                  <div style="font-size:10.5pt; font-weight:800; color:#1e3a8a;">⭐ 1. QR สำหรับผู้เข้าอบรม (ประเมิน + รับวุฒิบัตร)</div>
+                  <div style="font-size:8.5pt; color:#1e40af; margin-top:2px;">สแกนเพื่อตอบแบบประเมิน ➔ รับวุฒิบัตร ➔ และรับไฟล์สื่อการสอนในที่เดียว</div>
                   <div style="font-size:7.5pt; color:#2563eb; font-family:monospace; margin-top:4px;">survey.html?t=${d.eventId}</div>
                 </div>
               </div>
@@ -8885,8 +8904,8 @@
                   <img src="https://api.qrserver.com/v1/create-qr-code/?size=110x110&data=${encodeURIComponent(d.resourceLink || 'https://drive.google.com')}" style="width:78px; height:78px; display:block;" alt="QR เอกสารและภาพโครงการ">
                 </div>
                 <div>
-                  <div style="font-size:10.5pt; font-weight:700; color:#b45309;">2. QR แหล่งเก็บไฟล์ & ภาพอบรม</div>
-                  <div style="font-size:8.5pt; color:#78350f; margin-top:2px;">สแกนดาวน์โหลดคู่มือ สไลด์ และภาพกิจกรรมโครงการ</div>
+                  <div style="font-size:10.5pt; font-weight:700; color:#b45309;">📁 2. QR คลังไฟล์สำหรับวิทยากร & ภาพกิจกรรม</div>
+                  <div style="font-size:8.5pt; color:#78350f; margin-top:2px;">คลังโฟลเดอร์ Google Drive รวมไฟล์สไลด์และภาพถ่ายความละเอียดสูง</div>
                   <div style="font-size:7.5pt; color:#b45309; font-family:monospace; margin-top:4px;">${d.resourceLink ? d.resourceLink.substring(0, 38) + '...' : 'https://drive.google.com/...'}</div>
                 </div>
               </div>
@@ -8936,7 +8955,7 @@
           <div style="border-top:1px dashed #cbd5e1; margin-top:10px; padding-top:4px; display:flex; justify-content:space-between; align-items:center; font-size:8.5pt; color:#64748b;">
             <div>
               <i class="fa-solid fa-file-contract mr-1 text-[#08539E]"></i>
-              รายงานประเมินและวิเคราะห์ต้นทุนการจัดอบรม A4 • ออกโดย TWP Training Enterprise Platform (v1.17.0)
+              รายงานประเมินและวิเคราะห์ต้นทุนการจัดอบรม A4 • ออกโดย TWP Training Enterprise Platform (v1.18.0)
             </div>
             <div>
               หน้า 1/1 • ${d.eventId}
@@ -9115,7 +9134,7 @@
           <div style="border-top:1px dashed #cbd5e1; margin-top:14px; padding-top:6px; display:flex; justify-content:space-between; align-items:center; font-size:8.5pt; color:#64748b;">
             <div>
               <i class="fa-solid fa-shield-halved" style="color:#08539E; margin-right:4px;"></i>
-              เอกสารอิเล็กทรอนิกส์มาตรฐาน A4 ออกโดย TWP Training Enterprise Management System (EMS v1.17.0)
+              เอกสารอิเล็กทรอนิกส์มาตรฐาน A4 ออกโดย TWP Training Enterprise Management System (EMS v1.18.0)
             </div>
             <div>
               รหัสอ้างอิง: <span style="font-family:monospace; font-weight:700; color:#0f172a;">${d.eventId}</span> | หน้า 1/1
@@ -9288,7 +9307,7 @@
           </table>
 
           <div style="margin-top:14px; padding-top:4px; border-top:1px solid #e2e8f0; font-size:8.5pt; color:#94a3b8; text-align:center;">
-            เอกสารฉบับนี้สร้างโดยระบบ Training Center TWP (EMS Enterprise Platform v1.17.0) • ใช้สำหรับติดตามและควบคุมผลการปฏิบัติงานภายใน (PPC Standard)
+            เอกสารฉบับนี้สร้างโดยระบบ Training Center TWP (EMS Enterprise Platform v1.18.0) • ใช้สำหรับติดตามและควบคุมผลการปฏิบัติงานภายใน (PPC Standard)
           </div>
         </div>
       `;
@@ -10583,7 +10602,7 @@
           <div>
             <div class="flex items-center space-x-2">
               <h3 class="font-bold text-slate-900 text-lg">ประวัติและการปรับปรุงระบบเวอร์ชัน (Release Notes)</h3>
-              <span class="bg-blue-100 text-[#08539E] text-xs font-bold font-mono px-2 py-0.5 rounded-full">v1.17.0 Current</span>
+              <span class="bg-blue-100 text-[#08539E] text-xs font-bold font-mono px-2 py-0.5 rounded-full">v1.18.0 Current</span>
             </div>
             <p class="text-xs text-slate-500">บันทึกประวัติการปรับปรุงสถาปัตยกรรมและฟังก์ชันการทำงานอย่างละเอียด</p>
           </div>
@@ -10595,6 +10614,25 @@
 
       <!-- Release Timeline List -->
       <div class="space-y-4">
+        
+        <!-- v1.18.0 (Current Major Milestone) -->
+        <div class="p-5 bg-gradient-to-br from-blue-50 via-white to-indigo-50/70 border-2 border-blue-300 rounded-3xl space-y-3 shadow-xs">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-1">
+            <div class="flex items-center space-x-2">
+              <span class="bg-blue-700 text-white text-xs font-black px-2.5 py-0.5 rounded-lg font-mono">v1.18.0</span>
+              <span class="font-bold text-slate-900 text-sm">ระบบประเมิน 2 ขั้นตอน (Evaluation-First), รวมศูนย์ QR Code & Smart Expense Engine</span>
+            </div>
+            <span class="text-[11px] text-blue-700 font-bold font-mono">2026-11-11 &bull; Latest Release</span>
+          </div>
+          <ul class="text-xs text-slate-700 space-y-2 list-disc list-inside leading-relaxed">
+            <li><strong>Strict 2-Step Survey Pipeline:</strong> จัดลำดับการประเมินใหม่อย่างถูกต้อง เป็นมืออาชีพ: ผู้เข้าอบรมทำแบบประเมินความพึงพอใจ 10 ข้อก่อน ➔ เมื่อเสร็จสิ้นจึงปลดล็อกหน้าจอระบุชื่อ-สกุลเพื่อออกวุฒิบัตร e-Certificate</li>
+            <li><strong>Live Real-Time Certificate Name Update:</strong> แก้ไขปัญหาชื่อไม่เปลี่ยน โดยชื่อ-นามสกุลของผู้เข้าอบรมจะอัปเดตลงบนใบวุฒิบัตรทันทีแบบสดๆ พร้อมตรวจทานความถูกต้องก่อนพิมพ์หรือส่งอีเมล</li>
+            <li><strong>Executive Signature Lock:</strong> ตัดแถบเครื่องมือแก้ไขชื่อผู้ลงนามออกจากหน้าจอมือถือผู้เข้าอบรม ล็อกชื่อ ผศ.อินทิรา บุนนาค (กรรมการผู้จัดการ) และชื่อวิทยากรจริงตามโครงการอย่างเป็นทางการ</li>
+            <li><strong>Unified QR Code & Metadata Transmission:</strong> ปรับปรุง QR Code ทั้งหมดให้ส่งข้อมูลโครงการครบถ้วน ไม่ว่าจะเป็นชื่อสถานศึกษา, หลักสูตร, วิทยากร และวันที่จัดงาน เพื่อให้สมาร์ทโฟนทุกเครื่องแสดงข้อมูลจริง 100%</li>
+            <li><strong>1-Click Live Survey Testing Button:</strong> เพิ่มปุ่มเปิดทดสอบแบบสอบถามจริงในคลิกเดียวในหน้าต่าง QR Modal ช่วยให้แอดมินและทีมงานเปิดตรวจดูหน้าตาแบบสอบถามได้ทันทีโดยไม่ต้องสแกน</li>
+            <li><strong>Zero-Data-Loss Smart Merge:</strong> ระบบผสานข้อมูลคลาวด์อัตโนมัติ ป้องกันข้อมูลการอนุมัติ ลายเซ็น และค่าใช้จ่ายจริง 7 หมวดสูญหายระหว่างการซิงค์</li>
+          </ul>
+        </div>
         
         <!-- v1.17.0 (Major Milestone) -->
         <div class="p-5 bg-gradient-to-br from-indigo-50/80 via-white to-sky-50/60 border-2 border-indigo-200 rounded-3xl space-y-3 shadow-xs">
