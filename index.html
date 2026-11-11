@@ -3402,6 +3402,80 @@
     </div>
   </div>
 
+  <!-- ========================================== -->
+  <!-- MODAL: SPEAKER DIGITAL SIGNATURE PAD (ทีม B นำให้วิทยากรลงนามดิจิทัล) -->
+  <!-- ========================================== -->
+  <div id="speakerSignatureModal" class="hidden fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm flex items-center justify-center p-3 sm:p-4">
+    <div class="bg-white rounded-3xl max-w-lg w-full p-5 sm:p-6 space-y-4 shadow-2xl border border-slate-200">
+      
+      <!-- Modal Header -->
+      <div class="flex items-center justify-between pb-3 border-b border-slate-100">
+        <div class="flex items-center space-x-2.5">
+          <div class="w-10 h-10 rounded-2xl bg-purple-100 text-purple-700 flex items-center justify-center text-xl shadow-sm">
+            <i class="fa-solid fa-signature"></i>
+          </div>
+          <div>
+            <h3 class="font-bold text-slate-800 text-base">บันทึกและจัดเก็บลายเซ็นวิทยากร</h3>
+            <p class="text-xs text-slate-500">ทีม B นำให้อาจารย์วิทยากรจรดปากกาเซ็นสด หรือ แนบไฟล์ภาพลายเซ็น</p>
+          </div>
+        </div>
+        <button type="button" onclick="closeSpeakerSignatureModal()" class="text-slate-400 hover:text-slate-600 cursor-pointer"><i class="fa-solid fa-xmark text-lg"></i></button>
+      </div>
+
+      <!-- Speaker & Event Meta Card -->
+      <div class="bg-purple-50/70 p-3.5 rounded-2xl border border-purple-200 text-xs space-y-2">
+        <div class="flex items-center justify-between">
+          <span class="text-slate-500">รหัสคำขอ: <strong id="spkSigModalEventId" class="font-mono text-[#08539E] font-bold">EVT-XXXX</strong></span>
+          <span id="spkSigModalIndexBadge" class="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-purple-200 text-purple-900 border border-purple-300">วิทยากรคนที่ 1</span>
+        </div>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+          <div>
+            <label class="block font-bold text-slate-700 text-[11px] mb-1">ชื่อ-สกุล วิทยากร *</label>
+            <input type="text" id="spkSigModalName" class="w-full bg-white border border-slate-300 rounded-xl p-2 text-xs font-bold text-slate-800 focus:ring-2 focus:ring-purple-500 focus:outline-none" placeholder="ระบุชื่อวิทยากร...">
+          </div>
+          <div>
+            <label class="block font-bold text-slate-700 text-[11px] mb-1">ตำแหน่ง / บทบาท *</label>
+            <input type="text" id="spkSigModalRole" class="w-full bg-white border border-slate-300 rounded-xl p-2 text-xs text-slate-700 focus:ring-2 focus:ring-purple-500 focus:outline-none" placeholder="เช่น วิทยากรประจำหลักสูตร">
+          </div>
+        </div>
+      </div>
+
+      <!-- Signature Drawing Canvas Area -->
+      <div class="relative bg-slate-50 border-2 border-dashed border-purple-300 rounded-2xl p-1 overflow-hidden">
+        <canvas id="speakerSigPadCanvas" class="w-full h-44 bg-white rounded-xl cursor-crosshair" style="touch-action: none; width: 100%; height: 176px;"></canvas>
+        <div id="spkSigPlaceholder" class="absolute inset-0 flex items-center justify-center pointer-events-none text-slate-400 text-xs select-none">
+          <i class="fa-solid fa-pen-fancy mr-1.5 opacity-60"></i>จรดปากกาหรือใช้นิ้วเซ็นลายมือชื่อที่นี่ (รองรับ Touch / Stylus / Mouse)
+        </div>
+      </div>
+
+      <!-- Hidden File Input for uploading signature image -->
+      <input type="file" id="spkSigFileInput" accept="image/*" class="hidden" onchange="handleSpeakerSigFileUpload(event)">
+
+      <!-- Actions -->
+      <div class="flex flex-col sm:flex-row items-center justify-between gap-2.5 pt-1">
+        <div class="flex items-center space-x-2 w-full sm:w-auto">
+          <button type="button" onclick="clearSpeakerSigCanvas()" class="px-3 py-2 bg-slate-100 hover:bg-slate-200 text-slate-600 text-xs font-semibold rounded-xl transition cursor-pointer">
+            <i class="fa-solid fa-rotate-left mr-1"></i>ล้าง
+          </button>
+          <button type="button" onclick="document.getElementById('spkSigFileInput').click()" class="px-3 py-2 bg-purple-50 hover:bg-purple-100 text-purple-700 border border-purple-200 text-xs font-semibold rounded-xl transition cursor-pointer flex items-center space-x-1" title="อัปโหลดภาพลายเซ็น (PNG/JPG)">
+            <i class="fa-solid fa-image text-purple-600"></i>
+            <span>แนบไฟล์ภาพ</span>
+          </button>
+        </div>
+        <div class="flex items-center space-x-2 w-full sm:w-auto justify-end">
+          <button type="button" onclick="closeSpeakerSignatureModal()" class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold rounded-xl transition cursor-pointer">
+            ยกเลิก
+          </button>
+          <button type="button" onclick="confirmSpeakerSignatureModal()" class="px-6 py-2 bg-purple-600 hover:bg-purple-700 text-white text-xs font-bold rounded-xl shadow-md transition flex items-center space-x-1.5 btn-tactile cursor-pointer">
+            <i class="fa-solid fa-check mr-1 text-amber-300"></i>
+            <span>บันทึกลายเซ็น</span>
+          </button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
 <!-- ========================================== -->
   <div id="logoutModal" class="hidden fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm flex items-center justify-center p-4">
     <div class="bg-white rounded-3xl max-w-sm w-full p-6 text-center space-y-4 shadow-2xl border border-slate-100">
@@ -7401,6 +7475,63 @@
 
       container.innerHTML = queue.map(req => {
         const costRatio = req.targetSales > 0 ? ((req.estBudget / req.targetSales) * 100).toFixed(1) + '%' : '-';
+        const reqSpeakers = getEventSpeakers(req);
+        const speakersHtml = reqSpeakers.map((sp, sIdx) => {
+          const isMain = sIdx === 0;
+          const hasSig = !!sp.signature;
+          return `
+            <div class="bg-white p-3 rounded-2xl border border-purple-200/90 shadow-xs space-y-2.5">
+              <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-2">
+                  <span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold ${isMain ? 'bg-purple-100 text-purple-800 border border-purple-300' : 'bg-slate-100 text-slate-700 border border-slate-300'}">
+                    ${isMain ? '<i class="fa-solid fa-star text-amber-500 mr-1"></i>วิทยากรหลัก (คนที่ 1)' : `วิทยากรร่วม (คนที่ ${sIdx + 1})`}
+                  </span>
+                  ${hasSig 
+                    ? `<span class="text-[10px] text-emerald-700 font-bold bg-emerald-50 px-2 py-0.5 rounded-md border border-emerald-200 flex items-center"><i class="fa-solid fa-circle-check text-emerald-600 mr-1"></i>บันทึกลายเซ็นแล้ว</span>` 
+                    : `<span class="text-[10px] text-amber-700 font-medium bg-amber-50 px-2 py-0.5 rounded-md border border-amber-200 flex items-center"><i class="fa-solid fa-circle-exclamation text-amber-600 mr-1"></i>ยังไม่มีลายเซ็น</span>`}
+                </div>
+                ${!isMain ? `
+                  <button type="button" onclick="removeSpeakerFromEvent('${req.eventId}', ${sIdx})" class="text-rose-500 hover:text-rose-700 text-xs font-semibold px-2 py-0.5 rounded-md hover:bg-rose-50 transition cursor-pointer">
+                    <i class="fa-solid fa-trash-can mr-1"></i>ลบวิทยากรท่านนี้
+                  </button>
+                ` : ''}
+              </div>
+
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
+                <div>
+                  <label class="block text-[11px] font-semibold text-slate-700 mb-1">ชื่อ-สกุล วิทยากร *</label>
+                  <input type="text" id="teamBSpeakerName-${req.eventId}-${sIdx}" list="teamBSpeakerList" value="${sp.name || ''}" placeholder="ระบุชื่อ-สกุล วิทยากร..." class="w-full bg-slate-50 border border-slate-200 rounded-xl p-2 text-xs font-bold text-slate-800 focus:bg-white focus:ring-2 focus:ring-purple-500 focus:outline-none">
+                </div>
+                <div>
+                  <label class="block text-[11px] font-semibold text-slate-700 mb-1">ตำแหน่ง / บทบาทในหลักสูตร</label>
+                  <input type="text" id="teamBSpeakerRole-${req.eventId}-${sIdx}" value="${sp.role || (isMain ? 'วิทยากรประจำหลักสูตร ฝ่ายพัฒนาวิชาการและนวัตกรรมการเรียนรู้' : 'วิทยากรร่วม ฝ่ายพัฒนาวิชาการและนวัตกรรมการเรียนรู้')}" placeholder="เช่น วิทยากรประจำหลักสูตร" class="w-full bg-slate-50 border border-slate-200 rounded-xl p-2 text-xs text-slate-700 focus:bg-white focus:ring-2 focus:ring-purple-500 focus:outline-none">
+                </div>
+              </div>
+
+              <!-- Signature status & action -->
+              <div class="bg-slate-50 p-2 rounded-xl border border-slate-200 flex flex-wrap items-center justify-between gap-2">
+                <div class="flex items-center space-x-2">
+                  <span class="text-[11px] text-slate-500 font-medium">ลายเซ็นดิจิทัล:</span>
+                  ${hasSig 
+                    ? `<div class="h-8 bg-white border border-emerald-300 rounded px-2 flex items-center shadow-xs"><img src="${sp.signature}" style="max-height:28px; max-width:110px; object-fit:contain;" alt="ลายเซ็น"></div>` 
+                    : `<span class="text-[11px] text-slate-400 italic">ยังไม่ได้จัดเก็บลายเซ็น</span>`}
+                </div>
+                <div class="flex items-center space-x-1.5">
+                  <button type="button" onclick="openSpeakerSignaturePadModal('${req.eventId}', ${sIdx})" class="px-3 py-1.5 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white rounded-lg text-xs font-bold transition flex items-center space-x-1 shadow-xs cursor-pointer">
+                    <i class="fa-solid fa-pen-fancy text-amber-300"></i>
+                    <span>${hasSig ? 'เซ็นใหม่ / เปลี่ยนลายเซ็น' : 'นำหน้าจอให้วิทยากรเซ็น'}</span>
+                  </button>
+                  ${hasSig ? `
+                    <button type="button" onclick="removeSpeakerSignature('${req.eventId}', ${sIdx})" class="px-2 py-1.5 bg-slate-200 hover:bg-rose-100 text-slate-600 hover:text-rose-700 rounded-lg text-xs font-semibold transition cursor-pointer" title="ลบลายเซ็นออก">
+                      <i class="fa-solid fa-eraser"></i>
+                    </button>
+                  ` : ''}
+                </div>
+              </div>
+            </div>
+          `;
+        }).join('');
+
         return `
         <div onclick="setActiveReadingCard(this)" class="reading-card bg-white rounded-3xl p-6 border border-slate-200 shadow-sm space-y-5 cursor-pointer transition">
           
@@ -7522,23 +7653,38 @@
               <span class="text-[11px] text-purple-700 font-semibold bg-purple-100 px-2.5 py-0.5 rounded-full">ยืนยันความพร้อมวิชาการ</span>
             </div>
 
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <div>
-                <label class="block text-xs font-semibold text-slate-700 mb-1 flex items-center justify-between">
-                  <span>วิทยากรผู้บรรยายที่ยืนยัน *</span>
-                  <span class="text-[10px] text-purple-600 font-medium"><i class="fa-solid fa-pen-to-square mr-1"></i>เลือกหรือพิมพ์เอง</span>
-                </label>
-                <input type="text" id="teamBSpeaker-${req.eventId}" list="teamBSpeakerList" value="${req.teamBSpeaker || ''}" placeholder="เลือกจากประวัติ หรือพิมพ์ชื่อวิทยากร..." class="w-full bg-white border border-slate-300 rounded-xl p-2.5 text-xs focus:ring-2 focus:ring-purple-500 focus:outline-none">
+            <!-- SPEAKERS MANAGEMENT & DIGITAL SIGNATURES -->
+            <div class="space-y-3">
+              <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-purple-200/60 pb-2">
+                <div class="flex items-center space-x-2">
+                  <label class="text-xs font-bold text-purple-950 flex items-center">
+                    <i class="fa-solid fa-chalkboard-user mr-1.5 text-purple-700"></i>
+                    <span>คณะวิทยากรผู้บรรยาย & ลายเซ็นดิจิทัล (${reqSpeakers.length} ท่าน) *</span>
+                  </label>
+                  <span class="text-[10px] text-purple-700 bg-purple-100 px-2 py-0.5 rounded-full font-semibold">จัดเก็บล่วงหน้าเพื่อบรรจุลงใน e-Certificate</span>
+                </div>
+                <button type="button" onclick="addSpeakerToEvent('${req.eventId}')" class="px-2.5 py-1 bg-white hover:bg-purple-100 text-purple-800 border border-purple-300 rounded-xl text-xs font-bold transition flex items-center space-x-1 shadow-xs cursor-pointer w-fit">
+                  <i class="fa-solid fa-user-plus text-purple-600"></i>
+                  <span>+ เพิ่มวิทยากรคนที่ ${reqSpeakers.length + 1} (Co-Speaker)</span>
+                </button>
               </div>
+
+              <!-- Speakers List -->
+              <div class="space-y-2.5">
+                ${speakersHtml}
+              </div>
+            </div>
+
+            <!-- Financials & Notes -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
                 <label class="block text-xs font-semibold text-slate-700 mb-1">งบประมาณจริงที่ตัดจ่าย (บาท) *</label>
                 <input type="number" id="actualBudget-${req.eventId}" value="${req.actualBudget || req.estBudget}" class="w-full bg-white border border-slate-300 rounded-xl p-2.5 text-xs font-mono focus:ring-2 focus:ring-purple-500 focus:outline-none">
               </div>
-            </div>
-
-            <div>
-              <label class="block text-xs font-semibold text-slate-700 mb-1">ข้อเสนอแนะเพิ่มเติมเชิงวิชาการ</label>
-              <textarea id="teamBNotes-${req.eventId}" rows="2" placeholder="ระบุความเห็นด้านหลักสูตร เอกสาร หรือการเตรียมการ..." class="w-full bg-white border border-slate-300 rounded-xl p-2.5 text-xs focus:ring-2 focus:ring-purple-500 focus:outline-none">${req.teamBNotes || ''}</textarea>
+              <div>
+                <label class="block text-xs font-semibold text-slate-700 mb-1">ข้อเสนอแนะเพิ่มเติมเชิงวิชาการ</label>
+                <textarea id="teamBNotes-${req.eventId}" rows="2" placeholder="ระบุความเห็นด้านหลักสูตร เอกสาร หรือการเตรียมการ..." class="w-full bg-white border border-slate-300 rounded-xl p-2.5 text-xs focus:ring-2 focus:ring-purple-500 focus:outline-none">${req.teamBNotes || ''}</textarea>
+              </div>
             </div>
 
             <div class="flex justify-end space-x-2 pt-2 border-t border-purple-200/50">
@@ -7651,6 +7797,18 @@
               <div>
                 <span class="text-slate-400 block text-[11px]">วิทยากรผู้บรรยายที่ยืนยัน:</span>
                 <span class="font-bold text-purple-900 text-sm">${req.teamBSpeaker || req.speakerType || 'วิทยากรประจำหลักสูตร'}</span>
+                ${(req.speakers && req.speakers.length > 1) ? `
+                  <div class="text-[11px] text-slate-500 mt-0.5">
+                    (รวมวิทยากร ${req.speakers.length} ท่าน: ${req.speakers.map(s => s.name).filter(Boolean).join(', ')})
+                  </div>
+                ` : ''}
+                ${(req.speakers && req.speakers.some(s => s.signature)) ? `
+                  <div class="mt-1 flex items-center space-x-1.5">
+                    <span class="text-[10px] bg-emerald-100 text-emerald-800 font-bold px-2 py-0.5 rounded-full border border-emerald-200 flex items-center">
+                      <i class="fa-solid fa-signature mr-1 text-emerald-600"></i>เก็บบันทึกลายเซ็นดิจิทัลแล้ว (${req.speakers.filter(s => s.signature).length}/${req.speakers.length} ท่าน)
+                    </span>
+                  </div>
+                ` : ''}
               </div>
               <div>
                 <span class="text-slate-400 block text-[11px]">ความเห็นทางวิชาการ:</span>
@@ -8002,10 +8160,277 @@
       }
     }
 
-    // ------------------- ACTIONS: TEAM B REVIEW -------------------
+    // ------------------- ACTIONS: TEAM B REVIEW & SPEAKER SIGNATURE MANAGEMENT -------------------
+
+    let currentSigningSpeakerEventId = null;
+    let currentSigningSpeakerIndex = 0;
+    let isSpkSigDrawing = false;
+    let hasDrawnSpkSig = false;
+    let spkSigCanvasElem = null;
+    let spkSigCanvasCtx = null;
+    let spkUploadedSigDataUrl = null;
+
+    function getEventSpeakers(req) {
+      if (Array.isArray(req.speakers) && req.speakers.length > 0) {
+        return req.speakers;
+      }
+      const primaryName = req.teamBSpeaker || req.speakerType || 'ศ.ดร.ประสาน ปัญญาเลิศ';
+      const defaultRole = 'วิทยากรประจำหลักสูตร ฝ่ายพัฒนาวิชาการและนวัตกรรมการเรียนรู้';
+      req.speakers = [
+        {
+          name: primaryName,
+          role: defaultRole,
+          signature: req.speakerSignature || null
+        }
+      ];
+      return req.speakers;
+    }
+
+    function addSpeakerToEvent(eventId) {
+      const req = AppState.requests.find(r => r.eventId === eventId);
+      if (!req) return;
+      harvestTeamBSpeakersFromDOM(eventId);
+      if (!req.speakers) getEventSpeakers(req);
+      const newIndex = req.speakers.length + 1;
+      req.speakers.push({
+        name: '',
+        role: `วิทยากรร่วม (คนที่ ${newIndex}) ฝ่ายพัฒนาวิชาการและนวัตกรรมการเรียนรู้`,
+        signature: null
+      });
+      localStorage.setItem('twp_requests_store', JSON.stringify(AppState.requests));
+      renderTeamBQueue();
+    }
+
+    function removeSpeakerFromEvent(eventId, index) {
+      const req = AppState.requests.find(r => r.eventId === eventId);
+      if (!req || !req.speakers) return;
+      harvestTeamBSpeakersFromDOM(eventId);
+      if (req.speakers.length <= 1) {
+        showAlert('ต้องมีวิทยากรหลักอย่างน้อย 1 ท่าน', 'warning');
+        return;
+      }
+      req.speakers.splice(index, 1);
+      req.teamBSpeaker = req.speakers.map(s => s.name).filter(Boolean).join(', ');
+      localStorage.setItem('twp_requests_store', JSON.stringify(AppState.requests));
+      renderTeamBQueue();
+    }
+
+    function harvestTeamBSpeakersFromDOM(eventId) {
+      const req = AppState.requests.find(r => r.eventId === eventId);
+      if (!req || !req.speakers) return;
+      req.speakers.forEach((sp, i) => {
+        const nameInp = document.getElementById(`teamBSpeakerName-${eventId}-${i}`);
+        const roleInp = document.getElementById(`teamBSpeakerRole-${eventId}-${i}`);
+        if (nameInp) sp.name = nameInp.value.trim();
+        if (roleInp) sp.role = roleInp.value.trim();
+      });
+      req.teamBSpeaker = req.speakers.map(s => s.name).filter(Boolean).join(', ');
+      if (req.speakers[0] && req.speakers[0].signature) {
+        req.speakerSignature = req.speakers[0].signature;
+      }
+    }
+
+    function removeSpeakerSignature(eventId, index) {
+      const req = AppState.requests.find(r => r.eventId === eventId);
+      if (!req || !req.speakers || !req.speakers[index]) return;
+      harvestTeamBSpeakersFromDOM(eventId);
+      req.speakers[index].signature = null;
+      if (index === 0) req.speakerSignature = null;
+      localStorage.setItem('twp_requests_store', JSON.stringify(AppState.requests));
+      renderTeamBQueue();
+    }
+
+    function openSpeakerSignaturePadModal(eventId, index) {
+      currentSigningSpeakerEventId = eventId;
+      currentSigningSpeakerIndex = index;
+      spkUploadedSigDataUrl = null;
+
+      const req = AppState.requests.find(r => r.eventId === eventId);
+      if (!req) return;
+      harvestTeamBSpeakersFromDOM(eventId);
+      const speakers = getEventSpeakers(req);
+      const sp = speakers[index] || { name: '', role: '', signature: null };
+
+      document.getElementById('spkSigModalEventId').innerText = eventId;
+      document.getElementById('spkSigModalIndexBadge').innerText = index === 0 ? 'วิทยากรหลัก (คนที่ 1)' : `วิทยากรร่วม (คนที่ ${index + 1})`;
+      document.getElementById('spkSigModalName').value = sp.name || '';
+      document.getElementById('spkSigModalRole').value = sp.role || (index === 0 ? 'วิทยากรประจำหลักสูตร ฝ่ายพัฒนาวิชาการและนวัตกรรมการเรียนรู้' : 'วิทยากรร่วม');
+
+      const modal = document.getElementById('speakerSignatureModal');
+      modal.classList.remove('hidden');
+      modal.style.display = 'flex';
+
+      setTimeout(() => {
+        initSpeakerSignatureCanvas();
+        clearSpeakerSigCanvas();
+        if (sp.signature) {
+          const img = new Image();
+          img.onload = () => {
+            const ph = document.getElementById('spkSigPlaceholder');
+            if (ph) ph.style.display = 'none';
+            if (spkSigCanvasCtx && spkSigCanvasElem) {
+              const rect = spkSigCanvasElem.getBoundingClientRect();
+              spkSigCanvasCtx.drawImage(img, 20, 20, rect.width - 40, rect.height - 40);
+              hasDrawnSpkSig = true;
+            }
+          };
+          img.src = sp.signature;
+        }
+      }, 50);
+    }
+
+    function closeSpeakerSignatureModal() {
+      const modal = document.getElementById('speakerSignatureModal');
+      if (modal) {
+        modal.classList.add('hidden');
+        modal.style.display = 'none';
+      }
+      currentSigningSpeakerEventId = null;
+      spkUploadedSigDataUrl = null;
+    }
+
+    function initSpeakerSignatureCanvas() {
+      spkSigCanvasElem = document.getElementById('speakerSigPadCanvas');
+      if (!spkSigCanvasElem) return;
+      spkSigCanvasCtx = spkSigCanvasElem.getContext('2d');
+
+      const rect = spkSigCanvasElem.getBoundingClientRect();
+      const ratio = window.devicePixelRatio || 1;
+      spkSigCanvasElem.width = rect.width * ratio;
+      spkSigCanvasElem.height = rect.height * ratio;
+      spkSigCanvasCtx.scale(ratio, ratio);
+      spkSigCanvasCtx.lineWidth = 2.8;
+      spkSigCanvasCtx.lineCap = 'round';
+      spkSigCanvasCtx.lineJoin = 'round';
+      spkSigCanvasCtx.strokeStyle = '#08539E';
+
+      function getPos(e) {
+        const r = spkSigCanvasElem.getBoundingClientRect();
+        if (e.touches && e.touches.length > 0) {
+          return { x: e.touches[0].clientX - r.left, y: e.touches[0].clientY - r.top };
+        }
+        return { x: e.clientX - r.left, y: e.clientY - r.top };
+      }
+
+      function startDraw(e) {
+        e.preventDefault();
+        isSpkSigDrawing = true;
+        hasDrawnSpkSig = true;
+        spkUploadedSigDataUrl = null;
+        const ph = document.getElementById('spkSigPlaceholder');
+        if (ph) ph.style.display = 'none';
+        const p = getPos(e);
+        spkSigCanvasCtx.beginPath();
+        spkSigCanvasCtx.moveTo(p.x, p.y);
+      }
+
+      function draw(e) {
+        if (!isSpkSigDrawing) return;
+        e.preventDefault();
+        const p = getPos(e);
+        spkSigCanvasCtx.lineTo(p.x, p.y);
+        spkSigCanvasCtx.stroke();
+      }
+
+      function stopDraw(e) {
+        if (isSpkSigDrawing) {
+          isSpkSigDrawing = false;
+          spkSigCanvasCtx.closePath();
+        }
+      }
+
+      spkSigCanvasElem.onmousedown = startDraw;
+      spkSigCanvasElem.onmousemove = draw;
+      spkSigCanvasElem.onmouseup = stopDraw;
+      spkSigCanvasElem.onmouseleave = stopDraw;
+
+      spkSigCanvasElem.addEventListener('touchstart', startDraw, { passive: false });
+      spkSigCanvasElem.addEventListener('touchmove', draw, { passive: false });
+      spkSigCanvasElem.addEventListener('touchend', stopDraw, { passive: false });
+      spkSigCanvasElem.addEventListener('touchcancel', stopDraw, { passive: false });
+    }
+
+    function clearSpeakerSigCanvas() {
+      if (!spkSigCanvasElem || !spkSigCanvasCtx) return;
+      const rect = spkSigCanvasElem.getBoundingClientRect();
+      spkSigCanvasCtx.clearRect(0, 0, rect.width, rect.height);
+      hasDrawnSpkSig = false;
+      spkUploadedSigDataUrl = null;
+      const ph = document.getElementById('spkSigPlaceholder');
+      if (ph) ph.style.display = 'flex';
+    }
+
+    function handleSpeakerSigFileUpload(event) {
+      const file = event.target.files && event.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        const dataUrl = e.target.result;
+        spkUploadedSigDataUrl = dataUrl;
+        hasDrawnSpkSig = true;
+        const img = new Image();
+        img.onload = function() {
+          clearSpeakerSigCanvas();
+          const ph = document.getElementById('spkSigPlaceholder');
+          if (ph) ph.style.display = 'none';
+          if (spkSigCanvasCtx && spkSigCanvasElem) {
+            const rect = spkSigCanvasElem.getBoundingClientRect();
+            const hRatio = (rect.height - 30) / img.height;
+            const wRatio = (rect.width - 40) / img.width;
+            const ratio = Math.min(hRatio, wRatio, 1);
+            const drawW = img.width * ratio;
+            const drawH = img.height * ratio;
+            const drawX = (rect.width - drawW) / 2;
+            const drawY = (rect.height - drawH) / 2;
+            spkSigCanvasCtx.drawImage(img, drawX, drawY, drawW, drawH);
+          }
+        };
+        img.src = dataUrl;
+      };
+      reader.readAsDataURL(file);
+      event.target.value = '';
+    }
+
+    function confirmSpeakerSignatureModal() {
+      if (!currentSigningSpeakerEventId) return;
+      const req = AppState.requests.find(r => r.eventId === currentSigningSpeakerEventId);
+      if (!req) return;
+
+      const spkName = document.getElementById('spkSigModalName')?.value.trim();
+      const spkRole = document.getElementById('spkSigModalRole')?.value.trim();
+
+      let signatureDataUrl = null;
+      if (spkUploadedSigDataUrl) {
+        signatureDataUrl = spkUploadedSigDataUrl;
+      } else if (hasDrawnSpkSig && spkSigCanvasElem) {
+        signatureDataUrl = spkSigCanvasElem.toDataURL('image/png');
+      }
+
+      if (!req.speakers) getEventSpeakers(req);
+      if (req.speakers[currentSigningSpeakerIndex]) {
+        if (spkName) req.speakers[currentSigningSpeakerIndex].name = spkName;
+        if (spkRole) req.speakers[currentSigningSpeakerIndex].role = spkRole;
+        if (signatureDataUrl) {
+          req.speakers[currentSigningSpeakerIndex].signature = signatureDataUrl;
+        }
+      }
+
+      req.teamBSpeaker = req.speakers.map(s => s.name).filter(Boolean).join(', ');
+      if (currentSigningSpeakerIndex === 0 && signatureDataUrl) {
+        req.speakerSignature = signatureDataUrl;
+      }
+
+      localStorage.setItem('twp_requests_store', JSON.stringify(AppState.requests));
+      closeSpeakerSignatureModal();
+      showAlert('บันทึกลายเซ็นและข้อมูลวิทยากรเรียบร้อยแล้ว', 'success');
+      renderTeamBQueue();
+    }
 
     function handleTeamBAction(eventId, decision) {
-      const speaker = document.getElementById('teamBSpeaker-' + eventId)?.value || '';
+      harvestTeamBSpeakersFromDOM(eventId);
+      const req = AppState.requests.find(r => r.eventId === eventId);
+      const speakers = (req && req.speakers) ? req.speakers : [];
+      const speaker = (req && req.teamBSpeaker) ? req.teamBSpeaker : (document.getElementById('teamBSpeaker-' + eventId)?.value || '');
       const actualBudget = Number(document.getElementById('actualBudget-' + eventId)?.value) || 0;
       const notes = document.getElementById('teamBNotes-' + eventId)?.value || '';
 
@@ -8013,6 +8438,8 @@
         eventId: eventId,
         decision: decision,
         teamBSpeaker: speaker,
+        speakers: speakers,
+        speakerSignature: speakers[0]?.signature || null,
         actualBudget: actualBudget,
         teamBNotes: notes,
         operatorName: AppState.operatorName
@@ -8024,10 +8451,11 @@
       }
 
       function applyLocalTeamB(isFallback = false) {
-        const req = AppState.requests.find(r => r.eventId === eventId);
         if (req) {
           req.status = decision === 'RETURN_TO_A' ? 'RETURNED_TO_A' : 'WAITING_EXEC';
           req.teamBSpeaker = speaker;
+          req.speakers = speakers;
+          if (speakers[0]?.signature) req.speakerSignature = speakers[0].signature;
           req.actualBudget = actualBudget;
           req.teamBNotes = notes;
           req.reviewedBy = AppState.operatorName;

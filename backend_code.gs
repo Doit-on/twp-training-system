@@ -8,7 +8,7 @@
  * ============================================================================
  */
 
-const SYSTEM_VERSION = '1.17.0';
+const SYSTEM_VERSION = '1.18.1';
 const DEFAULT_ADMIN_PASS = 'admin0000';
 
 function getSpreadsheet() {
@@ -104,6 +104,9 @@ function doPost(e) {
         break;
       case 'EXPORT_PPC_REPORT_DOCX':
         result = exportPpcReportDocx(payload.eventId);
+        break;
+      case 'SEND_ECERTIFICATE_EMAIL':
+        result = handleSendECertificateEmail(payload);
         break;
       default:
         throw new Error('ไม่พบ Action ที่ระบุ: ' + action);
@@ -978,4 +981,120 @@ function sendWorkflowEmailNotification(type, data) {
   } catch(err) {
     Logger.log('sendWorkflowEmailNotification error: ' + err.message);
   }
+}
+
+// ==========================================
+// E-CERTIFICATE PARTICIPANT EMAIL DISPATCHER
+// ==========================================
+function handleSendECertificateEmail(payload) {
+  if (!payload || !payload.email) {
+    throw new Error('กรุณาระบุอีเมลผู้รับ');
+  }
+
+  const recipient = payload.email.trim();
+  const nameTh = payload.nameTh || 'ผู้เข้าร่วมการอบรม';
+  const nameEn = payload.nameEn || '';
+  const school = payload.school || '-';
+  const courseTopic = payload.courseTopic || 'หลักสูตรพัฒนาศักยภาพครูผู้สอน';
+  const certId = payload.certId || ('TWP-ECERT-' + Date.now());
+  const eventDate = payload.eventDate || new Date().toLocaleDateString('th-TH');
+  const token = payload.token || '';
+  const driveUrl = 'https://drive.google.com/drive/u/0/folders/1GxHFu2kMPwtl7j3PvnD6wHRb_YwlQGqk';
+  const certWebUrl = 'https://doit-on.github.io/twp-training-system/survey.html?t=' + encodeURIComponent(token);
+
+  const subject = '🏅 วุฒิบัตรการฝึกอบรม (e-Certificate): ' + nameTh + ' - สำนักพิมพ์ไทยวัฒนาพานิช จำกัด';
+
+  const htmlBody = 
+    '<div style="font-family: \'Sarabun\', Tahoma, Arial, sans-serif; max-width: 650px; margin: 0 auto; background: #ffffff; border: 1.5px solid #cbd5e1; border-radius: 16px; overflow: hidden; box-shadow: 0 4px 20px rgba(0,0,0,0.06);">' +
+      '<!-- Header -->' +
+      '<div style="background: #08539E; padding: 24px 20px; text-align: center; color: #ffffff;">' +
+        '<div style="display: inline-block; background: #ffffff; color: #08539E; font-weight: 900; font-size: 16px; padding: 6px 14px; border-radius: 8px; margin-bottom: 8px;">TWP</div>' +
+        '<h2 style="margin: 0; font-size: 20px; font-weight: 800; color: #ffffff;">สำนักพิมพ์ไทยวัฒนาพานิช จำกัด</h2>' +
+        '<div style="font-size: 11px; opacity: 0.9; margin-top: 3px; letter-spacing: 1.5px; color: #e0f2fe;">THAI WATANA PANICH PUBLISHING HOUSE</div>' +
+      '</div>' +
+      
+      '<!-- Body Content -->' +
+      '<div style="padding: 28px 24px; color: #1e293b; line-height: 1.65;">' +
+        '<div style="display: inline-block; background: #eff6ff; color: #1e40af; font-size: 12px; font-weight: bold; padding: 4px 12px; border-radius: 20px; margin-bottom: 12px; border: 1px solid #bfdbfe;">' +
+          '✓ บันทึกผลการประเมินและออกวุฒิบัตรเรียบร้อยแล้ว' +
+        '</div>' +
+        
+        '<h3 style="color: #08539E; margin-top: 0; font-size: 18px; border-bottom: 2px solid #e2e8f0; padding-bottom: 10px;">' +
+          'วุฒิบัตรการฝึกอบรมพัฒนาวิชาชีพทางการศึกษา' +
+        '</h3>' +
+        
+        '<p style="font-size: 15px; margin: 12px 0 6px 0;">เรียน <strong>' + nameTh + '</strong> ' + (nameEn ? '(' + nameEn + ')' : '') + '</p>' +
+        '<p style="font-size: 14px; color: #475569; margin-top: 0;">' +
+          'สำนักพิมพ์ไทยวัฒนาพานิช จำกัด ขอแสดงความยินดีและขอบพระคุณท่านที่ได้เข้าร่วมการอบรมเชิงปฏิบัติการและตอบแบบประเมินผลโครงการ' +
+        '</p>' +
+        
+        '<!-- Certificate Data Card -->' +
+        '<div style="background: #f8fafc; border: 1.5px solid #cbd5e1; border-radius: 12px; padding: 18px; margin: 18px 0; font-size: 13.5px;">' +
+          '<div style="margin-bottom: 8px;"><strong>หลักสูตร:</strong> <span style="color: #08539E; font-weight: bold;">' + courseTopic + '</span></div>' +
+          '<div style="margin-bottom: 8px;"><strong>หน่วยงาน / โรงเรียน:</strong> ' + school + '</div>' +
+          '<div style="margin-bottom: 8px;"><strong>วันที่จัดอบรม:</strong> ' + eventDate + '</div>' +
+          '<div><strong>เลขที่วุฒิบัตร (Cert No.):</strong> <span style="font-family: monospace; font-weight: bold; color: #08539E; background: #e0f2fe; padding: 2px 6px; border-radius: 4px;">' + certId + '</span></div>' +
+        '</div>' +
+        
+        '<!-- Action Buttons -->' +
+        '<div style="text-align: center; margin: 26px 0; display: flex; flex-direction: column; gap: 10px;">' +
+          '<a href="' + certWebUrl + '" style="background: #08539E; color: #ffffff; padding: 12px 24px; text-decoration: none; border-radius: 10px; font-weight: bold; font-size: 14px; display: inline-block; box-shadow: 0 4px 10px rgba(8,83,158,0.25);">' +
+            '🖨️ คลิกเพื่อเปิดดูและพิมพ์วุฒิบัตร (A4 แนวนอน)' +
+          '</a>' +
+          '<br>' +
+          '<a href="' + driveUrl + '" style="background: #f59e0b; color: #ffffff; padding: 10px 20px; text-decoration: none; border-radius: 10px; font-weight: bold; font-size: 13px; display: inline-block; margin-top: 6px;">' +
+            '📁 เข้าสู่คลัง Google Drive ดาวน์โหลดสไลด์และเอกสารอบรม' +
+          '</a>' +
+        '</div>' +
+        
+        '<p style="font-size: 13px; color: #64748b; line-height: 1.6;">' +
+          '* วุฒิบัตรฉบับนี้ออกอย่างเป็นทางการโดย บริษัท ไทยวัฒนาพานิช จำกัด ได้รับการลงนามรับรองความถูกต้องโดย <strong>ผศ.อินทิรา บุนนาค (กรรมการผู้จัดการ)</strong> และวิทยากรประจำหลักสูตร ท่านสามารถจัดเก็บอีเมลนี้ไว้เป็นหลักฐานอ้างอิงการฝึกอบรมได้ตลอดเวลา' +
+        '</p>' +
+        
+        '<!-- Footer -->' +
+        '<div style="margin-top: 24px; padding-top: 16px; border-top: 1px dashed #cbd5e1; font-size: 11.5px; color: #94a3b8; text-align: center;">' +
+          'บริษัท ไทยวัฒนาพานิช จำกัด • ศูนย์ฝึกอบรมและพัฒนาวิชาชีพครู (TWP Training Center)<br>' +
+          'ระบบจัดส่งวุฒิบัตรอิเล็กทรอนิกส์อัตโนมัติ (EMS Enterprise v' + SYSTEM_VERSION + ')' +
+        '</div>' +
+      '</div>' +
+    '</div>';
+
+  MailApp.sendEmail({
+    to: recipient,
+    subject: subject,
+    htmlBody: htmlBody
+  });
+
+  // Log dispatch event to System_Logs
+  try {
+    const ss = getSpreadsheet();
+    let logSheet = ss.getSheetByName('System_Logs');
+    if (logSheet) {
+      logSheet.appendRow([
+        new Date(),
+        'SEND_ECERTIFICATE_EMAIL',
+        'SYSTEM',
+        recipient,
+        'SUCCESS',
+        'ส่งวุฒิบัตรไปยัง ' + recipient + ' (' + certId + ')'
+      ]);
+    }
+  } catch(e) {}
+
+  return {
+    sent: true,
+    recipient: recipient,
+    certId: certId,
+    timestamp: new Date().toISOString()
+  };
+}
+
+/**
+ * ฟังก์ชันสำหรับกด "เรียกใช้" (Run) ในหน้า Google Apps Script 1 ครั้ง
+ * เพื่ออนุมัติสิทธิ์ (Authorize Permissions) ให้กับ MailApp.sendEmail
+ */
+function testMailAuthorization() {
+  const quota = MailApp.getRemainingDailyQuota();
+  Logger.log('MailApp Authorization SUCCESS! Remaining daily quota: ' + quota);
+  return 'สิทธิ์การส่งอีเมลได้รับการอนุมัติเรียบร้อยแล้ว โควตาคงเหลือวันนี้: ' + quota + ' ฉบับ';
 }

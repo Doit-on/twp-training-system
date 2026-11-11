@@ -198,9 +198,7 @@
   <header class="bg-[#08539E] text-white shadow-md sticky top-0 z-30">
     <div class="max-w-2xl mx-auto px-4 py-3 flex items-center justify-between">
       <div class="flex items-center space-x-2.5">
-        <div class="w-9 h-9 rounded-xl bg-white text-[#08539E] flex items-center justify-center font-black text-sm shadow-sm">
-          TWP
-        </div>
+        <img src="assets/logo.png" alt="TWP Logo" class="w-9 h-9 rounded-xl bg-white p-0.5 object-contain shadow-sm border border-white/20">
         <div>
           <h1 class="text-sm sm:text-base font-bold leading-tight">แบบประเมินและรับวุฒิบัตร (e-Certificate)</h1>
           <p class="text-[11px] text-blue-200">สำนักพิมพ์ไทยวัฒนาพานิช จำกัด</p>
@@ -638,18 +636,16 @@
             <div class="cert-corner cert-corner-bl"></div>
             <div class="cert-corner cert-corner-br"></div>
 
-            <!-- Subtle TWP Shield Watermark -->
+            <!-- Subtle TWP Shield Watermark (Official 3-Ring Emblem) -->
             <div class="cert-watermark flex items-center justify-center">
-              <div class="text-[140px] font-black text-[#08539E] tracking-tighter">TWP</div>
+              <img src="assets/logo.png" alt="TWP Watermark" class="w-56 h-56 object-contain opacity-[0.06]">
             </div>
 
             <!-- CERTIFICATE HEADER -->
             <div class="text-center relative z-10 space-y-1">
-              <!-- TWP Seal & Crest (Official Emblem) -->
+              <!-- TWP Seal & Crest (Official 3-Ring Emblem) -->
               <div class="flex items-center justify-center gap-2 mb-1">
-                <div class="w-11 h-11 rounded-2xl bg-[#08539E] text-white flex items-center justify-center shadow-md border-2 border-white">
-                  <span class="font-black text-base tracking-wider leading-none">TWP</span>
-                </div>
+                <img src="assets/logo.png" alt="TWP Logo" class="h-14 w-auto object-contain mx-auto drop-shadow-sm">
               </div>
 
               <!-- Main Publisher Headline -->
@@ -711,12 +707,12 @@
             </div>
 
             <!-- SIGNATURES, GOLD SEAL & VERIFICATION BLOCK -->
-            <div class="grid grid-cols-3 items-end pt-3 pb-2 px-8 relative z-10 border-t border-slate-200/70">
+            <div id="certSignaturesContainer" class="grid grid-cols-3 items-end pt-3 pb-2 px-8 relative z-10 border-t border-slate-200/70">
               
               <!-- Left Signatory: Speaker / Academic Leader -->
               <div class="text-center space-y-1">
-                <div class="h-10 flex items-end justify-center pb-1">
-                  <div class="w-36 border-b border-slate-400 border-dashed"></div>
+                <div class="h-10 flex items-end justify-center pb-0.5">
+                  <img id="viewCertSpeakerSig" src="" style="max-height:38px; max-width:130px; object-fit:contain;" alt="ลายเซ็นวิทยากร">
                 </div>
                 <div id="viewCertSpeaker" class="text-xs font-bold text-slate-800 leading-tight">ศ.ดร.ประสาน ปัญญาเลิศ</div>
                 <div class="text-[10px] text-slate-500">วิทยากรประจำหลักสูตร</div>
@@ -799,8 +795,11 @@
       { id: 'q10', no: 10, title: 'ความประสงค์เข้าร่วมกิจกรรมหรือแนะนำหลักสูตรของ TWP ต่อไป', desc: 'ยินดีที่จะเข้าร่วมกิจกรรมอบรมหรือแนะนำสื่อการสอนของ TWP ให้เพื่อนครู' }
     ];
 
-    // Signature data URI of Assistant Professor Indhira Bunnag
+    // Signature data URI of Assistant Professor Indhira Bunnag (Managing Director)
     const EXECUTIVE_SIGNATURE_SVG = 'data:image/svg+xml;utf8,' + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="260" height="90" viewBox="0 0 260 90"><path d="M 25 55 Q 50 15, 75 50 T 115 40 Q 145 25, 165 55 T 205 45 Q 235 35, 250 40" fill="none" stroke="#003399" stroke-width="2.6" stroke-linecap="round"/><path d="M 55 65 Q 125 70, 225 58" fill="none" stroke="#003399" stroke-width="2.2" stroke-linecap="round"/><path d="M 100 30 Q 110 10, 120 35" fill="none" stroke="#003399" stroke-width="2.2" stroke-linecap="round"/><text x="110" y="80" font-family="sans-serif" font-size="13" fill="#08539E" font-weight="bold">ผศ.อินทิรา บุนนาค</text></svg>');
+
+    // Signature data URI of Course Speaker (Academic Leader)
+    const SPEAKER_SIGNATURE_SVG = 'data:image/svg+xml;utf8,' + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="260" height="90" viewBox="0 0 260 90"><path d="M 30 60 Q 60 15, 85 45 T 130 35 Q 160 20, 185 50 T 225 35" fill="none" stroke="#003399" stroke-width="2.6" stroke-linecap="round"/><path d="M 50 40 Q 120 25, 230 45" fill="none" stroke="#003399" stroke-width="2.2" stroke-linecap="round"/><path d="M 115 25 L 145 68" fill="none" stroke="#003399" stroke-width="2.4" stroke-linecap="round"/><text x="95" y="82" font-family="sans-serif" font-size="12" fill="#08539E" font-weight="bold">ศ.ดร.ประสาน ปัญญาเลิศ</text></svg>');
 
     // Pull Token & GasEndpoint from URL
     const urlParams = new URLSearchParams(window.location.search);
@@ -816,6 +815,17 @@
       certId: '',
       courseTitle: 'Active Learning สู่สมรรถนะผู้เรียนด้วยสื่อนวัตกรรมดิจิทัล',
       speakerName: 'ศ.ดร.ประสาน ปัญญาเลิศ',
+      speakers: [
+        {
+          name: 'ศ.ดร.ประสาน ปัญญาเลิศ',
+          role: 'วิทยากรประจำหลักสูตร',
+          dept: 'ฝ่ายพัฒนาวิชาการและนวัตกรรมการเรียนรู้',
+          signature: null
+        }
+      ],
+      executiveName: 'ผศ.อินทิรา บุนนาค',
+      executiveRole: 'กรรมการผู้จัดการ',
+      executiveSignature: null,
       eventDate: '9 พฤศจิกายน 2569',
       eventDateEn: 'November 9, 2026',
       resourceLink: 'https://drive.google.com/drive/u/0/folders/1GxHFu2kMPwtl7j3PvnD6wHRb_YwlQGqk'
@@ -894,9 +904,6 @@
 
     // Resolve event information from URL parameters (Highest Priority) and localStorage
     function resolveEventDetails() {
-      const sigImg = document.getElementById('viewCertExecutiveSig');
-      if (sigImg) sigImg.src = EXECUTIVE_SIGNATURE_SVG;
-
       // 1. Direct URL Query Parameters (Passes metadata from QR to mobile phones seamlessly)
       const pTopic = urlParams.get('topic');
       const pSchool = urlParams.get('school');
@@ -906,7 +913,15 @@
 
       if (pTopic) currentParticipant.courseTitle = decodeURIComponent(pTopic);
       if (pSchool) currentParticipant.school = decodeURIComponent(pSchool);
-      if (pSpeaker) currentParticipant.speakerName = decodeURIComponent(pSpeaker);
+      if (pSpeaker) {
+        currentParticipant.speakerName = decodeURIComponent(pSpeaker);
+        currentParticipant.speakers = [{
+          name: currentParticipant.speakerName,
+          role: 'วิทยากรประจำหลักสูตร',
+          dept: 'ฝ่ายพัฒนาวิชาการและนวัตกรรมการเรียนรู้',
+          signature: null
+        }];
+      }
       if (pDrive) currentParticipant.resourceLink = decodeURIComponent(pDrive);
       if (pDate) {
         const decodedDate = decodeURIComponent(pDate);
@@ -920,6 +935,58 @@
         } catch(e) {}
       }
 
+      function applyFoundEvent(found) {
+        if (!found) return;
+        if (!pTopic && found.courseTopic) currentParticipant.courseTitle = found.courseTopic;
+        if (!pSpeaker && (found.teamBSpeaker || found.speakerType)) currentParticipant.speakerName = found.teamBSpeaker || found.speakerType;
+        if (found.approvedBy) currentParticipant.executiveName = found.approvedBy;
+        if (found.approverRole || found.approverPosition) currentParticipant.executiveRole = found.approverRole || found.approverPosition;
+        if (found.executiveSignature || found.approvedSignature) currentParticipant.executiveSignature = found.executiveSignature || found.approvedSignature;
+
+        if (Array.isArray(found.speakers) && found.speakers.length > 0) {
+          currentParticipant.speakers = found.speakers;
+          currentParticipant.speakerName = found.speakers.map(s => s.name).filter(Boolean).join(', ');
+        } else if (typeof found.speakers === 'string' && found.speakers.startsWith('[')) {
+          try {
+            currentParticipant.speakers = JSON.parse(found.speakers);
+            currentParticipant.speakerName = currentParticipant.speakers.map(s => s.name).filter(Boolean).join(', ');
+          } catch(e) {}
+        } else if (found.teamBSpeaker) {
+          const names = found.teamBSpeaker.split(/[,&และ]/).map(s => s.trim()).filter(Boolean);
+          if (names.length > 1) {
+            currentParticipant.speakers = names.map((nm, idx) => ({
+              name: nm,
+              role: idx === 0 ? 'วิทยากรประจำหลักสูตร' : 'วิทยากรร่วม',
+              dept: 'ฝ่ายพัฒนาวิชาการและนวัตกรรมการเรียนรู้',
+              signature: idx === 0 ? (found.speakerSignature || null) : null
+            }));
+          } else {
+            currentParticipant.speakers = [{
+              name: found.teamBSpeaker,
+              role: 'วิทยากรประจำหลักสูตร',
+              dept: 'ฝ่ายพัฒนาวิชาการและนวัตกรรมการเรียนรู้',
+              signature: found.speakerSignature || null
+            }];
+          }
+        } else if (found.speakerSignature) {
+          if (!currentParticipant.speakers || currentParticipant.speakers.length === 0) {
+            currentParticipant.speakers = [{ name: currentParticipant.speakerName, role: 'วิทยากรประจำหลักสูตร', dept: 'ฝ่ายพัฒนาวิชาการและนวัตกรรมการเรียนรู้', signature: found.speakerSignature }];
+          } else {
+            currentParticipant.speakers[0].signature = found.speakerSignature;
+          }
+        }
+
+        if (!pSchool && found.schoolName) currentParticipant.school = found.schoolName;
+        if (!pDrive && found.resourceLink) currentParticipant.resourceLink = found.resourceLink;
+        if (found.eventDate) {
+          const d = new Date(found.eventDate);
+          if (!isNaN(d.getTime())) {
+            currentParticipant.eventDate = d.toLocaleDateString('th-TH', { year: 'numeric', month: 'long', day: 'numeric' });
+            currentParticipant.eventDateEn = d.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+          }
+        }
+      }
+
       // 2. Fallback to localStorage if parameters were not in URL
       if (!pTopic || !pSchool) {
         const stored = localStorage.getItem('twp_requests_store');
@@ -928,15 +995,7 @@
             const reqs = JSON.parse(stored);
             const found = reqs.find(r => r.token === surveyToken || r.eventId === surveyToken || r.eventId === urlParams.get('evt'));
             if (found) {
-              if (!pTopic && found.courseTopic) currentParticipant.courseTitle = found.courseTopic;
-              if (!pSpeaker && (found.teamBSpeaker || found.speakerType)) currentParticipant.speakerName = found.teamBSpeaker || found.speakerType;
-              if (!pSchool && found.schoolName) currentParticipant.school = found.schoolName;
-              if (!pDrive && found.resourceLink) currentParticipant.resourceLink = found.resourceLink;
-              if (!pDate && found.eventDate) {
-                const d = new Date(found.eventDate);
-                currentParticipant.eventDate = d.toLocaleDateString('th-TH', { year: 'numeric', month: 'long', day: 'numeric' });
-                currentParticipant.eventDateEn = d.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
-              }
+              applyFoundEvent(found);
             }
           } catch(e) {}
         }
@@ -953,15 +1012,7 @@
           if (res && res.data && res.data.requests) {
             const found = res.data.requests.find(r => r.eventId === surveyToken || r.token === surveyToken || (surveyToken && r.eventId && surveyToken.includes(r.eventId)));
             if (found) {
-              currentParticipant.courseTitle = found.courseTopic || currentParticipant.courseTitle;
-              currentParticipant.speakerName = found.teamBSpeaker || found.speakerType || currentParticipant.speakerName;
-              currentParticipant.school = found.schoolName || currentParticipant.school;
-              currentParticipant.resourceLink = found.resourceLink || currentParticipant.resourceLink;
-              if (found.eventDate) {
-                const d = new Date(found.eventDate);
-                currentParticipant.eventDate = d.toLocaleDateString('th-TH', { year: 'numeric', month: 'long', day: 'numeric' });
-                currentParticipant.eventDateEn = d.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
-              }
+              applyFoundEvent(found);
               const dt = document.getElementById('dispCourseTitle'); if (dt) dt.innerText = currentParticipant.courseTitle;
               const ds = document.getElementById('dispSpeakerName'); if (ds) ds.innerText = currentParticipant.speakerName;
               const dsc = document.getElementById('dispSchoolName'); if (dsc) dsc.innerText = currentParticipant.school || 'สถานศึกษาผู้เข้าร่วมอบรม';
@@ -987,6 +1038,103 @@
       }
       
       updateCertLivePreview();
+    }
+
+    // Dynamic Multi-Speaker & Signatures Layout Renderer for e-Certificate
+    function renderCertificateSignaturesUI() {
+      const container = document.getElementById('certSignaturesContainer');
+      if (!container) return;
+
+      const speakers = (currentParticipant.speakers && currentParticipant.speakers.length > 0)
+        ? currentParticipant.speakers
+        : [{
+            name: currentParticipant.speakerName || 'ศ.ดร.ประสาน ปัญญาเลิศ',
+            role: 'วิทยากรประจำหลักสูตร',
+            dept: 'ฝ่ายพัฒนาวิชาการและนวัตกรรมการเรียนรู้',
+            signature: null
+          }];
+
+      const cId = currentParticipant.certId || 'TWP-2026-0001';
+      const execSigSrc = (currentParticipant.executiveSignature && currentParticipant.executiveSignature !== 'OFFICIAL_DIGITAL_SIGNATURE')
+        ? currentParticipant.executiveSignature
+        : EXECUTIVE_SIGNATURE_SVG;
+
+      // Column layout: 1 speaker = 3 cols, 2 speakers = 4 cols, 3+ speakers = 5+ cols
+      let colsClass = 'grid-cols-3';
+      if (speakers.length === 2) {
+        colsClass = 'grid-cols-4';
+      } else if (speakers.length > 2) {
+        colsClass = 'grid-cols-' + (speakers.length + 2);
+      }
+
+      const speakersHtml = speakers.map((sp, idx) => {
+        const sigSrc = sp.signature || (idx === 0 ? SPEAKER_SIGNATURE_SVG : '');
+        const sigImgHtml = sigSrc 
+          ? `<img src="${sigSrc}" style="max-height:38px; max-width:130px; object-fit:contain;" alt="ลายเซ็นวิทยากร">`
+          : `<div class="h-8 border-b border-dashed border-slate-300 w-24 mx-auto"></div>`;
+        const labelRole = sp.role || (idx === 0 ? 'วิทยากรประจำหลักสูตร' : 'วิทยากรร่วม');
+        const labelDept = sp.dept || 'ฝ่ายพัฒนาวิชาการและนวัตกรรมการเรียนรู้';
+
+        return `
+          <div class="text-center space-y-1">
+            <div class="h-10 flex items-end justify-center pb-0.5">
+              ${sigImgHtml}
+            </div>
+            <div class="text-xs font-bold text-slate-800 leading-tight">${sp.name || 'วิทยากร'}</div>
+            <div class="text-[10px] text-slate-500">${labelRole}</div>
+            <div class="text-[9px] text-slate-400">${labelDept}</div>
+          </div>
+        `;
+      }).join('');
+
+      const sealAndQrHtml = `
+        <!-- Center: Gold Foil Seal & Verification QR Code -->
+        <div class="text-center flex flex-col items-center justify-center space-y-1">
+          <div class="relative">
+            <div class="w-16 h-16 rounded-full bg-gradient-to-tr from-amber-600 via-yellow-400 to-amber-700 p-1 shadow-md flex items-center justify-center border-2 border-white">
+              <div class="w-full h-full rounded-full bg-amber-500 flex flex-col items-center justify-center text-white border border-amber-300 shadow-inner">
+                <i class="fa-solid fa-award text-base text-yellow-100"></i>
+                <span class="text-[7.5px] font-black tracking-widest mt-0.5">OFFICIAL</span>
+              </div>
+            </div>
+          </div>
+          <div class="flex items-center gap-1.5 mt-0.5">
+            <div id="certQrWrapper" class="p-0.5 bg-white border border-slate-300 rounded shadow-xs"></div>
+            <div class="text-left">
+              <div class="text-[8px] font-mono text-slate-500">CERT NO:</div>
+              <div id="viewCertRefId" class="text-[9px] font-mono font-bold text-[#08539E]">${cId}</div>
+            </div>
+          </div>
+        </div>
+      `;
+
+      const execHtml = `
+        <!-- Right Signatory: Executive Director with Digital Signature -->
+        <div class="text-center space-y-1">
+          <div class="h-10 flex items-end justify-center pb-0.5">
+            <img id="viewCertExecutiveSig" src="${execSigSrc}" style="max-height:38px; max-width:130px; object-fit:contain;" alt="ลายเซ็นผู้บริหาร">
+          </div>
+          <div id="viewCertExecutive" class="text-xs font-bold text-slate-800 leading-tight">${currentParticipant.executiveName || 'ผศ.อินทิรา บุนนาค'}</div>
+          <div id="viewCertExecutiveRole" class="text-[10px] text-slate-500">${currentParticipant.executiveRole || 'กรรมการผู้จัดการ'}</div>
+          <div class="text-[9px] text-[#08539E] font-semibold">บริษัท ไทยวัฒนาพานิช จำกัด</div>
+        </div>
+      `;
+
+      container.className = `grid ${colsClass} items-end pt-3 pb-2 px-8 relative z-10 border-t border-slate-200/70`;
+      container.innerHTML = speakersHtml + sealAndQrHtml + execHtml;
+
+      const qrWrap = document.getElementById('certQrWrapper');
+      if (qrWrap && window.QRCode) {
+        qrWrap.innerHTML = '';
+        new QRCode(qrWrap, {
+          text: `https://twp.co.th/verify?cert=${encodeURIComponent(cId)}`,
+          width: 48,
+          height: 48,
+          colorDark: '#08539E',
+          colorLight: '#ffffff',
+          correctLevel: QRCode.CorrectLevel.M
+        });
+      }
     }
 
     // Step 1: Submit Evaluation and Advance to Step 2
@@ -1164,6 +1312,8 @@
 
       const viewSp = document.getElementById('viewCertSpeaker');
       if (viewSp) viewSp.innerText = currentParticipant.speakerName;
+
+      renderCertificateSignaturesUI();
     }
 
     // Fast Resilient Action: Send E-Certificate to Email
@@ -1208,9 +1358,9 @@
         if (!isCompleted) {
           isCompleted = true;
           controller.abort();
-          onEmailSentSuccess(email);
+          onEmailSentFailure(email, 'การเชื่อมต่อระบบเมลใช้เวลานานเกินกำหนด');
         }
-      }, 3500);
+      }, 10000);
 
       const targetEndpoint = gasEndpoint || DEFAULT_GAS_ENDPOINT;
       fetch(targetEndpoint, {
@@ -1224,14 +1374,18 @@
         if (!isCompleted) {
           isCompleted = true;
           clearTimeout(timeoutId);
-          onEmailSentSuccess(email);
+          if (res && res.status === 'SUCCESS') {
+            onEmailSentSuccess(email);
+          } else {
+            onEmailSentFailure(email, res?.message || 'ระบบคลาวด์ Apps Script ปฏิเสธคำขอ');
+          }
         }
       })
       .catch(err => {
         if (!isCompleted) {
           isCompleted = true;
           clearTimeout(timeoutId);
-          onEmailSentSuccess(email);
+          onEmailSentFailure(email, 'ไม่สามารถเชื่อมต่ออินเทอร์เน็ตหรือบริการส่งเมลได้');
         }
       });
     }
@@ -1239,7 +1393,16 @@
     function onEmailSentSuccess(email) {
       localStorage.setItem('ems_cert_sent_' + surveyToken, 'SENT');
       applyCertSentLockUI();
-      alert('✅ จัดส่งวุฒิบัตรอิเล็กทรอนิกส์ (e-Certificate) ไปยังอีเมล ' + email + ' เรียบร้อยแล้ว!\n\nท่านสามารถกดปุ่ม "พิมพ์ / บันทึกเป็น PDF" ด้านล่างเพื่อดาวน์โหลดไฟล์ความละเอียดสูงเก็บไว้ได้ทันทีครับ');
+      alert('✅ จัดส่งวุฒิบัตรอิเล็กทรอนิกส์ (e-Certificate) ไปยังอีเมล ' + email + ' เรียบร้อยแล้ว!\n\nท่านสามารถตรวจดูในกล่องจดหมาย (หรือโฟลเดอร์สแปม/จดหมายขยะ) และสามารถกดปุ่ม "พิมพ์ / บันทึก PDF (A4 แนวนอน)" ด้านล่างเพื่อดาวน์โหลดไฟล์เข้าอุปกรณ์ได้ทันทีครับ');
+    }
+
+    function onEmailSentFailure(email, errorMsg) {
+      const btn = document.getElementById('btnSendCertEmail');
+      if (btn) {
+        btn.disabled = false;
+        btn.innerHTML = '<i class="fa-solid fa-envelope-circle-check text-amber-300 text-base mr-2"></i><span>ส่งวุฒิบัตรเข้าอีเมลของฉันทันที</span>';
+      }
+      alert('⚠️ ยังไม่สามารถส่งอีเมลไปยัง ' + email + ' ได้ในขณะนี้\n\nสาเหตุ: ' + errorMsg + '\n\n💡 หมายเหตุ: หากเพิ่งอัปเดตระบบ กรุณานำโค้ด backend_code.gs ไป Deploy ทับใน Google Apps Script หรือท่านสามารถกดปุ่ม "พิมพ์ / บันทึก PDF (A4 แนวนอน)" ด้านล่าง เพื่อรับวุฒิบัตรเข้าสู่อุปกรณ์ของท่านได้ทันที 100% ครับ');
     }
 
     function applyCertSentLockUI() {
