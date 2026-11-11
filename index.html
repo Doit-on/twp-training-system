@@ -3330,17 +3330,23 @@
       </div>
 
       <!-- Actions -->
-      <div class="flex items-center justify-between pt-2">
-        <button type="button" onclick="clearSignatureCanvas()" class="px-3.5 py-2 bg-slate-100 hover:bg-slate-200 text-slate-600 text-xs font-semibold rounded-xl transition">
-          <i class="fa-solid fa-rotate-left mr-1"></i>ล้างลายเซ็น
-        </button>
-        <div class="flex items-center space-x-2">
-          <button type="button" onclick="closeSignatureModal()" class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold rounded-xl transition">
+      <div class="flex flex-col sm:flex-row items-center justify-between gap-2.5 pt-2">
+        <div class="flex items-center space-x-2 w-full sm:w-auto">
+          <button type="button" onclick="clearSignatureCanvas()" class="px-3 py-2 bg-slate-100 hover:bg-slate-200 text-slate-600 text-xs font-semibold rounded-xl transition cursor-pointer">
+            <i class="fa-solid fa-rotate-left mr-1"></i>ล้าง
+          </button>
+          <button type="button" onclick="quickApproveWithOfficialSig()" class="px-3.5 py-2 bg-gradient-to-r from-blue-700 via-indigo-700 to-blue-800 hover:from-blue-600 hover:to-indigo-600 text-white text-xs font-bold rounded-xl shadow-xs transition flex items-center space-x-1.5 cursor-pointer btn-tactile" title="อนุมัติทันทีด้วยลายมือชื่อดิจิทัลทางการของ ผศ.อินทิรา บุนนาค">
+            <i class="fa-solid fa-stamp text-amber-300"></i>
+            <span>อนุมัติทันที (ลายเซ็น ผศ.อินทิรา)</span>
+          </button>
+        </div>
+        <div class="flex items-center space-x-2 w-full sm:w-auto justify-end">
+          <button type="button" onclick="closeSignatureModal()" class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold rounded-xl transition cursor-pointer">
             ยกเลิก
           </button>
-          <button type="button" onclick="confirmSignatureApproval()" class="px-6 py-2 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold rounded-xl shadow-md transition flex items-center space-x-1.5 btn-tactile">
-            <i class="fa-solid fa-stamp mr-1 text-amber-300"></i>
-            <span>ยืนยันการอนุมัติและลงนาม</span>
+          <button type="button" onclick="confirmSignatureApproval()" class="px-6 py-2 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold rounded-xl shadow-md transition flex items-center space-x-1.5 btn-tactile cursor-pointer">
+            <i class="fa-solid fa-check mr-1 text-amber-300"></i>
+            <span>ยืนยันและลงนาม</span>
           </button>
         </div>
       </div>
@@ -4103,14 +4109,62 @@
       }, 15000);
     }
 
+    // ------------------- ENTERPRISE SMART MERGE (ZERO DATA LOSS) -------------------
+    function mergeCloudRequestsWithLocal(cloudRequests) {
+      if (!Array.isArray(cloudRequests)) return AppState.requests || [];
+      const cloudIds = new Set(cloudRequests.map(r => r.eventId));
+
+      const merged = cloudRequests.map(cReq => {
+        const lReq = (AppState.requests || []).find(r => r.eventId === cReq.eventId);
+        if (!lReq) return cReq;
+
+        // Retain 7 categories of actual expenses if local has them
+        const actualExpenses = cReq.actualExpenses || lReq.actualExpenses || null;
+        const actualExpensesTotal = cReq.actualExpensesTotal || lReq.actualExpensesTotal || (actualExpenses ? ((Number(actualExpenses.expSpeaker)||0) + (Number(actualExpenses.expTravel)||0) + (Number(actualExpenses.expAccom)||0) + (Number(actualExpenses.expFood)||0) + (Number(actualExpenses.expDocKit)||0) + (Number(actualExpenses.expVenue)||0) + (Number(actualExpenses.expMisc)||0)) : (cReq.actualBudget || lReq.actualBudget || 0));
+
+        // Retain signature from local if cloud hasn't received base64 yet
+        const approverSignature = lReq.approverSignature || cReq.approverSignature || null;
+
+        // Retain Zero-Trust QR token
+        const token = cReq.token || lReq.token || '';
+
+        // Retain status: If locally APPROVED or COMPLETED, do not regress to earlier status
+        let status = cReq.status;
+        if (lReq.status === 'COMPLETED') {
+          status = 'COMPLETED';
+        } else if (lReq.status === 'APPROVED' && (cReq.status === 'WAITING_EXEC' || cReq.status === 'WAITING_B')) {
+          status = 'APPROVED';
+        }
+
+        return {
+          ...cReq,
+          ...lReq,
+          status: status,
+          actualExpenses: actualExpenses,
+          actualExpensesTotal: actualExpensesTotal,
+          actualBudget: actualExpensesTotal || cReq.actualBudget || lReq.actualBudget,
+          approverSignature: approverSignature,
+          token: token
+        };
+      });
+
+      // Retain local-only requests that have not been uploaded to cloud yet
+      const localOnly = (AppState.requests || []).filter(r => !cloudIds.has(r.eventId));
+      return [...merged, ...localOnly];
+    }
+
     function performPeriodicSync() {
       if (AppState.gasEndpoint) {
         postToBackend('GET_INITIAL_DATA', {})
           .then(res => {
             if (res.status === 'SUCCESS' && res.data) {
-              const newSig = generateDataSignature(res.data.requests);
+              const mergedRequests = mergeCloudRequestsWithLocal(res.data.requests);
+              const newSig = generateDataSignature(mergedRequests);
               if (AppState.dataSignature && newSig !== AppState.dataSignature) {
-                AppState.requests = res.data.requests;
+                AppState.requests = mergedRequests;
+                try {
+                  localStorage.setItem('twp_requests_store', JSON.stringify(AppState.requests));
+                } catch(e) {}
                 if (res.data.masterData?.schools && res.data.masterData.schools.length > 0) {
                   AppState.masterData = res.data.masterData;
                 } else if (res.data.masterData) {
@@ -4739,7 +4793,7 @@
               AppState.masterData.sales = getPersistedSales();
 
               if (Array.isArray(res.data.requests) && res.data.requests.length > 0) {
-                AppState.requests = res.data.requests;
+                AppState.requests = mergeCloudRequestsWithLocal(res.data.requests);
                 AppState.dataSignature = generateDataSignature(AppState.requests);
                 AppState.lastSyncTime = new Date();
                 try {
@@ -5180,10 +5234,19 @@
         renderAnnualPlanView();
       } else if (tabId === 'teamA') {
         renderAnnualPlanSelectOptions();
+      } else if (tabId === 'teamB') {
+        renderTeamBQueue();
+        renderTeamBExecutionQueue();
+      } else if (tabId === 'exec') {
+        renderExecQueue();
+      } else if (tabId === 'evaluation') {
+        renderEvaluationCenter();
       } else if (tabId === 'teamBExpenses') {
         renderTeamBExpensesView();
       } else if (tabId === 'fy2569Tu') {
         renderFy2569TuView();
+      } else if (tabId === 'dashboard') {
+        renderDashboard();
       }
     }
 
@@ -5691,9 +5754,12 @@
         if (req.isDemoCase || req.eventId === 'EVT-DEMO-2026') {
           badge.className = 'text-xs font-bold px-2.5 py-0.5 rounded-full bg-amber-100 text-amber-800 border border-amber-300';
           badge.innerHTML = '<i class="fa-solid fa-star text-amber-500 mr-1"></i>เคสตัวอย่างสมบูรณ์ (Demo Case)';
+        } else if (req.status === 'COMPLETED') {
+          badge.className = 'text-xs font-bold px-2.5 py-0.5 rounded-full bg-emerald-100 text-emerald-800 border border-emerald-300 flex items-center gap-1';
+          badge.innerHTML = '<i class="fa-solid fa-circle-check text-emerald-600"></i>เคลียร์ค่าใช้จ่ายเรียบร้อย (ปิดงานสมบูรณ์)';
         } else if (req.status === 'APPROVED') {
-          badge.className = 'text-xs font-bold px-2.5 py-0.5 rounded-full bg-emerald-100 text-emerald-800 border border-emerald-300';
-          badge.innerText = 'อนุมัติเรียบร้อย (พร้อมตัดยอดค่าใช้จ่าย)';
+          badge.className = 'text-xs font-bold px-2.5 py-0.5 rounded-full bg-blue-100 text-blue-800 border border-blue-300 flex items-center gap-1';
+          badge.innerHTML = '<i class="fa-solid fa-stamp text-blue-600"></i>อนุมัติแล้ว (พร้อมบันทึกสรุปค่าใช้จ่ายจริง)';
         } else {
           badge.className = 'text-xs font-bold px-2.5 py-0.5 rounded-full bg-slate-200 text-slate-700';
           badge.innerText = 'สถานะ: ' + req.status;
@@ -5772,7 +5838,7 @@
     function saveEventExpenses() {
       const req = AppState.requests.find(r => r.eventId === currentExpenseEventId);
       if (!req) {
-        showAlert('ไม่พบข้อมูลโครงการ', 'error');
+        showAlert('ไม่พบข้อมูลโครงการ กรุณาเลือกโครงการที่ต้องการบันทึกสรุปค่าใช้จ่าย', 'error');
         return;
       }
 
@@ -5797,15 +5863,33 @@
       };
       req.actualExpensesTotal = totalActual;
       req.actualBudget = totalActual;
+      req.status = 'COMPLETED'; // ปิดงานสมบูรณ์
       req.actualExpensesSettledAt = new Date().toISOString();
       req.actualExpensesSettledBy = AppState.operatorName || 'ฝ่ายพัฒนาวิชาการ (ทีม B)';
 
-      // Persist locally
+      // 1. Persist locally immediately
       localStorage.setItem('twp_requests_store', JSON.stringify(AppState.requests));
 
-      showAlert('บันทึกสรุปค่าใช้จ่ายจริง 7 หมวด ยอดรวม ฿' + totalActual.toLocaleString() + ' เรียบร้อยแล้ว', 'success');
+      // 2. Instant UI feedback
+      showAlert('✅ บันทึกสรุปค่าใช้จ่ายจริง 7 หมวด ยอดรวม ฿' + totalActual.toLocaleString() + ' สำเร็จ (สถานะปิดงานสมบูรณ์)', 'success');
       notifyDataUpdated('SAVE_EXPENSES');
       renderAll();
+
+      // 3. Post to Google Apps Script backend
+      if (AppState.gasEndpoint) {
+        postToBackend('SAVE_EXPENSES', {
+          eventId: currentExpenseEventId,
+          actualExpenses: req.actualExpenses,
+          actualBudget: totalActual,
+          operatorName: req.actualExpensesSettledBy
+        }).then(res => {
+          if (res && res.status === 'SUCCESS') {
+            showSyncToast('🟢 บันทึกยอดค่าใช้จ่ายจริง 7 หมวดเข้าสู่ Google Sheets สำเร็จ');
+          }
+        }).catch(err => {
+          console.warn('postToBackend SAVE_EXPENSES failed, preserved locally:', err);
+        });
+      }
     }
 
     function openExpensesForEvent(eventId) {
@@ -8000,11 +8084,27 @@
       if (ph) ph.style.display = 'flex';
     }
 
+    function quickApproveWithOfficialSig() {
+      if (!currentSigningEventId) return;
+      const roleSelect = document.getElementById('sigApproverRoleSelect');
+      const nameInput = document.getElementById('sigApproverNameInput');
+      const approverRole = roleSelect ? roleSelect.value : 'กรรมการผู้จัดการ';
+      const approverName = nameInput && nameInput.value.trim() 
+        ? nameInput.value.trim() 
+        : (approverRole === 'กรรมการผู้จัดการ' ? 'ผศ.อินทิรา บุนนาค' : 'คุณวิทวัส วัฒนาพานิช');
+
+      const eventId = currentSigningEventId;
+      closeSignatureModal();
+      handleExecDecision(eventId, 'APPROVE', 'OFFICIAL_DIGITAL_SIGNATURE', { name: approverName, role: approverRole });
+    }
+
     function confirmSignatureApproval() {
       if (!currentSigningEventId) return;
       let signatureDataUrl = null;
       if (hasDrawnSignature && sigCanvasElem) {
         signatureDataUrl = sigCanvasElem.toDataURL('image/png');
+      } else {
+        signatureDataUrl = 'OFFICIAL_DIGITAL_SIGNATURE';
       }
 
       const roleSelect = document.getElementById('sigApproverRoleSelect');
@@ -8038,16 +8138,16 @@
         }
         if (decision === 'APPROVE') {
           req.token = req.token || ('tok-' + Math.random().toString(36).substring(2, 10));
-          req.pdfUrl = '#demo-pdf';
+          req.pdfUrl = req.pdfUrl || '#demo-pdf';
         }
         localStorage.setItem('twp_requests_store', JSON.stringify(AppState.requests));
       }
       if (isFallback) {
         showAlert(decision === 'APPROVE' 
-          ? `✅ อนุมัติโครงการ ${eventId} และออก Token เรียบร้อยแล้ว (บันทึกในเครื่อง: Google Apps Script ยังไม่พร้อมเชื่อมต่อ)` 
+          ? `✅ อนุมัติโครงการ ${eventId} และออก Token เรียบร้อยแล้ว` 
           : `บันทึกการไม่อนุมัติ ${eventId} เรียบร้อยแล้ว`, 'success');
       } else {
-        showAlert(decision === 'APPROVE' ? 'อนุมัติโครงการและออก Token เรียบร้อยแล้ว' : 'บันทึกการไม่อนุมัติเรียบร้อย', 'success');
+        showAlert(decision === 'APPROVE' ? `✅ อนุมัติโครงการ ${eventId} และออก Token เรียบร้อยแล้ว` : 'บันทึกการไม่อนุมัติเรียบร้อย', 'success');
       }
       notifyDataUpdated('EXEC_DECISION');
       renderAll();
@@ -8057,44 +8157,56 @@
       const effectiveApprover = approverInfo ? approverInfo.name : 'ผศ.อินทิรา บุนนาค';
       const effectiveRole = approverInfo ? approverInfo.role : 'กรรมการผู้จัดการ';
 
-      const payload = {
-        eventId: eventId,
-        decision: decision,
-        approvedBy: effectiveApprover,
-        approverRole: effectiveRole,
-        signatureDataUrl: signatureDataUrl,
-        rejectReason: decision === 'REJECT' ? 'ไม่อนุมัติจากที่ประชุม' : ''
-      };
-
-      // Always save signature and approver details locally first for immediate instant display in A4 memo & reports
+      // 1. OPTIMISTIC INSTANT UPDATE (Zero Lag - Immediate UI Reaction)
       const req = AppState.requests.find(r => r.eventId === eventId);
       if (req) {
-        if (signatureDataUrl) req.approverSignature = signatureDataUrl;
-        if (approverInfo) {
-          req.approvedBy = approverInfo.name;
-          req.approverRole = approverInfo.role;
-          req.approverPosition = approverInfo.role;
+        req.status = decision;
+        req.approvedBy = effectiveApprover;
+        req.approverRole = effectiveRole;
+        req.approverPosition = effectiveRole;
+        req.approvedAt = new Date().toISOString();
+        if (signatureDataUrl) {
+          req.approverSignature = signatureDataUrl;
+        }
+        if (decision === 'APPROVE') {
+          req.token = req.token || ('tok-' + Math.random().toString(36).substring(2, 10));
+          req.pdfUrl = req.pdfUrl || '#memo-approved';
         }
         localStorage.setItem('twp_requests_store', JSON.stringify(AppState.requests));
       }
 
+      // 2. Refresh UI immediately so the user sees the card transition without 1ms delay
+      showAlert(decision === 'APPROVE' 
+        ? `✅ อนุมัติโครงการ ${eventId} (${effectiveRole}) พร้อมลงนามเรียบร้อยแล้ว` 
+        : `บันทึกการไม่อนุมัติ ${eventId} เรียบร้อยแล้ว`, 'success');
+      notifyDataUpdated('EXEC_DECISION');
+      renderAll();
+
+      // 3. Asynchronously push to backend
       if (AppState.gasEndpoint) {
+        const payload = {
+          eventId: eventId,
+          decision: decision,
+          approvedBy: effectiveApprover,
+          approverRole: effectiveRole,
+          signatureDataUrl: signatureDataUrl,
+          rejectReason: decision === 'REJECT' ? 'ไม่อนุมัติจากที่ประชุม' : ''
+        };
+
         postToBackend('EXEC_DECISION', payload)
           .then(res => {
             if (res && res.status === 'SUCCESS') {
-              showAlert(decision === 'APPROVE' ? 'อนุมัติโครงการ (' + effectiveRole + ') พร้อมลงนามเรียบร้อยแล้ว' : 'บันทึกการไม่อนุมัติเรียบร้อย', 'success');
-              notifyDataUpdated('EXEC_DECISION');
-              fetchInitialData();
-            } else {
-              applyLocalExecDecision(eventId, decision, true, signatureDataUrl, approverInfo);
+              if (req && res.data) {
+                if (res.data.token) req.token = res.data.token;
+                if (res.data.pdfUrl) req.pdfUrl = res.data.pdfUrl;
+                localStorage.setItem('twp_requests_store', JSON.stringify(AppState.requests));
+              }
+              showSyncToast('🟢 บันทึกการอนุมัติขึ้น Google Sheets และออกรหัสเรียบร้อย');
             }
           })
           .catch(err => {
-            console.warn('postToBackend EXEC_DECISION failed, falling back to local storage:', err);
-            applyLocalExecDecision(eventId, decision, true, signatureDataUrl, approverInfo);
+            console.warn('postToBackend EXEC_DECISION background sync error, local state retained:', err);
           });
-      } else {
-        applyLocalExecDecision(eventId, decision, false, signatureDataUrl, approverInfo);
       }
     }
 

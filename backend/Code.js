@@ -72,6 +72,9 @@ function doPost(e) {
       case 'UPDATE_REVIEW_B':
         result = updateReviewTeamB(payload);
         break;
+      case 'SAVE_EXPENSES':
+        result = handleSaveExpenses(payload);
+        break;
       case 'EXEC_DECISION':
         result = handleExecDecision(payload);
         break;
@@ -175,6 +178,17 @@ function getInitialData() {
   masterData.provinces = Array.from(provinceSet).sort();
   masterData.sales = Array.from(salesMap.values());
 
+  // ดึง QR Tokens เพื่อผูกรหัสลับแบบ Zero-Trust
+  const tokenSheet = ss.getSheetByName('QR_Tokens');
+  const tokenRows = tokenSheet ? tokenSheet.getDataRange().getValues() : [];
+  const tokenMap = {};
+  for (let i = 1; i < tokenRows.length; i++) {
+    const tr = tokenRows[i];
+    if (tr[0] && tr[1]) {
+      tokenMap[tr[1]] = tr[0]; // eventId -> Token_ID
+    }
+  }
+
   // ดึง Event Requests
   const reqSheet = ss.getSheetByName('Event_Requests');
   const reqRows = reqSheet.getDataRange().getValues();
@@ -183,6 +197,16 @@ function getInitialData() {
   for (let i = 1; i < reqRows.length; i++) {
     const r = reqRows[i];
     if (!r[0]) continue;
+
+    let actualExp = null;
+    if (r[35]) {
+      try {
+        actualExp = typeof r[35] === 'string' ? JSON.parse(r[35]) : r[35];
+      } catch (e) {
+        actualExp = null;
+      }
+    }
+
     requests.push({
       eventId: r[0],
       createdAt: r[1],
@@ -219,6 +243,9 @@ function getInitialData() {
       isOutOfPlan: r[32] || 'NO',
       outOfPlanReason: r[33] || '',
       annualPlanId: r[34] || '',
+      actualExpenses: actualExp,
+      actualExpensesTotal: actualExp ? ((Number(actualExp.expSpeaker)||0) + (Number(actualExp.expTravel)||0) + (Number(actualExp.expAccom)||0) + (Number(actualExp.expFood)||0) + (Number(actualExp.expDocKit)||0) + (Number(actualExp.expVenue)||0) + (Number(actualExp.expMisc)||0)) : (Number(r[18]) || 0),
+      token: tokenMap[r[0]] || (r[36] || ''),
       rowIndex: i + 1
     });
   }
@@ -388,6 +415,51 @@ function updateReviewTeamB(payload) {
   });
 
   return { success: true, eventId: eventId, newStatus: nextStatus };
+}
+
+// ------------------- TEAM B: ACTUAL EXPENSES SETTLEMENT (7 หมวด) -------------------
+
+function handleSaveExpenses(payload) {
+  const { eventId, actualExpenses, actualBudget, operatorName } = payload;
+  const ss = getSpreadsheet();
+  const sheet = ss.getSheetByName('Event_Requests');
+  const data = sheet.getDataRange().getValues();
+  const now = new Date().toISOString();
+  const operator = operatorName || 'ฝ่ายพัฒนาวิชาการ (ทีม B)';
+
+  let targetRow = -1;
+  for (let i = 1; i < data.length; i++) {
+    if (data[i][0] === eventId) {
+      targetRow = i + 1;
+      break;
+    }
+  }
+
+  if (targetRow === -1) throw new Error('ไม่พบรหัสคำขอ ' + eventId);
+
+  // ปรับสถานะเป็น COMPLETED (ปิดงานสมบูรณ์) และบันทึกยอดงบตัดจ่ายจริง 7 หมวด
+  sheet.getRange(targetRow, 3).setValue('COMPLETED');
+  if (actualBudget !== undefined && actualBudget !== null) {
+    sheet.getRange(targetRow, 19).setValue(Number(actualBudget) || 0); // Col 19: Actual_Budget
+  }
+  sheet.getRange(targetRow, 23).setValue(operator); // Last_Modified_By
+  
+  // บันทึก JSON ค่าใช้จ่ายจริง 7 หมวดลงใน Column 36 (Actual_Expenses_JSON)
+  const expensesJson = JSON.stringify(actualExpenses || {});
+  sheet.getRange(targetRow, 36).setValue(expensesJson);
+
+  logSystemAction(eventId, 'SETTLE_EXPENSES', operator, {
+    actualBudget: actualBudget,
+    actualExpenses: actualExpenses
+  });
+
+  return {
+    success: true,
+    eventId: eventId,
+    status: 'COMPLETED',
+    actualBudget: actualBudget,
+    actualExpenses: actualExpenses
+  };
 }
 
 // ------------------- EXECUTIVE: APPROVAL / REJECTION -------------------
