@@ -82,17 +82,112 @@
     .cert-corner-bl { bottom: 10px; left: 10px; border-bottom: 3px double #C5A059; border-left: 3px double #C5A059; }
     .cert-corner-br { bottom: 10px; right: 10px; border-bottom: 3px double #C5A059; border-right: 3px double #C5A059; }
 
+    /* STRICT A4 LANDSCAPE PRINT RULES FOR E-CERTIFICATE */
+    @page {
+      size: A4 landscape;
+      margin: 0;
+    }
+
     @media print {
-      body * { visibility: hidden; }
-      #printableCertArea, #printableCertArea * { visibility: visible; }
+      /* Suppress everything except printable certificate */
+      header, footer, nav, .no-print,
+      #stepTab1, #stepTab2, #step1Container,
+      #completionNoticeCard, #participantInputFormCard, #certActionCard, #unlockedResourceCard,
+      #certPreviewHeader, #resetParticipantCard {
+        display: none !important;
+      }
+
+      html, body {
+        width: 297mm !important;
+        height: 210mm !important;
+        max-width: 297mm !important;
+        max-height: 210mm !important;
+        min-width: 297mm !important;
+        min-height: 210mm !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        background: #ffffff !important;
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+        overflow: hidden !important;
+      }
+
+      body * {
+        visibility: hidden !important;
+      }
+
+      #printableCertArea, #printableCertArea * {
+        visibility: visible !important;
+      }
+
+      main {
+        max-width: none !important;
+        width: 297mm !important;
+        height: 210mm !important;
+        padding: 0 !important;
+        margin: 0 !important;
+      }
+
+      #step2Container,
+      #certPreviewContainer,
+      .overflow-x-auto {
+        padding: 0 !important;
+        margin: 0 !important;
+        background: transparent !important;
+        box-shadow: none !important;
+        border: none !important;
+        width: 297mm !important;
+        height: 210mm !important;
+        overflow: visible !important;
+      }
+
       #printableCertArea {
-        position: fixed;
-        left: 0;
-        top: 0;
-        width: 100vw;
-        height: 100vh;
-        margin: 0;
-        padding: 0;
+        position: fixed !important;
+        left: 0 !important;
+        top: 0 !important;
+        width: 297mm !important;
+        min-width: 297mm !important;
+        max-width: 297mm !important;
+        height: 210mm !important;
+        min-height: 210mm !important;
+        max-height: 210mm !important;
+        box-sizing: border-box !important;
+        margin: 0 !important;
+        padding: 8mm 14mm 6mm 14mm !important;
+        border: 6.5mm solid #08539E !important;
+        outline: 1.5mm solid #C5A059 !important;
+        outline-offset: -4mm !important;
+        page-break-after: avoid !important;
+        page-break-inside: avoid !important;
+        display: flex !important;
+        flex-direction: column !important;
+        justify-content: space-between !important;
+        background: #ffffff !important;
+        box-shadow: none !important;
+        border-radius: 0 !important;
+        z-index: 9999 !important;
+      }
+
+      .cert-corner {
+        position: absolute !important;
+        width: 14mm !important;
+        height: 14mm !important;
+        z-index: 2 !important;
+      }
+      .cert-corner-tl { top: 2mm !important; left: 2mm !important; border-top: 2.5mm double #C5A059 !important; border-left: 2.5mm double #C5A059 !important; }
+      .cert-corner-tr { top: 2mm !important; right: 2mm !important; border-top: 2.5mm double #C5A059 !important; border-right: 2.5mm double #C5A059 !important; }
+      .cert-corner-bl { bottom: 2mm !important; left: 2mm !important; border-bottom: 2.5mm double #C5A059 !important; border-left: 2.5mm double #C5A059 !important; }
+      .cert-corner-br { bottom: 2mm !important; right: 2mm !important; border-bottom: 2.5mm double #C5A059 !important; border-right: 2.5mm double #C5A059 !important; }
+
+      .cert-watermark {
+        position: absolute !important;
+        top: 50% !important;
+        left: 50% !important;
+        transform: translate(-50%, -50%) !important;
+        width: 80mm !important;
+        height: 80mm !important;
+        opacity: 0.04 !important;
+        z-index: 1 !important;
       }
     }
   </style>
@@ -369,7 +464,7 @@
     <div id="step2Container" class="hidden space-y-5">
       
       <!-- Top Success Alert Banner -->
-      <div class="bg-white rounded-2xl shadow-md border border-emerald-200 p-5 text-center space-y-2 relative overflow-hidden">
+      <div id="completionNoticeCard" class="bg-white rounded-2xl shadow-md border border-emerald-200 p-5 text-center space-y-2 relative overflow-hidden">
         <div class="w-12 h-12 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center mx-auto text-xl shadow-inner">
           <i class="fa-solid fa-circle-check"></i>
         </div>
@@ -388,7 +483,7 @@
       </div>
 
       <!-- Participant Identity Inputs for E-Certificate -->
-      <div class="bg-gradient-to-r from-blue-50/90 to-indigo-50/90 rounded-2xl shadow-sm border border-blue-200 p-4 sm:p-5 space-y-4">
+      <div id="participantInputFormCard" class="bg-gradient-to-r from-blue-50/90 to-indigo-50/90 rounded-2xl shadow-sm border border-blue-200 p-4 sm:p-5 space-y-4">
         <div class="flex items-center space-x-2.5 pb-2 border-b border-blue-200/60">
           <div class="w-8 h-8 rounded-lg bg-[#08539E] text-white flex items-center justify-center text-sm shadow-sm">
             <i class="fa-solid fa-id-card"></i>
@@ -460,16 +555,24 @@
         </div>
 
         <!-- Dispatch Buttons -->
-        <div class="flex flex-col sm:flex-row items-center gap-3">
-          <button type="button" id="btnSendCertEmail" onclick="sendCertToEmailAction()" class="btn-touch w-full flex-1 bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 text-white font-bold rounded-xl shadow-md flex items-center justify-center space-x-2 transition">
-            <i class="fa-solid fa-envelope-circle-check text-amber-300 text-base"></i>
-            <span>ส่งวุฒิบัตรเข้าอีเมลของฉันทันที</span>
-          </button>
-          
-          <button type="button" id="btnPrintCert" onclick="printCertAction()" class="btn-touch w-full sm:w-auto px-6 bg-slate-800 hover:bg-slate-700 text-white font-bold rounded-xl shadow-sm flex items-center justify-center space-x-2 transition">
-            <i class="fa-solid fa-print text-blue-300"></i>
-            <span>พิมพ์ / บันทึกเป็น PDF</span>
-          </button>
+        <div class="space-y-2.5">
+          <div class="flex flex-col sm:flex-row items-center gap-2.5">
+            <button type="button" id="btnSendCertEmail" onclick="sendCertToEmailAction()" class="btn-touch w-full flex-1 py-3 px-4 bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 text-white font-bold rounded-xl shadow-md flex items-center justify-center space-x-2 transition cursor-pointer">
+              <i class="fa-solid fa-envelope-circle-check text-amber-300 text-base"></i>
+              <span>ส่งวุฒิบัตรเข้าอีเมลของฉันทันที</span>
+            </button>
+            
+            <button type="button" id="btnPrintCert" onclick="printCertAction()" class="btn-touch w-full sm:w-auto py-3 px-5 bg-gradient-to-r from-blue-700 to-indigo-700 hover:from-blue-800 hover:to-indigo-800 text-white font-bold rounded-xl shadow-md flex items-center justify-center space-x-2 transition cursor-pointer">
+              <i class="fa-solid fa-print text-amber-300"></i>
+              <span>พิมพ์ / บันทึก PDF (A4 แนวนอน)</span>
+            </button>
+          </div>
+          <div class="flex justify-center">
+            <button type="button" onclick="openFullCertWindow()" class="btn-touch text-xs text-blue-700 hover:text-blue-900 font-bold py-1.5 px-3 rounded-lg bg-blue-50 hover:bg-blue-100 border border-blue-200 transition flex items-center gap-1.5 cursor-pointer">
+              <i class="fa-solid fa-up-right-from-square text-blue-600"></i>
+              <span>เปิดหน้าต่างวุฒิบัตรเต็มแผ่น (Full Landscape Window)</span>
+            </button>
+          </div>
         </div>
 
       </div>
@@ -513,11 +616,11 @@
       </div>
 
       <!-- FULL E-CERTIFICATE LIVE PREVIEW CONTAINER -->
-      <div class="space-y-2">
-        <div class="flex items-center justify-between px-1 text-xs">
+      <div id="certPreviewContainer" class="space-y-2">
+        <div id="certPreviewHeader" class="flex items-center justify-between px-1 text-xs">
           <span class="font-bold text-slate-700 flex items-center gap-1.5">
             <i class="fa-solid fa-certificate text-[#08539E]"></i>
-            <span>ตัวอย่างวุฒิบัตรจริง (Real-Time Live Certificate Preview):</span>
+            <span>ตัวอย่างวุฒิบัตรจริง A4 แนวนอน (Real-Time Live Certificate Preview):</span>
           </span>
           <span class="text-emerald-700 font-bold text-[11px] flex items-center gap-1">
             <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
@@ -542,11 +645,10 @@
 
             <!-- CERTIFICATE HEADER -->
             <div class="text-center relative z-10 space-y-1">
-              <!-- TWP Seal & Crest -->
+              <!-- TWP Seal & Crest (Official Emblem) -->
               <div class="flex items-center justify-center gap-2 mb-1">
-                <div class="w-10 h-10 rounded-xl bg-[#08539E] text-white flex flex-col items-center justify-center shadow-md">
-                  <span class="font-black text-sm leading-none">TWP</span>
-                  <span class="text-[6.5px] tracking-widest opacity-90 mt-0.5">1936</span>
+                <div class="w-11 h-11 rounded-2xl bg-[#08539E] text-white flex items-center justify-center shadow-md border-2 border-white">
+                  <span class="font-black text-base tracking-wider leading-none">TWP</span>
                 </div>
               </div>
 
@@ -664,7 +766,7 @@
       </div>
 
       <!-- Reset Option -->
-      <div class="text-center pt-2">
+      <div id="resetParticipantCard" class="text-center pt-2">
         <button type="button" onclick="resetForNewParticipant()" class="text-xs text-blue-600 hover:text-blue-800 underline transition">
           <i class="fa-solid fa-rotate-left mr-1"></i> ต้องการทำแบบประเมินสำหรับผู้เข้าอบรมท่านอื่น คลิกที่นี่
         </button>
@@ -1154,8 +1256,8 @@
 
       if (printBtn) {
         printBtn.disabled = false;
-        printBtn.className = 'btn-touch w-full sm:w-auto px-6 bg-gradient-to-r from-blue-700 to-indigo-700 hover:from-blue-800 hover:to-indigo-800 text-white font-bold rounded-xl shadow-md flex items-center justify-center space-x-2 transition cursor-pointer';
-        printBtn.innerHTML = '<i class="fa-solid fa-print text-amber-300"></i><span>พิมพ์ / บันทึกเป็น PDF</span>';
+        printBtn.className = 'btn-touch w-full sm:w-auto py-3 px-5 bg-gradient-to-r from-blue-700 to-indigo-700 hover:from-blue-800 hover:to-indigo-800 text-white font-bold rounded-xl shadow-md flex items-center justify-center space-x-2 transition cursor-pointer';
+        printBtn.innerHTML = '<i class="fa-solid fa-print text-amber-300"></i><span>พิมพ์ / บันทึก PDF (A4 แนวนอน)</span>';
       }
 
       if (emailBanner) emailBanner.classList.add('hidden');
@@ -1170,6 +1272,111 @@
         return;
       }
       window.print();
+    }
+
+    function openFullCertWindow() {
+      const nameTh = document.getElementById('participantNameTh')?.value.trim() || 'ผู้เข้าร่วมการอบรม';
+      const certNode = document.getElementById('printableCertArea').cloneNode(true);
+      const win = window.open('', '_blank');
+      if (!win) {
+        alert('เบราว์เซอร์บล็อกหน้าต่างใหม่ กรุณากดปุ่ม "พิมพ์ / บันทึก PDF (A4 แนวนอน)" แทนได้เลยครับ');
+        return;
+      }
+      win.document.write(`<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <title>วุฒิบัตร - ${nameTh}</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <script src="https://cdn.tailwindcss.com"><\/script>
+  <style>
+    @page { size: A4 landscape; margin: 0; }
+    html, body {
+      margin: 0;
+      padding: 0;
+      background: #0f172a;
+      font-family: 'Sarabun', sans-serif;
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
+    }
+    .print-bar {
+      background: #08539E;
+      color: #ffffff;
+      padding: 12px 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+    }
+    .cert-sheet-wrapper {
+      padding: 28px 16px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: calc(100vh - 65px);
+    }
+    #printableCertArea {
+      width: 297mm !important;
+      min-width: 297mm !important;
+      max-width: 297mm !important;
+      height: 210mm !important;
+      min-height: 210mm !important;
+      max-height: 210mm !important;
+      box-sizing: border-box !important;
+      margin: 0 auto !important;
+      padding: 8mm 14mm 6mm 14mm !important;
+      border: 6.5mm solid #08539E !important;
+      outline: 1.5mm solid #C5A059 !important;
+      outline-offset: -4mm !important;
+      background: #ffffff !important;
+      display: flex !important;
+      flex-direction: column !important;
+      justify-content: space-between !important;
+      position: relative !important;
+      box-shadow: 0 20px 50px rgba(0,0,0,0.4) !important;
+      overflow: hidden !important;
+    }
+    .cert-corner { position: absolute !important; width: 14mm !important; height: 14mm !important; z-index: 2 !important; }
+    .cert-corner-tl { top: 2mm !important; left: 2mm !important; border-top: 2.5mm double #C5A059 !important; border-left: 2.5mm double #C5A059 !important; }
+    .cert-corner-tr { top: 2mm !important; right: 2mm !important; border-top: 2.5mm double #C5A059 !important; border-right: 2.5mm double #C5A059 !important; }
+    .cert-corner-bl { bottom: 2mm !important; left: 2mm !important; border-bottom: 2.5mm double #C5A059 !important; border-left: 2.5mm double #C5A059 !important; }
+    .cert-corner-br { bottom: 2mm !important; right: 2mm !important; border-bottom: 2.5mm double #C5A059 !important; border-right: 2.5mm double #C5A059 !important; }
+    .cert-watermark { position: absolute !important; top: 50% !important; left: 50% !important; transform: translate(-50%, -50%) !important; width: 80mm !important; height: 80mm !important; opacity: 0.04 !important; z-index: 1 !important; }
+    @media print {
+      body { background: #ffffff !important; }
+      .print-bar { display: none !important; }
+      .cert-sheet-wrapper { padding: 0 !important; margin: 0 !important; }
+      #printableCertArea { box-shadow: none !important; margin: 0 !important; }
+    }
+  </style>
+</head>
+<body>
+  <div class="print-bar">
+    <div style="font-weight:bold; font-size:14px; display:flex; align-items:center; gap:8px;">
+      <i class="fa-solid fa-award" style="color:#fbbf24; font-size:18px;"></i>
+      <span>วุฒิบัตรอิเล็กทรอนิกส์มาตรฐาน A4 แนวนอน (Official Full Landscape Certificate)</span>
+    </div>
+    <div style="display:flex; gap:10px;">
+      <button onclick="window.print()" style="background:#10b981; color:#ffffff; border:none; padding:8px 22px; border-radius:10px; font-weight:bold; cursor:pointer; font-size:13px; display:flex; align-items:center; gap:6px; box-shadow: 0 2px 6px rgba(0,0,0,0.2);">
+        <i class="fa-solid fa-print"></i> พิมพ์ / บันทึก PDF (A4 แนวนอน)
+      </button>
+      <button onclick="window.close()" style="background:rgba(255,255,255,0.18); color:#ffffff; border:none; padding:8px 14px; border-radius:10px; cursor:pointer; font-size:13px;">
+        ปิด
+      </button>
+    </div>
+  </div>
+  <div class="cert-sheet-wrapper">
+    ${certNode.outerHTML}
+  </div>
+</body>
+</html>`);
+      win.document.close();
     }
 
     // Reset flow for new participant
