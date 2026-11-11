@@ -1530,6 +1530,28 @@
           </div>
         </div>
 
+        <!-- Prominent Settlement Completed Banner (เมื่อปิดยอดแล้ว) -->
+        <div id="expenseSettledBanner" class="hidden p-4 rounded-2xl bg-gradient-to-r from-emerald-500/15 via-teal-500/10 to-emerald-500/15 border-2 border-emerald-500/50 text-emerald-950 flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-xs">
+          <div class="flex items-center space-x-3">
+            <div class="w-10 h-10 rounded-xl bg-emerald-600 text-white flex items-center justify-center text-lg font-bold shadow-xs shrink-0">
+              <i class="fa-solid fa-circle-check"></i>
+            </div>
+            <div>
+              <div class="font-extrabold text-xs sm:text-sm text-emerald-900 flex items-center gap-1.5 flex-wrap">
+                <span>โครงการนี้ตัดยอดและบันทึกค่าใช้จ่ายจริงเรียบร้อยแล้ว</span>
+                <span class="bg-emerald-600 text-white text-[10px] px-2 py-0.5 rounded-full font-mono font-bold shadow-xs">สถานะ: COMPLETED</span>
+              </div>
+              <p id="expenseSettledSubtext" class="text-[11px] text-emerald-800 font-medium mt-0.5">บันทึกเมื่อ: - โดย -</p>
+            </div>
+          </div>
+          <div class="flex items-center gap-2 shrink-0">
+            <button type="button" onclick="previewExpenseReportA4()" class="px-3.5 py-1.5 bg-emerald-700 hover:bg-emerald-800 text-white rounded-xl text-xs font-bold transition flex items-center gap-1.5 shadow-xs cursor-pointer btn-tactile">
+              <i class="fa-solid fa-file-invoice"></i>
+              <span>ดูรายงานสรุป A4</span>
+            </button>
+          </div>
+        </div>
+
         <!-- 7 Recommended Standard Expense Categories -->
         <div class="space-y-3">
           <div class="flex items-center justify-between">
@@ -1762,21 +1784,25 @@
           </div>
         </div>
 
-        <!-- Action Buttons -->
-          <div class="pt-3 flex flex-wrap items-center justify-between gap-3">
-            <div class="text-[11px] text-slate-400">
-              * ข้อมูลค่าใช้จ่ายจริงจะถูกนำไปอัปเดตลงใน <strong class="text-white">รายงานประเมินและวิเคราะห์ต้นทุน A4</strong> อัตโนมัติ
-            </div>
-            <div class="flex items-center space-x-2">
-              <button onclick="previewExpenseReportA4()" class="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-white rounded-xl text-xs font-bold transition btn-tactile border border-slate-600">
-                <i class="fa-solid fa-file-invoice mr-1 text-blue-400"></i>ดูรายงานสรุปประเมิน A4
-              </button>
-              <button onclick="saveEventExpenses()" class="px-6 py-2.5 bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl text-xs font-bold transition btn-tactile shadow-md flex items-center space-x-1.5">
-                <i class="fa-solid fa-floppy-disk text-amber-300"></i>
-                <span>ยืนยันและบันทึกค่าใช้จ่ายจริง</span>
-              </button>
+        <!-- Action Buttons & Live Settlement Status -->
+        <div class="pt-4 border-t border-slate-200 flex flex-col sm:flex-row items-center justify-between gap-3 bg-slate-50 p-4 rounded-2xl">
+          <div class="flex items-center space-x-2 text-xs">
+            <div id="expenseSaveIndicator" class="flex items-center gap-1.5 font-bold">
+              <i class="fa-solid fa-clock text-slate-400"></i>
+              <span class="text-slate-500">พร้อมบันทึกค่าใช้จ่ายจริง</span>
             </div>
           </div>
+          <div class="flex items-center space-x-2 w-full sm:w-auto justify-end">
+            <button type="button" onclick="previewExpenseReportA4()" class="px-4 py-2.5 bg-slate-800 hover:bg-slate-700 text-white rounded-xl text-xs font-bold transition btn-tactile border border-slate-600 flex items-center space-x-1.5 cursor-pointer shadow-xs">
+              <i class="fa-solid fa-file-invoice text-blue-400"></i>
+              <span>ดูรายงานสรุป A4</span>
+            </button>
+            <button type="button" onclick="saveEventExpenses()" id="saveExpensesBtn" class="px-6 py-2.5 bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl text-xs font-bold transition btn-tactile shadow-md flex items-center space-x-2 cursor-pointer">
+              <i class="fa-solid fa-floppy-disk text-amber-300"></i>
+              <span>ยืนยันและบันทึกค่าใช้จ่ายจริง</span>
+            </button>
+          </div>
+        </div>
 
         </div>
 
@@ -5727,10 +5753,19 @@
         return;
       }
 
-      // Populate events dropdown
+      // Populate events dropdown with clear status icons
       select.innerHTML = requests.map(r => {
-        const statusLabel = r.status === 'APPROVED' ? '[อนุมัติแล้ว]' : r.status === 'WAITING_B' ? '[รอทีม B]' : '[รออนุมัติ]';
-        return `<option value="${r.eventId}">${r.eventId} | ${r.schoolName} (${statusLabel})</option>`;
+        let statusBadge = '';
+        if (r.status === 'COMPLETED') {
+          statusBadge = '✅ [ปิดงาน/ตัดงบแล้ว]';
+        } else if (r.status === 'APPROVED') {
+          statusBadge = '🔵 [อนุมัติแล้ว - พร้อมตัดงบ]';
+        } else if (r.status === 'WAITING_EXEC') {
+          statusBadge = '🟠 [รอผู้บริหารอนุมัติ]';
+        } else {
+          statusBadge = '🟡 [รอทีม B ตรวจสอบ]';
+        }
+        return `<option value="${r.eventId}">${statusBadge} ${r.eventId} | ${r.schoolName}</option>`;
       }).join('');
 
       if (!currentExpenseEventId || !requests.some(r => r.eventId === currentExpenseEventId)) {
@@ -5748,13 +5783,20 @@
       const req = AppState.requests.find(r => r.eventId === eventId);
       if (!req) return;
 
-      // Status badge
+      // Status badge & Prominent Settlement Banner
       const badge = document.getElementById('expenseEventStatusBadge');
+      const banner = document.getElementById('expenseSettledBanner');
+      const bannerSub = document.getElementById('expenseSettledSubtext');
+      const btn = document.getElementById('saveExpensesBtn');
+      const indicator = document.getElementById('expenseSaveIndicator');
+
+      const isCompleted = req.status === 'COMPLETED';
+
       if (badge) {
         if (req.isDemoCase || req.eventId === 'EVT-DEMO-2026') {
           badge.className = 'text-xs font-bold px-2.5 py-0.5 rounded-full bg-amber-100 text-amber-800 border border-amber-300';
           badge.innerHTML = '<i class="fa-solid fa-star text-amber-500 mr-1"></i>เคสตัวอย่างสมบูรณ์ (Demo Case)';
-        } else if (req.status === 'COMPLETED') {
+        } else if (isCompleted) {
           badge.className = 'text-xs font-bold px-2.5 py-0.5 rounded-full bg-emerald-100 text-emerald-800 border border-emerald-300 flex items-center gap-1';
           badge.innerHTML = '<i class="fa-solid fa-circle-check text-emerald-600"></i>เคลียร์ค่าใช้จ่ายเรียบร้อย (ปิดงานสมบูรณ์)';
         } else if (req.status === 'APPROVED') {
@@ -5763,6 +5805,35 @@
         } else {
           badge.className = 'text-xs font-bold px-2.5 py-0.5 rounded-full bg-slate-200 text-slate-700';
           badge.innerText = 'สถานะ: ' + req.status;
+        }
+      }
+
+      // Toggle Prominent Settlement Banner & Button State
+      if (isCompleted) {
+        if (banner) {
+          banner.classList.remove('hidden');
+          if (bannerSub) {
+            const timeStr = req.actualExpensesSettledAt ? new Date(req.actualExpensesSettledAt).toLocaleString('th-TH') : '-';
+            const byStr = req.actualExpensesSettledBy || 'ฝ่ายพัฒนาวิชาการ (ทีม B)';
+            bannerSub.innerText = `บันทึกตัดงบเมื่อ: ${timeStr} โดย ${byStr}`;
+          }
+        }
+        if (btn) {
+          btn.className = 'px-6 py-2.5 bg-emerald-700 hover:bg-emerald-600 text-white rounded-xl text-xs font-bold transition btn-tactile shadow-md flex items-center space-x-2 border border-emerald-400 ring-2 ring-emerald-500/20 cursor-pointer';
+          btn.innerHTML = '<i class="fa-solid fa-circle-check text-emerald-300"></i><span>บันทึกเรียบร้อยแล้ว (คลิกเพื่อแก้ไข/บันทึกซ้ำ)</span>';
+        }
+        if (indicator) {
+          const timeStr = req.actualExpensesSettledAt ? new Date(req.actualExpensesSettledAt).toLocaleTimeString('th-TH', { hour: '2-digit', minute: '2-digit' }) : '';
+          indicator.innerHTML = `<span class="text-emerald-700 flex items-center gap-1.5 font-bold"><i class="fa-solid fa-circle-check text-emerald-600"></i>บันทึกสำเร็จแล้วเมื่อ ${timeStr} น.</span>`;
+        }
+      } else {
+        if (banner) banner.classList.add('hidden');
+        if (btn) {
+          btn.className = 'px-6 py-2.5 bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl text-xs font-bold transition btn-tactile shadow-md flex items-center space-x-2 cursor-pointer';
+          btn.innerHTML = '<i class="fa-solid fa-floppy-disk text-amber-300"></i><span>ยืนยันและบันทึกค่าใช้จ่ายจริง</span>';
+        }
+        if (indicator) {
+          indicator.innerHTML = '<span class="text-slate-500 flex items-center gap-1.5"><i class="fa-solid fa-clock text-slate-400"></i>ยังไม่ได้บันทึกสรุปค่าใช้จ่ายจริง</span>';
         }
       }
 
@@ -5842,6 +5913,12 @@
         return;
       }
 
+      const saveBtn = document.getElementById('saveExpensesBtn');
+      if (saveBtn) {
+        saveBtn.disabled = true;
+        saveBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin text-white mr-1.5"></i><span>กำลังประมวลผลและตัดยอดงบ...</span>';
+      }
+
       const expSpeaker = Number(document.getElementById('expSpeaker').value) || 0;
       const expTravel = Number(document.getElementById('expTravel').value) || 0;
       const expAccom = Number(document.getElementById('expAccom').value) || 0;
@@ -5863,17 +5940,26 @@
       };
       req.actualExpensesTotal = totalActual;
       req.actualBudget = totalActual;
-      req.status = 'COMPLETED'; // ปิดงานสมบูรณ์
+      req.status = 'COMPLETED'; // ปรับสถานะเป็นปิดงานสมบูรณ์ 100%
       req.actualExpensesSettledAt = new Date().toISOString();
       req.actualExpensesSettledBy = AppState.operatorName || 'ฝ่ายพัฒนาวิชาการ (ทีม B)';
 
       // 1. Persist locally immediately
       localStorage.setItem('twp_requests_store', JSON.stringify(AppState.requests));
 
-      // 2. Instant UI feedback
-      showAlert('✅ บันทึกสรุปค่าใช้จ่ายจริง 7 หมวด ยอดรวม ฿' + totalActual.toLocaleString() + ' สำเร็จ (สถานะปิดงานสมบูรณ์)', 'success');
-      notifyDataUpdated('SAVE_EXPENSES');
-      renderAll();
+      setTimeout(() => {
+        // 2. Instant Tactile UI Feedback
+        if (saveBtn) {
+          saveBtn.disabled = false;
+          saveBtn.innerHTML = '<i class="fa-solid fa-circle-check text-emerald-300 animate-bounce mr-1.5"></i><span>บันทึกสำเร็จเรียบร้อย!</span>';
+        }
+
+        showAlert('✅ บันทึกสรุปค่าใช้จ่ายจริง 7 หมวด ยอดรวม ฿' + totalActual.toLocaleString() + ' สำเร็จแล้ว (สถานะปิดงานสมบูรณ์)', 'success');
+        showSyncToast('🎉 บันทึกสรุปค่าใช้จ่ายจริง 7 หมวด ยอดรวม ฿' + totalActual.toLocaleString() + ' สำเร็จแล้ว (สถานะ: COMPLETED)');
+        notifyDataUpdated('SAVE_EXPENSES');
+        renderAll();
+        onExpenseEventSelect(currentExpenseEventId);
+      }, 300);
 
       // 3. Post to Google Apps Script backend
       if (AppState.gasEndpoint) {
