@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-  <title>Training Center TWP - ระบบบริหารคำขอจัดอบรมและประเมินผล v1.15.1</title>
+  <title>Training Center TWP - ระบบบริหารคำขอจัดอบรมและประเมินผล v1.15.2</title>
   <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
   <!-- Google Fonts: Sarabun -->
@@ -217,7 +217,7 @@
       <div class="flex items-center space-x-3 text-xs">
         <span class="bg-white/15 px-3 py-1.5 rounded-full border border-white/20 backdrop-blur-sm font-mono text-blue-100 flex items-center">
           <span class="w-2 h-2 rounded-full bg-emerald-400 mr-2 animate-pulse"></span>
-          System v1.15.1
+          System v1.15.2
         </span>
       </div>
     </div>
@@ -298,7 +298,7 @@
     <!-- Bottom Footer on Landing Page -->
     <div class="max-w-7xl mx-auto w-full px-6 py-4 flex flex-col sm:flex-row items-center justify-between text-xs text-blue-200 border-t border-white/10 relative z-10 gap-2">
       <div>&copy; 2026 Training Center TWP - บริษัท ไทยวัฒนาพานิช จำกัด. All rights reserved.</div>
-      <div class="font-mono text-[11px] bg-white/10 px-3 py-1 rounded-full border border-white/15">EMS Enterprise Platform v1.15.1 (Live Apps Script Engine)</div>
+      <div class="font-mono text-[11px] bg-white/10 px-3 py-1 rounded-full border border-white/15">EMS Enterprise Platform v1.15.2 (Live Apps Script Engine)</div>
     </div>
 
   </div>
@@ -321,7 +321,7 @@
             <div>
               <div class="flex items-center space-x-2">
                 <span class="font-extrabold text-lg tracking-wide text-white">Training Center TWP</span>
-                <span class="bg-blue-400/20 text-blue-200 text-[10px] font-mono px-2 py-0.5 rounded-full border border-blue-300/30">v1.15.1</span>
+                <span class="bg-blue-400/20 text-blue-200 text-[10px] font-mono px-2 py-0.5 rounded-full border border-blue-300/30">v1.15.2</span>
               </div>
               <p class="text-[11px] text-blue-200 hidden sm:block">ระบบบริหารคำขอจัดอบรมและประเมินผลปิดลูป</p>
             </div>
@@ -861,6 +861,7 @@
               <div class="sm:col-span-10">
                 <select id="annualPlanSelect" onchange="onSelectAnnualPlan(this.value)" class="w-full bg-white border border-indigo-300 rounded-xl p-2.5 text-xs font-bold text-slate-800 focus:ring-2 focus:ring-indigo-500 focus:outline-none cursor-pointer">
                   <option value="">-- เลือกโครงการอนุมัติหลักการ เช่น ลำดับที่ 1 งานอบรมใหญ่ (หรือกรอกเองอิสระ) --</option>
+                  <option value="OUT_OF_PLAN" class="font-bold text-amber-700 bg-amber-50">⚡ ไม่อยู่ในโครงการอนุมัติหลักการประจำปี (ขอจัดเป็นกรณีพิเศษ / นอกแผน)</option>
                   <!-- Populated from AppState.annualPlans -->
                 </select>
               </div>
@@ -876,6 +877,23 @@
             <div id="annualPlanSelectedNotice" class="hidden p-2.5 bg-emerald-50 border border-emerald-200 rounded-xl text-emerald-900 text-xs font-medium flex items-center justify-between">
               <span id="annualPlanNoticeText">✓ ดึงข้อมูลโครงการอนุมัติหลักการเรียบร้อยแล้ว</span>
               <span class="text-[10px] text-slate-500">* สามารถปรับเปลี่ยนและแก้ไขรายละเอียดในแบบฟอร์มด้านล่างได้ตามจริง</span>
+            </div>
+
+            <!-- Out-of-Plan Justification Box (กรณีไม่อยู่ในโครงการอนุมัติหลักการประจำปี) -->
+            <div id="outOfPlanReasonBox" class="hidden p-3.5 bg-amber-50 border-2 border-amber-300 rounded-2xl space-y-2.5 shadow-xs">
+              <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-2 text-amber-900 font-bold text-xs">
+                  <i class="fa-solid fa-triangle-exclamation text-amber-600 text-sm"></i>
+                  <span>คำขอจัดอบรมนอกโครงการอนุมัติหลักการประจำปี (กรณีพิเศษ)</span>
+                </div>
+                <span class="text-[10px] bg-amber-200 text-amber-900 font-bold px-2 py-0.5 rounded-full border border-amber-300">
+                  จำเป็นต้องระบุเหตุผล
+                </span>
+              </div>
+              <p class="text-[11px] text-amber-800 leading-relaxed font-medium">
+                กรุณาระบุเหตุผลความจำเป็นที่โครงการนี้ไม่ได้ถูกบรรจุในโครงการอนุมัติหลักการประจำปีตั้งแต่แรก เพื่อให้ฝ่ายวิชาการ (ทีม B) และผู้บริหารใช้ประกอบการพิจารณาอนุมัติ
+              </p>
+              <textarea id="outOfPlanReason" rows="2" placeholder="เช่น เป็นคำขอเร่งด่วนจาก ผอ.เขตพื้นที่การศึกษา, โครงการพัฒนาครูตามนโยบายกระทรวงฯ เร่งด่วน, โรงเรียนได้รับจัดสรรงบประมาณพัฒนาครูเฉพาะกิจ ฯลฯ" class="w-full bg-white border border-amber-300 rounded-xl p-2.5 text-xs text-slate-800 placeholder-slate-400 focus:ring-2 focus:ring-amber-500 focus:outline-none"></textarea>
             </div>
           </div>
 
@@ -937,7 +955,7 @@
                 <span>หัวข้อหลักสูตรอบรม *</span>
                 <span class="text-[10px] text-blue-600 font-medium"><i class="fa-solid fa-pen-to-square mr-1"></i>เลือกหรือพิมพ์เอง</span>
               </label>
-              <input type="text" id="courseTopic" list="courseTopicList" required placeholder="เลือกจากรายการ หรือพิมพ์ใหม่..." class="w-full bg-white border border-slate-300 rounded-lg p-2.5 text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none">
+              <input type="text" id="courseTopic" list="courseTopicList" required oninput="checkCourseTopicAgainstPlan()" placeholder="เลือกจากรายการ หรือพิมพ์ใหม่..." class="w-full bg-white border border-slate-300 rounded-lg p-2.5 text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none">
               <datalist id="courseTopicList"></datalist>
             </div>
           </div>
@@ -3151,7 +3169,7 @@
     <!-- Footer -->
   <footer class="bg-white border-t border-slate-200 text-slate-500 text-xs py-4 px-6 mt-auto">
     <div class="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-2">
-      <div>Training Center TWP (EMS Enterprise v1.15.1) &copy; 2026 - บริษัท ไทยวัฒนาพานิช จำกัด</div>
+      <div>Training Center TWP (EMS Enterprise v1.15.2) &copy; 2026 - บริษัท ไทยวัฒนาพานิช จำกัด</div>
       <div class="flex items-center space-x-4">
         <button onclick="showLandingPage()" class="hover:text-blue-600 transition"><i class="fa-solid fa-house mr-1"></i>กลับหน้าแรก</button>
         <span>Google Apps Script + Google Sheets Architecture (PPC Standard)</span>
@@ -3698,7 +3716,7 @@
 
     // System Global State (Synchronously initialized with complete Master Data)
     const AppState = {
-      version: '1.15.1',
+      version: '1.15.2',
       clientId: 'DEV-' + Math.random().toString(36).substring(2, 7).toUpperCase(),
       activeTab: 'dashboard',
       activeDevices: {},
@@ -4301,6 +4319,10 @@
         lineBtnText.innerText = 'ส่งต่อเข้า LINE ฝ่ายวิชาการ (ทีม B)';
         emailBtnText.innerText = 'ส่งอีเมลแจ้งทีม B';
 
+        const outOfPlanNote = (req.isOutOfPlan === 'YES' || req.outOfPlanReason)
+          ? `⚡ ประเภท: นอกแผนหลักการ (กรณีพิเศษ)\n📝 เหตุผล: ${req.outOfPlanReason || '-'}\n`
+          : '';
+
         messageText = `🔔 [Training TWP] มีคำขอจัดอบรมใหม่รอตรวจสอบ!\n` +
           `━━━━━━━━━━━━━━━━━━━━\n` +
           `📌 รหัสคำขอ: ${req.eventId}\n` +
@@ -4308,6 +4330,7 @@
           `📚 หัวข้อ: ${req.courseTopic || req.customTopic || '-'}\n` +
           `📅 วันที่จัด: ${req.eventDate || '-'} | 👥 ผู้เข้าอบรม: ${req.expectedTrainees || 50} ท่าน\n` +
           `💰 งบประมาณขอ: ฿${Number(req.estBudget || 0).toLocaleString()} | 🎯 เป้าขาย: ฿${Number(req.targetSales || 0).toLocaleString()}\n` +
+          outOfPlanNote +
           `👤 ผู้เสนอ: ${req.saleName || req.createdBy || 'ทีม A'}\n` +
           `━━━━━━━━━━━━━━━━━━━━\n` +
           `👉 คลิกเพื่อเปิดตรวจวิชาการและวิทยากรทันที:\n${currentHandoffUrl}`;
@@ -4331,6 +4354,10 @@
         lineBtnText.innerText = 'ส่งข้อความขออนุมัติถึงผู้บริหารทาง LINE';
         emailBtnText.innerText = 'ส่งอีเมลขออนุมัติถึงผู้บริหาร';
 
+        const outOfPlanNote = (req.isOutOfPlan === 'YES' || req.outOfPlanReason)
+          ? `⚡ ประเภท: นอกแผนหลักการ (กรณีพิเศษ)\n📝 เหตุผล: ${req.outOfPlanReason || '-'}\n`
+          : '';
+
         messageText = `📑 [Training TWP] คำขอจัดอบรมผ่านการตรวจสอบ รอท่านอนุมัติ\n` +
           `━━━━━━━━━━━━━━━━━━━━\n` +
           `📌 รหัสคำขอ: ${req.eventId}\n` +
@@ -4339,6 +4366,7 @@
           `📅 วันที่จัด: ${req.eventDate || '-'}\n` +
           `👨‍🏫 วิทยากร: ${req.teamBSpeaker || '-'}\n` +
           `💰 งบขอ: ฿${Number(req.estBudget || 0).toLocaleString()} ➔ ตัดจ่ายจริง: ฿${Number(req.actualBudget || 0).toLocaleString()}\n` +
+          outOfPlanNote +
           `📋 ความเห็นวิชาการ: ${req.teamBNotes || '-'}\n` +
           `━━━━━━━━━━━━━━━━━━━━\n` +
           `👉 เรียนเชิญพิจารณาและลงนามอนุมัติอิเล็กทรอนิกส์:\n${currentHandoffUrl}`;
@@ -5193,7 +5221,7 @@
     }
 
     // ==========================================================================
-    // FY2569 STRATEGIC PROJECTS & SALES RECONCILIATION ENGINE (v1.15.1)
+    // FY2569 STRATEGIC PROJECTS & SALES RECONCILIATION ENGINE (v1.15.2)
     // ==========================================================================
 
     let fy2569SelectedMatchProjectId = null;
@@ -5661,7 +5689,7 @@
         '</style></head><body>' +
         '<div class="header">' +
         '<div><h2 style="margin:0; color:#08539E; font-size:16pt;">บริษัท ไทยวัฒนาพานิช จำกัด (TWP)</h2><div style="font-size:11pt; color:#475569;">รายงานสรุปการกระทบยอดงบประมาณจัดอบรมกับยอดขายจริง ประจำปี 2569</div></div>' +
-        '<div style="text-align:right; font-size:9pt; color:#64748b;">ออกโดยระบบ EMS Enterprise v1.15.1<br>วันที่พิมพ์: ' + new Date().toLocaleDateString('th-TH') + '</div>' +
+        '<div style="text-align:right; font-size:9pt; color:#64748b;">ออกโดยระบบ EMS Enterprise v1.15.2<br>วันที่พิมพ์: ' + new Date().toLocaleDateString('th-TH') + '</div>' +
         '</div>' +
         '<div style="display:flex; justify-content:space-between; background:#f8fafc; padding:8px 12px; border-radius:6px; margin-bottom:10px; font-size:10pt;">' +
         '<div>โครงการทั้งหมด: <strong>' + projects.length + ' โครงการ</strong></div>' +
@@ -6304,7 +6332,10 @@
 
         tr.innerHTML = `
           <td class="px-6 py-4">
-            <div class="font-bold text-slate-800 text-sm flex items-center">${req.eventId} ${getSampleBadgeHtml(req)}</div>
+            <div class="font-bold text-slate-800 text-sm flex items-center">
+              ${req.eventId} ${getSampleBadgeHtml(req)}
+              ${(req.isOutOfPlan === 'YES' || req.outOfPlanReason) ? '<span class="ml-1.5 px-1.5 py-0.5 rounded text-[10px] font-bold bg-amber-100 text-amber-900 border border-amber-300" title="โครงการนอกแผนหลักการ: ' + (req.outOfPlanReason || '') + '"><i class="fa-solid fa-bolt mr-0.5 text-amber-600"></i>นอกแผน</span>' : ''}
+            </div>
             <div class="text-xs text-blue-600 font-medium">${req.courseTopic}</div>
             <div class="mt-1 flex flex-wrap gap-1">${logisHtml}</div>
             <div class="text-[11px] text-slate-400 mt-0.5">วันจัดงาน: ${req.eventDate || '-'}</div>
@@ -6461,6 +6492,11 @@
                 <span class="font-black text-slate-900 text-lg font-mono flex items-center">${req.eventId} ${getSampleBadgeHtml(req)}</span>
                 <span class="text-xs bg-purple-100 text-purple-800 font-bold px-2.5 py-0.5 rounded-full border border-purple-200">${req.activityType}</span>
                 <span class="text-xs bg-slate-100 text-slate-600 px-2 py-0.5 rounded-md font-mono">วันที่จัด: ${req.eventDate || '-'}</span>
+                ${(req.isOutOfPlan === 'YES' || req.outOfPlanReason) ? `
+                  <span class="text-xs bg-amber-100 text-amber-900 font-bold px-2.5 py-0.5 rounded-full border border-amber-300 flex items-center">
+                    <i class="fa-solid fa-triangle-exclamation mr-1 text-amber-600"></i>นอกแผนหลักการ (กรณีพิเศษ)
+                  </span>
+                ` : ''}
               </div>
               <h3 class="font-bold text-slate-800 text-base mt-1">${req.courseTopic}</h3>
             </div>
@@ -6511,6 +6547,16 @@
               <span class="text-slate-400 block text-[11px] font-semibold">วัตถุประสงค์เชิงกลยุทธ์ของโครงการ:</span>
               <p class="text-slate-800 mt-1 leading-relaxed">${req.objective || 'ขยายผลการใช้งานสื่อการสอนและสร้างความสัมพันธ์กับสถาบันการศึกษาเป้าหมาย'}</p>
             </div>
+
+            ${(req.isOutOfPlan === 'YES' || req.outOfPlanReason) ? `
+              <div class="bg-amber-50 border border-amber-300 rounded-xl p-3 text-xs space-y-1">
+                <div class="font-bold text-amber-900 flex items-center">
+                  <i class="fa-solid fa-circle-exclamation text-amber-600 mr-1.5"></i>
+                  <span>เหตุผลความจำเป็นที่ไม่อยู่ในโครงการอนุมัติหลักการประจำปี (ขอจัดเป็นกรณีพิเศษ):</span>
+                </div>
+                <p class="text-amber-800 leading-relaxed font-medium pl-5">${req.outOfPlanReason || 'ขอจัดเป็นกรณีพิเศษตามความจำเป็นเร่งด่วน'}</p>
+              </div>
+            ` : ''}
 
             <!-- Financials & Logistics Metrics -->
             <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5 text-xs">
@@ -6616,6 +6662,11 @@
                 <span class="font-black text-slate-900 text-lg font-mono flex items-center">${req.eventId} ${getSampleBadgeHtml(req)}</span>
                 <span class="text-xs bg-amber-100 text-amber-900 font-bold px-2.5 py-0.5 rounded-full border border-amber-200">${req.activityType}</span>
                 <span class="text-xs bg-slate-100 text-slate-600 px-2 py-0.5 rounded-md font-mono">วันที่จัด: ${req.eventDate || '-'}</span>
+                ${(req.isOutOfPlan === 'YES' || req.outOfPlanReason) ? `
+                  <span class="text-xs bg-amber-100 text-amber-900 font-bold px-2.5 py-0.5 rounded-full border border-amber-300 flex items-center">
+                    <i class="fa-solid fa-triangle-exclamation mr-1 text-amber-600"></i>นอกแผนหลักการ (กรณีพิเศษ)
+                  </span>
+                ` : ''}
               </div>
               <h3 class="font-bold text-slate-800 text-base mt-1">${req.courseTopic}</h3>
             </div>
@@ -6662,6 +6713,12 @@
               <div class="text-[11px] text-slate-500 pt-1 border-t border-emerald-200/40">
                 งบประมาณที่ขอ: <strong>฿${estBudget.toLocaleString()}</strong>
               </div>
+              ${(req.isOutOfPlan === 'YES' || req.outOfPlanReason) ? `
+                <div class="bg-amber-100/70 border border-amber-300 rounded-xl p-2.5 text-xs text-amber-900 space-y-1">
+                  <span class="font-bold flex items-center"><i class="fa-solid fa-triangle-exclamation text-amber-600 mr-1"></i>เหตุผลนอกแผนหลักการ:</span>
+                  <p class="text-amber-800 leading-relaxed font-medium">${req.outOfPlanReason || 'ขอจัดเป็นกรณีพิเศษ'}</p>
+                </div>
+              ` : ''}
             </div>
 
             <!-- Right: Team B Academic Endorsement -->
@@ -6839,8 +6896,27 @@
       const saleNameInput = document.getElementById('saleInput')?.value?.trim() || document.getElementById('saleSelect')?.value || '';
       const expectedTraineesVal = Number(document.getElementById('expectedTrainees')?.value) || 50;
 
+      const annualPlanSelectVal = document.getElementById('annualPlanSelect')?.value || '';
+      const outOfPlanReasonVal = document.getElementById('outOfPlanReason')?.value?.trim() || '';
+      const isMatchedPlan = (AppState.annualPlans || []).some(p => p.planId === annualPlanSelectVal || (p.title && p.title.trim().toLowerCase() === courseTopicVal.trim().toLowerCase()));
+      const isOutOfPlan = (annualPlanSelectVal === 'OUT_OF_PLAN' || !isMatchedPlan) ? 'YES' : 'NO';
+
+      if (isOutOfPlan === 'YES' && !outOfPlanReasonVal) {
+        showAlert('โครงการนี้ไม่อยู่ในโครงการอนุมัติหลักการประจำปี กรุณาระบุเหตุผลความจำเป็นในช่องที่กำหนด เพื่อเสนอผู้บริหารพิจารณา', 'error');
+        const box = document.getElementById('outOfPlanReasonBox');
+        if (box) box.classList.remove('hidden');
+        const select = document.getElementById('annualPlanSelect');
+        if (select) select.value = 'OUT_OF_PLAN';
+        const reasonInput = document.getElementById('outOfPlanReason');
+        if (reasonInput) reasonInput.focus();
+        return;
+      }
+
       const matchedSchool = AppState.masterData.schools.find(sc => cleanForComparison(sc.schoolName) === cleanForComparison(schoolNameInput));
       const payload = {
+        annualPlanId: isMatchedPlan && annualPlanSelectVal !== 'OUT_OF_PLAN' ? annualPlanSelectVal : 'OUT_OF_PLAN',
+        isOutOfPlan: isOutOfPlan,
+        outOfPlanReason: isOutOfPlan === 'YES' ? outOfPlanReasonVal : '',
         activityType: document.getElementById('activityType').value,
         courseTopic: courseTopicVal,
         customTopic: courseTopicVal === 'อื่นๆ' ? customTopicVal : '',
@@ -6892,6 +6968,15 @@
             document.getElementById('needTransportation').checked = false;
             toggleTransportFields(false);
             if (document.getElementById('resourceLink')) document.getElementById('resourceLink').value = '';
+            if (document.getElementById('annualPlanSelect')) document.getElementById('annualPlanSelect').value = '';
+            if (document.getElementById('outOfPlanReason')) document.getElementById('outOfPlanReason').value = '';
+            if (document.getElementById('outOfPlanReasonBox')) document.getElementById('outOfPlanReasonBox').classList.add('hidden');
+            if (document.getElementById('annualPlanSelectedNotice')) document.getElementById('annualPlanSelectedNotice').classList.add('hidden');
+            if (document.getElementById('resourceLink')) document.getElementById('resourceLink').value = '';
+            if (document.getElementById('annualPlanSelect')) document.getElementById('annualPlanSelect').value = '';
+            if (document.getElementById('outOfPlanReason')) document.getElementById('outOfPlanReason').value = '';
+            if (document.getElementById('outOfPlanReasonBox')) document.getElementById('outOfPlanReasonBox').classList.add('hidden');
+            if (document.getElementById('annualPlanSelectedNotice')) document.getElementById('annualPlanSelectedNotice').classList.add('hidden');
             const createdId = res.data?.eventId || ('EVT-' + Date.now());
             const newReqObj = {
               eventId: createdId,
@@ -7557,6 +7642,9 @@
         transDetails: req.transportDetails || '',
         isDemoCase: req.isDemoCase || req.eventId === 'EVT-DEMO-2026',
         resourceLink: req.resourceLink || '',
+        isOutOfPlan: req.isOutOfPlan || (req.outOfPlanReason ? 'YES' : 'NO'),
+        outOfPlanReason: req.outOfPlanReason || '',
+        annualPlanId: req.annualPlanId || '',
         actualExpenses: req.actualExpenses || {
           expSpeaker: Math.round(actualBudget * 0.40),
           expTravel: Math.round(actualBudget * 0.12),
@@ -7895,7 +7983,7 @@
           <div style="border-top:1px dashed #cbd5e1; margin-top:10px; padding-top:4px; display:flex; justify-content:space-between; align-items:center; font-size:8.5pt; color:#64748b;">
             <div>
               <i class="fa-solid fa-file-contract mr-1 text-[#08539E]"></i>
-              รายงานประเมินและวิเคราะห์ต้นทุนการจัดอบรม A4 • ออกโดย TWP Training Enterprise Platform (v1.15.1)
+              รายงานประเมินและวิเคราะห์ต้นทุนการจัดอบรม A4 • ออกโดย TWP Training Enterprise Platform (v1.15.2)
             </div>
             <div>
               หน้า 1/1 • ${d.eventId}
@@ -7989,6 +8077,13 @@
               ตามที่ฝ่ายขาย (ทีม A) โดย <strong>${d.saleName}</strong> (${d.saleCompany}) ได้ประสานงานร่วมกับ <strong>${d.schoolName}</strong> จังหวัด${d.province} และมีความประสงค์ขออนุมัติจัดกิจกรรมอบรมวิชาการ ประเภทกิจกรรม "${d.activityType}" ในหัวข้อเรื่อง "<strong>${d.courseTopic}</strong>" โดยมีกลุ่มเป้าหมายผู้เข้าร่วมอบรมเป็นผู้บริหารสถานศึกษา คณะครู และบุคลากรทางการศึกษาจำนวนทั้งสิ้น <strong>${(d.expectedTrainees || 50).toLocaleString()} คน</strong> ทั้งนี้ มีวัตถุประสงค์หลักเพื่อ${d.objective} และได้กำหนดเป้าหมายยอดขายสื่อการเรียนรู้สืบเนื่องจากการจัดโครงการครั้งนี้เป็นจำนวนเงิน <strong>฿${Number(d.targetSales).toLocaleString()} บาท</strong>
             </div>
 
+            ${(d.isOutOfPlan === 'YES' || d.outOfPlanReason) ? `
+              <div style="background:#fffbeb; border:1px solid #fde68a; border-left:4px solid #d97706; padding:6px 12px; margin-bottom:10px; border-radius:4px; font-size:11pt; color:#92400e; line-height:1.4;">
+                <strong>⚡ หมายเหตุการขอจัดเป็นกรณีพิเศษ (นอกแผนโครงการอนุมัติหลักการประจำปี):</strong>
+                <span>${d.outOfPlanReason || 'โครงการนี้เป็นการขอจัดกิจกรรมเป็นกรณีพิเศษนอกเหนือจากโครงการอนุมัติหลักการประจำปี โดยมีความจำเป็นเร่งด่วนเพื่อประโยชน์สูงสุดในการประสานงานและการจำหน่ายสื่อการเรียนรู้'}</span>
+              </div>
+            ` : ''}
+
             <!-- Paragraph 2: Academic Screening & Logistics Plan (Team B) -->
             <div class="a4-memo-section-title" style="font-weight:700; color:#6b21a8;">
               2. แผนการจัดกิจกรรมเชิงวิชาการและโลจิสติกส์ (การกลั่นกรองจากฝ่ายวิชาการ - ทีม B)
@@ -8067,7 +8162,7 @@
           <div style="border-top:1px dashed #cbd5e1; margin-top:14px; padding-top:6px; display:flex; justify-content:space-between; align-items:center; font-size:8.5pt; color:#64748b;">
             <div>
               <i class="fa-solid fa-shield-halved" style="color:#08539E; margin-right:4px;"></i>
-              เอกสารอิเล็กทรอนิกส์มาตรฐาน A4 ออกโดย TWP Training Enterprise Management System (EMS v1.15.1)
+              เอกสารอิเล็กทรอนิกส์มาตรฐาน A4 ออกโดย TWP Training Enterprise Management System (EMS v1.15.2)
             </div>
             <div>
               รหัสอ้างอิง: <span style="font-family:monospace; font-weight:700; color:#0f172a;">${d.eventId}</span> | หน้า 1/1
@@ -8240,7 +8335,7 @@
           </table>
 
           <div style="margin-top:14px; padding-top:4px; border-top:1px solid #e2e8f0; font-size:8.5pt; color:#94a3b8; text-align:center;">
-            เอกสารฉบับนี้สร้างโดยระบบ Training Center TWP (EMS Enterprise Platform v1.15.1) • ใช้สำหรับติดตามและควบคุมผลการปฏิบัติงานภายใน (PPC Standard)
+            เอกสารฉบับนี้สร้างโดยระบบ Training Center TWP (EMS Enterprise Platform v1.15.2) • ใช้สำหรับติดตามและควบคุมผลการปฏิบัติงานภายใน (PPC Standard)
           </div>
         </div>
       `;
@@ -9070,6 +9165,7 @@
       const currentVal = select.value;
 
       select.innerHTML = '<option value="">-- เลือกโครงการอนุมัติหลักการ เช่น ลำดับที่ 1 งานอบรมใหญ่ (หรือกรอกเองอิสระ) --</option>' +
+        '<option value="OUT_OF_PLAN" class="font-bold text-amber-700 bg-amber-50">⚡ ไม่อยู่ในโครงการอนุมัติหลักการประจำปี (ขอจัดเป็นกรณีพิเศษ / นอกแผน)</option>' +
         plans.map(p => {
           return `<option value="${p.planId}">ลำดับที่ ${p.seqNo}: ${p.title} (งบหลักการ ฿${Number(p.principleBudget).toLocaleString()} / เป้าขาย ฿${Number(p.targetSales).toLocaleString()})</option>`;
         }).join('');
@@ -9077,43 +9173,67 @@
       if (currentVal) select.value = currentVal;
     }
 
+    function checkCourseTopicAgainstPlan() {
+      const topicInput = document.getElementById('courseTopic');
+      const select = document.getElementById('annualPlanSelect');
+      const outOfPlanBox = document.getElementById('outOfPlanReasonBox');
+      const noticeBox = document.getElementById('annualPlanSelectedNotice');
+      if (!topicInput || !select) return;
+      const val = topicInput.value.trim();
+      if (!val) return;
+
+      const matchingPlan = (AppState.annualPlans || []).find(p => p.title.trim().toLowerCase() === val.toLowerCase());
+      if (matchingPlan) {
+        select.value = matchingPlan.planId;
+        if (outOfPlanBox) outOfPlanBox.classList.add('hidden');
+        if (noticeBox) {
+          const noticeText = document.getElementById('annualPlanNoticeText');
+          if (noticeText) noticeText.innerHTML = `<i class="fa-solid fa-circle-check text-emerald-600 mr-1.5"></i>ดึงข้อมูลจาก: <strong>ลำดับที่ ${matchingPlan.seqNo} ${matchingPlan.title}</strong> (อนุมัติหลักการโดย ${matchingPlan.approverName || 'ผศ.อินทิรา บุนนาค'} กรรมการผู้จัดการ)`;
+          noticeBox.classList.remove('hidden');
+        }
+      } else {
+        if (!select.value || select.value.startsWith('PLAN-')) {
+          select.value = 'OUT_OF_PLAN';
+          if (outOfPlanBox) outOfPlanBox.classList.remove('hidden');
+          if (noticeBox) noticeBox.classList.add('hidden');
+        }
+      }
+    }
+
     function onSelectAnnualPlan(planId) {
       const noticeBox = document.getElementById('annualPlanSelectedNotice');
       const noticeText = document.getElementById('annualPlanNoticeText');
+      const outOfPlanBox = document.getElementById('outOfPlanReasonBox');
+      const outOfPlanInput = document.getElementById('outOfPlanReason');
 
       if (!planId) {
         if (noticeBox) noticeBox.classList.add('hidden');
+        if (outOfPlanBox) outOfPlanBox.classList.add('hidden');
         return;
       }
+
+      if (planId === 'OUT_OF_PLAN') {
+        if (noticeBox) noticeBox.classList.add('hidden');
+        if (outOfPlanBox) {
+          outOfPlanBox.classList.remove('hidden');
+          if (outOfPlanInput) outOfPlanInput.focus();
+        }
+        showAlert('คุณเลือกขอจัดอบรมนอกแผนอนุมัติหลักการประจำปี กรุณากรอกเหตุผลความจำเป็นในช่องด้านล่าง', 'info');
+        return;
+      }
+
+      if (outOfPlanBox) outOfPlanBox.classList.add('hidden');
 
       const plan = (AppState.annualPlans || []).find(p => p.planId === planId);
       if (!plan) return;
 
       // Auto-fill Team A Form
-      const customTopicInput = document.getElementById('customTopicInput');
-      const topicSelect = document.getElementById('topicSelect');
+      const courseTopicInput = document.getElementById('courseTopic');
       const budgetInput = document.getElementById('estBudget');
       const targetSalesInput = document.getElementById('targetSales');
 
-      if (topicSelect) {
-        // Look for matching topic or set to custom
-        let matched = false;
-        for (let i = 0; i < topicSelect.options.length; i++) {
-          if (topicSelect.options[i].value === plan.title) {
-            topicSelect.selectedIndex = i;
-            matched = true;
-            break;
-          }
-        }
-        if (!matched) {
-          topicSelect.value = 'อื่นๆ';
-          if (customTopicInput) {
-            customTopicInput.classList.remove('hidden');
-            customTopicInput.value = plan.title;
-          }
-        } else {
-          if (customTopicInput) customTopicInput.classList.add('hidden');
-        }
+      if (courseTopicInput) {
+        courseTopicInput.value = plan.title;
       }
 
       if (budgetInput) budgetInput.value = plan.principleBudget || '';

@@ -8,7 +8,7 @@
  * ============================================================================
  */
 
-const SYSTEM_VERSION = '1.9.0';
+const SYSTEM_VERSION = '1.15.2';
 const DEFAULT_ADMIN_PASS = 'admin0000';
 
 function getSpreadsheet() {
@@ -216,6 +216,9 @@ function getInitialData() {
       needTransportation: r[29] || 'NO',
       transportDetails: r[30] || '',
       docxUrl: r[31] || '',
+      isOutOfPlan: r[32] || 'NO',
+      outOfPlanReason: r[33] || '',
+      annualPlanId: r[34] || '',
       rowIndex: i + 1
     });
   }
@@ -328,12 +331,16 @@ function createRequestTeamA(payload) {
     payload.needAccommodation ? 'YES' : 'NO',
     Number(payload.roomCount) || 0,
     payload.needTransportation ? 'YES' : 'NO',
-    payload.transportDetails || ''
+    payload.transportDetails || '',
+    '', // A4_Docx_Url (col 31)
+    payload.isOutOfPlan || 'NO', // Is_Out_Of_Plan (col 32)
+    payload.outOfPlanReason || '', // Out_Of_Plan_Reason (col 33)
+    payload.annualPlanId || '' // Annual_Plan_ID (col 34)
   ];
 
   sheet.appendRow(rowData);
 
-  sendWorkflowEmailNotification('TEAM_A_CREATED', { eventId: eventId, schoolName: payload.schoolName, province: payload.province, courseTopic: payload.courseTopic || payload.customTopic, eventDate: payload.eventDate, estBudget: payload.estBudget, targetSales: payload.targetSales, saleName: payload.saleName || operator });
+  sendWorkflowEmailNotification('TEAM_A_CREATED', { eventId: eventId, schoolName: payload.schoolName, province: payload.province, courseTopic: payload.courseTopic || payload.customTopic, eventDate: payload.eventDate, estBudget: payload.estBudget, targetSales: payload.targetSales, saleName: payload.saleName || operator, isOutOfPlan: payload.isOutOfPlan || 'NO', outOfPlanReason: payload.outOfPlanReason || '' });
 
   logSystemAction(eventId, 'TEAM_A_CREATE', operator, {
     estBudget: payload.estBudget,
@@ -790,7 +797,7 @@ function ensureRequiredSheets(ss) {
         'Venue_Type', 'Objective', 'Target_Sales', 'Est_Budget', 'TeamB_Speaker', 'TeamB_Notes',
         'Actual_Budget', 'Created_By', 'Reviewed_By', 'Approved_By', 'Last_Modified_By',
         'Submitted_To_B_At', 'Reviewed_By_B_At', 'Approved_At', 'A4_PDF_Url',
-        'Need_Accommodation', 'Room_Count', 'Need_Transportation', 'Transport_Details', 'A4_Docx_Url'
+        'Need_Accommodation', 'Room_Count', 'Need_Transportation', 'Transport_Details', 'A4_Docx_Url', 'Is_Out_Of_Plan', 'Out_Of_Plan_Reason', 'Annual_Plan_ID'
       ]
     },
     {
