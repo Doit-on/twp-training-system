@@ -689,6 +689,38 @@
             }
           } catch(e) {}
         }
+
+        // 3. Fallback to Cloud GAS Database (for mobile phones scanning QR without local cache)
+        const targetEndpoint = gasEndpoint || DEFAULT_GAS_ENDPOINT;
+        fetch(targetEndpoint, {
+          method: 'POST',
+          headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+          body: JSON.stringify({ action: 'GET_INITIAL_DATA' })
+        })
+        .then(r => r.json())
+        .then(res => {
+          if (res && res.data && res.data.requests) {
+            const found = res.data.requests.find(r => r.eventId === surveyToken || r.token === surveyToken || (surveyToken && r.eventId && surveyToken.includes(r.eventId)));
+            if (found) {
+              currentParticipant.courseTitle = found.courseTopic || currentParticipant.courseTitle;
+              currentParticipant.speakerName = found.teamBSpeaker || found.speakerType || currentParticipant.speakerName;
+              currentParticipant.school = found.schoolName || currentParticipant.school;
+              currentParticipant.resourceLink = found.resourceLink || currentParticipant.resourceLink;
+              if (found.eventDate) {
+                const d = new Date(found.eventDate);
+                currentParticipant.eventDate = d.toLocaleDateString('th-TH', { year: 'numeric', month: 'long', day: 'numeric' });
+                currentParticipant.eventDateEn = d.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+              }
+              const dt = document.getElementById('dispCourseTitle'); if (dt) dt.innerText = currentParticipant.courseTitle;
+              const ds = document.getElementById('dispSpeakerName'); if (ds) ds.innerText = currentParticipant.speakerName;
+              const dsc = document.getElementById('dispSchoolName'); if (dsc) dsc.innerText = currentParticipant.school || 'สถานศึกษาผู้เข้าร่วมอบรม';
+              const dd = document.getElementById('dispEventDate'); if (dd) dd.innerText = currentParticipant.eventDate;
+              const ps = document.getElementById('participantSchool'); if (ps && currentParticipant.school) ps.value = currentParticipant.school;
+              updateCertLivePreview();
+            }
+          }
+        })
+        .catch(e => console.log('Offline survey mode'));
       }
 
       // Populate Display Elements

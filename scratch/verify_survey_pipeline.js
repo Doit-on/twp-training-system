@@ -60,14 +60,12 @@ requiredSurveyFunctions.forEach(fn => {
 const hasConfusingToolbar = surveyHtml.includes('ผู้ลงนามรับรองวุฒิบัตร (ปรับเปลี่ยนแก้ไขได้)');
 console.log(`[SURVEY SECURITY] Confusing signatory editor removed: ${!hasConfusingToolbar ? '✅ REMOVED' : '❌ STILL PRESENT'}`);
 
-// 4. Verify index.html QR generator passes metadata
+// 4. Verify index.html QR generator passes clean scannable URL
 const hasReqParam = indexHtml.includes('getSurveyFullUrl(token, req)');
-const hasTopicParam = indexHtml.includes('&topic=');
-const hasSchoolParam = indexHtml.includes('&school=');
-const hasSpeakerParam = indexHtml.includes('&speaker=');
-console.log(`[INDEX QR URL] getSurveyFullUrl supports metadata: ${hasReqParam && hasTopicParam && hasSchoolParam ? '✅ OK' : '❌ MISSING'}`);
+const hasPublicFallback = indexHtml.includes('https://doit-on.github.io/twp-training-system/survey.html');
+console.log(`[INDEX QR URL] getSurveyFullUrl generates public scannable URL: ${hasReqParam && hasPublicFallback ? '✅ OK' : '❌ MISSING'}`);
 
-if (!allSurveyElementsOk || !allSurveyFuncsOk || hasConfusingToolbar || !hasTopicParam) {
+if (!allSurveyElementsOk || !allSurveyFuncsOk || hasConfusingToolbar || !hasPublicFallback) {
   console.error('\nFAILED: Verification checks failed.');
   process.exit(1);
 }

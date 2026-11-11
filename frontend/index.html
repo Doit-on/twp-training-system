@@ -8327,31 +8327,25 @@
       if (!req && window.AppState && AppState.requests) {
         req = AppState.requests.find(r => r.token === token || r.eventId === token);
       }
-      let path = window.location.pathname || '/';
-      if (path.endsWith('/')) {
-        path = path + 'survey.html';
-      } else if (path.endsWith('index.html')) {
-        path = path.slice(0, -10) + 'survey.html';
-      } else if (!path.endsWith('survey.html')) {
-        const lastSlash = path.lastIndexOf('/');
-        path = path.substring(0, lastSlash + 1) + 'survey.html';
+      
+      // Crucial Fix: If running locally on PC (file:/// or localhost), use public production domain so smartphone can access!
+      let baseUrl = 'https://doit-on.github.io/twp-training-system/survey.html';
+      if (window.location.origin && window.location.origin.startsWith('http') && !window.location.origin.includes('localhost') && !window.location.origin.includes('127.0.0.1')) {
+        let path = window.location.pathname || '/';
+        if (path.endsWith('/')) {
+          path = path + 'survey.html';
+        } else if (path.endsWith('index.html')) {
+          path = path.slice(0, -10) + 'survey.html';
+        } else if (!path.endsWith('survey.html')) {
+          const lastSlash = path.lastIndexOf('/');
+          path = path.substring(0, lastSlash + 1) + 'survey.html';
+        }
+        baseUrl = window.location.origin + path;
       }
-      const baseUrl = window.location.origin + path;
-      const activeEp = (window.AppState && AppState.gasEndpoint) || DEFAULT_GAS_ENDPOINT;
-      let url = baseUrl + '?t=' + encodeURIComponent(token);
-      if (req) {
-        if (req.eventId) url += '&evt=' + encodeURIComponent(req.eventId);
-        if (req.courseTopic) url += '&topic=' + encodeURIComponent(req.courseTopic);
-        if (req.schoolName) url += '&school=' + encodeURIComponent(req.schoolName);
-        const spk = req.teamBSpeaker || req.speakerType || '';
-        if (spk) url += '&speaker=' + encodeURIComponent(spk);
-        if (req.eventDate) url += '&date=' + encodeURIComponent(req.eventDate);
-        if (req.resourceLink) url += '&drive=' + encodeURIComponent(req.resourceLink);
-      }
-      if (activeEp) {
-        url += '&ep=' + encodeURIComponent(activeEp);
-      }
-      return url;
+      
+      // Keep QR URL ultra-compact (only token/eventId) to ensure massive, sharp, instant QR scanning!
+      const effToken = token || (req && (req.token || req.eventId)) || 'demo-active-learning-2026';
+      return baseUrl + '?t=' + encodeURIComponent(effToken);
     }
 
     function switchQrModalMode(mode) {
