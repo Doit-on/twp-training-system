@@ -125,7 +125,7 @@
       <!-- Search Input Box -->
       <div class="relative">
         <i class="fa-solid fa-search absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-sm"></i>
-        <input type="text" id="attendeeSearchInput" oninput="handleAttendeeSearch(this.value)" placeholder="พิมพ์ชื่อ-นามสกุล เช่น ศศิวิมล, Sasiwimon, โคราช..." class="w-full pl-10 pr-10 py-3 text-sm bg-slate-50 border border-slate-200 focus:bg-white focus:border-blue-500 rounded-2xl focus:outline-none focus:ring-2 focus:ring-blue-100 transition font-medium">
+        <input type="text" id="attendeeSearchInput" oninput="handleAttendeeSearch(this.value)" onkeyup="handleAttendeeSearch(this.value)" onchange="handleAttendeeSearch(this.value)" placeholder="พิมพ์ค้นหา: ชื่อ, นามสกุล, โรงเรียน, หรือเบอร์โทร..." class="w-full pl-10 pr-10 py-3 text-sm bg-slate-50 border border-slate-200 focus:bg-white focus:border-blue-500 rounded-2xl focus:outline-none focus:ring-2 focus:ring-blue-100 transition font-medium">
         <button type="button" onclick="clearSearchInput()" id="btnClearSearch" class="hidden absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 p-1">
           <i class="fa-solid fa-circle-xmark text-sm"></i>
         </button>
@@ -512,38 +512,39 @@
     function matchAttendeeSearch(att, query) {
       if (!query) return true;
       const rawQ = String(query).trim().toLowerCase();
+      if (!rawQ) return true;
+
       const cleanQ = stripTitlePrefix(rawQ);
       const rawQNoSpace = rawQ.replace(/\s+/g, '');
-      const cleanQNoSpace = cleanQ.replace(/\s+/g, '');
+      const cleanQNoSpace = cleanQ ? cleanQ.replace(/\s+/g, '') : '';
 
       const fields = [
-        att.nameTh || '',
-        att.nameEn || '',
-        att.school || att.schoolName || '',
-        att.email || ''
+        String(att.nameTh || ''),
+        String(att.nameEn || ''),
+        String(att.school || att.schoolName || ''),
+        String(att.email || '')
       ];
 
-      for (const f of fields) {
-        if (!f) continue;
-        const rawF = String(f).trim().toLowerCase();
-        const cleanF = stripTitlePrefix(rawF);
-        const rawFNoSpace = rawF.replace(/\s+/g, '');
+      for (const rawF of fields) {
+        if (!rawF) continue;
+        const lowerF = rawF.toLowerCase();
+        const cleanF = stripTitlePrefix(lowerF);
+        const rawFNoSpace = lowerF.replace(/\s+/g, '');
         const cleanFNoSpace = cleanF.replace(/\s+/g, '');
 
-        // 1. Direct contains
-        if (rawF.includes(rawQ)) return true;
-        // 2. Direct contains without spaces
+        // 1. Direct contains (name, school, email)
+        if (lowerF.includes(rawQ)) return true;
         if (rawQNoSpace && rawFNoSpace.includes(rawQNoSpace)) return true;
-        // 3. Clean contains (prefix stripped)
+
+        // 2. Prefix-stripped contains (นาย, นาง, นางสาว, คุณ, Mr., etc.)
         if (cleanQ && cleanF.includes(cleanQ)) return true;
         if (cleanQNoSpace && cleanFNoSpace.includes(cleanQNoSpace)) return true;
-        // 4. Reverse clean (in case DB has prefix but search didn't, or vice-versa)
-        if (cleanQ && rawF.includes(cleanQ)) return true;
+        if (cleanQ && lowerF.includes(cleanQ)) return true;
         if (cleanQNoSpace && rawFNoSpace.includes(cleanQNoSpace)) return true;
       }
 
-      // Phone number match (digits only, match partial or last 4 digits)
-      const phoneDigits = (att.phone || '').replace(/[^0-9]/g, '');
+      // Phone number match (safely convert to String, supports partial 3-4 digits or full)
+      const phoneDigits = String(att.phone || '').replace(/[^0-9]/g, '');
       const qDigits = rawQ.replace(/[^0-9]/g, '');
       if (qDigits.length >= 3 && phoneDigits && (phoneDigits.includes(qDigits) || phoneDigits.endsWith(qDigits))) {
         return true;
@@ -644,11 +645,11 @@
                   </span>
                   <div class="text-[10px] text-slate-400 mt-0.5">${att.checkinTime || ''}</div>
                 </div>
-                <!-- Undo / Cancel Check-in Button -->
+                <!-- Undo / Cancel Check-in Button (Prominent & Easy to Tap) -->
                 <div>
-                  <button type="button" onclick="promptCancelCheckin('${att.regId}')" class="text-[10px] text-rose-600 hover:text-rose-800 underline font-semibold flex items-center justify-end gap-1 ml-auto cursor-pointer" title="ยกเลิกเช็กชื่อกรณีเลือกผิด">
-                    <i class="fa-solid fa-rotate-left"></i>
-                    <span>เลือกชื่อผิด? ยกเลิก</span>
+                  <button type="button" onclick="promptCancelCheckin('${att.regId}')" class="px-2.5 py-1 bg-white hover:bg-rose-50 active:bg-rose-100 text-rose-700 hover:text-rose-800 border border-rose-300 rounded-lg text-[11px] font-bold transition flex items-center justify-center gap-1 shadow-2xs ml-auto cursor-pointer mt-1" title="ยกเลิกการเช็กชื่อของท่านนี้">
+                    <i class="fa-solid fa-rotate-left text-rose-600 text-xs"></i>
+                    <span>ยกเลิกเช็กชื่อ</span>
                   </button>
                 </div>
               ` : `
@@ -742,6 +743,17 @@
     }
 
     // Cancel / Undo Checkin Flow
+    
+    let lastCheckedInAttendee = null;
+
+    function undoCurrentActiveCheckin() {
+      if (!lastCheckedInAttendee) {
+        showAlert('ไม่พบข้อมูลการเช็กชื่อล่าสุด', 'warning');
+        return;
+      }
+      promptCancelCheckin(lastCheckedInAttendee.regId);
+    }
+  
     function promptCancelCheckin(regId) {
       const att = attendees.find(a => a.regId === regId);
       if (!att) return;
@@ -787,6 +799,7 @@
     }
 
     function showCheckinSuccessPass(att) {
+      lastCheckedInAttendee = att;
       document.getElementById('successAttendeeNameTh').innerText = att.nameTh;
       document.getElementById('successAttendeeNameEn').innerText = att.nameEn || '';
       document.getElementById('successAttendeeSchool').innerText = att.school || currentEvent.schoolName;

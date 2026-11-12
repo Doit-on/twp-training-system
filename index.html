@@ -12553,33 +12553,35 @@ function renderA4EvalReportHtmlClient(d) {
     function matchAttendeeSearch(att, query) {
       if (!query) return true;
       const rawQ = String(query).trim().toLowerCase();
+      if (!rawQ) return true;
+
       const cleanQ = stripTitlePrefix(rawQ);
       const rawQNoSpace = rawQ.replace(/\s+/g, '');
-      const cleanQNoSpace = cleanQ.replace(/\s+/g, '');
+      const cleanQNoSpace = cleanQ ? cleanQ.replace(/\s+/g, '') : '';
 
       const fields = [
-        att.nameTh || '',
-        att.nameEn || '',
-        att.school || att.schoolName || '',
-        att.email || ''
+        String(att.nameTh || ''),
+        String(att.nameEn || ''),
+        String(att.school || att.schoolName || ''),
+        String(att.email || '')
       ];
 
-      for (const f of fields) {
-        if (!f) continue;
-        const rawF = String(f).trim().toLowerCase();
-        const cleanF = stripTitlePrefix(rawF);
-        const rawFNoSpace = rawF.replace(/\s+/g, '');
+      for (const rawF of fields) {
+        if (!rawF) continue;
+        const lowerF = rawF.toLowerCase();
+        const cleanF = stripTitlePrefix(lowerF);
+        const rawFNoSpace = lowerF.replace(/\s+/g, '');
         const cleanFNoSpace = cleanF.replace(/\s+/g, '');
 
-        if (rawF.includes(rawQ)) return true;
+        if (lowerF.includes(rawQ)) return true;
         if (rawQNoSpace && rawFNoSpace.includes(rawQNoSpace)) return true;
         if (cleanQ && cleanF.includes(cleanQ)) return true;
         if (cleanQNoSpace && cleanFNoSpace.includes(cleanQNoSpace)) return true;
-        if (cleanQ && rawF.includes(cleanQ)) return true;
+        if (cleanQ && lowerF.includes(cleanQ)) return true;
         if (cleanQNoSpace && rawFNoSpace.includes(cleanQNoSpace)) return true;
       }
 
-      const phoneDigits = (att.phone || '').replace(/[^0-9]/g, '');
+      const phoneDigits = String(att.phone || '').replace(/[^0-9]/g, '');
       const qDigits = rawQ.replace(/[^0-9]/g, '');
       if (qDigits.length >= 3 && phoneDigits && (phoneDigits.includes(qDigits) || phoneDigits.endsWith(qDigits))) {
         return true;
