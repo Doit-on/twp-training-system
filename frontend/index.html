@@ -720,6 +720,12 @@
             <span class="hidden sm:inline">ติดตาม & กระทบยอดขายปี 2569</span>
             <span class="sm:hidden">กระทบยอดขาย</span>
           </button>
+
+          <!-- Onsite Registration Quick Access Button in Top Filter Bar -->
+          <button type="button" onclick="switchTab('registration')" class="px-3.5 py-1.5 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-white rounded-xl text-xs font-bold transition flex items-center space-x-1.5 shadow-sm btn-tactile cursor-pointer border border-amber-300/40" title="เข้าสู่ระบบลงทะเบียนหน้างาน & พิมพ์ป้ายตั้งโต๊ะ A4">
+            <i class="fa-solid fa-id-card-clip text-yellow-200"></i>
+            <span>ระบบลงทะเบียนหน้างาน</span>
+          </button>
         </div>
       </div>
 
@@ -1834,10 +1840,14 @@
               <p class="text-[10px] text-slate-400 mt-1">รองรับไฟล์ .xlsx, .xls, .csv (หัวตาราง: Name_TH, Name_EN, School, Email, Phone)</p>
             </div>
             <input type="file" id="regExcelFileInput" accept=".xlsx, .xls, .csv" onchange="handleAttendeeExcelImport(event)" class="hidden">
-            <div class="pt-1">
+            <div class="pt-1 flex items-center justify-center sm:justify-start gap-2 flex-wrap">
               <button type="button" onclick="document.getElementById('regExcelFileInput').click()" class="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 text-white rounded-xl text-xs font-bold shadow-xs transition inline-flex items-center gap-1.5 cursor-pointer">
                 <i class="fa-solid fa-folder-open"></i>
                 <span>เลือกไฟล์จากเครื่อง...</span>
+              </button>
+              <button type="button" id="btnDirectCancelExcel" onclick="cancelAttendeeExcelImport()" class="px-3.5 py-2 bg-rose-50 hover:bg-rose-100 active:bg-rose-200 text-rose-700 border border-rose-300 rounded-xl text-xs font-bold transition inline-flex items-center gap-1.5 cursor-pointer shadow-2xs" title="ยกเลิกไฟล์นี้และล้างรายชื่อที่นำเข้า">
+                <i class="fa-solid fa-trash-can text-rose-600"></i>
+                <span>✕ ยกเลิกไฟล์ / ล้างรายชื่อ</span>
               </button>
             </div>
           </div>
@@ -1914,10 +1924,16 @@
             <button type="button" onclick="filterRegAttendees('WALKIN')" id="regFilter-WALKIN" class="px-3 py-1.5 rounded-xl font-semibold bg-slate-100 text-slate-600 hover:bg-slate-200">Walk-in (<span id="countPillWalkin">0</span>)</button>
           </div>
 
-          <!-- Search Input -->
-          <div class="relative w-full md:w-72">
-            <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i>
-            <input type="text" id="regTableSearchInput" oninput="filterAttendeeTable()" placeholder="ค้นหา: ชื่อ, โรงเรียน, เบอร์โทร..." class="w-full pl-8 pr-3 py-1.5 bg-slate-50 border border-slate-200 rounded-xl text-xs focus:bg-white focus:ring-2 focus:ring-blue-500 focus:outline-none">
+          <!-- Search Input & Cancel Import Button -->
+          <div class="flex items-center gap-2 w-full md:w-auto">
+            <div class="relative flex-1 md:w-72">
+              <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i>
+              <input type="text" id="regTableSearchInput" oninput="filterAttendeeTable()" placeholder="ค้นหา: ชื่อ, โรงเรียน, เบอร์โทร..." class="w-full pl-8 pr-3 py-1.5 bg-slate-50 border border-slate-200 rounded-xl text-xs focus:bg-white focus:ring-2 focus:ring-blue-500 focus:outline-none">
+            </div>
+            <button type="button" onclick="cancelAttendeeExcelImport()" class="px-3 py-1.5 bg-rose-50 hover:bg-rose-100 active:bg-rose-200 text-rose-700 hover:text-rose-800 border border-rose-300 rounded-xl text-xs font-bold transition flex items-center gap-1.5 cursor-pointer shrink-0 shadow-2xs" title="ยกเลิกไฟล์นี้และล้างรายชื่อที่นำเข้าในโครงการนี้">
+              <i class="fa-solid fa-trash-can text-rose-600"></i>
+              <span>ยกเลิกไฟล์ / ลบรายชื่อ</span>
+            </button>
           </div>
         </div>
 
@@ -5723,7 +5739,7 @@
 
     // 1. EXCEL ATTENDEE IMPORT FILE MANAGEMENT
     function renderUploadedExcelFileInfo(eventId) {
-      const eid = eventId || currentRegEventId;
+      const eid = eventId || currentRegEventId || currentLandingRegEventId || (AppState.requests && AppState.requests[0]?.eventId);
       if (!eid) return;
 
       const metaKey = 'twp_last_excel_' + eid;
@@ -5733,6 +5749,10 @@
         if (stored) meta = JSON.parse(stored);
       } catch(e) {}
 
+      // Also check attendees count in memory / local cache
+      const hasAttendees = (currentRegAttendees && currentRegAttendees.length > 0);
+      const count = (meta && meta.count) || (currentRegAttendees ? currentRegAttendees.length : 0);
+
       const card = document.getElementById('regExcelUploadedFileInfo');
       const nameEl = document.getElementById('regExcelUploadedFileName');
       const metaEl = document.getElementById('regExcelUploadedFileMeta');
@@ -5741,8 +5761,14 @@
       const landingNameEl = document.getElementById('landingExcelUploadedFileName');
       const landingMetaEl = document.getElementById('landingExcelUploadedFileMeta');
 
+      const directCancelBtn = document.getElementById('btnDirectCancelExcel');
+      if (directCancelBtn) {
+        if (hasAttendees || meta) directCancelBtn.classList.remove('hidden');
+        else directCancelBtn.classList.add('hidden');
+      }
+
       if (meta && meta.fileName) {
-        const text = `ขนาด ${meta.fileSize || '0 KB'} • นำเข้าสำเร็จ ${meta.count || 0} ท่าน • ${meta.time || ''}`;
+        const text = `ขนาด ${meta.fileSize || '0 KB'} • นำเข้าสำเร็จ ${count} ท่าน • ${meta.time || ''}`;
         if (card && nameEl && metaEl) {
           nameEl.innerText = meta.fileName;
           metaEl.innerText = text;
@@ -5750,6 +5776,18 @@
         }
         if (landingCard && landingNameEl && landingMetaEl) {
           landingNameEl.innerText = meta.fileName;
+          landingMetaEl.innerText = text;
+          landingCard.classList.remove('hidden');
+        }
+      } else if (hasAttendees) {
+        const text = `รายชื่อผู้เข้าอบรมในระบบ ${count} ท่าน (พร้อมเช็กชื่อและออกวุฒิบัตร)`;
+        if (card && nameEl && metaEl) {
+          nameEl.innerText = 'ข้อมูลรายชื่อที่โหลดเข้าโครงการ';
+          metaEl.innerText = text;
+          card.classList.remove('hidden');
+        }
+        if (landingCard && landingNameEl && landingMetaEl) {
+          landingNameEl.innerText = 'ข้อมูลรายชื่อที่โหลดเข้าโครงการ';
           landingMetaEl.innerText = text;
           landingCard.classList.remove('hidden');
         }
@@ -6111,6 +6149,8 @@
       refreshSchoolsDatalist();
       renderAdminSalesList();
       renderDashboard();
+      if (typeof populateLandingRegEventSelect === 'function') populateLandingRegEventSelect();
+      if (typeof updateLandingRegCard === 'function') updateLandingRegCard();
       renderAnnualPlanView();
       renderAnnualPlanSelectOptions();
       renderTeamBQueue();
@@ -12050,13 +12090,14 @@ function renderA4EvalReportHtmlClient(d) {
 
       const registerUrl = getRegisterFullUrl(eventId);
 
+      // Low error correction Level L + short URL creates large, sharp dots (scannable instantly)
       new QRCode(qrWrap, {
         text: registerUrl,
-        width: 140,
-        height: 140,
+        width: 180,
+        height: 180,
         colorDark: '#08539E',
         colorLight: '#ffffff',
-        correctLevel: QRCode.CorrectLevel.M
+        correctLevel: QRCode.CorrectLevel.L
       });
 
       const btnTest = document.getElementById('btnTestOpenRegisterPage');
@@ -12169,11 +12210,11 @@ function renderA4EvalReportHtmlClient(d) {
   <script>
     new QRCode(document.getElementById('printQrContainer'), {
       text: "${registerUrl}",
-      width: 220,
-      height: 220,
+      width: 240,
+      height: 240,
       colorDark: '#08539E',
       colorLight: '#ffffff',
-      correctLevel: QRCode.CorrectLevel.M
+      correctLevel: QRCode.CorrectLevel.L
     });
   <\/script>
 </body>
@@ -12474,7 +12515,6 @@ function renderA4EvalReportHtmlClient(d) {
     // -------------------------------------------------------------------------
     function getRegisterFullUrl(eventId) {
       const eid = eventId || currentRegEventId || currentLandingRegEventId || (AppState.requests && AppState.requests[0]?.eventId) || '';
-      const req = (AppState.requests && AppState.requests.find(r => String(r.eventId || '').trim().toUpperCase() === String(eid).trim().toUpperCase())) || {};
 
       let baseUrl = 'https://doit-on.github.io/twp-training-system/register.html';
       if (window.location.origin && window.location.origin.startsWith('http') && !window.location.origin.includes('localhost') && !window.location.origin.includes('127.0.0.1')) {
@@ -12490,15 +12530,9 @@ function renderA4EvalReportHtmlClient(d) {
         baseUrl = window.location.origin + path;
       }
 
-      const params = new URLSearchParams();
-      params.set('event', eid);
-      if (req.courseTopic) params.set('topic', req.courseTopic);
-      if (req.schoolName) params.set('school', req.schoolName);
-      if (req.eventDate || req.trainingDate) params.set('date', req.eventDate || req.trainingDate);
-      if (req.teamBSpeaker || req.speakerType) params.set('speaker', req.teamBSpeaker || req.speakerType);
-      if (AppState.gasEndpoint) params.set('ep', AppState.gasEndpoint);
-
-      return `${baseUrl}?${params.toString()}`;
+      // ULTRA-CLEAN SHORT URL (< 75 chars)
+      // Generates low-density, high-contrast, large-module QR code that any phone scans instantly in 0.1s!
+      return `${baseUrl}?event=${encodeURIComponent(eid)}`;
     }
 
     // -------------------------------------------------------------------------
