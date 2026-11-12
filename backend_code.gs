@@ -1349,7 +1349,7 @@ function handleSendECertificateEmail(payload) {
 // ============================================================================
 
 function handleGetEventRegistrations(payload) {
-  const eventId = payload ? payload.eventId : '';
+  const eventId = payload ? String(payload.eventId || '').trim().toUpperCase() : '';
   const ss = getSpreadsheet();
   ensureRequiredSheets(ss);
   const sheet = ss.getSheetByName('Onsite_Registrations');
@@ -1362,7 +1362,8 @@ function handleGetEventRegistrations(payload) {
 
   for (let i = 1; i < rows.length; i++) {
     const r = rows[i];
-    if (!eventId || r[1] === eventId) {
+    const rowEid = String(r[1] || '').trim().toUpperCase();
+    if (!eventId || rowEid === eventId) {
       const isCheckedIn = (r[8] === 'CHECKED_IN');
       const isWalkIn = (r[10] === 'WALK_IN');
       if (isCheckedIn) checkedInCount++;
@@ -1392,7 +1393,7 @@ function handleGetEventRegistrations(payload) {
     if (reqSheet && eventId) {
       const reqRows = reqSheet.getDataRange().getValues();
       for (let j = 1; j < reqRows.length; j++) {
-        if (String(reqRows[j][0]).trim() === String(eventId).trim()) {
+        if (String(reqRows[j][0] || '').trim().toUpperCase() === eventId) {
           eventInfo = {
             eventId: reqRows[j][0],
             schoolName: reqRows[j][2] || '',

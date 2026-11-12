@@ -899,6 +899,21 @@
 
         </div>
 
+        <!-- Landing Page Active Uploaded Excel File Banner -->
+        <div id="landingExcelUploadedFileInfo" class="hidden bg-emerald-50/90 border border-emerald-300 rounded-2xl p-3 flex items-center justify-between gap-2 text-xs">
+          <div class="flex items-center gap-2 min-w-0">
+            <i class="fa-solid fa-file-excel text-emerald-600 text-base"></i>
+            <div class="min-w-0">
+              <span id="landingExcelUploadedFileName" class="font-bold text-slate-800 truncate block">ไฟล์ที่โหลดล่าสุด</span>
+              <span id="landingExcelUploadedFileMeta" class="text-[10px] text-slate-500">ข้อมูลนำเข้าในระบบ</span>
+            </div>
+          </div>
+          <button type="button" onclick="cancelAttendeeExcelImport()" class="px-2.5 py-1 bg-white hover:bg-rose-50 text-rose-700 border border-rose-200 rounded-lg text-[11px] font-bold transition flex items-center gap-1 cursor-pointer shrink-0">
+            <i class="fa-solid fa-xmark"></i>
+            <span>ยกเลิกไฟล์</span>
+          </button>
+        </div>
+
         <!-- Quick Launch Bar (3 Buttons: Print Standee, Open Mobile Check-in, Import Excel) -->
         <div class="pt-1 flex flex-wrap items-center justify-between gap-2.5">
           <div class="flex flex-wrap items-center gap-2">
@@ -1827,6 +1842,28 @@
             </div>
           </div>
 
+          <!-- Active Uploaded Excel File Card & Cancellation -->
+          <div id="regExcelUploadedFileInfo" class="hidden bg-emerald-50/90 border border-emerald-300 rounded-2xl p-3.5 space-y-2 text-left">
+            <div class="flex items-center justify-between gap-2">
+              <div class="flex items-center gap-2.5 min-w-0">
+                <div class="w-8 h-8 rounded-xl bg-emerald-100 text-emerald-700 flex items-center justify-center text-sm font-bold shrink-0">
+                  <i class="fa-solid fa-file-excel"></i>
+                </div>
+                <div class="min-w-0">
+                  <div class="flex items-center gap-1.5">
+                    <span id="regExcelUploadedFileName" class="text-xs font-bold text-slate-800 truncate">ไฟล์ตัวอย่าง.xlsx</span>
+                    <span class="text-[9px] bg-emerald-200 text-emerald-900 font-bold px-1.5 py-0.2 rounded-md">โหลดเข้าแล้ว</span>
+                  </div>
+                  <div id="regExcelUploadedFileMeta" class="text-[10px] text-slate-500 mt-0.5">ขนาด 0 KB • นำเข้า 0 ท่าน</div>
+                </div>
+              </div>
+              <button type="button" onclick="cancelAttendeeExcelImport()" class="px-3 py-1.5 bg-white hover:bg-rose-50 text-rose-700 hover:text-rose-800 border border-rose-300 rounded-xl text-xs font-bold transition flex items-center gap-1 cursor-pointer shrink-0 shadow-2xs" title="ยกเลิกไฟล์นี้และลบรายชื่อที่เพิ่งนำเข้าออกจากระบบ">
+                <i class="fa-solid fa-trash-can text-xs"></i>
+                <span>ยกเลิกไฟล์นี้</span>
+              </button>
+            </div>
+          </div>
+
           <!-- Instructions & Template Download -->
           <div class="bg-slate-50 rounded-2xl p-3 border border-slate-200 text-xs text-slate-600 flex items-center justify-between">
             <div class="space-y-0.5">
@@ -2205,6 +2242,18 @@
                   <i class="fa-solid fa-upload"></i>
                   <span>อัปโหลด</span>
                 </button>
+              </div>
+
+              <!-- Active Selected Event Photos List & Cancellation -->
+              <div id="eventPhotosSelectedListContainer" class="hidden w-full bg-blue-50/90 border border-blue-200 rounded-xl p-2.5 space-y-1.5 text-xs text-left">
+                <div class="flex items-center justify-between border-b border-blue-200/60 pb-1 text-[11px] font-bold text-blue-900">
+                  <span id="eventPhotosSelectedCount">เลือกรูปภาพ 0 ไฟล์</span>
+                  <button type="button" onclick="cancelAllSelectedEventPhotos()" class="text-rose-600 hover:text-rose-800 font-semibold flex items-center gap-1 cursor-pointer">
+                    <i class="fa-solid fa-xmark"></i>
+                    <span>ยกเลิกทั้งหมด</span>
+                  </button>
+                </div>
+                <div id="eventPhotosSelectedChips" class="flex flex-wrap gap-1.5 max-h-28 overflow-y-auto custom-scrollbar"></div>
               </div>
             </div>
 
@@ -3916,6 +3965,21 @@
       <!-- Hidden File Input for uploading signature image -->
       <input type="file" id="spkSigFileInput" accept="image/*" class="hidden" onchange="handleSpeakerSigFileUpload(event)">
 
+      <!-- Active Uploaded Signature File Tag -->
+      <div id="spkSigUploadedFileInfo" class="hidden bg-purple-50/90 border border-purple-200 rounded-xl p-2.5 flex items-center justify-between gap-2 text-xs">
+        <div class="flex items-center gap-2 min-w-0">
+          <i class="fa-solid fa-image text-purple-600"></i>
+          <div class="min-w-0">
+            <span id="spkSigUploadedFileName" class="font-bold text-slate-800 truncate block">ชื่อไฟล์ภาพ.png</span>
+            <span id="spkSigUploadedFileMeta" class="text-[10px] text-slate-500">ขนาด 0 KB</span>
+          </div>
+        </div>
+        <button type="button" onclick="cancelSpeakerSigFileUpload()" class="px-2.5 py-1 bg-white hover:bg-rose-50 text-rose-700 border border-rose-200 rounded-lg text-[11px] font-bold transition flex items-center gap-1 cursor-pointer shrink-0" title="ยกเลิกไฟล์ภาพลายเซ็นนี้">
+          <i class="fa-solid fa-trash-can text-[10px]"></i>
+          <span>ยกเลิกไฟล์นี้</span>
+        </button>
+      </div>
+
       <!-- Actions -->
       <div class="flex flex-col sm:flex-row items-center justify-between gap-2.5 pt-1">
         <div class="flex items-center space-x-2 w-full sm:w-auto">
@@ -5583,9 +5647,8 @@
       if (!eventId) return;
 
       const btnOpen = document.getElementById('landingBtnOpenRegister');
-      const hostOrigin = window.location.origin + window.location.pathname.replace(/[^\/]*$/, '');
       if (btnOpen) {
-        btnOpen.href = `${hostOrigin}register.html?event=${encodeURIComponent(eventId)}`;
+        btnOpen.href = getRegisterFullUrl(eventId);
       }
 
       // Check local cached attendees
@@ -5615,6 +5678,7 @@
       if (elPending) elPending.innerText = pending;
       if (elWalkin) elWalkin.innerText = walkin;
       if (elPct) elPct.innerText = pct + '% ของเป้าหมาย';
+      renderUploadedExcelFileInfo(eventId);
 
       // Background sync from backend if online
       if (AppState.gasEndpoint && list.length === 0) {
@@ -5650,6 +5714,168 @@
         const fileInp = document.getElementById('regExcelFileInput');
         if (fileInp) fileInp.click();
       }, 150);
+    }
+
+    
+    // -------------------------------------------------------------------------
+    // FILE MANAGEMENT, DISPLAY & CANCELLATION CONTROLLER
+    // -------------------------------------------------------------------------
+
+    // 1. EXCEL ATTENDEE IMPORT FILE MANAGEMENT
+    function renderUploadedExcelFileInfo(eventId) {
+      const eid = eventId || currentRegEventId;
+      if (!eid) return;
+
+      const metaKey = 'twp_last_excel_' + eid;
+      let meta = null;
+      try {
+        const stored = localStorage.getItem(metaKey);
+        if (stored) meta = JSON.parse(stored);
+      } catch(e) {}
+
+      const card = document.getElementById('regExcelUploadedFileInfo');
+      const nameEl = document.getElementById('regExcelUploadedFileName');
+      const metaEl = document.getElementById('regExcelUploadedFileMeta');
+
+      const landingCard = document.getElementById('landingExcelUploadedFileInfo');
+      const landingNameEl = document.getElementById('landingExcelUploadedFileName');
+      const landingMetaEl = document.getElementById('landingExcelUploadedFileMeta');
+
+      if (meta && meta.fileName) {
+        const text = `ขนาด ${meta.fileSize || '0 KB'} • นำเข้าสำเร็จ ${meta.count || 0} ท่าน • ${meta.time || ''}`;
+        if (card && nameEl && metaEl) {
+          nameEl.innerText = meta.fileName;
+          metaEl.innerText = text;
+          card.classList.remove('hidden');
+        }
+        if (landingCard && landingNameEl && landingMetaEl) {
+          landingNameEl.innerText = meta.fileName;
+          landingMetaEl.innerText = text;
+          landingCard.classList.remove('hidden');
+        }
+      } else {
+        if (card) card.classList.add('hidden');
+        if (landingCard) landingCard.classList.add('hidden');
+      }
+    }
+
+    function cancelAttendeeExcelImport() {
+      const eventId = currentRegEventId || currentLandingRegEventId || (AppState.requests && AppState.requests[0]?.eventId);
+      if (!eventId) return;
+
+      const metaKey = 'twp_last_excel_' + eventId;
+      let meta = null;
+      try {
+        const stored = localStorage.getItem(metaKey);
+        if (stored) meta = JSON.parse(stored);
+      } catch(e) {}
+
+      const fileName = meta?.fileName || 'ไฟล์ Excel ที่โหลดเข้าล่าสุด';
+      const count = meta?.count || 0;
+
+      const confirmCancel = confirm(`คุณต้องการยกเลิกไฟล์: "\n${fileName}"\n\nและล้างรายชื่อที่เพิ่งนำเข้า (${count} ท่าน) ออกจากโครงการ ${eventId} ใช่หรือไม่?`);
+      if (!confirmCancel) return;
+
+      // Remove imported attendees belonging to this batch
+      if (meta && Array.isArray(meta.attendeeRegIds) && meta.attendeeRegIds.length > 0) {
+        const idSet = new Set(meta.attendeeRegIds);
+        currentRegAttendees = (currentRegAttendees || []).filter(a => !idSet.has(a.regId));
+      } else {
+        // Fallback: clear PRE registered attendees of this event
+        currentRegAttendees = (currentRegAttendees || []).filter(a => a.regType === 'WALKIN');
+      }
+
+      // Update storage
+      localStorage.setItem('twp_onsite_attendees_' + eventId, JSON.stringify(currentRegAttendees));
+      localStorage.removeItem(metaKey);
+
+      // Reset file input
+      const fileInp = document.getElementById('regExcelFileInput');
+      if (fileInp) fileInp.value = '';
+
+      // Hide display cards
+      renderUploadedExcelFileInfo(eventId);
+
+      // Post update to backend
+      if (AppState.gasEndpoint) {
+        postToBackend('IMPORT_REGISTRATIONS', {
+          eventId: eventId,
+          participants: currentRegAttendees,
+          attendees: currentRegAttendees
+        }).catch(e => console.log('Offline cancelled'));
+      }
+
+      updateRegKpis();
+      filterAttendeeTable();
+      updateLandingRegCard();
+      showAlert(`ยกเลิกไฟล์ "${fileName}" และล้างรายชื่อเรียบร้อยแล้ว`, 'info');
+    }
+
+    // 2. SPEAKER SIGNATURE FILE MANAGEMENT
+    function displayUploadedSpeakerSigFileInfo(file) {
+      if (!file) return;
+      const card = document.getElementById('spkSigUploadedFileInfo');
+      const nameEl = document.getElementById('spkSigUploadedFileName');
+      const metaEl = document.getElementById('spkSigUploadedFileMeta');
+      if (card && nameEl && metaEl) {
+        nameEl.innerText = file.name;
+        metaEl.innerText = `ขนาด ${(file.size / 1024).toFixed(1)} KB • ไฟล์ภาพลายเซ็น`;
+        card.classList.remove('hidden');
+      }
+    }
+
+    function cancelSpeakerSigFileUpload() {
+      clearSpeakerSigCanvas();
+      spkUploadedSigDataUrl = null;
+      const fileInp = document.getElementById('spkSigFileInput');
+      if (fileInp) fileInp.value = '';
+      const card = document.getElementById('spkSigUploadedFileInfo');
+      if (card) card.classList.add('hidden');
+      const ph = document.getElementById('spkSigPlaceholder');
+      if (ph) ph.style.display = 'flex';
+      showAlert('ยกเลิกไฟล์ภาพลายเซ็นเรียบร้อยแล้ว', 'info');
+    }
+
+    // 3. EVENT PHOTOS FILE MANAGEMENT
+    function renderSelectedEventPhotosChips() {
+      const container = document.getElementById('eventPhotosSelectedListContainer');
+      const chipsEl = document.getElementById('eventPhotosSelectedChips');
+      const countEl = document.getElementById('eventPhotosSelectedCount');
+      if (!container || !chipsEl || !countEl) return;
+
+      const files = selectedEventPhotosToUpload || [];
+      if (files.length === 0) {
+        container.classList.add('hidden');
+        return;
+      }
+
+      countEl.innerText = `เลือกรูปภาพ ${files.length} ไฟล์ พร้อมอัปโหลด`;
+      chipsEl.innerHTML = files.map((f, idx) => `
+        <span class="inline-flex items-center gap-1 px-2.5 py-1 bg-white border border-blue-300 rounded-lg text-[11px] font-medium text-slate-700 shadow-2xs">
+          <i class="fa-solid fa-image text-blue-600 text-[10px]"></i>
+          <span class="max-w-[140px] truncate">${f.name}</span>
+          <span class="text-[9px] text-slate-400 font-mono">(${(f.size/1024).toFixed(0)}KB)</span>
+          <button type="button" onclick="removeSingleSelectedPhoto(${idx})" class="text-rose-500 hover:text-rose-700 p-0.5 ml-0.5 cursor-pointer" title="ลบไฟล์นี้">
+            <i class="fa-solid fa-xmark text-xs"></i>
+          </button>
+        </span>
+      `).join('');
+
+      container.classList.remove('hidden');
+    }
+
+    function removeSingleSelectedPhoto(index) {
+      if (!selectedEventPhotosToUpload) return;
+      selectedEventPhotosToUpload.splice(index, 1);
+      renderSelectedEventPhotosChips();
+    }
+
+    function cancelAllSelectedEventPhotos() {
+      selectedEventPhotosToUpload = [];
+      const fileInp = document.getElementById('eventPhotoFileInput');
+      if (fileInp) fileInp.value = '';
+      renderSelectedEventPhotosChips();
+      showAlert('ยกเลิกไฟล์ภาพที่เลือกทั้งหมดแล้ว', 'info');
     }
 
     function renderDashboardArchives() {
@@ -5804,7 +6030,7 @@
                   <i class="fa-solid fa-expand text-indigo-200"></i>
                   <span>ฉาย QR จอใหญ่</span>
                 </button>
-                <button type="button" onclick="printQrDeskSign('${req.eventId}')" class="py-2.5 px-3 bg-white hover:bg-sky-50 text-sky-900 border border-sky-300 rounded-xl text-xs font-bold transition flex items-center justify-center space-x-1.5 shadow-xs btn-tactile cursor-pointer" title="พิมพ์ป้ายตั้งโต๊ะ A4 วางโต๊ะลงทะเบียน">
+                <button type="button" onclick="printOnsiteQrStandee('${req.eventId}')" class="py-2.5 px-3 bg-white hover:bg-sky-50 text-sky-900 border border-sky-300 rounded-xl text-xs font-bold transition flex items-center justify-center space-x-1.5 shadow-xs btn-tactile cursor-pointer" title="พิมพ์ป้ายตั้งโต๊ะ A4 วางโต๊ะลงทะเบียน">
                   <i class="fa-solid fa-print text-sky-600"></i>
                   <span>พิมพ์ใบตั้งโต๊ะ A4</span>
                 </button>
@@ -5865,11 +6091,7 @@
     }
 
     function printQrDeskSign(eventId) {
-      openQrModalFor(eventId, 'SURVEY');
-      showAlert('เปิดหน้าต่างพิมพ์ใบตั้งโต๊ะ A4 เรียบร้อยแล้ว', 'info');
-      setTimeout(() => {
-        window.print();
-      }, 350);
+      printOnsiteQrStandee(eventId);
     }
 
     function shareSurveyToLine(eventId) {
@@ -6727,7 +6949,8 @@
       const files = Array.from(e.target.files || []);
       if (files.length === 0) return;
       selectedEventPhotosToUpload = files;
-      showAlert('เลือกรูปภาพ ' + files.length + ' ภาพ พร้อมอัปโหลด', 'info');
+      renderSelectedEventPhotosChips();
+      showAlert('เลือกรูปภาพ ' + files.length + ' ภาพ พร้อมอัปโหลด (สามารถลบหรือยกเลิกได้ด้านบน)', 'info');
     }
 
     function uploadSelectedEventPhotos() {
@@ -6772,6 +6995,9 @@
             btn.innerHTML = '<i class="fa-solid fa-upload"></i> อัปโหลด';
             if (captionInput) captionInput.value = '';
             selectedEventPhotosToUpload = [];
+            const photoInp = document.getElementById('eventPhotoFileInput');
+            if (photoInp) photoInp.value = '';
+            if (typeof renderSelectedEventPhotosChips === 'function') renderSelectedEventPhotosChips();
             localStorage.setItem('twp_requests_store', JSON.stringify(AppState.requests));
             renderEventPhotoGallery(currentExpenseEventId);
             showAlert('อัปโหลดรูปภาพกิจกรรม ' + processed + ' ภาพขึ้น Google Drive เรียบร้อยแล้ว', 'success');
@@ -7467,8 +7693,16 @@
     }
 
     function importSystemBackupJson(e) {
-      const file = e.target.files[0];
+      const file = e.target.files && e.target.files[0];
       if (!file) return;
+
+      const sizeKb = (file.size / 1024).toFixed(1);
+      const confirmImport = confirm(`คุณต้องการนำเข้าไฟล์สำรองข้อมูล:\n"${file.name}" (${sizeKb} KB)\n\nเพื่อกู้คืนฐานข้อมูลคำขอจัดอบรมใช่หรือไม่? (สามารถกดยกเลิกได้หากเลือกไฟล์ผิด)`);
+      if (!confirmImport) {
+        e.target.value = '';
+        showAlert('ยกเลิกการนำเข้าไฟล์สำรองข้อมูลแล้ว', 'info');
+        return;
+      }
 
       const reader = new FileReader();
       reader.onload = function(evt) {
@@ -8974,6 +9208,7 @@
         const dataUrl = e.target.result;
         spkUploadedSigDataUrl = dataUrl;
         hasDrawnSpkSig = true;
+        displayUploadedSpeakerSigFileInfo(file);
         const img = new Image();
         img.onload = function() {
           clearSpeakerSigCanvas();
@@ -11813,9 +12048,7 @@ function renderA4EvalReportHtmlClient(d) {
       if (!qrWrap || !window.QRCode) return;
       qrWrap.innerHTML = '';
 
-      const req = AppState.requests.find(r => r.eventId === eventId);
-      const hostOrigin = window.location.origin + window.location.pathname.replace(/[^\/]*$/, '');
-      const registerUrl = `${hostOrigin}register.html?event=${encodeURIComponent(eventId)}`;
+      const registerUrl = getRegisterFullUrl(eventId);
 
       new QRCode(qrWrap, {
         text: registerUrl,
@@ -11830,15 +12063,15 @@ function renderA4EvalReportHtmlClient(d) {
       if (btnTest) btnTest.href = registerUrl;
     }
 
-    function printOnsiteQrStandee() {
-      const eventId = currentRegEventId || (AppState.requests && AppState.requests[0]?.eventId);
+    function printOnsiteQrStandee(targetEventId) {
+      const eventId = targetEventId || currentRegEventId || currentLandingRegEventId || (AppState.requests && AppState.requests[0]?.eventId);
+      currentRegEventId = eventId;
       if (!eventId) {
         showAlert('กรุณาเลือกโครงการที่ต้องการพิมพ์ป้ายตั้งโต๊ะก่อนครับ', 'warning');
         return;
       }
-      const req = AppState.requests.find(r => r.eventId === eventId);
-      const hostOrigin = window.location.origin + window.location.pathname.replace(/[^\/]*$/, '');
-      const registerUrl = `${hostOrigin}register.html?event=${encodeURIComponent(eventId)}`;
+      const req = (AppState.requests && AppState.requests.find(r => String(r.eventId || '').trim().toUpperCase() === String(eventId).trim().toUpperCase())) || {};
+      const registerUrl = getRegisterFullUrl(eventId);
 
       const win = window.open('', '_blank');
       if (!win) {
@@ -12156,9 +12389,22 @@ function renderA4EvalReportHtmlClient(d) {
             }).catch(e => console.log('Offline imported'));
           }
 
-          showAlert(`นำเข้ารายชื่อผู้เข้าอบรมสำเร็จ ${parsedAttendees.length} ท่าน`, 'success');
+          // Record last uploaded Excel metadata
+          const lastExcelMeta = {
+            fileName: file.name,
+            fileSize: (file.size / 1024).toFixed(1) + ' KB',
+            time: new Date().toLocaleTimeString('th-TH', { hour: '2-digit', minute: '2-digit' }) + ' น.',
+            count: parsedAttendees.length,
+            eventId: eventId,
+            attendeeRegIds: parsedAttendees.map(a => a.regId)
+          };
+          localStorage.setItem('twp_last_excel_' + eventId, JSON.stringify(lastExcelMeta));
+          renderUploadedExcelFileInfo(eventId);
+
+          showAlert(`นำเข้ารายชื่อจาก "${file.name}" สำเร็จ ${parsedAttendees.length} ท่าน`, 'success');
           updateRegKpis();
           filterAttendeeTable();
+          updateLandingRegCard();
         } catch(err) {
           console.error(err);
           showAlert('เกิดข้อผิดพลาดในการอ่านไฟล์ Excel: ' + err.message, 'error');
@@ -12222,6 +12468,92 @@ function renderA4EvalReportHtmlClient(d) {
       filterAttendeeTable();
     }
 
+    
+    // -------------------------------------------------------------------------
+    // UNIVERSAL REGISTRATION URL BUILDER (WITH STAND-ALONE EVENT METADATA)
+    // -------------------------------------------------------------------------
+    function getRegisterFullUrl(eventId) {
+      const eid = eventId || currentRegEventId || currentLandingRegEventId || (AppState.requests && AppState.requests[0]?.eventId) || '';
+      const req = (AppState.requests && AppState.requests.find(r => String(r.eventId || '').trim().toUpperCase() === String(eid).trim().toUpperCase())) || {};
+
+      let baseUrl = 'https://doit-on.github.io/twp-training-system/register.html';
+      if (window.location.origin && window.location.origin.startsWith('http') && !window.location.origin.includes('localhost') && !window.location.origin.includes('127.0.0.1')) {
+        let path = window.location.pathname || '/';
+        if (path.endsWith('/')) {
+          path = path + 'register.html';
+        } else if (path.endsWith('index.html')) {
+          path = path.slice(0, -10) + 'register.html';
+        } else if (!path.endsWith('register.html')) {
+          const lastSlash = path.lastIndexOf('/');
+          path = path.substring(0, lastSlash + 1) + 'register.html';
+        }
+        baseUrl = window.location.origin + path;
+      }
+
+      const params = new URLSearchParams();
+      params.set('event', eid);
+      if (req.courseTopic) params.set('topic', req.courseTopic);
+      if (req.schoolName) params.set('school', req.schoolName);
+      if (req.eventDate || req.trainingDate) params.set('date', req.eventDate || req.trainingDate);
+      if (req.teamBSpeaker || req.speakerType) params.set('speaker', req.teamBSpeaker || req.speakerType);
+      if (AppState.gasEndpoint) params.set('ep', AppState.gasEndpoint);
+
+      return `${baseUrl}?${params.toString()}`;
+    }
+
+    // -------------------------------------------------------------------------
+    // SMART PREFIX-TOLERANT ATTENDEE NAME MATCHER (THAI & ENGLISH)
+    // Supports: นาย, นางสาว, นาง, คุณ, น.ส., ดร., ผศ.ดร., Mr., Mrs., Ms., Miss, etc.
+    // -------------------------------------------------------------------------
+    const TITLE_PREFIXES_REGEX = /^(นาย|นางสาว|นาง|คุณ|น\.ส\.|น\.ส|นส\.|นส|ดร\.|ดร|ผศ\.ดร\.|รศ\.ดร\.|ศ\.ดร\.|ผศ\.|รศ\.|ศ\.|อาจารย์|อ\.|ว่าที่ร้อยตรี|ว่าที่ ร\.ต\.|ว่าที่ ร\.ต|mr\.|mr|mrs\.|mrs|ms\.|ms|miss|dr\.|dr|prof\.|prof|khun)\s*/i;
+
+    function stripTitlePrefix(str) {
+      if (!str) return '';
+      return String(str)
+        .trim()
+        .toLowerCase()
+        .replace(TITLE_PREFIXES_REGEX, '')
+        .trim();
+    }
+
+    function matchAttendeeSearch(att, query) {
+      if (!query) return true;
+      const rawQ = String(query).trim().toLowerCase();
+      const cleanQ = stripTitlePrefix(rawQ);
+      const rawQNoSpace = rawQ.replace(/\s+/g, '');
+      const cleanQNoSpace = cleanQ.replace(/\s+/g, '');
+
+      const fields = [
+        att.nameTh || '',
+        att.nameEn || '',
+        att.school || att.schoolName || '',
+        att.email || ''
+      ];
+
+      for (const f of fields) {
+        if (!f) continue;
+        const rawF = String(f).trim().toLowerCase();
+        const cleanF = stripTitlePrefix(rawF);
+        const rawFNoSpace = rawF.replace(/\s+/g, '');
+        const cleanFNoSpace = cleanF.replace(/\s+/g, '');
+
+        if (rawF.includes(rawQ)) return true;
+        if (rawQNoSpace && rawFNoSpace.includes(rawQNoSpace)) return true;
+        if (cleanQ && cleanF.includes(cleanQ)) return true;
+        if (cleanQNoSpace && cleanFNoSpace.includes(cleanQNoSpace)) return true;
+        if (cleanQ && rawF.includes(cleanQ)) return true;
+        if (cleanQNoSpace && rawFNoSpace.includes(cleanQNoSpace)) return true;
+      }
+
+      const phoneDigits = (att.phone || '').replace(/[^0-9]/g, '');
+      const qDigits = rawQ.replace(/[^0-9]/g, '');
+      if (qDigits.length >= 3 && phoneDigits && (phoneDigits.includes(qDigits) || phoneDigits.endsWith(qDigits))) {
+        return true;
+      }
+
+      return false;
+    }
+
     function filterAttendeeTable() {
       const q = (document.getElementById('regTableSearchInput')?.value || '').trim().toLowerCase();
       let list = currentRegAttendees || [];
@@ -12235,13 +12567,7 @@ function renderA4EvalReportHtmlClient(d) {
       }
 
       if (q) {
-        list = list.filter(a => {
-          const th = (a.nameTh || '').toLowerCase();
-          const en = (a.nameEn || '').toLowerCase();
-          const sc = (a.school || '').toLowerCase();
-          const ph = (a.phone || '').toLowerCase();
-          return th.includes(q) || en.includes(q) || sc.includes(q) || ph.includes(q);
-        });
+        list = list.filter(a => matchAttendeeSearch(a, q));
       }
 
       renderRegTable(list);
