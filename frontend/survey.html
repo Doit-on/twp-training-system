@@ -200,13 +200,25 @@
       <div class="flex items-center space-x-2.5">
         <img src="assets/logo.png" alt="TWP Logo" class="w-9 h-9 rounded-xl bg-white p-0.5 object-contain shadow-sm border border-white/20">
         <div>
-          <h1 class="text-sm sm:text-base font-bold leading-tight">แบบประเมินและรับวุฒิบัตร (e-Certificate)</h1>
-          <p class="text-[11px] text-blue-200">สำนักพิมพ์ไทยวัฒนาพานิช จำกัด</p>
+          <h1 id="headerMainTitle" class="text-sm sm:text-base font-bold leading-tight">แบบประเมินและรับวุฒิบัตร (e-Certificate)</h1>
+          <p class="text-[11px] text-blue-200">สำนักพิมพ์ไทยวัฒนาพานิช จำกัด • THAI WATANA PANICH</p>
         </div>
       </div>
-      <div class="text-[11px] bg-blue-900/80 px-2.5 py-1 rounded-full border border-blue-400/30 flex items-center">
-        <i class="fa-solid fa-award text-amber-300 mr-1.5"></i>
-        <span>ระบบ 2 ขั้นตอน (v1.18.1)</span>
+      <div class="flex items-center space-x-2">
+        <!-- Language Switcher Toggle Pill -->
+        <div class="bg-blue-950/80 p-0.5 rounded-xl border border-blue-400/40 flex items-center text-xs font-bold shadow-inner">
+          <button type="button" id="btnLangTh" onclick="setLanguage('th')" class="px-2.5 py-1 rounded-lg bg-white text-[#08539E] shadow-xs transition cursor-pointer font-bold">
+            ไทย
+          </button>
+          <button type="button" id="btnLangEn" onclick="setLanguage('en')" class="px-2.5 py-1 rounded-lg text-blue-200 hover:text-white transition cursor-pointer font-medium">
+            EN
+          </button>
+        </div>
+        
+        <div class="text-[11px] bg-blue-900/80 px-2.5 py-1 rounded-full border border-blue-400/30 hidden sm:flex items-center">
+          <i class="fa-solid fa-award text-amber-300 mr-1.5"></i>
+          <span>v1.19.0</span>
+        </div>
       </div>
     </div>
   </header>
@@ -215,7 +227,7 @@
   <main class="flex-1 max-w-2xl w-full mx-auto p-4 sm:p-6 space-y-4">
 
     <!-- STEPPER PROGRESS BAR (Strict 2-Step Pipeline) -->
-    <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-3 sm:p-4">
+    <div id="stepperCard" class="bg-white rounded-2xl shadow-sm border border-slate-200 p-3 sm:p-4">
       <div class="flex items-center justify-between">
         
         <!-- Step 1 Tab -->
@@ -461,7 +473,27 @@
     <!-- ========================================================================= -->
     <div id="step2Container" class="hidden space-y-5">
       
-      <!-- Top Success Alert Banner -->
+      <!-- Top Verified Banner (Only shown in Direct Certificate View Mode) -->
+      <div id="directCertVerifiedBanner" class="hidden bg-gradient-to-r from-[#08539E] via-blue-800 to-indigo-900 text-white rounded-2xl p-5 shadow-lg border border-blue-400/30 text-center space-y-2">
+        <div class="inline-flex items-center justify-center w-12 h-12 rounded-full bg-amber-400 text-blue-950 text-2xl shadow-md">
+          <i class="fa-solid fa-award"></i>
+        </div>
+        <div>
+          <h2 class="text-lg sm:text-xl font-black text-white">วุฒิบัตรอิเล็กทรอนิกส์ฉบับจริง (Official e-Certificate)</h2>
+          <p class="text-xs text-blue-200 mt-0.5">สำนักพิมพ์ไทยวัฒนาพานิช จำกัด • THAI WATANA PANICH</p>
+        </div>
+        <div class="bg-white/10 rounded-xl p-3 border border-white/20 text-xs max-w-lg mx-auto space-y-1">
+          <div class="text-amber-300 font-bold text-sm sm:text-base" id="bannerParticipantNameTh">ผู้เข้าร่วมการอบรม</div>
+          <div class="text-blue-100 font-serif italic text-xs" id="bannerParticipantNameEn"></div>
+          <div class="text-slate-200 text-[11px]" id="bannerParticipantSchool"></div>
+          <div class="pt-1.5 flex items-center justify-center gap-2 text-[10px] text-emerald-300 font-semibold border-t border-white/10 mt-1.5">
+            <i class="fa-solid fa-lock"></i>
+            <span>เอกสารนี้ได้รับการยืนยันและล็อกสิทธิ์เรียบร้อยแล้ว (ไม่สามารถแก้ไขชื่อได้)</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Top Success Alert Banner (Shown only after completing Step 1 Survey) -->
       <div id="completionNoticeCard" class="bg-white rounded-2xl shadow-md border border-emerald-200 p-5 text-center space-y-2 relative overflow-hidden">
         <div class="w-12 h-12 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center mx-auto text-xl shadow-inner">
           <i class="fa-solid fa-circle-check"></i>
@@ -480,7 +512,7 @@
         </div>
       </div>
 
-      <!-- Participant Identity Inputs for E-Certificate -->
+      <!-- Participant Identity Inputs for E-Certificate (Shown only during Step 2 input) -->
       <div id="participantInputFormCard" class="bg-gradient-to-r from-blue-50/90 to-indigo-50/90 rounded-2xl shadow-sm border border-blue-200 p-4 sm:p-5 space-y-4">
         <div class="flex items-center space-x-2.5 pb-2 border-b border-blue-200/60">
           <div class="w-8 h-8 rounded-lg bg-[#08539E] text-white flex items-center justify-center text-sm shadow-sm">
@@ -530,97 +562,14 @@
         </div>
       </div>
 
-      <!-- Action Card: Email Dispatch & PDF Download -->
-      <div id="certActionCard" class="bg-white rounded-2xl shadow-md border border-slate-200 p-5 space-y-4">
-        
-        <div id="emailStatusBanner" class="p-3.5 rounded-xl bg-blue-50 border border-blue-200 text-xs text-blue-900 flex items-start gap-2.5">
-          <i class="fa-solid fa-paper-plane text-blue-600 text-base mt-0.5"></i>
-          <div class="flex-1">
-            <div class="font-bold text-blue-950">ช่องทางรับวุฒิบัตร (e-Certificate):</div>
-            <div class="text-blue-800 mt-0.5">ท่านสามารถกดส่งไฟล์เข้าสู่อีเมล หรือกดปุ่ม <strong>"พิมพ์ / บันทึกเป็น PDF"</strong> เพื่อดาวน์โหลดไฟล์เข้าสู่อุปกรณ์ของท่านได้ทันที</div>
-          </div>
-        </div>
-
-        <!-- Security Lock Banner (Shown when email is already sent) -->
-        <div id="certLockedBanner" class="hidden p-4 rounded-xl bg-amber-50 border-2 border-amber-300 text-xs text-amber-950 space-y-2">
-          <div class="flex items-center gap-2 font-bold text-amber-900 text-sm">
-            <i class="fa-solid fa-lock text-amber-600 text-base"></i>
-            <span>วุฒิบัตรถูกจัดส่งทางอีเมลเรียบร้อยแล้ว (ล็อกสิทธิ์การออกซ้ำ)</span>
-          </div>
-          <p class="leading-relaxed text-amber-800">
-            ระบบได้ทำการบันทึกและล็อกสิทธิ์การออกวุฒิบัตรฉบับนี้แล้ว ท่านสามารถเปิดดูหรือบันทึกไฟล์จากอีเมลที่ได้รับ หรือกดปุ่มพิมพ์/บันทึก PDF ด้านล่างนี้ได้ตลอดเวลาครับ
-          </p>
-        </div>
-
-        <!-- Dispatch Buttons -->
-        <div class="space-y-2.5">
-          <div class="flex flex-col sm:flex-row items-center gap-2.5">
-            <button type="button" id="btnSendCertEmail" onclick="sendCertToEmailAction()" class="btn-touch w-full flex-1 py-3 px-4 bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 text-white font-bold rounded-xl shadow-md flex items-center justify-center space-x-2 transition cursor-pointer">
-              <i class="fa-solid fa-envelope-circle-check text-amber-300 text-base"></i>
-              <span>ส่งวุฒิบัตรเข้าอีเมลของฉันทันที</span>
-            </button>
-            
-            <button type="button" id="btnPrintCert" onclick="printCertAction()" class="btn-touch w-full sm:w-auto py-3 px-5 bg-gradient-to-r from-blue-700 to-indigo-700 hover:from-blue-800 hover:to-indigo-800 text-white font-bold rounded-xl shadow-md flex items-center justify-center space-x-2 transition cursor-pointer">
-              <i class="fa-solid fa-print text-amber-300"></i>
-              <span>พิมพ์ / บันทึก PDF (A4 แนวนอน)</span>
-            </button>
-          </div>
-          <div class="flex justify-center">
-            <button type="button" onclick="openFullCertWindow()" class="btn-touch text-xs text-blue-700 hover:text-blue-900 font-bold py-1.5 px-3 rounded-lg bg-blue-50 hover:bg-blue-100 border border-blue-200 transition flex items-center gap-1.5 cursor-pointer">
-              <i class="fa-solid fa-up-right-from-square text-blue-600"></i>
-              <span>เปิดหน้าต่างวุฒิบัตรเต็มแผ่น (Full Landscape Window)</span>
-            </button>
-          </div>
-        </div>
-
-      </div>
-
-      <!-- UNLOCKED REWARD: CLOUD DRIVE & TRAINING MATERIALS -->
-      <div id="unlockedResourceCard" class="bg-gradient-to-r from-amber-500/10 via-amber-500/5 to-transparent border-2 border-amber-300 rounded-2xl p-4 sm:p-5 shadow-sm space-y-3.5">
-        <div class="flex items-center justify-between">
-          <div class="flex items-center space-x-2.5">
-            <div class="w-10 h-10 rounded-xl bg-amber-500 text-white flex items-center justify-center text-lg shadow-sm">
-              <i class="fa-solid fa-gift"></i>
-            </div>
-            <div>
-              <div class="flex items-center gap-1.5">
-                <h4 class="text-xs sm:text-sm font-extrabold text-amber-950">คลังเอกสาร สื่อการสอน และภาพถ่ายโครงการ (Google Drive)</h4>
-                <span class="text-[9px] bg-emerald-100 text-emerald-800 font-bold px-2 py-0.5 rounded-full border border-emerald-300 flex items-center gap-1">
-                  <i class="fa-solid fa-unlock"></i> ปลดล็อกแล้ว
-                </span>
-              </div>
-              <p class="text-[11px] text-amber-800 mt-0.5">ท่านทำแบบประเมินเสร็จสมบูรณ์แล้ว สามารถเข้าถึงและดาวน์โหลดเอกสารคู่มือ สไลด์ และภาพกิจกรรมได้ทันที</p>
-            </div>
-          </div>
-        </div>
-
-        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 items-center bg-white p-3 rounded-xl border border-amber-200">
-          <div class="flex flex-col items-center justify-center text-center p-1 sm:border-r border-slate-100">
-            <div id="unlockedDriveQrWrapper" class="p-1 bg-white border border-amber-300 rounded-lg shadow-xs"></div>
-            <span class="text-[9px] text-slate-500 mt-1 font-medium">สแกนเปิด Drive บนมือถือ</span>
-          </div>
-
-          <div class="sm:col-span-2 space-y-2">
-            <a id="btnOpenUnlockedDrive" href="https://drive.google.com/drive/u/0/folders/1GxHFu2kMPwtl7j3PvnD6wHRb_YwlQGqk" target="_blank" class="w-full py-2.5 px-4 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-white font-bold rounded-xl text-xs transition flex items-center justify-center space-x-2 shadow-sm btn-touch">
-              <i class="fa-brands fa-google-drive text-sm"></i>
-              <span>เข้าสู่ Google Drive เพื่อดาวน์โหลดไฟล์ & สื่อการสอน</span>
-              <i class="fa-solid fa-arrow-up-right-from-square text-[10px]"></i>
-            </a>
-            <p class="text-[10px] text-slate-400">
-              * แหล่งรวบรวมไฟล์สไลด์บรรยาย คู่มือการจัดกิจกรรม และโฟลเดอร์ภาพถ่ายความละเอียดสูง
-            </p>
-          </div>
-        </div>
-      </div>
-
-      <!-- FULL E-CERTIFICATE LIVE PREVIEW CONTAINER -->
+      <!-- FULL E-CERTIFICATE LIVE PREVIEW CONTAINER (Placed above actions) -->
       <div id="certPreviewContainer" class="space-y-2">
         <div id="certPreviewHeader" class="flex items-center justify-between px-1 text-xs">
           <span class="font-bold text-slate-700 flex items-center gap-1.5">
             <i class="fa-solid fa-certificate text-[#08539E]"></i>
-            <span>ตัวอย่างวุฒิบัตรจริง A4 แนวนอน (Real-Time Live Certificate Preview):</span>
+            <span id="certPreviewTitleText">ตัวอย่างวุฒิบัตรจริง A4 แนวนอน (Real-Time Live Certificate Preview):</span>
           </span>
-          <span class="text-emerald-700 font-bold text-[11px] flex items-center gap-1">
+          <span id="certLiveBadge" class="text-emerald-700 font-bold text-[11px] flex items-center gap-1">
             <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
             <span>ชื่อเปลี่ยนทันทีตามที่พิมพ์</span>
           </span>
@@ -719,24 +668,12 @@
                 <div class="text-[9px] text-slate-400">ฝ่ายพัฒนาวิชาการและนวัตกรรมการเรียนรู้</div>
               </div>
 
-              <!-- Center: Gold Foil Seal & Verification QR Code -->
+              <!-- Center: Elegant TWP Crest / Seal (NO 'OFFICIAL' text, subtle and refined) -->
               <div class="text-center flex flex-col items-center justify-center space-y-1">
-                <div class="relative">
-                  <!-- Metallic Gold Badge -->
-                  <div class="w-16 h-16 rounded-full bg-gradient-to-tr from-amber-600 via-yellow-400 to-amber-700 p-1 shadow-md flex items-center justify-center border-2 border-white">
-                    <div class="w-full h-full rounded-full bg-amber-500 flex flex-col items-center justify-center text-white border border-amber-300 shadow-inner">
-                      <i class="fa-solid fa-award text-base text-yellow-100"></i>
-                      <span class="text-[7.5px] font-black tracking-widest mt-0.5">OFFICIAL</span>
-                    </div>
-                  </div>
+                <div class="w-11 h-11 rounded-full bg-gradient-to-tr from-amber-500/20 via-yellow-200/40 to-amber-500/20 p-1 flex items-center justify-center border border-amber-300/50">
+                  <img src="assets/logo.png" alt="TWP Emblem" class="w-7 h-7 object-contain opacity-75">
                 </div>
-                <div class="flex items-center gap-1.5 mt-0.5">
-                  <div id="certQrWrapper" class="p-0.5 bg-white border border-slate-300 rounded shadow-xs"></div>
-                  <div class="text-left">
-                    <div class="text-[8px] font-mono text-slate-500">CERT NO:</div>
-                    <div id="viewCertRefId" class="text-[9px] font-mono font-bold text-[#08539E]">TWP-2026-0001</div>
-                  </div>
-                </div>
+                <div class="text-[8.5px] font-semibold text-slate-400 tracking-wider">THAI WATANA PANICH</div>
               </div>
 
               <!-- Right Signatory: Executive Director with Digital Signature -->
@@ -751,12 +688,104 @@
 
             </div>
 
-            <!-- Bottom Disclaimer Footnote -->
-            <div class="text-center text-[8.5px] text-slate-400 relative z-10 border-t border-slate-100 pt-1 flex justify-between px-2">
-              <span>วุฒิบัตรอิเล็กทรอนิกส์ออกตามมาตรฐานการอบรม สำนักพิมพ์ไทยวัฒนาพานิช จำกัด</span>
-              <span>ตรวจสอบความถูกต้องของวุฒิบัตรได้ผ่าน QR Code มุมล่าง</span>
+            <!-- Bottom Disclaimer & QR Code (Flush to bottom border, small & neat) -->
+            <div class="relative z-10 border-t border-slate-100 pt-1.5 pb-0.5 px-4 flex items-center justify-between text-slate-400">
+              <div class="flex items-center gap-2">
+                <div id="certQrWrapper" class="p-0.5 bg-white border border-slate-200 rounded shadow-2xs"></div>
+                <div class="text-left leading-tight">
+                  <div class="text-[7.5px] font-mono text-slate-400">DOCUMENT REF:</div>
+                  <div id="viewCertRefId" class="text-[8.5px] font-mono font-bold text-slate-600">TWP-2026-0001</div>
+                </div>
+              </div>
+              <div class="text-right text-[8px] text-slate-400 leading-tight">
+                <div>วุฒิบัตรอิเล็กทรอนิกส์ออกตามมาตรฐาน สำนักพิมพ์ไทยวัฒนาพานิช จำกัด</div>
+                <div class="text-[7.5px] text-slate-400 font-mono">สแกน QR Code เพื่อตรวจสอบความถูกต้องของวุฒิบัตรฉบับจริง</div>
+              </div>
             </div>
 
+          </div>
+        </div>
+      </div>
+
+      <!-- Action Card: Email Dispatch & PDF Download -->
+      <div id="certActionCard" class="bg-white rounded-2xl shadow-md border border-slate-200 p-5 space-y-4">
+        
+        <div id="emailStatusBanner" class="p-3.5 rounded-xl bg-blue-50 border border-blue-200 text-xs text-blue-900 flex items-start gap-2.5">
+          <i class="fa-solid fa-paper-plane text-blue-600 text-base mt-0.5"></i>
+          <div class="flex-1">
+            <div class="font-bold text-blue-950">ช่องทางรับวุฒิบัตร (e-Certificate):</div>
+            <div class="text-blue-800 mt-0.5">ท่านสามารถกดส่งไฟล์เข้าสู่อีเมล หรือกดปุ่ม <strong>"พิมพ์ / บันทึกเป็น PDF"</strong> เพื่อดาวน์โหลดไฟล์เข้าสู่อุปกรณ์ของท่านได้ทันที</div>
+          </div>
+        </div>
+
+        <!-- Security Lock Banner (Shown when email is already sent) -->
+        <div id="certLockedBanner" class="hidden p-4 rounded-xl bg-amber-50 border-2 border-amber-300 text-xs text-amber-950 space-y-2">
+          <div class="flex items-center gap-2 font-bold text-amber-900 text-sm">
+            <i class="fa-solid fa-lock text-amber-600 text-base"></i>
+            <span>วุฒิบัตรถูกจัดส่งทางอีเมลเรียบร้อยแล้ว (ล็อกสิทธิ์การออกซ้ำ)</span>
+          </div>
+          <p class="leading-relaxed text-amber-800">
+            ระบบได้ทำการบันทึกและล็อกสิทธิ์การออกวุฒิบัตรฉบับนี้แล้ว ท่านสามารถเปิดดูหรือบันทึกไฟล์จากอีเมลที่ได้รับ หรือกดปุ่มพิมพ์/บันทึก PDF ด้านล่างนี้ได้ตลอดเวลาครับ
+          </p>
+        </div>
+
+        <!-- Dispatch Buttons -->
+        <div class="space-y-2.5">
+          <div class="flex flex-col sm:flex-row items-center gap-2.5">
+            <button type="button" id="btnSendCertEmail" onclick="sendCertToEmailAction()" class="btn-touch w-full flex-1 py-3 px-4 bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 text-white font-bold rounded-xl shadow-md flex items-center justify-center space-x-2 transition cursor-pointer">
+              <i class="fa-solid fa-envelope-circle-check text-amber-300 text-base"></i>
+              <span>ส่งวุฒิบัตรเข้าอีเมลของฉันทันที</span>
+            </button>
+            
+            <button type="button" id="btnPrintCert" onclick="printCertAction()" class="btn-touch w-full sm:w-auto py-3 px-5 bg-gradient-to-r from-blue-700 to-indigo-700 hover:from-blue-800 hover:to-indigo-800 text-white font-bold rounded-xl shadow-md flex items-center justify-center space-x-2 transition cursor-pointer">
+              <i class="fa-solid fa-print text-amber-300"></i>
+              <span>พิมพ์ / บันทึก PDF (A4 แนวนอน)</span>
+            </button>
+          </div>
+          <div class="flex justify-center">
+            <button type="button" onclick="openFullCertWindow()" class="btn-touch text-xs text-blue-700 hover:text-blue-900 font-bold py-1.5 px-3 rounded-lg bg-blue-50 hover:bg-blue-100 border border-blue-200 transition flex items-center gap-1.5 cursor-pointer">
+              <i class="fa-solid fa-up-right-from-square text-blue-600"></i>
+              <span>เปิดหน้าต่างวุฒิบัตรเต็มแผ่น (Full Landscape Window)</span>
+            </button>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- UNLOCKED REWARD: CLOUD DRIVE & TRAINING MATERIALS -->
+      <div id="unlockedResourceCard" class="bg-gradient-to-r from-amber-500/10 via-amber-500/5 to-transparent border-2 border-amber-300 rounded-2xl p-4 sm:p-5 shadow-sm space-y-3.5">
+        <div class="flex items-center justify-between">
+          <div class="flex items-center space-x-2.5">
+            <div class="w-10 h-10 rounded-xl bg-amber-500 text-white flex items-center justify-center text-lg shadow-sm">
+              <i class="fa-solid fa-gift"></i>
+            </div>
+            <div>
+              <div class="flex items-center gap-1.5">
+                <h4 class="text-xs sm:text-sm font-extrabold text-amber-950">คลังเอกสาร สื่อการสอน และภาพถ่ายโครงการ (Google Drive)</h4>
+                <span class="text-[9px] bg-emerald-100 text-emerald-800 font-bold px-2 py-0.5 rounded-full border border-emerald-300 flex items-center gap-1">
+                  <i class="fa-solid fa-unlock"></i> ปลดล็อกแล้ว
+                </span>
+              </div>
+              <p class="text-[11px] text-amber-800 mt-0.5">ท่านทำแบบประเมินเสร็จสมบูรณ์แล้ว สามารถเข้าถึงและดาวน์โหลดเอกสารคู่มือ สไลด์ และภาพกิจกรรมได้ทันที</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 items-center bg-white p-3 rounded-xl border border-amber-200">
+          <div class="flex flex-col items-center justify-center text-center p-1 sm:border-r border-slate-100">
+            <div id="unlockedDriveQrWrapper" class="p-1 bg-white border border-amber-300 rounded-lg shadow-xs"></div>
+            <span class="text-[9px] text-slate-500 mt-1 font-medium">สแกนเปิด Drive บนมือถือ</span>
+          </div>
+
+          <div class="sm:col-span-2 space-y-2">
+            <a id="btnOpenUnlockedDrive" href="https://drive.google.com/drive/u/0/folders/1GxHFu2kMPwtl7j3PvnD6wHRb_YwlQGqk" target="_blank" class="w-full py-2.5 px-4 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-white font-bold rounded-xl text-xs transition flex items-center justify-center space-x-2 shadow-sm btn-touch">
+              <i class="fa-brands fa-google-drive text-sm"></i>
+              <span>เข้าสู่ Google Drive เพื่อดาวน์โหลดไฟล์ & สื่อการสอน</span>
+              <i class="fa-solid fa-arrow-up-right-from-square text-[10px]"></i>
+            </a>
+            <p class="text-[10px] text-slate-400">
+              * แหล่งรวบรวมไฟล์สไลด์บรรยาย คู่มือการจัดกิจกรรม และโฟลเดอร์ภาพถ่ายความละเอียดสูง
+            </p>
           </div>
         </div>
       </div>
@@ -781,19 +810,81 @@
     // Embedded Production Apps Script Web App Endpoint
     const DEFAULT_GAS_ENDPOINT = 'https://script.google.com/macros/s/AKfycby-D2AvgHXO_y4tVxg8wgkDP9ARBnRpiVp47-vnF7AiA1TA4AqwKGbelJTyI68tKfmx6g/exec';
 
-    // 10 Standard Evaluation Dimensions
+    // 10 Standard Evaluation Dimensions (Bilingual Support: TH / EN)
     const EVALUATION_QUESTIONS = [
-      { id: 'q1', no: 1, title: 'ความรู้ความเชี่ยวชาญในเนื้อหาของวิทยากร', desc: 'วิทยากรมีความรอบรู้ ลึกซึ้ง และตอบข้อซักถามได้อย่างชัดเจน' },
-      { id: 'q2', no: 2, title: 'เทคนิคการถ่ายทอดและการสื่อสารที่ชัดเจน เข้าใจง่าย', desc: 'มีลีลาการบรรยายที่น่าสนใจ ใช้ภาษาชัดเจน กระตุ้นการมีส่วนร่วม' },
-      { id: 'q3', no: 3, title: 'เนื้อหาหลักสูตรมีความทันสมัย ตรงตามมาตรฐานวิชาการ', desc: 'เนื้อหาถูกต้อง ทันต่อการเปลี่ยนแปลง และสอดคล้องกับหลักสูตรแกนกลาง' },
-      { id: 'q4', no: 4, title: 'ประโยชน์ในการนำความรู้ไปประยุกต์ใช้ในการสอนจริง', desc: 'สามารถนำแนวคิด เทคนิค และกิจกรรมไปปรับใช้ในชั้นเรียนได้ทันที' },
-      { id: 'q5', no: 5, title: 'คุณภาพและความเหมาะสมของเอกสาร สื่อ และชุดกิจกรรม', desc: 'เอกสารคู่มือ สไลด์ และสื่อตัวอย่างมีคุณภาพ สวยงาม ชัดเจน' },
-      { id: 'q6', no: 6, title: 'ความเหมาะสมของระยะเวลาและกำหนดการจัดกิจกรรม', desc: 'การจัดสรรเวลาในแต่ละหัวข้อมีความเหมาะสม ไม่กระชั้นชิดหรือยืดเยื้อ' },
-      { id: 'q7', no: 7, title: 'ความพร้อมของสถานที่ โสตทัศนูปกรณ์ และสิ่งอำนวยความสะดวก', desc: 'ระบบเสียง ภาพ แสงสว่าง และสัญญาณอินเทอร์เน็ตมีความพร้อมและเสถียร' },
-      { id: 'q8', no: 8, title: 'การให้บริการ การต้อนรับ และการประสานงานของทีมงาน TWP', desc: 'ทีมงานให้การต้อนรับ ประสานงาน ดูแลอำนวยความสะดวกอย่างอบอุ่น' },
-      { id: 'q9', no: 9, title: 'ความพึงพอใจต่อภาพรวมและผลสัมฤทธิ์ของการจัดอบรม', desc: 'การจัดกิจกรรมบรรลุวัตถุประสงค์และเกิดประโยชน์คุ้มค่าต่อผู้เรียน' },
-      { id: 'q10', no: 10, title: 'ความประสงค์เข้าร่วมกิจกรรมหรือแนะนำหลักสูตรของ TWP ต่อไป', desc: 'ยินดีที่จะเข้าร่วมกิจกรรมอบรมหรือแนะนำสื่อการสอนของ TWP ให้เพื่อนครู' }
+      { 
+        id: 'q1', no: 1, 
+        titleTh: 'ความรู้ความเชี่ยวชาญในเนื้อหาของวิทยากร', 
+        descTh: 'วิทยากรมีความรอบรู้ ลึกซึ้ง และตอบข้อซักถามได้อย่างชัดเจน',
+        titleEn: 'Speaker\'s Subject Matter Expertise',
+        descEn: 'The speaker demonstrated profound knowledge and answered inquiries clearly.'
+      },
+      { 
+        id: 'q2', no: 2, 
+        titleTh: 'เทคนิคการถ่ายทอดและการสื่อสารที่ชัดเจน เข้าใจง่าย', 
+        descTh: 'มีลีลาการบรรยายที่น่าสนใจ ใช้ภาษาชัดเจน กระตุ้นการมีส่วนร่วม',
+        titleEn: 'Communication & Teaching Delivery',
+        descEn: 'Engaging presentation style, clear articulation, and stimulated active engagement.'
+      },
+      { 
+        id: 'q3', no: 3, 
+        titleTh: 'เนื้อหาหลักสูตรมีความทันสมัย ตรงตามมาตรฐานวิชาการ', 
+        descTh: 'เนื้อหาถูกต้อง ทันต่อการเปลี่ยนแปลง และสอดคล้องกับหลักสูตรแกนกลาง',
+        titleEn: 'Curriculum Relevance & Modern Standards',
+        descEn: 'Accurate, up-to-date content aligned with national educational standards.'
+      },
+      { 
+        id: 'q4', no: 4, 
+        titleTh: 'ประโยชน์ในการนำความรู้ไปประยุกต์ใช้ในการสอนจริง', 
+        descTh: 'สามารถนำแนวคิด เทคนิค และกิจกรรมไปปรับใช้ในชั้นเรียนได้ทันที',
+        titleEn: 'Practical Classroom Applicability',
+        descEn: 'Teaching techniques and activities can be directly implemented in classrooms.'
+      },
+      { 
+        id: 'q5', no: 5, 
+        titleTh: 'คุณภาพและความเหมาะสมของเอกสาร สื่อ และชุดกิจกรรม', 
+        descTh: 'เอกสารคู่มือ สไลด์ และสื่อตัวอย่างมีคุณภาพ สวยงาม ชัดเจน',
+        titleEn: 'Quality of Materials & Learning Media',
+        descEn: 'Course handouts, presentation slides, and learning kits were of high quality.'
+      },
+      { 
+        id: 'q6', no: 6, 
+        titleTh: 'ความเหมาะสมของระยะเวลาและกำหนดการจัดกิจกรรม', 
+        descTh: 'การจัดสรรเวลาในแต่ละหัวข้อมีความเหมาะสม ไม่กระชั้นชิดหรือยืดเยื้อ',
+        titleEn: 'Schedule & Time Allocation',
+        descEn: 'Well-balanced agenda and pacing across all instructional sessions.'
+      },
+      { 
+        id: 'q7', no: 7, 
+        titleTh: 'ความพร้อมของสถานที่ โสตทัศนูปกรณ์ และสิ่งอำนวยความสะดวก', 
+        descTh: 'ระบบเสียง ภาพ แสงสว่าง และสัญญาณอินเทอร์เน็ตมีความพร้อมและเสถียร',
+        titleEn: 'Facilities & Audiovisual Readiness',
+        descEn: 'Sound, lighting, visual displays, and network connectivity were reliable.'
+      },
+      { 
+        id: 'q8', no: 8, 
+        titleTh: 'การให้บริการ การต้อนรับ และการประสานงานของทีมงาน TWP', 
+        descTh: 'ทีมงานให้การต้อนรับ ประสานงาน ดูแลอำนวยความสะดวกอย่างอบอุ่น',
+        titleEn: 'TWP Staff Hospitality & Coordination',
+        descEn: 'Warm welcome, attentive assistance, and professional event facilitation.'
+      },
+      { 
+        id: 'q9', no: 9, 
+        titleTh: 'ความพึงพอใจต่อภาพรวมและผลสัมฤทธิ์ของการจัดอบรม', 
+        descTh: 'การจัดกิจกรรมบรรลุวัตถุประสงค์และเกิดประโยชน์คุ้มค่าต่อผู้เรียน',
+        titleEn: 'Overall Workshop Achievement & Satisfaction',
+        descEn: 'The program successfully accomplished its goals and delivered exceptional value.'
+      },
+      { 
+        id: 'q10', no: 10, 
+        titleTh: 'ความประสงค์เข้าร่วมกิจกรรมหรือแนะนำหลักสูตรของ TWP ต่อไป', 
+        descTh: 'ยินดีที่จะเข้าร่วมกิจกรรมอบรมหรือแนะนำสื่อการสอนของ TWP ให้เพื่อนครู',
+        titleEn: 'Future Participation & Peer Recommendation',
+        descEn: 'Eager to attend subsequent TWP training sessions and recommend to colleagues.'
+      }
     ];
+
+    let currentLang = 'th';
 
     // Signature data URI of Assistant Professor Indhira Bunnag (Managing Director)
     const EXECUTIVE_SIGNATURE_SVG = 'data:image/svg+xml;utf8,' + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="260" height="90" viewBox="0 0 260 90"><path d="M 25 55 Q 50 15, 75 50 T 115 40 Q 145 25, 165 55 T 205 45 Q 235 35, 250 40" fill="none" stroke="#003399" stroke-width="2.6" stroke-linecap="round"/><path d="M 55 65 Q 125 70, 225 58" fill="none" stroke="#003399" stroke-width="2.2" stroke-linecap="round"/><path d="M 100 30 Q 110 10, 120 35" fill="none" stroke="#003399" stroke-width="2.2" stroke-linecap="round"/><text x="110" y="80" font-family="sans-serif" font-size="13" fill="#08539E" font-weight="bold">ผศ.อินทิรา บุนนาค</text></svg>');
@@ -846,7 +937,62 @@
       renderQuestions();
       resolveEventDetails();
       
-      // Check if already completed Step 1
+      // 1. Direct e-Certificate Access from Email (Bypasses survey & locks certificate view)
+      const pStep = urlParams.get('step');
+      const pView = urlParams.get('view');
+      const pCert = urlParams.get('cert');
+      const pName = urlParams.get('name') || urlParams.get('nameTh');
+      const pNameEn = urlParams.get('nameEn');
+      const pSchool = urlParams.get('school');
+      const pDate = urlParams.get('date');
+      const pTopic = urlParams.get('topic');
+      const pSpeaker = urlParams.get('speaker');
+
+      if (pView === 'cert' || urlParams.get('mode') === 'cert' || (pStep === '2' && pName) || (pCert && pName)) {
+        const cId = pCert || currentParticipant.certId || ('TWP-ECERT-' + Date.now().toString().slice(-6));
+        currentParticipant.certId = cId;
+        if (pName) currentParticipant.nameTh = decodeURIComponent(pName);
+        if (pNameEn) currentParticipant.nameEn = decodeURIComponent(pNameEn);
+        if (pSchool) currentParticipant.school = decodeURIComponent(pSchool);
+        if (pTopic) currentParticipant.courseTitle = decodeURIComponent(pTopic);
+        if (pDate) currentParticipant.eventDate = decodeURIComponent(pDate);
+        if (pSpeaker) currentParticipant.speakerName = decodeURIComponent(pSpeaker);
+
+        applyDirectCertViewMode();
+        return;
+      }
+
+      if (pCert || pStep === '2') {
+        const cId = pCert || currentParticipant.certId || ('TWP-ECERT-' + Date.now().toString().slice(-6));
+        currentParticipant.certId = cId;
+        if (pName) currentParticipant.nameTh = decodeURIComponent(pName);
+        if (pNameEn) currentParticipant.nameEn = decodeURIComponent(pNameEn);
+        if (pSchool) currentParticipant.school = decodeURIComponent(pSchool);
+        if (pTopic) currentParticipant.courseTitle = decodeURIComponent(pTopic);
+        if (pDate) currentParticipant.eventDate = decodeURIComponent(pDate);
+        if (pSpeaker) currentParticipant.speakerName = decodeURIComponent(pSpeaker);
+
+        switchToStep2(cId, 'VERIFIED_EMAIL_DISPATCH');
+
+        // Pre-fill input fields in Step 2
+        if (currentParticipant.nameTh) {
+          const inpTh = document.getElementById('participantNameTh');
+          if (inpTh) inpTh.value = currentParticipant.nameTh;
+        }
+        if (currentParticipant.nameEn) {
+          const inpEn = document.getElementById('participantNameEn');
+          if (inpEn) inpEn.value = currentParticipant.nameEn;
+        }
+        if (currentParticipant.school) {
+          const inpSc = document.getElementById('participantSchool');
+          if (inpSc) inpSc.value = currentParticipant.school;
+        }
+
+        updateCertLivePreview();
+        return;
+      }
+
+      // 2. Check if already completed Step 1 in local session
       const submittedResp = localStorage.getItem('ems_submitted_' + surveyToken);
       const isEmailSent = localStorage.getItem('ems_cert_sent_' + surveyToken) === 'SENT';
 
@@ -865,25 +1011,73 @@
       }
     });
 
-    // Render 10 Questions HTML
+    function setLanguage(lang) {
+      currentLang = lang;
+      const btnTh = document.getElementById('btnLangTh');
+      const btnEn = document.getElementById('btnLangEn');
+      if (btnTh && btnEn) {
+        if (lang === 'th') {
+          btnTh.className = 'px-2.5 py-1 rounded-lg bg-white text-[#08539E] shadow-xs transition cursor-pointer font-bold';
+          btnEn.className = 'px-2.5 py-1 rounded-lg text-blue-200 hover:text-white transition cursor-pointer font-medium';
+        } else {
+          btnEn.className = 'px-2.5 py-1 rounded-lg bg-white text-[#08539E] shadow-xs transition cursor-pointer font-bold';
+          btnTh.className = 'px-2.5 py-1 rounded-lg text-blue-200 hover:text-white transition cursor-pointer font-medium';
+        }
+      }
+
+      renderQuestions();
+      updateStaticTextI18n();
+    }
+
+    function updateStaticTextI18n() {
+      const isEn = (currentLang === 'en');
+      const headerTitle = document.getElementById('headerMainTitle');
+      if (headerTitle) headerTitle.innerText = isEn ? 'Evaluation & e-Certificate Issuance' : 'แบบประเมินและรับวุฒิบัตร (e-Certificate)';
+
+      const stepText1 = document.getElementById('stepText1');
+      if (stepText1) stepText1.innerText = isEn ? 'Step 1: Evaluation (10 Questions)' : 'ขั้นตอนที่ 1: ทำแบบประเมิน 10 ข้อ';
+      const stepText2 = document.getElementById('stepText2');
+      if (stepText2) stepText2.innerText = isEn ? 'Step 2: Participant Details' : 'ขั้นตอนที่ 2: ระบุชื่อรับวุฒิบัตร';
+
+      const btnSubmit = document.getElementById('btnSubmitEval');
+      if (btnSubmit) {
+        btnSubmit.innerHTML = isEn 
+          ? `<span>Submit Evaluation & Proceed to e-Certificate</span><i class="fa-solid fa-arrow-right text-amber-300 ml-1"></i>`
+          : `<span>ส่งผลการประเมิน และไปต่อเพื่อรับวุฒิบัตร (e-Certificate)</span><i class="fa-solid fa-arrow-right text-amber-300 ml-1"></i>`;
+      }
+    }
+
+    // Render 10 Questions HTML (Bilingual Support)
     function renderQuestions() {
       const container = document.getElementById('questionsContainer');
-      container.innerHTML = EVALUATION_QUESTIONS.map(q => `
+      const isEn = (currentLang === 'en');
+      const scales = isEn 
+        ? [ { v: 1, l: 'Poor' }, { v: 2, l: 'Fair' }, { v: 3, l: 'Good' }, { v: 4, l: 'Very Good' }, { v: 5, l: 'Excellent' } ]
+        : [ { v: 1, l: 'น้อยสุด' }, { v: 2, l: 'น้อย' }, { v: 3, l: 'ปานกลาง' }, { v: 4, l: 'ดี' }, { v: 5, l: 'ดีเยี่ยม' } ];
+
+      container.innerHTML = EVALUATION_QUESTIONS.map(q => {
+        const title = isEn ? q.titleEn : q.titleTh;
+        const desc = isEn ? q.descEn : q.descTh;
+        const currentVal = document.getElementById(q.id)?.value || 5;
+
+        return `
         <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-4 transition hover:border-blue-300">
           <label class="block text-xs sm:text-sm font-bold text-slate-800 mb-0.5">
-            ${q.no}. ${q.title}
+            ${q.no}. ${title}
           </label>
-          <p class="text-[11px] text-slate-400 mb-3">${q.desc}</p>
+          <p class="text-[11px] text-slate-400 mb-3">${desc}</p>
           <div class="flex justify-between items-center px-1" data-rating-group="${q.id}">
-            <button type="button" onclick="setRating('${q.id}', 1)" class="w-10 h-10 sm:w-12 sm:h-12 rounded-xl border border-slate-200 text-xs sm:text-sm font-bold transition hover:bg-blue-50 rating-btn" data-val="1">1<span class="text-[8px] font-normal text-slate-400 block -mt-1">น้อยสุด</span></button>
-            <button type="button" onclick="setRating('${q.id}', 2)" class="w-10 h-10 sm:w-12 sm:h-12 rounded-xl border border-slate-200 text-xs sm:text-sm font-bold transition hover:bg-blue-50 rating-btn" data-val="2">2<span class="text-[8px] font-normal text-slate-400 block -mt-1">น้อย</span></button>
-            <button type="button" onclick="setRating('${q.id}', 3)" class="w-10 h-10 sm:w-12 sm:h-12 rounded-xl border border-slate-200 text-xs sm:text-sm font-bold transition hover:bg-blue-50 rating-btn" data-val="3">3<span class="text-[8px] font-normal text-slate-400 block -mt-1">ปานกลาง</span></button>
-            <button type="button" onclick="setRating('${q.id}', 4)" class="w-10 h-10 sm:w-12 sm:h-12 rounded-xl border border-slate-200 text-xs sm:text-sm font-bold transition hover:bg-blue-50 rating-btn" data-val="4">4<span class="text-[8px] font-normal text-slate-400 block -mt-1">ดี</span></button>
-            <button type="button" onclick="setRating('${q.id}', 5)" class="w-10 h-10 sm:w-12 sm:h-12 rounded-xl border-2 border-blue-600 bg-blue-50 text-blue-700 text-xs sm:text-sm font-bold transition rating-btn active" data-val="5">5<span class="text-[8px] font-bold text-blue-600 block -mt-1">ดีเยี่ยม</span></button>
+            ${scales.map(sc => `
+              <button type="button" onclick="setRating('${q.id}', ${sc.v})" class="w-10 h-10 sm:w-12 sm:h-12 rounded-xl ${sc.v == currentVal ? 'border-2 border-blue-600 bg-blue-50 text-blue-700' : 'border border-slate-200 hover:bg-blue-50'} text-xs sm:text-sm font-bold transition rating-btn ${sc.v == currentVal ? 'active' : ''}" data-val="${sc.v}">
+                ${sc.v}
+                <span class="text-[8px] font-normal block -mt-1 ${sc.v == currentVal ? 'text-blue-600 font-bold' : 'text-slate-400'}">${sc.l}</span>
+              </button>
+            `).join('')}
           </div>
-          <input type="hidden" name="${q.id}" id="${q.id}" value="5">
+          <input type="hidden" name="${q.id}" id="${q.id}" value="${currentVal}">
         </div>
-      `).join('');
+      `;
+      }).join('');
     }
 
     function setRating(question, value) {
@@ -1087,24 +1281,13 @@
         `;
       }).join('');
 
-      const sealAndQrHtml = `
-        <!-- Center: Gold Foil Seal & Verification QR Code -->
+      const sealHtml = `
+        <!-- Center: Subtle TWP Emblem Seal (No OFFICIAL text) -->
         <div class="text-center flex flex-col items-center justify-center space-y-1">
-          <div class="relative">
-            <div class="w-16 h-16 rounded-full bg-gradient-to-tr from-amber-600 via-yellow-400 to-amber-700 p-1 shadow-md flex items-center justify-center border-2 border-white">
-              <div class="w-full h-full rounded-full bg-amber-500 flex flex-col items-center justify-center text-white border border-amber-300 shadow-inner">
-                <i class="fa-solid fa-award text-base text-yellow-100"></i>
-                <span class="text-[7.5px] font-black tracking-widest mt-0.5">OFFICIAL</span>
-              </div>
-            </div>
+          <div class="w-11 h-11 rounded-full bg-gradient-to-tr from-amber-500/20 via-yellow-200/40 to-amber-500/20 p-1 flex items-center justify-center border border-amber-300/50">
+            <img src="assets/logo.png" alt="TWP Emblem" class="w-7 h-7 object-contain opacity-75">
           </div>
-          <div class="flex items-center gap-1.5 mt-0.5">
-            <div id="certQrWrapper" class="p-0.5 bg-white border border-slate-300 rounded shadow-xs"></div>
-            <div class="text-left">
-              <div class="text-[8px] font-mono text-slate-500">CERT NO:</div>
-              <div id="viewCertRefId" class="text-[9px] font-mono font-bold text-[#08539E]">${cId}</div>
-            </div>
-          </div>
+          <div class="text-[8.5px] font-semibold text-slate-400 tracking-wider">THAI WATANA PANICH</div>
         </div>
       `;
 
@@ -1121,15 +1304,19 @@
       `;
 
       container.className = `grid ${colsClass} items-end pt-3 pb-2 px-8 relative z-10 border-t border-slate-200/70`;
-      container.innerHTML = speakersHtml + sealAndQrHtml + execHtml;
+      container.innerHTML = speakersHtml + sealHtml + execHtml;
+
+      const viewRef = document.getElementById('viewCertRefId');
+      if (viewRef) viewRef.innerText = cId;
 
       const qrWrap = document.getElementById('certQrWrapper');
       if (qrWrap && window.QRCode) {
         qrWrap.innerHTML = '';
+        const verifyUrl = `https://doit-on.github.io/twp-training-system/survey.html?step=2&view=cert&cert=${encodeURIComponent(cId)}&t=${encodeURIComponent(surveyToken)}&name=${encodeURIComponent(currentParticipant.nameTh || '')}&nameEn=${encodeURIComponent(currentParticipant.nameEn || '')}&school=${encodeURIComponent(currentParticipant.school || '')}`;
         new QRCode(qrWrap, {
-          text: `https://twp.co.th/verify?cert=${encodeURIComponent(cId)}`,
-          width: 48,
-          height: 48,
+          text: verifyUrl,
+          width: 38,
+          height: 38,
           colorDark: '#08539E',
           colorLight: '#ffffff',
           correctLevel: QRCode.CorrectLevel.M
@@ -1179,6 +1366,94 @@
 
       // Instant transition (Zero-lag responsive UI)
       switchToStep2(certNumber, respId);
+    }
+
+    // Direct Certificate View Mode: Used when accessing certificate via email link
+    // Completely locks the certificate view, hiding input forms and survey step navigation
+    function applyDirectCertViewMode() {
+      // 1. Hide survey containers, form inputs & stepper
+      const step1 = document.getElementById('step1Container');
+      if (step1) step1.classList.add('hidden');
+      const step2 = document.getElementById('step2Container');
+      if (step2) step2.classList.remove('hidden');
+
+      const stepper = document.getElementById('stepperCard');
+      if (stepper) stepper.classList.add('hidden');
+
+      const compNotice = document.getElementById('completionNoticeCard');
+      if (compNotice) compNotice.classList.add('hidden');
+
+      const formCard = document.getElementById('participantInputFormCard');
+      if (formCard) formCard.classList.add('hidden');
+
+      const resetCard = document.getElementById('resetParticipantCard');
+      if (resetCard) resetCard.classList.add('hidden');
+
+      const emailStatusBanner = document.getElementById('emailStatusBanner');
+      if (emailStatusBanner) emailStatusBanner.classList.add('hidden');
+
+      const sendBtn = document.getElementById('btnSendCertEmail');
+      if (sendBtn) sendBtn.classList.add('hidden');
+
+      // 2. Show Official Direct Certificate Banner with verified info
+      const directBanner = document.getElementById('directCertVerifiedBanner');
+      if (directBanner) directBanner.classList.remove('hidden');
+
+      const bNameTh = document.getElementById('bannerParticipantNameTh');
+      if (bNameTh) bNameTh.innerText = currentParticipant.nameTh || 'ผู้เข้าร่วมการอบรม';
+      const bNameEn = document.getElementById('bannerParticipantNameEn');
+      if (bNameEn) bNameEn.innerText = currentParticipant.nameEn || '';
+      const bSchool = document.getElementById('bannerParticipantSchool');
+      if (bSchool) bSchool.innerText = currentParticipant.school || '';
+
+      const certTitleText = document.getElementById('certPreviewTitleText');
+      if (certTitleText) certTitleText.innerText = 'วุฒิบัตรอิเล็กทรอนิกส์ฉบับจริง (Official e-Certificate A4 Landscape)';
+      const certLiveBadge = document.getElementById('certLiveBadge');
+      if (certLiveBadge) {
+        certLiveBadge.className = 'text-emerald-700 font-bold text-[11px] flex items-center gap-1';
+        certLiveBadge.innerHTML = '<i class="fa-solid fa-circle-check text-emerald-600"></i><span>เอกสารสมบูรณ์และถูกต้อง</span>';
+      }
+
+      // 3. Update Certificate elements & Signatures
+      const cId = currentParticipant.certId || ('TWP-ECERT-' + Date.now().toString().slice(-6));
+      currentParticipant.certId = cId;
+      const viewRef = document.getElementById('viewCertRefId');
+      if (viewRef) viewRef.innerText = cId;
+
+      // Populate Drive QR & button
+      const driveQrWrap = document.getElementById('unlockedDriveQrWrapper');
+      if (driveQrWrap) {
+        driveQrWrap.innerHTML = '';
+        const driveUrl = currentParticipant.resourceLink || 'https://drive.google.com/drive/u/0/folders/1GxHFu2kMPwtl7j3PvnD6wHRb_YwlQGqk';
+        const driveBtn = document.getElementById('btnOpenUnlockedDrive');
+        if (driveBtn) driveBtn.href = driveUrl;
+        new QRCode(driveQrWrap, {
+          text: driveUrl,
+          width: 70,
+          height: 70,
+          colorDark: '#b45309',
+          colorLight: '#ffffff',
+          correctLevel: QRCode.CorrectLevel.M
+        });
+      }
+
+      // Generate Verification QR Code inside certificate
+      const qrWrap = document.getElementById('certQrWrapper');
+      if (qrWrap) {
+        qrWrap.innerHTML = '';
+        const verifyUrl = `https://doit-on.github.io/twp-training-system/survey.html?step=2&view=cert&cert=${encodeURIComponent(cId)}&t=${encodeURIComponent(surveyToken)}&name=${encodeURIComponent(currentParticipant.nameTh || '')}&nameEn=${encodeURIComponent(currentParticipant.nameEn || '')}&school=${encodeURIComponent(currentParticipant.school || '')}`;
+        new QRCode(qrWrap, {
+          text: verifyUrl,
+          width: 38,
+          height: 38,
+          colorDark: '#08539E',
+          colorLight: '#ffffff',
+          correctLevel: QRCode.CorrectLevel.M
+        });
+      }
+
+      updateCertLivePreview();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
     // Step 2 Transition
@@ -1234,10 +1509,11 @@
       const qrWrap = document.getElementById('certQrWrapper');
       if (qrWrap) {
         qrWrap.innerHTML = '';
+        const verifyUrl = `https://doit-on.github.io/twp-training-system/survey.html?step=2&view=cert&cert=${encodeURIComponent(cId)}&t=${encodeURIComponent(surveyToken)}&name=${encodeURIComponent(currentParticipant.nameTh || '')}&nameEn=${encodeURIComponent(currentParticipant.nameEn || '')}&school=${encodeURIComponent(currentParticipant.school || '')}`;
         new QRCode(qrWrap, {
-          text: `https://twp.co.th/verify?cert=${encodeURIComponent(cId)}`,
-          width: 48,
-          height: 48,
+          text: verifyUrl,
+          width: 38,
+          height: 38,
           colorDark: '#08539E',
           colorLight: '#ffffff',
           correctLevel: QRCode.CorrectLevel.M
@@ -1268,15 +1544,15 @@
 
     // Live update certificate preview elements in real-time as user types
     function updateCertLivePreview() {
-      const nameTh = document.getElementById('participantNameTh')?.value.trim();
-      const nameEn = document.getElementById('participantNameEn')?.value.trim();
-      const school = document.getElementById('participantSchool')?.value.trim() || currentParticipant.school || '';
-      const email = document.getElementById('participantEmail')?.value.trim();
+      const nameTh = (document.getElementById('participantNameTh')?.value || '').trim() || currentParticipant.nameTh || '';
+      const nameEn = (document.getElementById('participantNameEn')?.value || '').trim() || currentParticipant.nameEn || '';
+      const school = (document.getElementById('participantSchool')?.value || '').trim() || currentParticipant.school || '';
+      const email = (document.getElementById('participantEmail')?.value || '').trim() || currentParticipant.email || '';
 
-      currentParticipant.nameTh = nameTh || '';
-      currentParticipant.nameEn = nameEn || '';
+      currentParticipant.nameTh = nameTh;
+      currentParticipant.nameEn = nameEn;
       currentParticipant.school = school;
-      currentParticipant.email = email || '';
+      currentParticipant.email = email;
 
       // Update Live Certificate Elements
       const viewTh = document.getElementById('viewCertNameTh');
@@ -1344,9 +1620,11 @@
         nameEn: currentParticipant.nameEn || currentParticipant.nameTh,
         school: currentParticipant.school,
         courseTopic: currentParticipant.courseTitle,
+        speakerName: currentParticipant.speakerName,
         certId: currentParticipant.certId || document.getElementById('savedCertId').innerText,
         eventDate: currentParticipant.eventDate,
-        token: surveyToken
+        token: surveyToken,
+        driveUrl: currentParticipant.resourceLink || 'https://drive.google.com/drive/u/0/folders/1GxHFu2kMPwtl7j3PvnD6wHRb_YwlQGqk'
       };
 
       // Save participant data locally
@@ -1428,17 +1706,18 @@
     }
 
     function printCertAction() {
-      const nameTh = document.getElementById('participantNameTh')?.value.trim();
+      const nameTh = currentParticipant.nameTh || document.getElementById('participantNameTh')?.value.trim();
       if (!nameTh) {
-        alert('กรุณาระบุชื่อ-นามสกุล (ภาษาไทย) ในช่องข้อมูลด้านบน เพื่อพิมพ์ลงในวุฒิบัตรก่อนครับ');
-        document.getElementById('participantNameTh').focus();
+        alert('กรุณาระบุชื่อ-นามสกุล (ภาษาไทย) เพื่อพิมพ์ลงในวุฒิบัตรก่อนครับ');
+        const inp = document.getElementById('participantNameTh');
+        if (inp) inp.focus();
         return;
       }
       window.print();
     }
 
     function openFullCertWindow() {
-      const nameTh = document.getElementById('participantNameTh')?.value.trim() || 'ผู้เข้าร่วมการอบรม';
+      const nameTh = currentParticipant.nameTh || document.getElementById('participantNameTh')?.value.trim() || 'ผู้เข้าร่วมการอบรม';
       const certNode = document.getElementById('printableCertArea').cloneNode(true);
       const win = window.open('', '_blank');
       if (!win) {

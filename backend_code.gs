@@ -8,11 +8,33 @@
  * ============================================================================
  */
 
-const SYSTEM_VERSION = '1.18.1';
+const SYSTEM_VERSION = '1.19.0';
 const DEFAULT_ADMIN_PASS = 'admin0000';
 
 function getSpreadsheet() {
   return SpreadsheetApp.getActiveSpreadsheet();
+}
+
+/**
+ * ============================================================================
+ * ฟังก์ชันสำหรับกด "เรียกใช้" (Run) ใน Google Apps Script เพื่ออนุมัติสิทธิ์ส่งอีเมล (Authorize MailApp)
+ * เมื่อเลือกฟังก์ชันนี้แล้วกด "เรียกใช้" Google จะแสดงป๊อปอัป "ให้สิทธิ์เข้าถึง (Authorization Required)" ทันที
+ * ============================================================================
+ */
+function authorizeMail() {
+  const myEmail = Session.getActiveUser().getEmail() || Session.getEffectiveUser().getEmail() || 'admin@twp.co.th';
+  const quota = MailApp.getRemainingDailyQuota();
+  MailApp.sendEmail({
+    to: myEmail,
+    subject: '[TWP Training] อนุมัติสิทธิ์ส่งอีเมลวุฒิบัตรสำเร็จ (Authorization Success)',
+    body: 'ยินดีด้วยครับ! สิทธิ์ MailApp.sendEmail ได้รับการอนุมัติเรียบร้อยแล้ว\nโควตาส่งอีเมลวันนี้คงเหลือ: ' + quota + ' ฉบับ\nระบบ e-Certificate สามารถจัดส่งอีเมลให้ผู้เข้าอบรมได้ทันที 100%'
+  });
+  Logger.log('MailApp Authorization SUCCESS! Remaining daily quota: ' + quota);
+  return 'สิทธิ์การส่งอีเมลได้รับการอนุมัติเรียบร้อยแล้ว โควตาคงเหลือวันนี้: ' + quota + ' ฉบับ';
+}
+
+function testMailAuthorization() {
+  return authorizeMail();
 }
 
 /**
@@ -107,6 +129,21 @@ function doPost(e) {
         break;
       case 'SEND_ECERTIFICATE_EMAIL':
         result = handleSendECertificateEmail(payload);
+        break;
+      case 'GET_EVENT_REGISTRATIONS':
+        result = handleGetEventRegistrations(payload);
+        break;
+      case 'CHECKIN_PARTICIPANT':
+        result = handleCheckinParticipant(payload);
+        break;
+      case 'REGISTER_WALKIN':
+        result = handleRegisterWalkin(payload);
+        break;
+      case 'IMPORT_REGISTRATIONS':
+        result = handleBatchImportRegistrations(payload);
+        break;
+      case 'UPDATE_TEAM_B_ATTENDEES':
+        result = handleUpdateTeamBAttendees(payload);
         break;
       default:
         throw new Error('ไม่พบ Action ที่ระบุ: ' + action);
@@ -249,6 +286,13 @@ function getInitialData() {
       actualExpenses: actualExp,
       actualExpensesTotal: actualExp ? ((Number(actualExp.expSpeaker)||0) + (Number(actualExp.expTravel)||0) + (Number(actualExp.expAccom)||0) + (Number(actualExp.expFood)||0) + (Number(actualExp.expDocKit)||0) + (Number(actualExp.expVenue)||0) + (Number(actualExp.expMisc)||0)) : (Number(r[18]) || 0),
       token: tokenMap[r[0]] || (r[36] || ''),
+      expectedTrainees: (r[35] !== '' && r[35] !== undefined && r[35] !== null) ? Number(r[35]) : 50,
+      actualTrainees: (r[36] !== '' && r[36] !== undefined && r[36] !== null) ? Number(r[36]) : ((r[35] !== '' && r[35] !== undefined && r[35] !== null) ? Number(r[35]) : 50),
+      needCatering: r[37] || 'NO',
+      needProductMedia: r[38] || 'NO',
+      otherSupportDetails: r[39] || '',
+      speakerSignature: r[40] || '',
+      speakers: r[41] ? (function() { try { return JSON.parse(r[41]); } catch(e) { return []; } })() : [],
       rowIndex: i + 1
     });
   }
@@ -272,7 +316,25 @@ function getInitialData() {
     evalMap[eId].q5 += Number(er[7]) || 0;
   }
 
-  // ผูกคะแนนเฉลี่ยลงใน Requests
+  // ดึงสถิติ Onsite Registrations
+  const regSheet = ss.getSheetByName('Onsite_Registrations');
+  const regMap = {};
+  if (regSheet) {
+    const regRows = regSheet.getDataRange().getValues();
+    for (let i = 1; i < regRows.length; i++) {
+      const rr = regRows[i];
+      const rEventId = rr[1];
+      if (!rEventId) continue;
+      if (!regMap[rEventId]) {
+        regMap[rEventId] = { total: 0, checkedIn: 0, walkIns: 0 };
+      }
+      regMap[rEventId].total += 1;
+      if (rr[8] === 'CHECKED_IN') regMap[rEventId].checkedIn += 1;
+      if (rr[10] === 'WALK_IN') regMap[rEventId].walkIns += 1;
+    }
+  }
+
+  // ผูกคะแนนเฉลี่ยและสถิติ Onsite ลงใน Requests
   requests.forEach(function(req) {
     const stats = evalMap[req.eventId];
     if (stats && stats.count > 0) {
@@ -281,6 +343,17 @@ function getInitialData() {
     } else {
       req.evalCount = 0;
       req.evalAvg = 0;
+    }
+
+    const rStats = regMap[req.eventId];
+    if (rStats) {
+      req.onsiteTotal = rStats.total;
+      req.onsiteCheckedIn = rStats.checkedIn;
+      req.onsiteWalkIns = rStats.walkIns;
+    } else {
+      req.onsiteTotal = 0;
+      req.onsiteCheckedIn = 0;
+      req.onsiteWalkIns = 0;
     }
   });
 
@@ -330,6 +403,13 @@ function createRequestTeamA(payload) {
   const eventId = 'EVT-' + Utilities.formatDate(new Date(), "GMT+7", "yyyyMMdd") + '-' + Math.floor(1000 + Math.random() * 9000);
   const operator = payload.operatorName || payload.saleName || 'ทีม A (Sales)';
 
+  const expectedTrainees = (payload.expectedTrainees !== undefined && payload.expectedTrainees !== null && payload.expectedTrainees !== '') ? Number(payload.expectedTrainees) : 50;
+  const needCatering = payload.needCatering === 'YES' ? 'YES' : 'NO';
+  const needProductMedia = payload.needProductMedia === 'YES' ? 'YES' : 'NO';
+  const otherSupportDetails = payload.otherSupportDetails || '';
+  const speakersJson = JSON.stringify(payload.speakers || []);
+  const speakerSig = payload.speakerSignature || (payload.speakers && payload.speakers[0] ? payload.speakers[0].signature : '') || '';
+
   const rowData = [
     eventId,
     now,
@@ -362,10 +442,17 @@ function createRequestTeamA(payload) {
     Number(payload.roomCount) || 0,
     payload.needTransportation ? 'YES' : 'NO',
     payload.transportDetails || '',
-    '', // A4_Docx_Url (col 31)
-    payload.isOutOfPlan || 'NO', // Is_Out_Of_Plan (col 32)
-    payload.outOfPlanReason || '', // Out_Of_Plan_Reason (col 33)
-    payload.annualPlanId || '' // Annual_Plan_ID (col 34)
+    '', // A4_Docx_Url (col 32)
+    payload.isOutOfPlan || 'NO', // Is_Out_Of_Plan (col 33)
+    payload.outOfPlanReason || '', // Out_Of_Plan_Reason (col 34)
+    payload.annualPlanId || '', // Annual_Plan_ID (col 35)
+    expectedTrainees, // Expected_Trainees (col 36)
+    expectedTrainees, // Actual_Trainees default (col 37)
+    needCatering, // Need_Catering (col 38)
+    needProductMedia, // Need_Product_Media (col 39)
+    otherSupportDetails, // Other_Support_Details (col 40)
+    speakerSig, // Speaker_Signature_Data (col 41)
+    speakersJson // Speakers_JSON (col 42)
   ];
 
   sheet.appendRow(rowData);
@@ -384,7 +471,7 @@ function createRequestTeamA(payload) {
 // ------------------- TEAM B: REVIEW & CONFIRM -------------------
 
 function updateReviewTeamB(payload) {
-  const { eventId, decision, teamBSpeaker, teamBNotes, actualBudget, operatorName } = payload;
+  const { eventId, decision, teamBSpeaker, teamBNotes, actualBudget, operatorName, actualTrainees, speakerSignature, speakers } = payload;
   const ss = getSpreadsheet();
   const sheet = ss.getSheetByName('Event_Requests');
   const data = sheet.getDataRange().getValues();
@@ -410,6 +497,19 @@ function updateReviewTeamB(payload) {
   sheet.getRange(targetRow, 21).setValue(operator);
   sheet.getRange(targetRow, 23).setValue(operator);
   sheet.getRange(targetRow, 25).setValue(now); // Reviewed_By_B_At
+
+  // Col 37: Actual_Trainees (ทีม B ปรับยอดผู้เข้าร่วมจริง)
+  if (actualTrainees !== undefined && actualTrainees !== null && actualTrainees !== '') {
+    sheet.getRange(targetRow, 37).setValue(Number(actualTrainees) || 0);
+  }
+  // Col 41: Speaker_Signature_Data
+  if (speakerSignature) {
+    sheet.getRange(targetRow, 41).setValue(speakerSignature);
+  }
+  // Col 42: Speakers_JSON
+  if (speakers && Array.isArray(speakers) && speakers.length > 0) {
+    sheet.getRange(targetRow, 42).setValue(JSON.stringify(speakers));
+  }
 
   logSystemAction(eventId, decision === 'RETURN_TO_A' ? 'TEAM_B_RETURN' : 'TEAM_B_CONFIRM', operator, {
     status: nextStatus,
@@ -872,8 +972,13 @@ function ensureRequiredSheets(ss) {
         'Venue_Type', 'Objective', 'Target_Sales', 'Est_Budget', 'TeamB_Speaker', 'TeamB_Notes',
         'Actual_Budget', 'Created_By', 'Reviewed_By', 'Approved_By', 'Last_Modified_By',
         'Submitted_To_B_At', 'Reviewed_By_B_At', 'Approved_At', 'A4_PDF_Url',
-        'Need_Accommodation', 'Room_Count', 'Need_Transportation', 'Transport_Details', 'A4_Docx_Url', 'Is_Out_Of_Plan', 'Out_Of_Plan_Reason', 'Annual_Plan_ID'
+        'Need_Accommodation', 'Room_Count', 'Need_Transportation', 'Transport_Details', 'A4_Docx_Url', 'Is_Out_Of_Plan', 'Out_Of_Plan_Reason', 'Annual_Plan_ID',
+        'Expected_Trainees', 'Actual_Trainees', 'Need_Catering', 'Need_Product_Media', 'Other_Support_Details', 'Speaker_Signature_Data', 'Speakers_JSON'
       ]
+    },
+    {
+      name: 'Onsite_Registrations',
+      headers: ['Reg_ID', 'Event_ID', 'Timestamp', 'Name_TH', 'Name_EN', 'School_Name', 'Email', 'Phone', 'Checkin_Status', 'Checkin_Time', 'Reg_Type']
     },
     {
       name: 'QR_Tokens',
@@ -987,11 +1092,22 @@ function sendWorkflowEmailNotification(type, data) {
 // E-CERTIFICATE PARTICIPANT EMAIL DISPATCHER
 // ==========================================
 function handleSendECertificateEmail(payload) {
+  // หากถูกกด "เรียกใช้" จาก Google Apps Script Editor โดยตรง (ไม่มี payload)
+  // ให้เตรียมข้อมูลจำลองสำหรับการทดสอบและขอสิทธิ์ Authorization ทันที โดยไม่ throw error
   if (!payload || !payload.email) {
-    throw new Error('กรุณาระบุอีเมลผู้รับ');
+    const defaultEmail = Session.getActiveUser().getEmail() || Session.getEffectiveUser().getEmail() || 'admin@twp.co.th';
+    payload = {
+      email: defaultEmail,
+      nameTh: 'ผู้ทดสอบระบบ (Test Admin)',
+      nameEn: 'System Administrator',
+      school: 'โรงเรียนสาธิตพัฒนา',
+      courseTopic: 'การพัฒนาศักยภาพครูผู้สอนสู่สมรรถนะ',
+      certId: 'TWP-TEST-' + Date.now().toString().slice(-6),
+      eventDate: new Date().toLocaleDateString('th-TH')
+    };
   }
 
-  const recipient = payload.email.trim();
+  const recipient = (payload.email || '').trim();
   const nameTh = payload.nameTh || 'ผู้เข้าร่วมการอบรม';
   const nameEn = payload.nameEn || '';
   const school = payload.school || '-';
@@ -999,87 +1115,188 @@ function handleSendECertificateEmail(payload) {
   const certId = payload.certId || ('TWP-ECERT-' + Date.now());
   const eventDate = payload.eventDate || new Date().toLocaleDateString('th-TH');
   const token = payload.token || '';
-  const driveUrl = 'https://drive.google.com/drive/u/0/folders/1GxHFu2kMPwtl7j3PvnD6wHRb_YwlQGqk';
-  const certWebUrl = 'https://doit-on.github.io/twp-training-system/survey.html?t=' + encodeURIComponent(token);
+  const speakerName = payload.speakerName || '';
+  const driveUrl = payload.driveUrl || 'https://drive.google.com/drive/u/0/folders/1GxHFu2kMPwtl7j3PvnD6wHRb_YwlQGqk';
+  
+  // Real QR code image for Google Drive materials
+  const driveQrImageUrl = 'https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=' + encodeURIComponent(driveUrl);
+
+  // Direct Certificate Web URL: Bypasses survey Step 1 and lands directly on locked completed e-Certificate
+  const certWebUrl = 'https://doit-on.github.io/twp-training-system/survey.html'
+    + '?step=2'
+    + '&view=cert'
+    + '&cert=' + encodeURIComponent(certId)
+    + '&name=' + encodeURIComponent(nameTh)
+    + (nameEn ? '&nameEn=' + encodeURIComponent(nameEn) : '')
+    + '&school=' + encodeURIComponent(school)
+    + '&topic=' + encodeURIComponent(courseTopic)
+    + '&date=' + encodeURIComponent(eventDate)
+    + (speakerName ? '&speaker=' + encodeURIComponent(speakerName) : '')
+    + '&t=' + encodeURIComponent(token);
 
   const subject = '🏅 วุฒิบัตรการฝึกอบรม (e-Certificate): ' + nameTh + ' - สำนักพิมพ์ไทยวัฒนาพานิช จำกัด';
 
   const htmlBody = 
-    '<div style="font-family: \'Sarabun\', Tahoma, Arial, sans-serif; max-width: 650px; margin: 0 auto; background: #ffffff; border: 1.5px solid #cbd5e1; border-radius: 16px; overflow: hidden; box-shadow: 0 4px 20px rgba(0,0,0,0.06);">' +
-      '<!-- Header -->' +
-      '<div style="background: #08539E; padding: 24px 20px; text-align: center; color: #ffffff;">' +
-        '<div style="display: inline-block; background: #ffffff; color: #08539E; font-weight: 900; font-size: 16px; padding: 6px 14px; border-radius: 8px; margin-bottom: 8px;">TWP</div>' +
-        '<h2 style="margin: 0; font-size: 20px; font-weight: 800; color: #ffffff;">สำนักพิมพ์ไทยวัฒนาพานิช จำกัด</h2>' +
-        '<div style="font-size: 11px; opacity: 0.9; margin-top: 3px; letter-spacing: 1.5px; color: #e0f2fe;">THAI WATANA PANICH PUBLISHING HOUSE</div>' +
-      '</div>' +
-      
-      '<!-- Body Content -->' +
-      '<div style="padding: 28px 24px; color: #1e293b; line-height: 1.65;">' +
-        '<div style="display: inline-block; background: #eff6ff; color: #1e40af; font-size: 12px; font-weight: bold; padding: 4px 12px; border-radius: 20px; margin-bottom: 12px; border: 1px solid #bfdbfe;">' +
-          '✓ บันทึกผลการประเมินและออกวุฒิบัตรเรียบร้อยแล้ว' +
+    '<div style="background-color: #0f172a; padding: 24px 12px; font-family: \'Sarabun\', Tahoma, Arial, sans-serif;">' +
+      '<div style="max-width: 780px; margin: 0 auto;">' +
+        
+        '<!-- Verified Alert Header -->' +
+        '<div style="background: #10b981; color: #ffffff; padding: 10px 16px; border-radius: 12px 12px 0 0; font-size: 13px; font-weight: bold; text-align: center; letter-spacing: 0.3px;">' +
+          '✓ วุฒิบัตรการฝึกอบรมพัฒนาวิชาชีพทางการศึกษา (Official e-Certificate) • ฉบับจริงสมบูรณ์' +
         '</div>' +
-        
-        '<h3 style="color: #08539E; margin-top: 0; font-size: 18px; border-bottom: 2px solid #e2e8f0; padding-bottom: 10px;">' +
-          'วุฒิบัตรการฝึกอบรมพัฒนาวิชาชีพทางการศึกษา' +
-        '</h3>' +
-        
-        '<p style="font-size: 15px; margin: 12px 0 6px 0;">เรียน <strong>' + nameTh + '</strong> ' + (nameEn ? '(' + nameEn + ')' : '') + '</p>' +
-        '<p style="font-size: 14px; color: #475569; margin-top: 0;">' +
-          'สำนักพิมพ์ไทยวัฒนาพานิช จำกัด ขอแสดงความยินดีและขอบพระคุณท่านที่ได้เข้าร่วมการอบรมเชิงปฏิบัติการและตอบแบบประเมินผลโครงการ' +
-        '</p>' +
-        
-        '<!-- Certificate Data Card -->' +
-        '<div style="background: #f8fafc; border: 1.5px solid #cbd5e1; border-radius: 12px; padding: 18px; margin: 18px 0; font-size: 13.5px;">' +
-          '<div style="margin-bottom: 8px;"><strong>หลักสูตร:</strong> <span style="color: #08539E; font-weight: bold;">' + courseTopic + '</span></div>' +
-          '<div style="margin-bottom: 8px;"><strong>หน่วยงาน / โรงเรียน:</strong> ' + school + '</div>' +
-          '<div style="margin-bottom: 8px;"><strong>วันที่จัดอบรม:</strong> ' + eventDate + '</div>' +
-          '<div><strong>เลขที่วุฒิบัตร (Cert No.):</strong> <span style="font-family: monospace; font-weight: bold; color: #08539E; background: #e0f2fe; padding: 2px 6px; border-radius: 4px;">' + certId + '</span></div>' +
+
+        '<!-- THE OFFICIAL E-CERTIFICATE SHEET (A4 LANDSCAPE RATIO) -->' +
+        '<div style="background: #ffffff; border: 8px solid #08539E; outline: 3px solid #C5A059; outline-offset: -5px; padding: 36px 28px; text-align: center; box-shadow: 0 12px 36px rgba(0,0,0,0.35); position: relative;">' +
+          
+          '<!-- TWP Official 3-Ring Logo -->' +
+          '<div style="margin-bottom: 8px;">' +
+            '<img src="https://raw.githubusercontent.com/doit-on/twp-training-system/main/assets/logo.png" alt="TWP Logo" style="height: 60px; width: auto; display: inline-block;">' +
+          '</div>' +
+
+          '<!-- Publisher Headline -->' +
+          '<div style="font-size: 24px; font-weight: 900; color: #08539E; letter-spacing: 0.5px; line-height: 1.2; margin-bottom: 2px;">' +
+            'สำนักพิมพ์ไทยวัฒนาพานิช' +
+          '</div>' +
+          '<div style="font-size: 10.5px; font-weight: bold; color: #64748b; letter-spacing: 3px; text-transform: uppercase; margin-bottom: 16px;">' +
+            'THAI WATANA PANICH PUBLISHING HOUSE' +
+          '</div>' +
+
+          '<!-- Certificate Title -->' +
+          '<div style="font-size: 17px; font-weight: bold; color: #b45309; margin-bottom: 2px;">' +
+            'วุฒิบัตรการฝึกอบรมพัฒนาวิชาชีพทางการศึกษา' +
+          '</div>' +
+          '<div style="font-size: 12px; color: #64748b; font-style: italic; margin-bottom: 14px;">' +
+            'Certificate of Professional Educational Development' +
+          '</div>' +
+
+          '<div style="font-size: 13px; color: #475569; margin-bottom: 8px;">' +
+            'วุฒิบัตรฉบับนี้ให้ไว้เพื่อแสดงว่า' +
+          '</div>' +
+
+          '<!-- PARTICIPANT NAME (PROMINENT & VERIFIED IN CERTIFICATE) -->' +
+          '<div style="font-size: 28px; font-weight: 900; color: #08539E; line-height: 1.25; margin: 8px 0 4px 0;">' +
+            nameTh +
+          '</div>' +
+          (nameEn ? '<div style="font-size: 16px; font-weight: bold; color: #334155; font-style: italic; margin-bottom: 4px;">' + nameEn + '</div>' : '') +
+          
+          '<div style="font-size: 14px; font-weight: 600; color: #475569; margin-bottom: 16px;">' +
+            school +
+          '</div>' +
+
+          '<!-- COURSE & ACHIEVEMENT DETAILS -->' +
+          '<div style="font-size: 13px; color: #334155; margin-bottom: 6px;">' +
+            'ได้ผ่านการฝึกอบรมเชิงปฏิบัติการตามโครงการพัฒนาศักยภาพครูผู้สอน หลักสูตร:' +
+          '</div>' +
+          '<div style="font-size: 19px; font-weight: 900; color: #08539E; margin-bottom: 10px; line-height: 1.4; padding: 0 10px;">' +
+            '“' + courseTopic + '”' +
+          '</div>' +
+          '<div style="font-size: 12.5px; color: #64748b; margin-bottom: 22px;">' +
+            'ให้ไว้ ณ วันที่ ' + eventDate +
+          '</div>' +
+
+          '<!-- SIGNATURES, GOLD BADGE & VERIFICATION TABLE -->' +
+          '<table style="width: 100%; border-top: 1.5px solid #e2e8f0; padding-top: 16px; margin-top: 14px;" cellpadding="0" cellspacing="0">' +
+            '<tr>' +
+              '<!-- Speaker Signatory -->' +
+              '<td style="width: 35%; text-align: center; vertical-align: bottom;">' +
+                '<div style="height: 38px; line-height: 38px;">' +
+                  '<span style="font-family: cursive, \'Brush Script MT\', sans-serif; font-size: 19px; color: #08539E; font-weight: bold;">' +
+                    (speakerName || 'ศ.ดร.ประสาน ปัญญาเลิศ') +
+                  '</span>' +
+                '</div>' +
+                '<div style="font-size: 13px; font-weight: bold; color: #1e293b; margin-top: 4px;">' + (speakerName || 'ศ.ดร.ประสาน ปัญญาเลิศ') + '</div>' +
+                '<div style="font-size: 11px; color: #64748b;">วิทยากรประจำหลักสูตร</div>' +
+                '<div style="font-size: 10px; color: #94a3b8;">ฝ่ายพัฒนาวิชาการและนวัตกรรมการเรียนรู้</div>' +
+              '</td>' +
+
+              '<!-- Center: Gold Medal Seal & Cert ID -->' +
+              '<td style="width: 30%; text-align: center; vertical-align: middle;">' +
+                '<div style="display: inline-block; background: #fef3c7; border: 2px solid #f59e0b; border-radius: 50%; width: 56px; height: 56px; line-height: 54px; text-align: center; font-size: 26px; box-shadow: 0 2px 8px rgba(245,158,11,0.3);">' +
+                  '🏅' +
+                '</div>' +
+                '<div style="font-size: 9px; font-family: monospace; font-weight: bold; color: #08539E; margin-top: 5px;">' +
+                  'CERT NO: ' + certId +
+                '</div>' +
+              '</td>' +
+
+              '<!-- Executive Signatory -->' +
+              '<td style="width: 35%; text-align: center; vertical-align: bottom;">' +
+                '<div style="height: 38px; line-height: 38px;">' +
+                  '<span style="font-family: cursive, \'Brush Script MT\', sans-serif; font-size: 20px; color: #08539E; font-weight: bold;">' +
+                    'ผศ.อินทิรา บุนนาค' +
+                  '</span>' +
+                '</div>' +
+                '<div style="font-size: 13px; font-weight: bold; color: #1e293b; margin-top: 4px;">ผศ.อินทิรา บุนนาค</div>' +
+                '<div style="font-size: 11px; color: #64748b;">กรรมการผู้จัดการ</div>' +
+                '<div style="font-size: 10px; color: #08539E; font-weight: bold;">บริษัท ไทยวัฒนาพานิช จำกัด</div>' +
+              '</td>' +
+            '</tr>' +
+          '</table>' +
+
+          '<!-- Certificate Footnote -->' +
+          '<table style="width: 100%; border-top: 1px solid #f1f5f9; margin-top: 16px; padding-top: 8px; font-size: 9.5px; color: #94a3b8;" cellpadding="0" cellspacing="0">' +
+            '<tr>' +
+              '<td style="text-align: left;">วุฒิบัตรอิเล็กทรอนิกส์ออกตามมาตรฐานการอบรม สำนักพิมพ์ไทยวัฒนาพานิช จำกัด</td>' +
+              '<td style="text-align: right;">เอกสารนี้ได้รับการรับรองความถูกต้องแล้ว</td>' +
+            '</tr>' +
+          '</table>' +
+
         '</div>' +
-        
-        '<!-- Action Buttons -->' +
-        '<div style="text-align: center; margin: 26px 0; display: flex; flex-direction: column; gap: 10px;">' +
-          '<a href="' + certWebUrl + '" style="background: #08539E; color: #ffffff; padding: 12px 24px; text-decoration: none; border-radius: 10px; font-weight: bold; font-size: 14px; display: inline-block; box-shadow: 0 4px 10px rgba(8,83,158,0.25);">' +
-            '🖨️ คลิกเพื่อเปิดดูและพิมพ์วุฒิบัตร (A4 แนวนอน)' +
+
+        '<!-- DIRECT ACTION: PRINT / SAVE PDF -->' +
+        '<div style="text-align: center; margin: 18px 0 14px 0;">' +
+          '<a href="' + certWebUrl + '" target="_blank" style="background: #08539E; color: #ffffff; padding: 13px 30px; text-decoration: none; border-radius: 10px; font-weight: bold; font-size: 14.5px; display: inline-block; box-shadow: 0 4px 12px rgba(8,83,158,0.3);">' +
+            '🖨️ พิมพ์ / บันทึก PDF (A4 แนวนอน)' +
           '</a>' +
-          '<br>' +
-          '<a href="' + driveUrl + '" style="background: #f59e0b; color: #ffffff; padding: 10px 20px; text-decoration: none; border-radius: 10px; font-weight: bold; font-size: 13px; display: inline-block; margin-top: 6px;">' +
-            '📁 เข้าสู่คลัง Google Drive ดาวน์โหลดสไลด์และเอกสารอบรม' +
-          '</a>' +
+          '<div style="font-size: 11px; color: #94a3b8; margin-top: 6px;">' +
+            '* ท่านสามารถบันทึกภาพวุฒิบัตรด้านบนไปใช้งานได้ทันที หรือกดปุ่มนี้เพื่อเปิดพิมพ์เป็นไฟล์ PDF แนวนอน (ไม่มีการกรอกข้อมูลซ้ำ)' +
+          '</div>' +
         '</div>' +
-        
-        '<p style="font-size: 13px; color: #64748b; line-height: 1.6;">' +
-          '* วุฒิบัตรฉบับนี้ออกอย่างเป็นทางการโดย บริษัท ไทยวัฒนาพานิช จำกัด ได้รับการลงนามรับรองความถูกต้องโดย <strong>ผศ.อินทิรา บุนนาค (กรรมการผู้จัดการ)</strong> และวิทยากรประจำหลักสูตร ท่านสามารถจัดเก็บอีเมลนี้ไว้เป็นหลักฐานอ้างอิงการฝึกอบรมได้ตลอดเวลา' +
-        '</p>' +
-        
+
+        '<!-- GOOGLE DRIVE TRAINING MATERIALS BLOCK WITH QR CODE -->' +
+        '<div style="background: #ffffff; border: 2px solid #fcd34d; border-radius: 14px; padding: 20px; margin-top: 18px;">' +
+          '<table style="width: 100%;" cellpadding="0" cellspacing="0">' +
+            '<tr>' +
+              '<td style="width: 140px; text-align: center; vertical-align: middle;">' +
+                '<img src="' + driveQrImageUrl + '" alt="QR Drive" style="width: 120px; height: 120px; border: 2px solid #f59e0b; border-radius: 8px; background: #ffffff; padding: 4px; display: block; margin: 0 auto;">' +
+                '<div style="font-size: 10px; color: #92400e; font-weight: bold; margin-top: 5px;">สแกนเปิด Google Drive</div>' +
+              '</td>' +
+              '<td style="padding-left: 20px; vertical-align: middle; text-align: left;">' +
+                '<div style="font-size: 16px; font-weight: 900; color: #92400e; margin-bottom: 4px;">' +
+                  '📁 คลังสื่อและเอกสารประกอบการอบรม (Google Drive)' +
+                '</div>' +
+                '<div style="font-size: 13px; color: #78350f; line-height: 1.5; margin-bottom: 12px;">' +
+                  'ท่านสามารถสแกน QR Code ด้านข้าง หรือคลิกปุ่มด้านล่างเพื่อดาวน์โหลดสไลด์บรรยาย คู่มือการจัดกิจกรรม และภาพถ่ายกิจกรรมความละเอียดสูงได้ทันที' +
+                '</div>' +
+                '<a href="' + driveUrl + '" target="_blank" style="background: #d97706; color: #ffffff; padding: 10px 22px; text-decoration: none; border-radius: 8px; font-weight: bold; font-size: 13px; display: inline-block; box-shadow: 0 2px 6px rgba(217,119,6,0.3);">' +
+                  '📂 เข้าสู่ Google Drive เพื่อดาวน์โหลดไฟล์ & สื่อการสอน &raquo;' +
+                '</a>' +
+              '</td>' +
+            '</tr>' +
+          '</table>' +
+        '</div>' +
+
         '<!-- Footer -->' +
-        '<div style="margin-top: 24px; padding-top: 16px; border-top: 1px dashed #cbd5e1; font-size: 11.5px; color: #94a3b8; text-align: center;">' +
+        '<div style="margin-top: 24px; padding-top: 16px; border-top: 1px dashed #334155; font-size: 11.5px; color: #64748b; text-align: center;">' +
           'บริษัท ไทยวัฒนาพานิช จำกัด • ศูนย์ฝึกอบรมและพัฒนาวิชาชีพครู (TWP Training Center)<br>' +
           'ระบบจัดส่งวุฒิบัตรอิเล็กทรอนิกส์อัตโนมัติ (EMS Enterprise v' + SYSTEM_VERSION + ')' +
         '</div>' +
       '</div>' +
     '</div>';
 
-  MailApp.sendEmail({
+  const mailOptions = {
     to: recipient,
     subject: subject,
-    htmlBody: htmlBody
-  });
+    htmlBody: htmlBody,
+    name: 'สำนักพิมพ์ไทยวัฒนาพานิช จำกัด (TWP Training Center)'
+  };
 
-  // Log dispatch event to System_Logs
-  try {
-    const ss = getSpreadsheet();
-    let logSheet = ss.getSheetByName('System_Logs');
-    if (logSheet) {
-      logSheet.appendRow([
-        new Date(),
-        'SEND_ECERTIFICATE_EMAIL',
-        'SYSTEM',
-        recipient,
-        'SUCCESS',
-        'ส่งวุฒิบัตรไปยัง ' + recipient + ' (' + certId + ')'
-      ]);
-    }
-  } catch(e) {}
+  // สามารถระบุอีเมลผู้ส่งเพิ่มเติมได้หากบัญชีได้ตั้งค่า Send As Alias ไว้ (เช่น skillboostenglish@gmail.com)
+  if (payload.fromEmail) {
+    mailOptions.from = payload.fromEmail;
+  }
+
+  MailApp.sendEmail(mailOptions);
 
   return {
     sent: true,
@@ -1089,12 +1306,175 @@ function handleSendECertificateEmail(payload) {
   };
 }
 
+// ============================================================================
+// ONSITE REGISTRATION & HYBRID ATTENDANCE CHECK-IN ENGINE (v1.19.0)
+// ============================================================================
+
+function handleGetEventRegistrations(payload) {
+  const eventId = payload ? payload.eventId : '';
+  const ss = getSpreadsheet();
+  ensureRequiredSheets(ss);
+  const sheet = ss.getSheetByName('Onsite_Registrations');
+  if (!sheet) return { registrations: [], stats: { total: 0, checkedIn: 0, walkIns: 0 } };
+
+  const rows = sheet.getDataRange().getValues();
+  const registrations = [];
+  let checkedInCount = 0;
+  let walkInCount = 0;
+
+  for (let i = 1; i < rows.length; i++) {
+    const r = rows[i];
+    if (!eventId || r[1] === eventId) {
+      const isCheckedIn = (r[8] === 'CHECKED_IN');
+      const isWalkIn = (r[10] === 'WALK_IN');
+      if (isCheckedIn) checkedInCount++;
+      if (isWalkIn) walkInCount++;
+
+      registrations.push({
+        regId: r[0],
+        eventId: r[1],
+        timestamp: r[2],
+        nameTh: r[3],
+        nameEn: r[4],
+        schoolName: r[5],
+        email: r[6],
+        phone: r[7],
+        checkinStatus: r[8] || 'PENDING',
+        checkinTime: r[9] || '',
+        regType: r[10] || 'PRE_REGISTERED',
+        rowIndex: i + 1
+      });
+    }
+  }
+
+  return {
+    registrations: registrations,
+    stats: {
+      total: registrations.length,
+      checkedIn: checkedInCount,
+      walkIns: walkInCount
+    }
+  };
+}
+
+function handleCheckinParticipant(payload) {
+  const { regId, eventId } = payload;
+  const ss = getSpreadsheet();
+  ensureRequiredSheets(ss);
+  const sheet = ss.getSheetByName('Onsite_Registrations');
+  if (!sheet) throw new Error('ไม่พบชีต Onsite_Registrations');
+
+  const data = sheet.getDataRange().getValues();
+  const now = new Date().toISOString();
+  let found = false;
+
+  for (let i = 1; i < data.length; i++) {
+    if (data[i][0] === regId) {
+      sheet.getRange(i + 1, 9).setValue('CHECKED_IN');
+      sheet.getRange(i + 1, 10).setValue(now);
+      found = true;
+      break;
+    }
+  }
+
+  if (!found) throw new Error('ไม่พบรหัสผู้ลงทะเบียน: ' + regId);
+  return { success: true, regId: regId, checkinTime: now };
+}
+
+function handleRegisterWalkin(payload) {
+  const { eventId, nameTh, nameEn, schoolName, email, phone } = payload;
+  const ss = getSpreadsheet();
+  ensureRequiredSheets(ss);
+  const sheet = ss.getSheetByName('Onsite_Registrations');
+  const now = new Date().toISOString();
+  const regId = 'REG-' + Date.now().toString().slice(-6) + '-' + Math.floor(100 + Math.random() * 900);
+
+  const row = [
+    regId,
+    eventId || 'GENERAL',
+    now,
+    nameTh || '',
+    nameEn || '',
+    schoolName || '',
+    email || '',
+    phone || '',
+    'CHECKED_IN',
+    now,
+    'WALK_IN'
+  ];
+
+  sheet.appendRow(row);
+  return { success: true, regId: regId, checkinTime: now, nameTh: nameTh };
+}
+
+function handleBatchImportRegistrations(payload) {
+  const { eventId, participants } = payload;
+  if (!participants || !Array.isArray(participants) || participants.length === 0) {
+    throw new Error('ไม่พบข้อมูลรายชื่อสำหรับนำเข้า');
+  }
+
+  const ss = getSpreadsheet();
+  ensureRequiredSheets(ss);
+  const sheet = ss.getSheetByName('Onsite_Registrations');
+  const now = new Date().toISOString();
+
+  const rows = participants.map((p, idx) => [
+    'REG-' + Date.now().toString().slice(-5) + '-' + (idx + 1),
+    eventId || 'GENERAL',
+    now,
+    p.nameTh || p.name || '',
+    p.nameEn || '',
+    p.schoolName || p.school || '',
+    p.email || '',
+    p.phone || '',
+    'PENDING',
+    '',
+    'PRE_REGISTERED'
+  ]);
+
+  if (rows.length > 0) {
+    const startRow = sheet.getLastRow() + 1;
+    sheet.getRange(startRow, 1, rows.length, rows[0].length).setValues(rows);
+  }
+
+  return { success: true, importedCount: rows.length };
+}
+
+function handleUpdateTeamBAttendees(payload) {
+  const { eventId, actualTrainees, operatorName } = payload;
+  const ss = getSpreadsheet();
+  const sheet = ss.getSheetByName('Event_Requests');
+  const data = sheet.getDataRange().getValues();
+  const operator = operatorName || 'ทีม B (วิชาการ)';
+
+  for (let i = 1; i < data.length; i++) {
+    if (data[i][0] === eventId) {
+      sheet.getRange(i + 1, 37).setValue(Number(actualTrainees) || 0);
+      sheet.getRange(i + 1, 23).setValue(operator);
+      return { success: true, eventId: eventId, actualTrainees: actualTrainees };
+    }
+  }
+  throw new Error('ไม่พบรหัสคำขอ: ' + eventId);
+}
+
 /**
  * ฟังก์ชันสำหรับกด "เรียกใช้" (Run) ในหน้า Google Apps Script 1 ครั้ง
  * เพื่ออนุมัติสิทธิ์ (Authorize Permissions) ให้กับ MailApp.sendEmail
  */
 function testMailAuthorization() {
   const quota = MailApp.getRemainingDailyQuota();
+  const myEmail = Session.getActiveUser().getEmail() || Session.getEffectiveUser().getEmail();
+  if (myEmail) {
+    MailApp.sendEmail({
+      to: myEmail,
+      subject: '[TWP] ทดสอบการอนุมัติสิทธิ์ส่งอีเมลวุฒิบัตร (Authorization Test)',
+      body: 'ยินดีด้วยครับ! สิทธิ์ MailApp.sendEmail ได้รับการอนุมัติเรียบร้อยแล้ว\nโควตาส่งอีเมลวันนี้คงเหลือ: ' + quota + ' ฉบับ\nระบบ e-Certificate สามารถส่งอีเมลให้ผู้เข้าอบรมได้ทันทีแล้วครับ'
+    });
+  }
   Logger.log('MailApp Authorization SUCCESS! Remaining daily quota: ' + quota);
   return 'สิทธิ์การส่งอีเมลได้รับการอนุมัติเรียบร้อยแล้ว โควตาคงเหลือวันนี้: ' + quota + ' ฉบับ';
+}
+
+function authorizeMail() {
+  return testMailAuthorization();
 }
