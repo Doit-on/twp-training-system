@@ -1,0 +1,842 @@
+const fs = require('fs');
+
+const registerHtml = `<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>ลงทะเบียนและเช็กชื่อเข้าอบรม - สำนักพิมพ์ไทยวัฒนาพานิช</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+
+  <style>
+    body {
+      font-family: 'Sarabun', sans-serif;
+      background-color: #f8fafc;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .btn-touch {
+      min-height: 44px;
+      touch-action: manipulation;
+    }
+    .custom-scrollbar::-webkit-scrollbar {
+      width: 5px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb {
+      background-color: #cbd5e1;
+      border-radius: 9999px;
+    }
+  </style>
+</head>
+<body class="min-h-screen text-slate-800 flex flex-col justify-between">
+
+  <!-- TOP HEADER -->
+  <header class="bg-[#08539E] text-white shadow-md sticky top-0 z-30">
+    <div class="max-w-xl mx-auto px-4 py-3 flex items-center justify-between">
+      <div class="flex items-center space-x-2.5">
+        <img src="assets/logo.png" alt="TWP Logo" class="h-9 w-auto object-contain bg-white/10 rounded-lg p-1">
+        <div>
+          <h1 class="text-sm font-black tracking-wide leading-tight">ไทยวัฒนาพานิช • TWP</h1>
+          <p class="text-[10px] text-blue-200">ระบบลงทะเบียนและเช็กชื่อผู้เข้าอบรมหน้างาน</p>
+        </div>
+      </div>
+      <div class="flex items-center gap-2">
+        <div id="cloudSyncIndicator" class="text-[10px] bg-emerald-500/20 text-emerald-200 border border-emerald-400/30 px-2.5 py-0.5 rounded-full flex items-center gap-1.5">
+          <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+          <span id="cloudSyncText">คลาวด์เชื่อมต่อแล้ว</span>
+        </div>
+        <button type="button" onclick="loadAttendees(true)" class="p-1 bg-white/10 hover:bg-white/20 active:bg-white/30 rounded-lg text-white text-xs transition" title="รีเฟรชข้อมูลล่าสุด">
+          <i id="btnRefreshIcon" class="fa-solid fa-arrows-rotate"></i>
+        </button>
+        <span class="text-[10px] bg-white/20 text-blue-100 font-mono font-bold px-2 py-0.5 rounded-full border border-white/20">v1.19.1</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- MAIN CONTENT CONTAINER -->
+  <main class="max-w-xl w-full mx-auto px-4 py-5 flex-1 space-y-4">
+
+    <!-- EVENT INFO CARD -->
+    <div class="bg-gradient-to-br from-[#08539E] via-blue-900 to-indigo-950 text-white rounded-3xl p-5 shadow-lg relative overflow-hidden">
+      <div class="absolute -right-6 -bottom-6 w-32 h-32 bg-white/5 rounded-full blur-xl pointer-events-none"></div>
+      
+      <div class="flex items-center justify-between text-xs text-blue-200 mb-2">
+        <span class="inline-flex items-center gap-1.5 font-mono bg-white/10 px-2.5 py-0.5 rounded-full border border-white/10">
+          <i class="fa-solid fa-calendar-check text-amber-300"></i>
+          <span id="dispEventId">EVT-2026-0001</span>
+        </span>
+        <span id="dispEventDate" class="font-medium">-</span>
+      </div>
+
+      <h2 id="dispEventTopic" class="text-base sm:text-lg font-black leading-snug text-white">
+        กำลังโหลดข้อมูลหลักสูตรการอบรม...
+      </h2>
+
+      <div class="mt-3 pt-3 border-t border-white/15 flex flex-wrap items-center justify-between text-xs text-blue-100 gap-2">
+        <div class="flex items-center gap-1.5">
+          <i class="fa-solid fa-school text-blue-300"></i>
+          <span id="dispEventSchool" class="font-medium truncate max-w-[220px]">-</span>
+        </div>
+        <div class="flex items-center gap-1.5">
+          <i class="fa-solid fa-chalkboard-user text-amber-300"></i>
+          <span id="dispEventSpeaker" class="truncate max-w-[150px]">-</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- ATTENDANCE OVERVIEW KPI BAR -->
+    <div class="grid grid-cols-3 gap-2 text-center text-xs">
+      <div class="bg-white p-2.5 rounded-2xl border border-slate-200 shadow-2xs">
+        <span class="text-[10px] text-slate-400 block font-semibold">รายชื่อทั้งหมด</span>
+        <span id="statKpiTotal" class="text-base font-extrabold text-slate-800 font-mono mt-0.5 block">0</span>
+      </div>
+      <div class="bg-white p-2.5 rounded-2xl border border-emerald-200 shadow-2xs">
+        <span class="text-[10px] text-emerald-800 block font-semibold flex items-center justify-center gap-1">
+          <i class="fa-solid fa-circle-check text-emerald-600"></i>เช็กชื่อแล้ว
+        </span>
+        <span id="statKpiCheckedIn" class="text-base font-extrabold text-emerald-700 font-mono mt-0.5 block">0</span>
+      </div>
+      <div class="bg-white p-2.5 rounded-2xl border border-amber-200 shadow-2xs">
+        <span class="text-[10px] text-amber-800 block font-semibold flex items-center justify-center gap-1">
+          <i class="fa-solid fa-hourglass-half text-amber-600"></i>ยังไม่เช็กชื่อ
+        </span>
+        <span id="statKpiPending" class="text-base font-extrabold text-amber-800 font-mono mt-0.5 block">0</span>
+      </div>
+    </div>
+
+    <!-- LIVE SEARCH & CHECK-IN CARD -->
+    <div class="bg-white rounded-3xl p-5 shadow-sm border border-slate-200 space-y-4">
+      
+      <div class="flex items-center justify-between pb-2 border-b border-slate-100">
+        <div class="flex items-center gap-2">
+          <div class="w-8 h-8 rounded-xl bg-blue-50 text-[#08539E] flex items-center justify-center text-sm font-bold">
+            <i class="fa-solid fa-magnifying-glass"></i>
+          </div>
+          <div>
+            <h3 class="text-sm font-bold text-slate-800">ค้นหารายชื่อเพื่อเช็กชื่อเข้างาน</h3>
+            <p class="text-[11px] text-slate-400">ค้นหาได้ทั้งชื่อภาษาไทย, English, โรงเรียน หรือเบอร์โทร</p>
+          </div>
+        </div>
+        <span id="searchResultCount" class="text-[11px] font-bold text-slate-600 bg-slate-100 px-2.5 py-0.5 rounded-full">0 ท่าน</span>
+      </div>
+
+      <!-- Search Input Box -->
+      <div class="relative">
+        <i class="fa-solid fa-search absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-sm"></i>
+        <input type="text" id="attendeeSearchInput" oninput="handleAttendeeSearch(this.value)" placeholder="พิมพ์ชื่อ-นามสกุล เช่น ศศิวิมล, Sasiwimon, โคราช..." class="w-full pl-10 pr-10 py-3 text-sm bg-slate-50 border border-slate-200 focus:bg-white focus:border-blue-500 rounded-2xl focus:outline-none focus:ring-2 focus:ring-blue-100 transition font-medium">
+        <button type="button" onclick="clearSearchInput()" id="btnClearSearch" class="hidden absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 p-1">
+          <i class="fa-solid fa-circle-xmark text-sm"></i>
+        </button>
+      </div>
+
+      <!-- Quick Action: Walk-in Registration Prompt -->
+      <div class="bg-amber-50/70 border border-amber-200/80 rounded-2xl p-3 flex items-center justify-between text-xs">
+        <div class="flex items-center gap-2 text-amber-900 font-semibold">
+          <i class="fa-solid fa-user-plus text-amber-600 text-sm"></i>
+          <span>ค้นหาไม่พบ หรือมาลงทะเบียนหน้างาน?</span>
+        </div>
+        <button type="button" onclick="openWalkinModal()" class="btn-touch px-3 py-1.5 bg-amber-600 hover:bg-amber-700 active:bg-amber-800 text-white rounded-xl font-bold shadow-xs transition flex items-center gap-1 cursor-pointer">
+          <i class="fa-solid fa-plus text-xs"></i>
+          <span>ลงทะเบียนใหม่ (Walk-in)</span>
+        </button>
+      </div>
+
+      <!-- Search Results / Attendee List Container -->
+      <div id="attendeesListContainer" class="space-y-2.5 max-h-[420px] overflow-y-auto custom-scrollbar pr-0.5">
+        <!-- Rendered dynamically -->
+      </div>
+
+    </div>
+
+    <!-- POST CHECK-IN SUCCESS DIGITAL E-BADGE PASS BANNER -->
+    <div id="checkinSuccessCard" class="hidden bg-gradient-to-b from-emerald-50 to-white border-2 border-emerald-400 rounded-3xl p-5 shadow-lg text-center space-y-4">
+      <div class="w-14 h-14 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center mx-auto text-2xl shadow-inner animate-bounce">
+        <i class="fa-solid fa-circle-check"></i>
+      </div>
+      
+      <div>
+        <span class="text-[11px] bg-emerald-100 text-emerald-800 font-bold px-3 py-0.5 rounded-full inline-block mb-1">
+          ✓ บันทึกเวลาเช็กชื่อเข้างานเรียบร้อยแล้ว
+        </span>
+        <h3 class="text-lg font-black text-emerald-950 mt-1" id="successAttendeeNameTh">คุณศศิวิมล เกิดหมื่นไวย</h3>
+        <p class="text-xs text-slate-500 font-serif italic" id="successAttendeeNameEn">Miss Sasiwimon Kerdmuenwai</p>
+        <p class="text-xs text-slate-600 mt-0.5" id="successAttendeeSchool">โรงเรียนโคราชพิทยาคม</p>
+        <p class="text-[11px] text-emerald-700 font-mono mt-1" id="successCheckinTime">เวลาเช็กชื่อ: 08:45 น.</p>
+      </div>
+
+      <div class="bg-blue-50/80 rounded-2xl p-4 border border-blue-200 text-xs text-slate-700 space-y-2 text-left">
+        <div class="font-bold flex items-center gap-1.5 text-blue-900 text-sm">
+          <i class="fa-solid fa-award text-amber-500"></i>
+          <span>สิทธิ์รับวุฒิบัตรอิเล็กทรอนิกส์ (e-Certificate)</span>
+        </div>
+        <p class="text-[11px] text-slate-600 leading-relaxed">
+          ชื่อของท่านได้รับการยืนยันเข้าสู่ระบบแล้ว เมื่อการอบรมสิ้นสุดลง ท่านสามารถกดปุ่มด้านล่างเพื่อทำแบบประเมินและดาวน์โหลดวุฒิบัตรได้ทันที
+        </p>
+        <div class="pt-2 flex flex-col sm:flex-row gap-2">
+          <a id="btnGoToSurvey" href="survey.html" class="btn-touch flex-1 inline-flex items-center justify-center gap-1.5 py-2.5 bg-[#08539E] text-white font-bold rounded-xl shadow-xs text-xs">
+            <span>ไปยังหน้าแบบประเมิน & วุฒิบัตร</span>
+            <i class="fa-solid fa-arrow-right text-amber-300"></i>
+          </a>
+          <button type="button" onclick="closeSuccessCard()" class="btn-touch px-4 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold rounded-xl text-xs transition">
+            กลับหน้ารายชื่อ
+          </button>
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- MODAL: IDENTITY CONFIRMATION (ป้องกันการกดผิด / ยืนยันตัวตนก่อนเช็กชื่อ) -->
+  <div id="confirmIdentityModal" class="hidden fixed inset-0 z-50 bg-slate-900/75 backdrop-blur-xs flex items-center justify-center p-4">
+    <div class="bg-white rounded-3xl max-w-sm w-full p-6 space-y-4 shadow-2xl text-center">
+      
+      <div class="w-14 h-14 bg-blue-100 text-[#08539E] rounded-2xl flex items-center justify-center mx-auto text-2xl shadow-inner">
+        <i class="fa-solid fa-id-card-clip"></i>
+      </div>
+
+      <div class="space-y-1">
+        <h3 class="text-base font-black text-slate-900">โปรดยืนยันตัวตนของคุณ</h3>
+        <p class="text-xs text-slate-500">กรุณาตรวจสอบชื่อ-สกุลให้ถูกต้องก่อนทำการเช็กชื่อรับสิทธิ์วุฒิบัตร</p>
+      </div>
+
+      <!-- Identity Card -->
+      <div class="bg-blue-50/70 border border-blue-200 rounded-2xl p-4 text-left space-y-2">
+        <div>
+          <span class="text-[10px] text-slate-400 block font-semibold">ชื่อ-นามสกุล (ภาษาไทย):</span>
+          <div id="confirmNameTh" class="text-base font-extrabold text-[#08539E] leading-snug">-</div>
+        </div>
+        <div>
+          <span class="text-[10px] text-slate-400 block font-semibold">Name - Surname (English):</span>
+          <div id="confirmNameEn" class="text-xs font-bold text-slate-700 italic font-serif">-</div>
+        </div>
+        <div>
+          <span class="text-[10px] text-slate-400 block font-semibold">โรงเรียน / หน่วยงาน:</span>
+          <div id="confirmSchool" class="text-xs font-semibold text-slate-600">-</div>
+        </div>
+        <div id="confirmContactWrap" class="pt-1 border-t border-blue-200/60 flex items-center justify-between text-[11px] text-slate-500">
+          <span id="confirmEmail" class="truncate max-w-[170px]">-</span>
+          <span id="confirmPhone">-</span>
+        </div>
+      </div>
+
+      <label class="flex items-start gap-2 text-left text-xs text-slate-600 cursor-pointer p-1">
+        <input type="checkbox" id="chkConfirmIdentity" class="mt-0.5 rounded text-blue-600 focus:ring-blue-500 cursor-pointer" checked>
+        <span class="leading-tight">ขอยืนยันว่าข้าพเจ้าคือบุคคลตามรายชื่อนี้ และเข้าร่วมการอบรมจริง</span>
+      </label>
+
+      <div class="pt-2 grid grid-cols-2 gap-2">
+        <button type="button" onclick="closeConfirmModal()" class="btn-touch py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl text-xs font-bold transition">
+          ไม่ใช่ฉัน / ยกเลิก
+        </button>
+        <button type="button" onclick="executeConfirmedCheckin()" id="btnConfirmCheckinSubmit" class="btn-touch py-2.5 bg-[#08539E] hover:bg-[#07488a] active:bg-[#063b72] text-white rounded-xl text-xs font-bold shadow-md transition flex items-center justify-center gap-1.5 cursor-pointer">
+          <i class="fa-solid fa-check text-amber-300"></i>
+          <span>ยืนยันใช่ตัวฉัน</span>
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- MODAL: WALKIN REGISTRATION FORM -->
+  <div id="walkinModal" class="hidden fixed inset-0 z-50 bg-slate-900/70 backdrop-blur-xs flex items-center justify-center p-4">
+    <div class="bg-white rounded-3xl max-w-md w-full p-5 sm:p-6 space-y-4 shadow-2xl max-h-[90vh] overflow-y-auto custom-scrollbar">
+      
+      <div class="flex items-center justify-between pb-3 border-b border-slate-100">
+        <div class="flex items-center gap-2.5">
+          <div class="w-9 h-9 rounded-2xl bg-amber-100 text-amber-800 flex items-center justify-center text-base font-bold">
+            <i class="fa-solid fa-user-plus"></i>
+          </div>
+          <div>
+            <h3 class="font-black text-slate-900 text-base">ลงทะเบียนหน้างาน (Walk-in)</h3>
+            <p class="text-[11px] text-slate-400">กรอกข้อมูลเพื่อเช็กชื่อและรับสิทธิ์ e-Certificate</p>
+          </div>
+        </div>
+        <button type="button" onclick="closeWalkinModal()" class="text-slate-400 hover:text-slate-600 p-1">
+          <i class="fa-solid fa-xmark text-lg"></i>
+        </button>
+      </div>
+
+      <form id="walkinForm" onsubmit="handleWalkinSubmit(event)" class="space-y-3">
+        <!-- Thai Name -->
+        <div>
+          <label class="block text-xs font-bold text-slate-700 mb-1">
+            1. ชื่อ-นามสกุล (ภาษาไทย) *
+          </label>
+          <input type="text" id="walkinNameTh" required placeholder="เช่น นางสาวศศิวิมล เกิดหมื่นไวย" class="w-full bg-slate-50 border border-slate-300 rounded-xl p-2.5 text-xs focus:bg-white focus:ring-2 focus:ring-blue-500 focus:outline-none">
+        </div>
+
+        <!-- English Name -->
+        <div>
+          <label class="block text-xs font-bold text-slate-700 mb-1">
+            2. Full Name (English) *
+          </label>
+          <input type="text" id="walkinNameEn" required placeholder="e.g. Miss Sasiwimon Kerdmuenwai" class="w-full bg-slate-50 border border-slate-300 rounded-xl p-2.5 text-xs focus:bg-white focus:ring-2 focus:ring-blue-500 focus:outline-none">
+        </div>
+
+        <!-- School -->
+        <div>
+          <label class="block text-xs font-bold text-slate-700 mb-1">
+            3. โรงเรียน / สถานศึกษา / หน่วยงาน *
+          </label>
+          <input type="text" id="walkinSchool" required placeholder="ระบุชื่อโรงเรียน หรือ หน่วยงานต้นสังกัด..." class="w-full bg-slate-50 border border-slate-300 rounded-xl p-2.5 text-xs focus:bg-white focus:ring-2 focus:ring-blue-500 focus:outline-none">
+        </div>
+
+        <!-- Email -->
+        <div>
+          <label class="block text-xs font-bold text-slate-700 mb-1 flex items-center justify-between">
+            <span>4. อีเมลสำหรับจัดส่งวุฒิบัตร (Email) *</span>
+            <span class="text-[10px] text-blue-600 font-normal">รับไฟล์ตรง</span>
+          </label>
+          <input type="email" id="walkinEmail" required placeholder="เช่น sasiwimon@example.com" class="w-full bg-slate-50 border border-slate-300 rounded-xl p-2.5 text-xs focus:bg-white focus:ring-2 focus:ring-blue-500 focus:outline-none">
+        </div>
+
+        <!-- Phone -->
+        <div>
+          <label class="block text-xs font-bold text-slate-700 mb-1">
+            5. เบอร์โทรศัพท์ติดต่อ (Phone)
+          </label>
+          <input type="tel" id="walkinPhone" placeholder="เช่น 081-234-5678" class="w-full bg-slate-50 border border-slate-300 rounded-xl p-2.5 text-xs focus:bg-white focus:ring-2 focus:ring-blue-500 focus:outline-none">
+        </div>
+
+        <div class="pt-2 flex items-center justify-end gap-2">
+          <button type="button" onclick="closeWalkinModal()" class="btn-touch px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl text-xs font-bold transition">
+            ยกเลิก
+          </button>
+          <button type="submit" id="btnSubmitWalkin" class="btn-touch px-5 py-2 bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 text-white rounded-xl text-xs font-bold shadow-md transition flex items-center gap-1.5 cursor-pointer">
+            <i class="fa-solid fa-check"></i>
+            <span>ยืนยันลงทะเบียน & เช็กชื่อ</span>
+          </button>
+        </div>
+      </form>
+
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <footer class="bg-white border-t border-slate-200 py-3 text-center text-slate-400 text-xs">
+    <p>สำนักพิมพ์ไทยวัฒนาพานิช จำกัด • Thai Watana Panich Publishing House</p>
+    <p class="text-[10px] text-slate-400 mt-0.5">ระบบเช็กชื่อผู้เข้าอบรมมาตรฐานสากล (TWP Enterprise Onsite Check-in v1.19.1)</p>
+  </footer>
+
+  <!-- SCRIPT LOGIC -->
+  <script>
+    const DEFAULT_GAS_ENDPOINT = 'https://script.google.com/macros/s/AKfycby-D2AvgHXO_y4tVxg8wgkDP9ARBnRpiVp47-vnF7AiA1TA4AqwKGbelJTyI68tKfmx6g/exec';
+    
+    // Parse URL Parameters
+    const urlParams = new URLSearchParams(window.location.search);
+    const targetEventId = urlParams.get('event') || urlParams.get('evt') || urlParams.get('t') || 'EVT-2026-0001';
+    const gasEndpoint = urlParams.get('ep') || DEFAULT_GAS_ENDPOINT;
+
+    // State
+    let currentEvent = {
+      eventId: targetEventId,
+      courseTopic: 'Active Learning สู่สมรรถนะผู้เรียนด้วยสื่อนวัตกรรมดิจิทัล',
+      schoolName: 'โรงเรียนเตรียมอุดมศึกษาพัฒนาการ',
+      speakerName: 'ศ.ดร.ประสาน ปัญญาเลิศ',
+      eventDate: '20 พฤศจิกายน 2569'
+    };
+
+    let attendees = [];
+    let filteredAttendees = [];
+    let pendingConfirmAttendee = null;
+
+    window.addEventListener('DOMContentLoaded', () => {
+      resolveEventMetadata();
+      loadAttendees(false);
+
+      // Auto poll every 30 seconds for live updates
+      setInterval(() => {
+        loadAttendees(false);
+      }, 30000);
+    });
+
+    function resolveEventMetadata() {
+      // 1. URL params
+      if (urlParams.get('topic')) currentEvent.courseTopic = decodeURIComponent(urlParams.get('topic'));
+      if (urlParams.get('school')) currentEvent.schoolName = decodeURIComponent(urlParams.get('school'));
+      if (urlParams.get('speaker')) currentEvent.speakerName = decodeURIComponent(urlParams.get('speaker'));
+      if (urlParams.get('date')) currentEvent.eventDate = decodeURIComponent(urlParams.get('date'));
+
+      // 2. Local storage requests store
+      const stored = localStorage.getItem('twp_requests_store');
+      if (stored) {
+        try {
+          const reqs = JSON.parse(stored);
+          const found = reqs.find(r => r.eventId === targetEventId);
+          if (found) {
+            currentEvent.courseTopic = found.courseTopic || currentEvent.courseTopic;
+            currentEvent.schoolName = found.schoolName || currentEvent.schoolName;
+            currentEvent.speakerName = found.teamBSpeaker || found.speakerType || currentEvent.speakerName;
+            currentEvent.eventDate = found.eventDate || currentEvent.eventDate;
+          }
+        } catch(e) {}
+      }
+
+      // Render UI
+      document.getElementById('dispEventId').innerText = currentEvent.eventId;
+      document.getElementById('dispEventTopic').innerText = currentEvent.courseTopic;
+      document.getElementById('dispEventSchool').innerText = currentEvent.schoolName;
+      document.getElementById('dispEventSpeaker').innerText = currentEvent.speakerName;
+      document.getElementById('dispEventDate').innerText = currentEvent.eventDate;
+
+      // Update Go to survey button link
+      const btnSurvey = document.getElementById('btnGoToSurvey');
+      if (btnSurvey) {
+        btnSurvey.href = \`survey.html?evt=\${encodeURIComponent(currentEvent.eventId)}&topic=\${encodeURIComponent(currentEvent.courseTopic)}&school=\${encodeURIComponent(currentEvent.schoolName)}&speaker=\${encodeURIComponent(currentEvent.speakerName)}&date=\${encodeURIComponent(currentEvent.eventDate)}\`;
+      }
+    }
+
+    function updateSyncIndicator(status, message) {
+      const ind = document.getElementById('cloudSyncIndicator');
+      const text = document.getElementById('cloudSyncText');
+      if (!ind || !text) return;
+
+      if (status === 'SYNCED') {
+        ind.className = 'text-[10px] bg-emerald-500/20 text-emerald-200 border border-emerald-400/30 px-2.5 py-0.5 rounded-full flex items-center gap-1.5';
+        text.innerHTML = message || \`คลาวด์เชื่อมต่อแล้ว (\${attendees.length} ท่าน)\`;
+      } else if (status === 'LOADING') {
+        ind.className = 'text-[10px] bg-amber-500/20 text-amber-200 border border-amber-400/30 px-2.5 py-0.5 rounded-full flex items-center gap-1.5';
+        text.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> กำลังซิงก์คลาวด์...';
+      } else {
+        ind.className = 'text-[10px] bg-slate-500/20 text-slate-300 border border-slate-400/30 px-2.5 py-0.5 rounded-full flex items-center gap-1.5';
+        text.innerHTML = message || 'ออฟไลน์ (ใช้ข้อมูลในเครื่อง)';
+      }
+    }
+
+    function loadAttendees(isManualRefresh = false) {
+      const icon = document.getElementById('btnRefreshIcon');
+      if (isManualRefresh && icon) icon.classList.add('fa-spin');
+      updateSyncIndicator('LOADING');
+
+      // 1. Load from local cache first for instant render
+      const localStoreKey = 'twp_onsite_attendees_' + currentEvent.eventId;
+      const cached = localStorage.getItem(localStoreKey);
+      if (cached) {
+        try {
+          const list = JSON.parse(cached);
+          if (Array.isArray(list) && list.length > 0 && attendees.length === 0) {
+            attendees = list;
+            updateKpiStats();
+            handleAttendeeSearch(document.getElementById('attendeeSearchInput')?.value || '');
+          }
+        } catch(e) {}
+      }
+
+      // 2. Fetch latest from Google Apps Script Backend
+      const targetEndpoint = gasEndpoint || DEFAULT_GAS_ENDPOINT;
+      fetch(targetEndpoint, {
+        method: 'POST',
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+        body: JSON.stringify({
+          action: 'GET_EVENT_REGISTRATIONS',
+          payload: { eventId: currentEvent.eventId }
+        })
+      })
+      .then(r => r.json())
+      .then(res => {
+        if (res && res.status === 'SUCCESS') {
+          let serverList = [];
+          if (Array.isArray(res.data)) {
+            serverList = res.data;
+          } else if (res.data && Array.isArray(res.data.registrations)) {
+            serverList = res.data.registrations;
+          }
+
+          if (serverList.length > 0) {
+            attendees = serverList;
+            localStorage.setItem(localStoreKey, JSON.stringify(attendees));
+          }
+
+          if (res.data && res.data.eventInfo) {
+            const ev = res.data.eventInfo;
+            if (ev.courseTopic) currentEvent.courseTopic = ev.courseTopic;
+            if (ev.schoolName) currentEvent.schoolName = ev.schoolName;
+            if (ev.speakerName) currentEvent.speakerName = ev.speakerName;
+            if (ev.eventDate) currentEvent.eventDate = ev.eventDate;
+            document.getElementById('dispEventTopic').innerText = currentEvent.courseTopic;
+            document.getElementById('dispEventSchool').innerText = currentEvent.schoolName;
+            document.getElementById('dispEventSpeaker').innerText = currentEvent.speakerName;
+            document.getElementById('dispEventDate').innerText = currentEvent.eventDate;
+          }
+
+          updateKpiStats();
+          handleAttendeeSearch(document.getElementById('attendeeSearchInput')?.value || '');
+          updateSyncIndicator('SYNCED');
+        } else {
+          updateSyncIndicator('SYNCED', \`ข้อมูลพร้อมใช้งาน (\${attendees.length} ท่าน)\`);
+        }
+      })
+      .catch(e => {
+        console.log('Offline checkin mode', e);
+        updateSyncIndicator('OFFLINE', \`ออฟไลน์ (\${attendees.length} ท่าน)\`);
+      })
+      .finally(() => {
+        if (icon) icon.classList.remove('fa-spin');
+      });
+    }
+
+    function updateKpiStats() {
+      const total = attendees.length;
+      const checked = attendees.filter(a => a.checkinStatus === 'CHECKED_IN').length;
+      const pending = total - checked;
+
+      const elTotal = document.getElementById('statKpiTotal');
+      const elChecked = document.getElementById('statKpiCheckedIn');
+      const elPending = document.getElementById('statKpiPending');
+
+      if (elTotal) elTotal.innerText = total;
+      if (elChecked) elChecked.innerText = checked;
+      if (elPending) elPending.innerText = pending;
+    }
+
+    function handleAttendeeSearch(query) {
+      const q = (query || '').trim().toLowerCase();
+      const btnClear = document.getElementById('btnClearSearch');
+      if (btnClear) {
+        if (q) btnClear.classList.remove('hidden');
+        else btnClear.classList.add('hidden');
+      }
+
+      if (!q) {
+        // Render all attendees by default so the user sees the database immediately!
+        renderAttendeesList(attendees, false);
+        return;
+      }
+
+      filteredAttendees = attendees.filter(att => {
+        const nameTh = (att.nameTh || '').toLowerCase();
+        const nameEn = (att.nameEn || '').toLowerCase();
+        const school = (att.school || '').toLowerCase();
+        const phone = (att.phone || '').replace(/[^0-9]/g, '');
+        const qClean = q.replace(/[^0-9]/g, '');
+
+        const matchText = nameTh.includes(q) || nameEn.includes(q) || school.includes(q);
+        const matchPhone = qClean && phone && (phone.includes(qClean) || phone.endsWith(qClean));
+
+        return matchText || matchPhone;
+      });
+
+      renderAttendeesList(filteredAttendees, true);
+    }
+
+    function clearSearchInput() {
+      const inp = document.getElementById('attendeeSearchInput');
+      if (inp) {
+        inp.value = '';
+        handleAttendeeSearch('');
+        inp.focus();
+      }
+    }
+
+    function renderAttendeesList(list, isFiltered = false) {
+      const container = document.getElementById('attendeesListContainer');
+      const countEl = document.getElementById('searchResultCount');
+      if (!container) return;
+
+      if (countEl) countEl.innerText = \`\${list.length} ท่าน\`;
+
+      if (list.length === 0) {
+        const searchVal = document.getElementById('attendeeSearchInput')?.value?.trim();
+        if (searchVal) {
+          container.innerHTML = \`
+            <div class="py-8 text-center text-slate-400 text-xs space-y-2 bg-slate-50 rounded-2xl border border-dashed border-slate-200 p-5">
+              <i class="fa-solid fa-user-slash text-3xl text-slate-300"></i>
+              <p class="font-bold text-slate-700">ไม่พบรายชื่อที่ตรงกับ "<strong>\${searchVal}</strong>"</p>
+              <p class="text-[11px] text-slate-400">ท่านอาจจะยังไม่ได้ลงทะเบียนล่วงหน้า หรือสะกดชื่อต่างจากในระบบ</p>
+              <div class="pt-2">
+                <button type="button" onclick="openWalkinModal('\${searchVal}')" class="px-4 py-2 bg-amber-600 hover:bg-amber-700 text-white rounded-xl font-bold transition text-xs shadow-xs inline-flex items-center gap-1.5">
+                  <i class="fa-solid fa-user-plus"></i>
+                  <span>กดลงทะเบียน Walk-in ด้วยชื่อนี้</span>
+                </button>
+              </div>
+            </div>
+          \`;
+        } else {
+          container.innerHTML = \`
+            <div class="py-10 text-center text-slate-400 text-xs space-y-2">
+              <i class="fa-solid fa-users text-4xl text-slate-300"></i>
+              <p class="font-bold text-slate-600">ยังไม่มีรายชื่อในโครงการนี้</p>
+              <p class="text-[11px] text-slate-400">สามารถกดปุ่ม "ลงทะเบียนใหม่ (Walk-in)" หรือให้ผู้จัดงานนำเข้าไฟล์ Excel</p>
+            </div>
+          \`;
+        }
+        return;
+      }
+
+      container.innerHTML = list.map((att, idx) => {
+        const isChecked = (att.checkinStatus === 'CHECKED_IN');
+        return \`
+          <div class="bg-white p-3.5 rounded-2xl border \${isChecked ? 'border-emerald-300 bg-emerald-50/25' : 'border-slate-200 hover:border-blue-300'} shadow-xs flex items-center justify-between gap-3 transition">
+            
+            <!-- Index & Info -->
+            <div class="min-w-0 flex-1">
+              <div class="flex items-center gap-2 flex-wrap">
+                <span class="w-5 text-center text-[10px] font-bold text-slate-400 font-mono">\${idx + 1}.</span>
+                <span class="font-black text-slate-900 text-sm tracking-tight">\${att.nameTh || '-'}</span>
+                \${att.regType === 'WALKIN' ? '<span class="text-[9px] bg-amber-100 text-amber-800 font-bold px-1.5 py-0.2 rounded-md">Walk-in</span>' : ''}
+              </div>
+              <div class="text-xs text-slate-500 font-serif italic pl-7">\${att.nameEn || '-'}</div>
+              <div class="text-[11px] text-slate-500 pl-7 truncate mt-0.5 flex items-center gap-2">
+                <span><i class="fa-solid fa-school text-slate-400 mr-1"></i>\${att.school || currentEvent.schoolName}</span>
+                \${att.phone ? \`<span class="text-slate-400 font-mono"><i class="fa-solid fa-phone text-slate-300 mr-0.5"></i>\${maskPhone(att.phone)}</span>\` : ''}
+              </div>
+            </div>
+
+            <!-- Action Column -->
+            <div class="shrink-0 text-right space-y-1">
+              \${isChecked ? \`
+                <div>
+                  <span class="inline-flex items-center gap-1 px-3 py-1 bg-emerald-100 text-emerald-800 border border-emerald-300 font-bold rounded-xl text-xs">
+                    <i class="fa-solid fa-circle-check text-emerald-600"></i>
+                    <span>เช็กชื่อแล้ว</span>
+                  </span>
+                  <div class="text-[10px] text-slate-400 mt-0.5">\${att.checkinTime || ''}</div>
+                </div>
+                <!-- Undo / Cancel Check-in Button -->
+                <div>
+                  <button type="button" onclick="promptCancelCheckin('\${att.regId}')" class="text-[10px] text-rose-600 hover:text-rose-800 underline font-semibold flex items-center justify-end gap-1 ml-auto cursor-pointer" title="ยกเลิกเช็กชื่อกรณีเลือกผิด">
+                    <i class="fa-solid fa-rotate-left"></i>
+                    <span>เลือกชื่อผิด? ยกเลิก</span>
+                  </button>
+                </div>
+              \` : \`
+                <button type="button" onclick="promptConfirmCheckin('\${att.regId}')" class="btn-touch px-4 py-2 bg-[#08539E] hover:bg-[#07488a] active:bg-[#063b72] text-white font-bold rounded-xl shadow-xs transition flex items-center gap-1.5 text-xs cursor-pointer">
+                  <i class="fa-solid fa-check text-amber-300"></i>
+                  <span>ยืนยันเช็กชื่อ</span>
+                </button>
+              \`}
+            </div>
+
+          </div>
+        \`;
+      }).join('');
+    }
+
+    function maskPhone(ph) {
+      const p = String(ph).trim();
+      if (p.length >= 8) {
+        return p.slice(0, 3) + '-***-' + p.slice(-4);
+      }
+      return p;
+    }
+
+    // Confirmation Modal Flow
+    function promptConfirmCheckin(regId) {
+      const att = attendees.find(a => a.regId === regId);
+      if (!att) return;
+
+      pendingConfirmAttendee = att;
+      document.getElementById('confirmNameTh').innerText = att.nameTh || '-';
+      document.getElementById('confirmNameEn').innerText = att.nameEn || '(ไม่มีข้อมูลภาษาอังกฤษ)';
+      document.getElementById('confirmSchool').innerText = att.school || currentEvent.schoolName;
+      document.getElementById('confirmEmail').innerText = att.email ? '✉️ ' + att.email : '';
+      document.getElementById('confirmPhone').innerText = att.phone ? '📞 ' + att.phone : '';
+      document.getElementById('chkConfirmIdentity').checked = true;
+
+      document.getElementById('confirmIdentityModal').classList.remove('hidden');
+    }
+
+    function closeConfirmModal() {
+      document.getElementById('confirmIdentityModal').classList.add('hidden');
+      pendingConfirmAttendee = null;
+    }
+
+    function executeConfirmedCheckin() {
+      const chk = document.getElementById('chkConfirmIdentity');
+      if (chk && !chk.checked) {
+        alert('กรุณาทำเครื่องหมายติ๊กถูกเพื่อยืนยันตัวตนครับ');
+        return;
+      }
+
+      if (!pendingConfirmAttendee) return;
+      const att = pendingConfirmAttendee;
+      closeConfirmModal();
+
+      const nowStr = new Date().toLocaleTimeString('th-TH', { hour: '2-digit', minute: '2-digit' }) + ' น.';
+      att.checkinStatus = 'CHECKED_IN';
+      att.checkinTime = nowStr;
+
+      // Update local storage
+      localStorage.setItem('twp_onsite_attendees_' + currentEvent.eventId, JSON.stringify(attendees));
+      updateKpiStats();
+      handleAttendeeSearch(document.getElementById('attendeeSearchInput')?.value || '');
+
+      // Show Success Pass
+      showCheckinSuccessPass(att);
+
+      // Post to backend
+      const targetEndpoint = gasEndpoint || DEFAULT_GAS_ENDPOINT;
+      fetch(targetEndpoint, {
+        method: 'POST',
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+        body: JSON.stringify({
+          action: 'CHECKIN_PARTICIPANT',
+          payload: {
+            regId: att.regId,
+            eventId: currentEvent.eventId,
+            checkinTime: nowStr
+          }
+        })
+      })
+      .then(r => r.json())
+      .then(res => {
+        console.log('Checkin recorded on cloud:', res);
+        updateSyncIndicator('SYNCED');
+      })
+      .catch(e => {
+        console.log('Offline checkin queued');
+        updateSyncIndicator('OFFLINE', 'บันทึกลงเครื่องแล้ว (รอต่อเน็ต)');
+      });
+    }
+
+    // Cancel / Undo Checkin Flow
+    function promptCancelCheckin(regId) {
+      const att = attendees.find(a => a.regId === regId);
+      if (!att) return;
+
+      const confirmUndo = confirm(\`คุณต้องการยกเลิกการเช็กชื่อของ:\\n"\${att.nameTh}"\\n\\nใช่หรือไม่? (ระบบจะคืนสถานะเป็น "ยังไม่เช็กชื่อ" เพื่อให้เลือกชื่อใหม่ได้ครับ)\`);
+      if (!confirmUndo) return;
+
+      att.checkinStatus = 'PENDING';
+      att.checkinTime = '';
+
+      // Update local storage
+      localStorage.setItem('twp_onsite_attendees_' + currentEvent.eventId, JSON.stringify(attendees));
+      updateKpiStats();
+      handleAttendeeSearch(document.getElementById('attendeeSearchInput')?.value || '');
+
+      // Hide success card if currently displayed for this attendee
+      const sc = document.getElementById('checkinSuccessCard');
+      if (sc && !sc.classList.contains('hidden')) {
+        closeSuccessCard();
+      }
+
+      // Post to backend
+      const targetEndpoint = gasEndpoint || DEFAULT_GAS_ENDPOINT;
+      fetch(targetEndpoint, {
+        method: 'POST',
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+        body: JSON.stringify({
+          action: 'CANCEL_CHECKIN',
+          payload: {
+            regId: att.regId,
+            eventId: currentEvent.eventId
+          }
+        })
+      })
+      .then(r => r.json())
+      .then(res => {
+        console.log('Checkin cancelled on cloud:', res);
+        updateSyncIndicator('SYNCED');
+      })
+      .catch(e => {
+        console.log('Offline undo logged');
+      });
+    }
+
+    function showCheckinSuccessPass(att) {
+      document.getElementById('successAttendeeNameTh').innerText = att.nameTh;
+      document.getElementById('successAttendeeNameEn').innerText = att.nameEn || '';
+      document.getElementById('successAttendeeSchool').innerText = att.school || currentEvent.schoolName;
+      document.getElementById('successCheckinTime').innerText = 'เวลาเช็กชื่อ: ' + (att.checkinTime || '');
+
+      const card = document.getElementById('checkinSuccessCard');
+      if (card) {
+        card.classList.remove('hidden');
+        card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
+    }
+
+    function closeSuccessCard() {
+      const card = document.getElementById('checkinSuccessCard');
+      if (card) card.classList.add('hidden');
+    }
+
+    // Walk-in modal
+    function openWalkinModal(prefilledName = '') {
+      const modal = document.getElementById('walkinModal');
+      const inpTh = document.getElementById('walkinNameTh');
+      const inpSchool = document.getElementById('walkinSchool');
+
+      if (inpTh && prefilledName) inpTh.value = prefilledName;
+      if (inpSchool && !inpSchool.value) inpSchool.value = currentEvent.schoolName;
+
+      if (modal) modal.classList.remove('hidden');
+    }
+
+    function closeWalkinModal() {
+      const modal = document.getElementById('walkinModal');
+      if (modal) modal.classList.add('hidden');
+      document.getElementById('walkinForm')?.reset();
+    }
+
+    function handleWalkinSubmit(e) {
+      e.preventDefault();
+      const btn = document.getElementById('btnSubmitWalkin');
+      if (btn) {
+        btn.disabled = true;
+        btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin mr-1"></i> กำลังบันทึก...';
+      }
+
+      const nameTh = document.getElementById('walkinNameTh')?.value.trim();
+      const nameEn = document.getElementById('walkinNameEn')?.value.trim();
+      const school = document.getElementById('walkinSchool')?.value.trim();
+      const email = document.getElementById('walkinEmail')?.value.trim();
+      const phone = document.getElementById('walkinPhone')?.value.trim();
+      const nowStr = new Date().toLocaleTimeString('th-TH', { hour: '2-digit', minute: '2-digit' }) + ' น.';
+
+      const newWalkin = {
+        regId: 'REG-WALKIN-' + Date.now().toString().slice(-6),
+        eventId: currentEvent.eventId,
+        nameTh: nameTh,
+        nameEn: nameEn,
+        school: school,
+        email: email,
+        phone: phone,
+        checkinStatus: 'CHECKED_IN',
+        checkinTime: nowStr,
+        regType: 'WALKIN'
+      };
+
+      // Add to local attendees
+      attendees.unshift(newWalkin);
+      localStorage.setItem('twp_onsite_attendees_' + currentEvent.eventId, JSON.stringify(attendees));
+
+      // Post to backend
+      const targetEndpoint = gasEndpoint || DEFAULT_GAS_ENDPOINT;
+      fetch(targetEndpoint, {
+        method: 'POST',
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+        body: JSON.stringify({
+          action: 'REGISTER_WALKIN',
+          payload: newWalkin
+        })
+      })
+      .then(r => r.json())
+      .then(res => {
+        console.log('Walkin recorded on cloud:', res);
+        updateSyncIndicator('SYNCED');
+      })
+      .catch(e => console.log('Offline walkin queued'));
+
+      closeWalkinModal();
+      updateKpiStats();
+      handleAttendeeSearch('');
+      showCheckinSuccessPass(newWalkin);
+
+      if (btn) {
+        btn.disabled = false;
+        btn.innerHTML = '<i class="fa-solid fa-check"></i><span>ยืนยันลงทะเบียน & เช็กชื่อ</span>';
+      }
+    }
+  </script>
+</body>
+</html>`;
+
+fs.writeFileSync('register.html', registerHtml, 'utf8');
+fs.writeFileSync('frontend/register.html', registerHtml, 'utf8');
+console.log('register.html fully updated and synchronized to frontend/register.html!');

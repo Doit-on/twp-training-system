@@ -157,11 +157,24 @@ function doPost(e) {
       case 'CHECKIN_PARTICIPANT':
         result = handleCheckinParticipant(payload);
         break;
+      case 'CANCEL_CHECKIN':
+      case 'UNDO_CHECKIN':
+        result = handleCancelCheckin(payload);
+        break;
       case 'REGISTER_WALKIN':
         result = handleRegisterWalkin(payload);
         break;
       case 'IMPORT_REGISTRATIONS':
         result = handleBatchImportRegistrations(payload);
+        break;
+      case 'GET_ANNUAL_PLANS':
+        result = handleGetAnnualPlans();
+        break;
+      case 'SAVE_ANNUAL_PLANS':
+        result = handleSaveAnnualPlans(payload);
+        break;
+      case 'DELETE_ANNUAL_PLAN':
+        result = handleDeleteAnnualPlan(payload);
         break;
       case 'UPDATE_TEAM_B_ATTENDEES':
         result = handleUpdateTeamBAttendees(payload);
@@ -1006,6 +1019,10 @@ function ensureRequiredSheets(ss) {
       headers: ['Token_ID', 'Event_ID', 'Course_Title', 'Speaker_Name', 'Event_Date', 'Expires_At', 'Status']
     },
     {
+      name: 'Annual_Plans',
+      headers: ['Plan_ID', 'Seq_No', 'Title', 'Target_Audience', 'Principle_Budget', 'Target_Sales', 'Quarter_Or_Date', 'Approver_Name', 'Approver_Role', 'Status', 'Notes', 'Created_At']
+    },
+    {
       name: 'Evaluation_Responses',
       headers: ['Response_ID', 'Event_ID', 'Timestamp', 'Score_Q1', 'Score_Q2', 'Score_Q3', 'Score_Q4', 'Score_Q5', 'Suggestions', 'Client_Hash']
     },
@@ -1453,7 +1470,8 @@ function handleRegisterWalkin(payload) {
 }
 
 function handleBatchImportRegistrations(payload) {
-  const { eventId, participants } = payload;
+  const eventId = payload ? payload.eventId : '';
+  const participants = (payload && (payload.participants || payload.attendees)) || [];
   if (!participants || !Array.isArray(participants) || participants.length === 0) {
     throw new Error('ไม่พบข้อมูลรายชื่อสำหรับนำเข้า');
   }
@@ -1522,4 +1540,127 @@ function testMailAuthorization() {
 
 function authorizeMail() {
   return testMailAuthorization();
+}
+
+
+function handleCancelCheckin(payload) {
+  const regId = payload ? payload.regId : '';
+  const eventId = payload ? payload.eventId : '';
+  if (!regId) throw new Error('กรุณาระบุ regId ที่ต้องการยกเลิก');
+
+  const ss = getSpreadsheet();
+  ensureRequiredSheets(ss);
+  const sheet = ss.getSheetByName('Onsite_Registrations');
+  if (!sheet) throw new Error('ไม่พบชีต Onsite_Registrations');
+
+  const rows = sheet.getDataRange().getValues();
+  for (let i = 1; i < rows.length; i++) {
+    if (String(rows[i][0]).trim() === String(regId).trim()) {
+      sheet.getRange(i + 1, 9).setValue('PENDING'); // checkinStatus
+      sheet.getRange(i + 1, 10).setValue('');        // checkinTime
+      return { success: true, regId: regId, status: 'PENDING', message: 'ยกเลิกการเช็กชื่อเรียบร้อยแล้ว' };
+    }
+  }
+  return { success: false, message: 'ไม่พบรหัสผู้ลงทะเบียน: ' + regId };
+}
+
+
+// ============================================================================
+// ANNUAL MASTER PLANS ENGINE (ผศ.อินทิรา บุนนาค อนุมัติหลักการ)
+// ============================================================================
+
+function handleGetAnnualPlans() {
+  const ss = getSpreadsheet();
+  ensureRequiredSheets(ss);
+  const sheet = ss.getSheetByName('Annual_Plans');
+  if (!sheet) return { plans: [] };
+
+  const rows = sheet.getDataRange().getValues();
+  const plans = [];
+
+  for (let i = 1; i < rows.length; i++) {
+    const r = rows[i];
+    if (r[0]) {
+      plans.push({
+        planId: r[0],
+        seqNo: Number(r[1]) || (i),
+        title: r[2] || '',
+        targetAudience: r[3] || '',
+        principleBudget: Number(r[4]) || 0,
+        targetSales: Number(r[5]) || 0,
+        quarterOrDate: r[6] || '',
+        approverName: r[7] || 'ผศ.อินทิรา บุนนาค',
+        approverRole: r[8] || 'กรรมการผู้จัดการ',
+        status: r[9] || 'APPROVED_PRINCIPLE',
+        notes: r[10] || '',
+        createdAt: r[11] || ''
+      });
+    }
+  }
+
+  // Sort by seqNo
+  plans.sort((a, b) => a.seqNo - b.seqNo);
+  return { plans: plans, total: plans.length };
+}
+
+function handleSaveAnnualPlans(payload) {
+  const plans = payload ? (payload.plans || (payload.plan ? [payload.plan] : [])) : [];
+  if (!Array.isArray(plans) || plans.length === 0) {
+    throw new Error('ไม่พบข้อมูลโครงการอนุมัติหลักการสำหรับบันทึก');
+  }
+
+  const ss = getSpreadsheet();
+  ensureRequiredSheets(ss);
+  let sheet = ss.getSheetByName('Annual_Plans');
+  if (!sheet) {
+    sheet = ss.insertSheet('Annual_Plans');
+    sheet.appendRow(['Plan_ID', 'Seq_No', 'Title', 'Target_Audience', 'Principle_Budget', 'Target_Sales', 'Quarter_Or_Date', 'Approver_Name', 'Approver_Role', 'Status', 'Notes', 'Created_At']);
+  }
+
+  // Re-write rows safely
+  const existingHeaders = sheet.getRange(1, 1, 1, 12).getValues()[0];
+  sheet.clearContents();
+  sheet.appendRow(existingHeaders);
+
+  const now = new Date().toISOString();
+  const rows = plans.map(p => [
+    p.planId || ('PLAN-2569-' + String(p.seqNo).padStart(2, '0')),
+    p.seqNo || 1,
+    p.title || '',
+    p.targetAudience || '',
+    Number(p.principleBudget) || 0,
+    Number(p.targetSales) || 0,
+    p.quarterOrDate || '',
+    p.approverName || 'ผศ.อินทิรา บุนนาค',
+    p.approverRole || 'กรรมการผู้จัดการ',
+    p.status || 'APPROVED_PRINCIPLE',
+    p.notes || '',
+    p.createdAt || now
+  ]);
+
+  if (rows.length > 0) {
+    sheet.getRange(2, 1, rows.length, 12).setValues(rows);
+  }
+
+  return { success: true, savedCount: rows.length };
+}
+
+function handleDeleteAnnualPlan(payload) {
+  const planId = payload ? payload.planId : '';
+  if (!planId) throw new Error('กรุณาระบุ planId ที่ต้องการลบ');
+
+  const ss = getSpreadsheet();
+  ensureRequiredSheets(ss);
+  const sheet = ss.getSheetByName('Annual_Plans');
+  if (!sheet) return { success: true };
+
+  const rows = sheet.getDataRange().getValues();
+  for (let i = 1; i < rows.length; i++) {
+    if (String(rows[i][0]).trim() === String(planId).trim()) {
+      sheet.deleteRow(i + 1);
+      return { success: true, deletedPlanId: planId };
+    }
+  }
+
+  return { success: false, message: 'ไม่พบรหัสโครงการ: ' + planId };
 }
