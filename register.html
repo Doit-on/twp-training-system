@@ -43,7 +43,7 @@
         </div>
       </div>
       <div class="text-right">
-        <span class="text-[10px] bg-white/20 text-blue-100 font-mono font-bold px-2 py-0.5 rounded-full border border-white/20">v1.19.0</span>
+        <span class="text-[10px] bg-white/20 text-blue-100 font-mono font-bold px-2 py-0.5 rounded-full border border-white/20">v1.19.1</span>
       </div>
     </div>
   </header>
@@ -321,8 +321,23 @@
       })
       .then(r => r.json())
       .then(res => {
-        if (res && res.status === 'SUCCESS' && Array.isArray(res.data)) {
-          attendees = res.data;
+        if (res && res.status === 'SUCCESS') {
+          if (Array.isArray(res.data)) {
+            attendees = res.data;
+          } else if (res.data && Array.isArray(res.data.registrations)) {
+            attendees = res.data.registrations;
+          }
+          if (res.data && res.data.eventInfo) {
+            const ev = res.data.eventInfo;
+            if (ev.courseTopic) currentEvent.courseTopic = ev.courseTopic;
+            if (ev.schoolName) currentEvent.schoolName = ev.schoolName;
+            if (ev.speakerName) currentEvent.speakerName = ev.speakerName;
+            if (ev.eventDate) currentEvent.eventDate = ev.eventDate;
+            document.getElementById('dispEventTopic').innerText = currentEvent.courseTopic;
+            document.getElementById('dispEventSchool').innerText = currentEvent.schoolName;
+            document.getElementById('dispEventSpeaker').innerText = currentEvent.speakerName;
+            document.getElementById('dispEventDate').innerText = currentEvent.eventDate;
+          }
           localStorage.setItem(localStoreKey, JSON.stringify(attendees));
           handleAttendeeSearch(document.getElementById('attendeeSearchInput')?.value || '');
         }

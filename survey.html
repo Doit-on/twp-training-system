@@ -217,7 +217,7 @@
         
         <div class="text-[11px] bg-blue-900/80 px-2.5 py-1 rounded-full border border-blue-400/30 hidden sm:flex items-center">
           <i class="fa-solid fa-award text-amber-300 mr-1.5"></i>
-          <span>v1.19.0</span>
+          <span>v1.19.1</span>
         </div>
       </div>
     </div>
@@ -1312,7 +1312,7 @@
       const qrWrap = document.getElementById('certQrWrapper');
       if (qrWrap && window.QRCode) {
         qrWrap.innerHTML = '';
-        const verifyUrl = `https://doit-on.github.io/twp-training-system/survey.html?step=2&view=cert&cert=${encodeURIComponent(cId)}&t=${encodeURIComponent(surveyToken)}&name=${encodeURIComponent(currentParticipant.nameTh || '')}&nameEn=${encodeURIComponent(currentParticipant.nameEn || '')}&school=${encodeURIComponent(currentParticipant.school || '')}`;
+        const verifyUrl = `https://doit-on.github.io/twp-training-system/survey.html?step=2&view=cert&cert=${encodeURIComponent(cId)}`;
         new QRCode(qrWrap, {
           text: verifyUrl,
           width: 38,
@@ -1441,7 +1441,7 @@
       const qrWrap = document.getElementById('certQrWrapper');
       if (qrWrap) {
         qrWrap.innerHTML = '';
-        const verifyUrl = `https://doit-on.github.io/twp-training-system/survey.html?step=2&view=cert&cert=${encodeURIComponent(cId)}&t=${encodeURIComponent(surveyToken)}&name=${encodeURIComponent(currentParticipant.nameTh || '')}&nameEn=${encodeURIComponent(currentParticipant.nameEn || '')}&school=${encodeURIComponent(currentParticipant.school || '')}`;
+        const verifyUrl = `https://doit-on.github.io/twp-training-system/survey.html?step=2&view=cert&cert=${encodeURIComponent(cId)}`;
         new QRCode(qrWrap, {
           text: verifyUrl,
           width: 38,
@@ -1509,7 +1509,7 @@
       const qrWrap = document.getElementById('certQrWrapper');
       if (qrWrap) {
         qrWrap.innerHTML = '';
-        const verifyUrl = `https://doit-on.github.io/twp-training-system/survey.html?step=2&view=cert&cert=${encodeURIComponent(cId)}&t=${encodeURIComponent(surveyToken)}&name=${encodeURIComponent(currentParticipant.nameTh || '')}&nameEn=${encodeURIComponent(currentParticipant.nameEn || '')}&school=${encodeURIComponent(currentParticipant.school || '')}`;
+        const verifyUrl = `https://doit-on.github.io/twp-training-system/survey.html?step=2&view=cert&cert=${encodeURIComponent(cId)}`;
         new QRCode(qrWrap, {
           text: verifyUrl,
           width: 38,

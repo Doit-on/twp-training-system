@@ -1,14 +1,14 @@
 /**
  * ============================================================================
  * EMS Enterprise - Training Center TWP
- * Version: 1.5.0
+ * Version: 1.19.1
  * Architecture: Google Apps Script Backend (Serverless) + Google Sheets Database
  * Security: Zero-Trust Data Isolation + Multi-Operator Stamping + Concurrency Lock
  * Features: Multi-Device Sync + Team QR Pairing + PPC Standard A4 Report Engine (PDF & Word .docx)
  * ============================================================================
  */
 
-const SYSTEM_VERSION = '1.19.0';
+const SYSTEM_VERSION = '1.19.1';
 const DEFAULT_ADMIN_PASS = 'admin0000';
 
 function getSpreadsheet() {
@@ -38,6 +38,27 @@ function testMailAuthorization() {
 }
 
 /**
+ * ฟังก์ชันสำหรับทดสอบส่งอีเมลวุฒิบัตร (e-Certificate) จาก Google Apps Script Editor
+ * สามารถเลือกชื่อฟังก์ชันนี้ในแถบเครื่องมือด้านบนแล้วกด "เรียกใช้" ได้ทันที
+ */
+function testSendCertificateEmail() {
+  const adminEmail = Session.getActiveUser().getEmail() || Session.getEffectiveUser().getEmail() || 'admin@twp.co.th';
+  Logger.log('กำลังทดสอบส่งอีเมลวุฒิบัตรไปยัง: ' + adminEmail);
+  const testPayload = {
+    email: adminEmail,
+    nameTh: 'นายทดสอบ ระบบวุฒิบัตร',
+    nameEn: 'Mr. Test TWP Certificate',
+    school: 'โรงเรียนสาธิตไทยวัฒนาพานิช',
+    courseTopic: 'Active Learning สู่สมรรถนะผู้เรียนด้วยสื่อนวัตกรรมดิจิทัล',
+    certId: 'TWP-TEST-' + Math.floor(100000 + Math.random() * 900000),
+    eventDate: new Date().toLocaleDateString('th-TH'),
+    speakerName: 'ศ.ดร.ประสาน ปัญญาเลิศ',
+    token: 'TEST-TOKEN-999'
+  };
+  return handleSendECertificateEmail(testPayload);
+}
+
+/**
  * WebApp View Dispatcher & Ping Endpoint
  */
 function doGet(e) {
@@ -54,7 +75,7 @@ function doGet(e) {
     version: SYSTEM_VERSION,
     spreadsheet: spreadsheetName,
     serverTime: new Date().toISOString(),
-    message: 'Google Apps Script Web App ทำงานอย่างสมบูรณ์ พร้อมรับคำสั่ง doPost จากระบบ v1.9.0 เรียบร้อยแล้ว'
+    message: 'Google Apps Script Web App ทำงานอย่างสมบูรณ์ พร้อมรับคำสั่ง doPost จากระบบ v1.19.1 เรียบร้อยแล้ว'
   }, null, 2)).setMimeType(ContentService.MimeType.JSON);
 }
 
@@ -1307,7 +1328,7 @@ function handleSendECertificateEmail(payload) {
 }
 
 // ============================================================================
-// ONSITE REGISTRATION & HYBRID ATTENDANCE CHECK-IN ENGINE (v1.19.0)
+// ONSITE REGISTRATION & HYBRID ATTENDANCE CHECK-IN ENGINE (v1.19.1)
 // ============================================================================
 
 function handleGetEventRegistrations(payload) {
@@ -1347,13 +1368,37 @@ function handleGetEventRegistrations(payload) {
     }
   }
 
+  // Lookup event metadata from Requests sheet
+  let eventInfo = null;
+  try {
+    const reqSheet = ss.getSheetByName('Requests');
+    if (reqSheet && eventId) {
+      const reqRows = reqSheet.getDataRange().getValues();
+      for (let j = 1; j < reqRows.length; j++) {
+        if (String(reqRows[j][0]).trim() === String(eventId).trim()) {
+          eventInfo = {
+            eventId: reqRows[j][0],
+            schoolName: reqRows[j][2] || '',
+            courseTopic: reqRows[j][3] || '',
+            eventDate: reqRows[j][5] || '',
+            speakerName: reqRows[j][8] || ''
+          };
+          break;
+        }
+      }
+    }
+  } catch (err) {
+    Logger.log('Could not load eventInfo: ' + err.message);
+  }
+
   return {
     registrations: registrations,
     stats: {
       total: registrations.length,
       checkedIn: checkedInCount,
       walkIns: walkInCount
-    }
+    },
+    eventInfo: eventInfo
   };
 }
 
