@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-  <title>Training Center TWP - ระบบบริหารคำขอจัดอบรมและประเมินผล v1.19.1</title>
+  <title>Training Center TWP - ระบบบริหารคำขอจัดอบรมและประเมินผล v1.20.0</title>
   <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
   <!-- Google Fonts: Sarabun -->
@@ -314,7 +314,7 @@
       <div class="flex items-center space-x-3 text-xs">
         <span class="bg-white/15 px-3 py-1.5 rounded-full border border-white/20 backdrop-blur-sm font-mono text-blue-100 flex items-center">
           <span class="w-2 h-2 rounded-full bg-emerald-400 mr-2 animate-pulse"></span>
-          System v1.19.1
+          System v1.20.0
         </span>
       </div>
     </div>
@@ -395,7 +395,7 @@
     <!-- Bottom Footer on Landing Page -->
     <div class="max-w-7xl mx-auto w-full px-6 py-4 flex flex-col sm:flex-row items-center justify-between text-xs text-blue-200 border-t border-white/10 relative z-10 gap-2">
       <div>&copy; 2026 Training Center TWP - บริษัท ไทยวัฒนาพานิช จำกัด. All rights reserved.</div>
-      <div class="font-mono text-[11px] bg-white/10 px-3 py-1 rounded-full border border-white/15">EMS Enterprise Platform v1.19.1 (Live Apps Script Engine)</div>
+      <div class="font-mono text-[11px] bg-white/10 px-3 py-1 rounded-full border border-white/15">EMS Enterprise Platform v1.20.0 (Live Apps Script Engine)</div>
     </div>
 
   </div>
@@ -420,7 +420,7 @@
           <div class="sidebar-brand-text truncate">
             <div class="flex items-center space-x-1.5">
               <span class="font-extrabold text-sm tracking-wide text-white">TWP</span>
-              <span onclick="openVersionReleaseModal()" class="bg-blue-400/20 hover:bg-blue-400/30 text-blue-200 text-[9px] font-mono px-1.5 py-0.5 rounded-full border border-blue-300/30 cursor-pointer transition flex items-center gap-1" title="คลิกดูรายละเอียดเวอร์ชัน v1.19.1"><i class="fa-solid fa-sparkles text-amber-300 text-[8px]"></i>v1.19.1</span>
+              <span onclick="openVersionReleaseModal()" class="bg-blue-400/20 hover:bg-blue-400/30 text-blue-200 text-[9px] font-mono px-1.5 py-0.5 rounded-full border border-blue-300/30 cursor-pointer transition flex items-center gap-1" title="คลิกดูรายละเอียดเวอร์ชัน v1.20.0"><i class="fa-solid fa-sparkles text-amber-300 text-[8px]"></i><span class="bg-emerald-500 text-white font-black px-2 py-0.5 rounded-full">v1.20.0</span></span>
             </div>
             <p class="text-[10px] text-blue-200 truncate">ระบบบริหารงานฝึกอบรม</p>
           </div>
@@ -3068,10 +3068,10 @@
               <i class="fa-solid fa-code-compare text-amber-300"></i>
               <span class="text-xs font-bold uppercase tracking-wider">รายละเอียดการปรับปรุงเวอร์ชัน (Version Release Notes)</span>
             </div>
-            <span class="text-[10px] bg-amber-400 text-slate-950 font-black px-2 py-0.5 rounded-full">v1.19.1 Live</span>
+            <span class="text-[10px] bg-amber-400 text-slate-950 font-black px-2 py-0.5 rounded-full">v1.20.0 Live</span>
           </div>
           <p class="text-xs text-blue-100 leading-relaxed">
-            <strong>v1.19.1 (Enterprise Compact QR & Drive Standard):</strong> ปรับขนาดหน้าต่างแท่นแสดงผล QR Code ให้กะทัดรัด (Compact Responsive) รองรับโน้ตบุ๊กทุกขนาดหน้าจอ, เพิ่มปุ่มปิดหน้าต่างทั้งบน ล่าง และกด Esc/คลิกนอกกรอบเพื่อปิดได้ทันที, พร้อมกำหนด Google Drive โฟลเดอร์กลางสำหรับเก็บเอกสารโครงการ
+            <strong>v1.20.0 (Enterprise Compact QR & Drive Standard):</strong> ปรับขนาดหน้าต่างแท่นแสดงผล QR Code ให้กะทัดรัด (Compact Responsive) รองรับโน้ตบุ๊กทุกขนาดหน้าจอ, เพิ่มปุ่มปิดหน้าต่างทั้งบน ล่าง และกด Esc/คลิกนอกกรอบเพื่อปิดได้ทันที, พร้อมกำหนด Google Drive โฟลเดอร์กลางสำหรับเก็บเอกสารโครงการ
           </p>
           <div class="pt-1 flex items-center justify-between text-[11px] text-blue-200">
             <span>ฐานข้อมูล: Google Sheets + Local Offline Cache</span>
@@ -7536,7 +7536,7 @@
         '</style></head><body>' +
         '<div class="header">' +
         '<div><h2 style="margin:0; color:#08539E; font-size:16pt;">บริษัท ไทยวัฒนาพานิช จำกัด (TWP)</h2><div style="font-size:11pt; color:#475569;">รายงานสรุปการกระทบยอดงบประมาณจัดอบรมกับยอดขายจริง ประจำปี 2569</div></div>' +
-        '<div style="text-align:right; font-size:9pt; color:#64748b;">ออกโดยระบบ EMS Enterprise v1.19.1<br>วันที่พิมพ์: ' + new Date().toLocaleDateString('th-TH') + '</div>' +
+        '<div style="text-align:right; font-size:9pt; color:#64748b;">ออกโดยระบบ EMS Enterprise v1.20.0<br>วันที่พิมพ์: ' + new Date().toLocaleDateString('th-TH') + '</div>' +
         '</div>' +
         '<div style="display:flex; justify-content:space-between; background:#f8fafc; padding:8px 12px; border-radius:6px; margin-bottom:10px; font-size:10pt;">' +
         '<div>โครงการทั้งหมด: <strong>' + projects.length + ' โครงการ</strong></div>' +
@@ -10592,7 +10592,7 @@ function renderA4EvalReportHtmlClient(d) {
           <div style="border-top:1px dashed #cbd5e1; margin-top:10px; padding-top:4px; display:flex; justify-content:space-between; align-items:center; font-size:8.5pt; color:#64748b;">
             <div>
               <i class="fa-solid fa-file-contract mr-1 text-[#08539E]"></i>
-              รายงานประเมินและวิเคราะห์ต้นทุนการจัดอบรม A4 • ออกโดย TWP Training Enterprise Platform (v1.19.1)
+              รายงานประเมินและวิเคราะห์ต้นทุนการจัดอบรม A4 • ออกโดย TWP Training Enterprise Platform (v1.20.0)
             </div>
             <div>
               หน้า 1/1 • ${d.eventId}
@@ -10771,7 +10771,7 @@ function renderA4EvalReportHtmlClient(d) {
           <div style="border-top:1px dashed #cbd5e1; margin-top:14px; padding-top:6px; display:flex; justify-content:space-between; align-items:center; font-size:8.5pt; color:#64748b;">
             <div>
               <i class="fa-solid fa-shield-halved" style="color:#08539E; margin-right:4px;"></i>
-              เอกสารอิเล็กทรอนิกส์มาตรฐาน A4 ออกโดย TWP Training Enterprise Management System (EMS v1.19.1)
+              เอกสารอิเล็กทรอนิกส์มาตรฐาน A4 ออกโดย TWP Training Enterprise Management System (EMS v1.20.0)
             </div>
             <div>
               รหัสอ้างอิง: <span style="font-family:monospace; font-weight:700; color:#0f172a;">${d.eventId}</span> | หน้า 1/1
@@ -10944,7 +10944,7 @@ function renderA4EvalReportHtmlClient(d) {
           </table>
 
           <div style="margin-top:14px; padding-top:4px; border-top:1px solid #e2e8f0; font-size:8.5pt; color:#94a3b8; text-align:center;">
-            เอกสารฉบับนี้สร้างโดยระบบ Training Center TWP (EMS Enterprise Platform v1.19.1) • ใช้สำหรับติดตามและควบคุมผลการปฏิบัติงานภายใน (PPC Standard)
+            เอกสารฉบับนี้สร้างโดยระบบ Training Center TWP (EMS Enterprise Platform v1.20.0) • ใช้สำหรับติดตามและควบคุมผลการปฏิบัติงานภายใน (PPC Standard)
           </div>
         </div>
       `;
@@ -12001,7 +12001,7 @@ function renderA4EvalReportHtmlClient(d) {
 
 
     // ========================================================
-    // ONSITE REGISTRATION & CHECK-IN MODULE (v1.19.1)
+    // ONSITE REGISTRATION & CHECK-IN MODULE (v1.20.0)
     // ========================================================
     let currentRegEventId = null;
     let currentRegAttendees = [];
@@ -12202,7 +12202,7 @@ function renderA4EvalReportHtmlClient(d) {
 
     <!-- Footnote -->
     <div class="text-[10px] text-slate-400 pt-2 border-t border-slate-200 flex justify-between px-2">
-      <span>ระบบบริหารคำขอและวุฒิบัตร Training Center TWP • Version 1.19.1</span>
+      <span>ระบบบริหารคำขอและวุฒิบัตร Training Center TWP • Version 1.20.0</span>
       <span>Official Attendance & e-Certificate Verification Standard</span>
     </div>
   </div>
@@ -12998,7 +12998,7 @@ function renderA4EvalReportHtmlClient(d) {
           <div>
             <div class="flex items-center space-x-2">
               <h3 class="font-bold text-slate-900 text-lg">ประวัติและการปรับปรุงระบบเวอร์ชัน (Release Notes)</h3>
-              <span class="bg-blue-100 text-[#08539E] text-xs font-bold font-mono px-2 py-0.5 rounded-full">v1.19.1 Current</span>
+              <span class="bg-blue-100 text-[#08539E] text-xs font-bold font-mono px-2 py-0.5 rounded-full">v1.20.0 Current</span>
             </div>
             <p class="text-xs text-slate-500">บันทึกประวัติการปรับปรุงสถาปัตยกรรมและฟังก์ชันการทำงานอย่างละเอียด</p>
           </div>
@@ -13011,11 +13011,11 @@ function renderA4EvalReportHtmlClient(d) {
       <!-- Release Timeline List -->
       <div class="space-y-4">
         
-        <!-- v1.19.1 (Current Major Milestone) -->
+        <!-- v1.20.0 (Current Major Milestone) -->
         <div class="p-5 bg-gradient-to-br from-blue-50 via-white to-indigo-50/70 border-2 border-blue-300 rounded-3xl space-y-3 shadow-xs">
           <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-1">
             <div class="flex items-center space-x-2">
-              <span class="bg-blue-700 text-white text-xs font-black px-2.5 py-0.5 rounded-lg font-mono">v1.19.1</span>
+              <span class="bg-blue-700 text-white text-xs font-black px-2.5 py-0.5 rounded-lg font-mono">v1.20.0</span>
               <span class="font-bold text-slate-900 text-sm">แท่น QR กะทัดรัด (Compact Responsive), มาตรฐานคลังไฟล์ Google Drive & ยกระดับการปิด Modal</span>
             </div>
             <span class="text-[11px] text-blue-700 font-bold font-mono">2026-11-11 &bull; Latest Release</span>
@@ -13028,11 +13028,11 @@ function renderA4EvalReportHtmlClient(d) {
           </ul>
         </div>
 
-        <!-- v1.19.1 (Major Milestone) -->
+        <!-- v1.20.0 (Major Milestone) -->
         <div class="p-5 bg-gradient-to-br from-indigo-50/80 via-white to-sky-50/60 border border-slate-200 rounded-3xl space-y-3 shadow-xs">
           <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-1">
             <div class="flex items-center space-x-2">
-              <span class="bg-indigo-600 text-white text-xs font-black px-2.5 py-0.5 rounded-lg font-mono">v1.19.1</span>
+              <span class="bg-indigo-600 text-white text-xs font-black px-2.5 py-0.5 rounded-lg font-mono">v1.20.0</span>
               <span class="font-bold text-slate-900 text-sm">ระบบประเมิน 2 ขั้นตอน (Evaluation-First), รวมศูนย์ QR Code & Smart Expense Engine</span>
             </div>
             <span class="text-[11px] text-slate-400 font-mono">2026-11-11</span>

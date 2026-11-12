@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Training Center TWP - ระบบกำลังนำทางกลับสู่หน้าหลัก</title>
+  <script>
+    // GitHub Pages SPA Redirect / Fallback
+    const path = window.location.pathname;
+    if (path.includes('register')) {
+      window.location.replace('register.html' + window.location.search);
+    } else if (path.includes('survey')) {
+      window.location.replace('survey.html' + window.location.search);
+    } else {
+      window.location.replace('index.html' + window.location.search);
+    }
+  </script>
+</head>
+<body style="font-family: sans-serif; text-align: center; padding: 40px; color: #08539E;">
+  <h2>กำลังเปลี่ยนเส้นทางกลับสู่ระบบ Training Center TWP...</h2>
+  <p><a href="index.html" style="color: #08539E; font-weight: bold;">คลิกที่นี่หากหน้าจอไม่เปลี่ยนเส้นทางอัตโนมัติ</a></p>
+</body>
+</html>
