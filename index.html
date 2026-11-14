@@ -359,48 +359,128 @@
       </div>
 
       <!-- Mandatory Login Gate Alert Card on Landing Page (if not logged in) -->
-      <div id="landingAuthAlertCard" class="hidden max-w-xl mx-auto w-full p-4 bg-amber-500/20 border-2 border-amber-300/50 rounded-2xl backdrop-blur-md text-center space-y-2 shadow-xl animate-fadeIn">
-        <div class="flex items-center justify-center space-x-2 text-amber-300 font-bold text-sm">
-          <i class="fa-solid fa-shield-halved text-base animate-bounce"></i>
-          <span>กรุณาเข้าสู่ระบบด้วย Username & Password ประจำทีมก่อนเริ่มใช้งาน</span>
+      <!-- Comprehensive Enterprise Team Sign-In Card (v1.22.1) -->
+      <div id="landingLoginSection" class="max-w-xl mx-auto w-full bg-white text-slate-800 rounded-3xl p-6 sm:p-7 shadow-2xl border-2 border-amber-400/80 space-y-4 text-left relative z-20 animate-fadeIn">
+        
+        <!-- Header -->
+        <div class="flex items-center justify-between pb-3 border-b border-slate-100">
+          <div class="flex items-center space-x-3">
+            <div class="w-10 h-10 rounded-2xl bg-[#08539E] text-white flex items-center justify-center text-lg font-bold shadow-md">
+              <i class="fa-solid fa-shield-halved"></i>
+            </div>
+            <div>
+              <h3 class="font-black text-slate-900 text-base sm:text-lg">เข้าสู่ระบบประจำทีม (Team Sign-In)</h3>
+              <p class="text-xs text-slate-500">ระบุชื่อผู้ใช้งานและรหัสผ่านเพื่อเข้าสู่ระบบตามสิทธิ์หน้าที่</p>
+            </div>
+          </div>
+          <span class="text-[11px] bg-emerald-100 text-emerald-800 font-bold font-mono px-2.5 py-1 rounded-full border border-emerald-200">v1.22.1</span>
         </div>
-        <p class="text-xs text-blue-100 leading-relaxed">
-          ระบบแยกสิทธิ์ตามบทบาท (ฝ่ายขาย A, วิชาการ B, ผู้บริหาร, แอดมิน) เพื่อความถูกต้องของข้อมูลตามมาตรฐานธรรมาภิบาล
-        </p>
-        <div class="flex items-center justify-center gap-2 pt-1">
-          <button type="button" onclick="openSwitchProfileModal()" class="px-5 py-2 bg-amber-400 hover:bg-amber-300 text-slate-950 font-black rounded-xl text-xs shadow-md transition cursor-pointer flex items-center space-x-1.5">
-            <i class="fa-solid fa-arrow-right-to-bracket"></i>
-            <span>เข้าสู่ระบบประจำทีม (Sign In)</span>
+
+        <!-- Quick Select Team Cards -->
+        <div class="space-y-1.5">
+          <div class="flex items-center justify-between">
+            <label class="block text-[11px] font-bold text-slate-600 uppercase tracking-wider">
+              เลือกทีมเพื่อระบุชื่อผู้ใช้และรหัสผ่าน (Select Team):
+            </label>
+            <span class="text-[10px] text-slate-400">คลิกทีมที่ต้องการใช้งาน</span>
+          </div>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
+            
+            <button type="button" onclick="setLandingCredentials('sale.lead', 'sale1234')" class="p-2.5 bg-emerald-50 hover:bg-emerald-100 border border-emerald-300 rounded-xl text-left transition cursor-pointer flex flex-col group">
+              <div class="font-bold text-emerald-950 text-xs flex items-center justify-between">
+                <span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-emerald-500"></span>1. ฝ่ายขาย (ทีม A)</span>
+                <i class="fa-solid fa-check text-emerald-600 opacity-0 group-hover:opacity-100 transition"></i>
+              </div>
+              <span class="text-[10px] text-slate-600 font-mono mt-0.5">sale.lead / sale1234</span>
+              <span class="text-[9px] text-emerald-700">บันทึก & ติดตามคำขอ</span>
+            </button>
+
+            <button type="button" onclick="setLandingCredentials('acad.lead', 'acad1234')" class="p-2.5 bg-purple-50 hover:bg-purple-100 border border-purple-300 rounded-xl text-left transition cursor-pointer flex flex-col group">
+              <div class="font-bold text-purple-950 text-xs flex items-center justify-between">
+                <span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-purple-500"></span>2. ทีมวิชาการ (ทีม B)</span>
+                <i class="fa-solid fa-check text-purple-600 opacity-0 group-hover:opacity-100 transition"></i>
+              </div>
+              <span class="text-[10px] text-slate-600 font-mono mt-0.5">acad.lead / acad1234</span>
+              <span class="text-[9px] text-purple-700">จัดวิทยากร & 6 เสาหลัก</span>
+            </button>
+
+            <button type="button" onclick="setLandingCredentials('exec.lead', 'exec1234')" class="p-2.5 bg-blue-50 hover:bg-blue-100 border border-blue-300 rounded-xl text-left transition cursor-pointer flex flex-col group">
+              <div class="font-bold text-blue-950 text-xs flex items-center justify-between">
+                <span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-blue-600"></span>3. ฝ่ายบริหาร (Exec)</span>
+                <i class="fa-solid fa-check text-blue-600 opacity-0 group-hover:opacity-100 transition"></i>
+              </div>
+              <span class="text-[10px] text-slate-600 font-mono mt-0.5">exec.lead / exec1234</span>
+              <span class="text-[9px] text-blue-700">อนุมัติงบ & ปลดล็อกแก้ไข</span>
+            </button>
+
+            <button type="button" onclick="setLandingCredentials('admin', 'admin0000')" class="p-2.5 bg-rose-50 hover:bg-rose-100 border border-rose-300 rounded-xl text-left transition cursor-pointer flex flex-col group">
+              <div class="font-bold text-rose-950 text-xs flex items-center justify-between">
+                <span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-rose-600"></span>4. ผู้ดูแลระบบ (Admin)</span>
+                <i class="fa-solid fa-check text-rose-600 opacity-0 group-hover:opacity-100 transition"></i>
+              </div>
+              <span class="text-[10px] text-slate-600 font-mono mt-0.5">admin / admin0000</span>
+              <span class="text-[9px] text-rose-700">ควบคุมระบบส่วนกลาง</span>
+            </button>
+
+          </div>
+        </div>
+
+        <!-- Inline Error Box -->
+        <div id="landingLoginErrorBox" class="hidden p-3.5 bg-rose-50 border-2 border-rose-300 rounded-xl text-rose-700 font-bold text-xs flex items-center space-x-2 animate-fadeIn">
+          <i class="fa-solid fa-circle-exclamation text-rose-600 text-base shrink-0"></i>
+          <span id="landingLoginErrorText">Username หรือ Password ไม่ถูกต้อง กรุณาตรวจสอบอีกครั้ง</span>
+        </div>
+
+        <!-- Login Form Fields -->
+        <form onsubmit="event.preventDefault(); handleLandingLoginSubmit(event); return false;" class="space-y-3 pt-1">
+          <div>
+            <label class="block font-bold text-slate-700 text-xs mb-1">ชื่อผู้ใช้งาน (Username) *</label>
+            <div class="relative">
+              <i class="fa-solid fa-user absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"></i>
+              <input type="text" id="landingUsernameInput" class="w-full pl-9 pr-3 py-2.5 bg-slate-50 border border-slate-300 rounded-xl focus:bg-white focus:ring-2 focus:ring-blue-500 text-xs font-mono font-bold" placeholder="เช่น sale.lead, acad.lead, exec.lead, admin" required />
+            </div>
+          </div>
+
+          <div>
+            <label class="block font-bold text-slate-700 text-xs mb-1">รหัสผ่าน (Password) *</label>
+            <div class="relative">
+              <i class="fa-solid fa-lock absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"></i>
+              <input type="password" id="landingPasswordInput" class="w-full pl-9 pr-10 py-2.5 bg-slate-50 border border-slate-300 rounded-xl focus:bg-white focus:ring-2 focus:ring-blue-500 text-xs font-mono font-bold" placeholder="ระบุรหัสผ่านประจำทีม" required />
+              <button type="button" onclick="togglePasswordVisibility('landingPasswordInput')" class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 text-xs cursor-pointer p-1">
+                <i class="fa-solid fa-eye"></i>
+              </button>
+            </div>
+          </div>
+
+          <button type="button" id="btnLandingSignIn" onclick="handleLandingLoginSubmit(event)" class="w-full py-3.5 bg-gradient-to-r from-blue-700 via-indigo-700 to-[#08539E] hover:from-blue-600 hover:to-[#07488a] text-white rounded-2xl font-black text-sm shadow-lg hover:shadow-xl transition cursor-pointer flex items-center justify-center space-x-2 btn-tactile">
+            <i class="fa-solid fa-lock-open text-base"></i>
+            <span>ตรวจสอบสิทธิ์และเข้าสู่ระบบ (Sign In)</span>
           </button>
-        </div>
+        </form>
+
       </div>
 
-      <!-- Feature Highlights Grid -->
-      <div class="grid grid-cols-2 sm:grid-cols-5 gap-3 max-w-4xl w-full pt-2">
-        <div onclick="handleLandingEnterClick('annualPlan')" class="bg-white/10 hover:bg-white/20 transition backdrop-blur-md border border-white/20 rounded-2xl p-3.5 text-center space-y-1.5 shadow-lg cursor-pointer transform hover:-translate-y-1">
-          <i class="fa-solid fa-file-shield text-indigo-300 text-xl"></i>
-          <div class="font-bold text-xs sm:text-sm text-white">1. แผนหลักการปี</div>
-          <div class="text-[11px] text-blue-200">อนุมัติโดย กก.ผจก.</div>
+      <!-- Logged In Active State Box on Landing Page (Shows when user is signed in) -->
+      <div id="landingLoggedInSection" class="hidden max-w-xl mx-auto w-full bg-white/95 backdrop-blur-md text-slate-800 rounded-3xl p-6 shadow-2xl border-2 border-emerald-400 space-y-4 text-center animate-fadeIn">
+        <div class="w-12 h-12 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center mx-auto text-xl font-bold shadow-xs">
+          <i class="fa-solid fa-user-check"></i>
         </div>
-        <div onclick="handleLandingEnterClick('teamA')" class="bg-white/10 hover:bg-white/20 transition backdrop-blur-md border border-white/20 rounded-2xl p-3.5 text-center space-y-1.5 shadow-lg cursor-pointer transform hover:-translate-y-1">
-          <i class="fa-solid fa-paper-plane text-emerald-300 text-xl"></i>
-          <div class="font-bold text-xs sm:text-sm text-white">2. ทีม A ขอจัดอบรม</div>
-          <div class="text-[11px] text-blue-200">ดึงจากแผนหลักการ</div>
+        <div>
+          <span class="text-xs text-slate-500">ท่านกำลังเข้าสู่ระบบในชื่อ:</span>
+          <h3 id="landingActiveUserName" class="text-lg font-black text-slate-900">ผู้ใช้งาน</h3>
+          <span id="landingActiveUserRole" class="inline-block mt-1 px-3 py-1 bg-emerald-100 text-emerald-800 font-bold text-xs rounded-full border border-emerald-200 font-mono">
+            ฝ่ายขาย (Team A)
+          </span>
         </div>
-        <div onclick="handleLandingEnterClick('teamB')" class="bg-white/10 hover:bg-white/20 transition backdrop-blur-md border border-white/20 rounded-2xl p-3.5 text-center space-y-1.5 shadow-lg cursor-pointer transform hover:-translate-y-1">
-          <i class="fa-solid fa-clipboard-check text-purple-300 text-xl"></i>
-          <div class="font-bold text-xs sm:text-sm text-white">3. ทีม B ตรวจวิชาการ</div>
-          <div class="text-[11px] text-blue-200">วิทยากร & งบตัดจ่าย</div>
-        </div>
-        <div onclick="handleLandingEnterClick('exec')" class="bg-white/10 hover:bg-white/20 transition backdrop-blur-md border border-white/20 rounded-2xl p-3.5 text-center space-y-1.5 shadow-lg cursor-pointer transform hover:-translate-y-1">
-          <i class="fa-solid fa-stamp text-amber-300 text-xl"></i>
-          <div class="font-bold text-xs sm:text-sm text-white">4. ผู้บริหารอนุมัติ</div>
-          <div class="text-[11px] text-blue-200">ออก PDF & Word A4</div>
-        </div>
-        <div onclick="handleLandingEnterClick('evaluation')" class="bg-white/10 hover:bg-white/20 transition backdrop-blur-md border border-white/20 rounded-2xl p-3.5 text-center space-y-1.5 shadow-lg cursor-pointer transform hover:-translate-y-1">
-          <i class="fa-solid fa-qrcode text-sky-300 text-xl"></i>
-          <div class="font-bold text-xs sm:text-sm text-white">5. QR ปิดลูปประเมิน</div>
-          <div class="text-[11px] text-blue-200">Zero-Trust ปลอดภัย</div>
+        <div class="flex items-center justify-center gap-3 pt-2">
+          <button type="button" onclick="enterPortal(true)" class="flex-1 py-3 bg-[#08539E] hover:bg-blue-800 text-white rounded-xl font-bold text-xs shadow-md transition cursor-pointer flex items-center justify-center space-x-2">
+            <i class="fa-solid fa-arrow-right-to-bracket"></i>
+            <span>เข้าสู่พื้นที่ทำงาน (Open Workspace)</span>
+          </button>
+          <button type="button" onclick="handleLogoutUser()" class="px-4 py-3 bg-rose-50 hover:bg-rose-100 text-rose-700 border border-rose-200 rounded-xl font-bold text-xs transition cursor-pointer flex items-center space-x-1.5">
+            <i class="fa-solid fa-arrow-right-from-bracket"></i>
+            <span>ออกจากระบบ</span>
+          </button>
         </div>
       </div>
 
@@ -4955,7 +5035,7 @@
       incidentLogs: JSON.parse(localStorage.getItem('twp_incident_logs') || '[]'),
       auditLogs: JSON.parse(localStorage.getItem('twp_audit_logs') || '[]'),
       editingEventId: null,
-      currentUser: JSON.parse(localStorage.getItem('twp_current_user') || 'null'),
+      currentUser: null,
       teamAccounts: JSON.parse(localStorage.getItem('twp_team_accounts') || '[]'),
       fy2569Projects: getPersistedFy2569Projects(),
       fy2569TuLedger: getPersistedFy2569TuLedger(),
@@ -4973,10 +5053,147 @@
     
 
     // Landing Page Navigation & Authentication Gate
+    
+    // ------------------- ENTERPRISE TEAM AUTHENTICATION HANDLERS (v1.22.1) -------------------
+    
+    function setLandingCredentials(u, p) {
+      const uIn = document.getElementById('landingUsernameInput');
+      const pIn = document.getElementById('landingPasswordInput');
+      if (uIn) uIn.value = u;
+      if (pIn) pIn.value = p;
+      const errBox = document.getElementById('landingLoginErrorBox');
+      if (errBox) errBox.classList.add('hidden');
+      showAlert('เลือกบัญชี ' + u + ' เรียบร้อย กรุณากดปุ่ม "ตรวจสอบสิทธิ์และเข้าสู่ระบบ"', 'info');
+      
+      const btn = document.getElementById('btnLandingSignIn');
+      if (btn) {
+        btn.classList.add('ring-4', 'ring-amber-400');
+        setTimeout(() => btn.classList.remove('ring-4', 'ring-amber-400'), 1000);
+      }
+    }
+
+    function handleLandingLoginSubmit(e) {
+      if (e && e.preventDefault) e.preventDefault();
+      const u = document.getElementById('landingUsernameInput')?.value?.trim();
+      const p = document.getElementById('landingPasswordInput')?.value?.trim();
+      const errBox = document.getElementById('landingLoginErrorBox');
+      const errText = document.getElementById('landingLoginErrorText');
+
+      if (!u || !p) {
+        if (errBox && errText) {
+          errText.innerText = 'กรุณาระบุ Username และ Password ประจำทีมของท่านให้ครบถ้วน';
+          errBox.classList.remove('hidden');
+        }
+        showAlert('กรุณากรอก Username และ Password ประจำทีม', 'warning');
+        return;
+      }
+
+      const verifiedUser = verifyTeamCredentials(u, p);
+
+      if (verifiedUser) {
+        if (errBox) errBox.classList.add('hidden');
+        AppState.currentUser = verifiedUser;
+        AppState.operatorName = verifiedUser.fullName;
+        localStorage.setItem('twp_current_user', JSON.stringify(AppState.currentUser));
+        localStorage.setItem('ems_operator_name', verifiedUser.fullName);
+
+        updateAuthModalCurrentUserInfo();
+        updateLandingPageAuthUI();
+        updateCurrentLoginUserUI();
+        showAlert('เข้าสู่ระบบสำเร็จในฐานะ ' + verifiedUser.fullName + ' (' + verifiedUser.teamRole + ')', 'success');
+
+        // Enter portal
+        enterPortal(true);
+
+        // Switch to the user's authorized home tab
+        if (verifiedUser.team === 'TEAM_A') switchTab('teamA');
+        else if (verifiedUser.team === 'TEAM_B') switchTab('teamB');
+        else if (verifiedUser.team === 'EXEC') switchTab('exec');
+        else switchTab('dashboard');
+
+        // Display personalized Daily Action Briefing for their team
+        setTimeout(() => {
+          openBriefingModal();
+        }, 500);
+
+      } else {
+        if (errBox && errText) {
+          errText.innerText = 'Username หรือ Password ไม่ถูกต้อง กรุณาตรวจสอบอีกครั้ง';
+          errBox.classList.remove('hidden');
+        }
+        showAlert('Username หรือ Password ไม่ถูกต้อง กรุณาตรวจสอบอีกครั้ง', 'error');
+      }
+    }
+
+    function updateLandingPageAuthUI() {
+      const user = AppState.currentUser;
+      const loginSection = document.getElementById('landingLoginSection');
+      const loggedInSection = document.getElementById('landingLoggedInSection');
+      const activeNameEl = document.getElementById('landingActiveUserName');
+      const activeRoleEl = document.getElementById('landingActiveUserRole');
+      const loginBtn = document.getElementById('landingLoginBtn');
+      const userBadge = document.getElementById('landingUserBadge');
+      const userNameEl = document.getElementById('landingUserName');
+      const userRoleEl = document.getElementById('landingUserRole');
+
+      if (user && user.userId) {
+        if (loginSection) loginSection.classList.add('hidden');
+        if (loggedInSection) loggedInSection.classList.remove('hidden');
+        if (activeNameEl) activeNameEl.innerText = user.fullName || user.username;
+        if (activeRoleEl) {
+          let rText = 'ทีมทั่วไป';
+          if (user.team === 'TEAM_A') rText = 'ฝ่ายขาย (Team A)';
+          else if (user.team === 'TEAM_B') rText = 'วิชาการ (Team B)';
+          else if (user.team === 'EXEC') rText = 'ฝ่ายบริหาร (Executive)';
+          else if (user.team === 'ADMIN') rText = 'ผู้ดูแลระบบ (Admin)';
+          activeRoleEl.innerText = rText;
+        }
+
+        if (loginBtn) loginBtn.classList.add('hidden');
+        if (userBadge) {
+          userBadge.classList.remove('hidden');
+          userBadge.classList.add('flex');
+        }
+        if (userNameEl) userNameEl.innerText = user.fullName ? user.fullName.split(' ')[0] : (user.username || 'ผู้ใช้งาน');
+        if (userRoleEl) {
+          let rText = 'ทีมทั่วไป';
+          if (user.team === 'TEAM_A') rText = 'ทีมขาย A';
+          else if (user.team === 'TEAM_B') rText = 'วิชาการ B';
+          else if (user.team === 'EXEC') rText = 'ผู้บริหาร';
+          else if (user.team === 'ADMIN') rText = 'แอดมิน';
+          userRoleEl.innerText = rText;
+        }
+      } else {
+        if (loginSection) loginSection.classList.remove('hidden');
+        if (loggedInSection) loggedInSection.classList.add('hidden');
+        if (loginBtn) loginBtn.classList.remove('hidden');
+        if (userBadge) {
+          userBadge.classList.add('hidden');
+          userBadge.classList.remove('flex');
+        }
+      }
+    }
+
+    function handleLogoutUser() {
+      AppState.currentUser = null;
+      localStorage.removeItem('twp_current_user');
+      showLandingPage();
+      updateLandingPageAuthUI();
+      updateCurrentLoginUserUI();
+      showAlert('ออกจากระบบเรียบร้อยแล้ว กรุณาระบุรหัสผ่านเพื่อเข้าใช้งานใหม่', 'info');
+    }
+
     function handleLandingEnterClick(target) {
       if (!AppState.currentUser || !AppState.currentUser.userId) {
         showAlert('🔒 กรุณาเข้าสู่ระบบด้วย Username & Password ประจำทีมของท่านก่อนเริ่มใช้งาน', 'warning');
-        openSwitchProfileModal();
+        const loginSection = document.getElementById('landingLoginSection');
+        if (loginSection) {
+          loginSection.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          loginSection.classList.add('ring-4', 'ring-amber-400');
+          setTimeout(() => loginSection.classList.remove('ring-4', 'ring-amber-400'), 1500);
+        }
+        const uIn = document.getElementById('landingUsernameInput');
+        if (uIn) uIn.focus();
         return;
       }
 
@@ -12683,9 +12900,12 @@ function renderA4EvalReportHtmlClient(d) {
       if (pIn) pIn.value = p;
       const errBox = document.getElementById('authModalInlineError');
       if (errBox) errBox.classList.add('hidden');
-      
-      // Auto-submit login with the chosen verified team account
-      handleAuthLoginSubmit();
+      showAlert('เลือกบัญชี ' + u + ' เรียบร้อย กรุณากดปุ่ม "ตรวจสอบสิทธิ์และเข้าสู่ระบบ"', 'info');
+      const btn = document.getElementById('btnSubmitAuthLogin');
+      if (btn) {
+        btn.classList.add('ring-4', 'ring-amber-400');
+        setTimeout(() => btn.classList.remove('ring-4', 'ring-amber-400'), 1000);
+      }
     }
 
     function verifyTeamCredentials(u, p) {
