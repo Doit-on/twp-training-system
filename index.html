@@ -8211,63 +8211,7 @@
         '<div style="text-align:center; width:200px;"><div style="margin-bottom:40px;">ผู้จัดทำรายงาน (ฝ่ายขาย/PPC)</div><div>(___________________________)</div></div>' +
         '<div style="text-align:center; width:200px;"><div style="margin-bottom:40px;">ผู้ตรวจสอบ (ฝ่ายวิชาการ)</div><div>(___________________________)</div></div>' +
         '<div style="text-align:center; width:200px;"><div style="margin-bottom:40px;">ผู้อนุมัติ (ผู้บริหาร)</div><div>(___________________________)</div></div>' +
-        '</div><!-- Modal: Audit Revision Request (Strict Post-Approval Freeze - v1.21.0) -->
-  <div id="auditRevisionModal" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 animate-fadeIn">
-    <div class="bg-white rounded-3xl max-w-lg w-full p-6 shadow-2xl border border-slate-200 space-y-4">
-      <div class="flex items-center justify-between border-b border-slate-100 pb-3">
-        <div class="flex items-center space-x-2.5">
-          <div class="w-9 h-9 rounded-xl bg-amber-100 text-amber-700 flex items-center justify-center font-bold text-base">
-            <i class="fa-solid fa-shield-halved"></i>
-          </div>
-          <div>
-            <h3 class="text-base font-black text-slate-900">บันทึกขอปรับปรุงโครงการหลังอนุมัติ</h3>
-            <p class="text-xs text-slate-400">ระบบ Audit Trail ป้องกันการแก้ไขงบประมาณโดยพลการ</p>
-          </div>
-        </div>
-        <button type="button" onclick="closeAuditRevisionModal()" class="text-slate-400 hover:text-slate-600 text-lg cursor-pointer">
-          <i class="fa-solid fa-xmark"></i>
-        </button>
-      </div>
-      <div class="p-3 bg-amber-50 rounded-xl border border-amber-200 text-xs text-amber-900 leading-relaxed">
-        <i class="fa-solid fa-lock text-amber-700 mr-1.5"></i>
-        <strong>มาตรการกำกับดูแล:</strong> โครงการนี้ผ่านการอนุมัติงบประมาณจากผู้บริหารแล้ว การปรับแก้ข้อมูลสำคัญจะต้องบันทึกเหตุผลความจำเป็นเข้าสู่ตาราง Audit Log เพื่อความโปร่งใส
-      </div>
-      <input type="hidden" id="auditModalEventId" />
-      <div class="space-y-3 text-xs">
-        <div>
-          <label class="block font-bold text-slate-700 mb-1">รหัสโครงการ</label>
-          <input type="text" id="auditModalEventIdDisplay" readonly class="w-full p-2.5 bg-slate-100 border border-slate-200 rounded-xl font-mono text-slate-600 font-bold" />
-        </div>
-        <div>
-          <label class="block font-bold text-slate-700 mb-1">ผู้ขอปรับแก้ *</label>
-          <input type="text" id="auditModalOperatorName" class="w-full p-2.5 border border-slate-300 rounded-xl font-medium focus:ring-2 focus:ring-amber-500" placeholder="ระบุชื่อ-นามสกุล และฝ่าย" />
-        </div>
-        <div>
-          <label class="block font-bold text-slate-700 mb-1">หมวดที่ต้องการขอปรับแก้ *</label>
-          <select id="auditModalCategory" class="w-full p-2.5 border border-slate-300 rounded-xl bg-white focus:ring-2 focus:ring-amber-500">
-            <option value="BUDGET">งบประมาณและค่าใช้จ่าย (Budget Modification)</option>
-            <option value="SCHEDULE">กำหนดการ / วันที่จัดอบรม (Date & Time)</option>
-            <option value="SPEAKER">วิทยากรและหัวข้อ (Speaker & Topic)</option>
-            <option value="LOGISTICS">สถานที่ / การเดินทาง / อาหาร (Logistics)</option>
-            <option value="OTHER">อื่นๆ</option>
-          </select>
-        </div>
-        <div>
-          <label class="block font-bold text-slate-700 mb-1">เหตุผลความจำเป็นและรายละเอียดการขอแก้ไข *</label>
-          <textarea id="auditModalReason" rows="3" class="w-full p-2.5 border border-slate-300 rounded-xl focus:ring-2 focus:ring-amber-500" placeholder="ระบุเหตุผลความจำเป็นอย่างชัดเจนเพื่อประกอบการตรวจสอบของฝ่ายบัญชีและผู้บริหาร..."></textarea>
-        </div>
-      </div>
-      <div class="flex items-center justify-end space-x-2 pt-2 border-t border-slate-100">
-        <button type="button" onclick="closeAuditRevisionModal()" class="px-4 py-2 border border-slate-200 text-slate-600 rounded-xl hover:bg-slate-50 transition text-xs font-bold cursor-pointer">ยกเลิก</button>
-        <button type="button" onclick="submitAuditRevision()" class="px-5 py-2 bg-amber-600 hover:bg-amber-700 text-white rounded-xl transition text-xs font-bold shadow-md flex items-center space-x-1.5 cursor-pointer">
-          <i class="fa-solid fa-stamp"></i>
-          <span>บันทึกเข้า Audit Log</span>
-        </button>
-      </div>
-    </div>
-  </div>
-
-</body></html>';
+        '</div></body></html>';
 
       printWin.document.write(docHtml);
       printWin.document.close();
@@ -13900,6 +13844,66 @@ function renderA4EvalReportHtmlClient(d) {
 
     </div>
   </div>
+
+
+
+<!-- Modal: Audit Revision Request (Strict Post-Approval Freeze - v1.21.0) -->
+  <div id="auditRevisionModal" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 animate-fadeIn">
+    <div class="bg-white rounded-3xl max-w-lg w-full p-6 shadow-2xl border border-slate-200 space-y-4">
+      <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+        <div class="flex items-center space-x-2.5">
+          <div class="w-9 h-9 rounded-xl bg-amber-100 text-amber-700 flex items-center justify-center font-bold text-base">
+            <i class="fa-solid fa-shield-halved"></i>
+          </div>
+          <div>
+            <h3 class="text-base font-black text-slate-900">บันทึกขอปรับปรุงโครงการหลังอนุมัติ</h3>
+            <p class="text-xs text-slate-400">ระบบ Audit Trail ป้องกันการแก้ไขงบประมาณโดยพลการ</p>
+          </div>
+        </div>
+        <button type="button" onclick="closeAuditRevisionModal()" class="text-slate-400 hover:text-slate-600 text-lg cursor-pointer">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+      <div class="p-3 bg-amber-50 rounded-xl border border-amber-200 text-xs text-amber-900 leading-relaxed">
+        <i class="fa-solid fa-lock text-amber-700 mr-1.5"></i>
+        <strong>มาตรการกำกับดูแล:</strong> โครงการนี้ผ่านการอนุมัติงบประมาณจากผู้บริหารแล้ว การปรับแก้ข้อมูลสำคัญจะต้องบันทึกเหตุผลความจำเป็นเข้าสู่ตาราง Audit Log เพื่อความโปร่งใส
+      </div>
+      <input type="hidden" id="auditModalEventId" />
+      <div class="space-y-3 text-xs">
+        <div>
+          <label class="block font-bold text-slate-700 mb-1">รหัสโครงการ</label>
+          <input type="text" id="auditModalEventIdDisplay" readonly class="w-full p-2.5 bg-slate-100 border border-slate-200 rounded-xl font-mono text-slate-600 font-bold" />
+        </div>
+        <div>
+          <label class="block font-bold text-slate-700 mb-1">ผู้ขอปรับแก้ *</label>
+          <input type="text" id="auditModalOperatorName" class="w-full p-2.5 border border-slate-300 rounded-xl font-medium focus:ring-2 focus:ring-amber-500" placeholder="ระบุชื่อ-นามสกุล และฝ่าย" />
+        </div>
+        <div>
+          <label class="block font-bold text-slate-700 mb-1">หมวดที่ต้องการขอปรับแก้ *</label>
+          <select id="auditModalCategory" class="w-full p-2.5 border border-slate-300 rounded-xl bg-white focus:ring-2 focus:ring-amber-500">
+            <option value="BUDGET">งบประมาณและค่าใช้จ่าย (Budget Modification)</option>
+            <option value="SCHEDULE">กำหนดการ / วันที่จัดอบรม (Date & Time)</option>
+            <option value="SPEAKER">วิทยากรและหัวข้อ (Speaker & Topic)</option>
+            <option value="LOGISTICS">สถานที่ / การเดินทาง / อาหาร (Logistics)</option>
+            <option value="OTHER">อื่นๆ</option>
+          </select>
+        </div>
+        <div>
+          <label class="block font-bold text-slate-700 mb-1">เหตุผลความจำเป็นและรายละเอียดการขอแก้ไข *</label>
+          <textarea id="auditModalReason" rows="3" class="w-full p-2.5 border border-slate-300 rounded-xl focus:ring-2 focus:ring-amber-500" placeholder="ระบุเหตุผลความจำเป็นอย่างชัดเจนเพื่อประกอบการตรวจสอบของฝ่ายบัญชีและผู้บริหาร..."></textarea>
+        </div>
+      </div>
+      <div class="flex items-center justify-end space-x-2 pt-2 border-t border-slate-100">
+        <button type="button" onclick="closeAuditRevisionModal()" class="px-4 py-2 border border-slate-200 text-slate-600 rounded-xl hover:bg-slate-50 transition text-xs font-bold cursor-pointer">ยกเลิก</button>
+        <button type="button" onclick="submitAuditRevision()" class="px-5 py-2 bg-amber-600 hover:bg-amber-700 text-white rounded-xl transition text-xs font-bold shadow-md flex items-center space-x-1.5 cursor-pointer">
+          <i class="fa-solid fa-stamp"></i>
+          <span>บันทึกเข้า Audit Log</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+
 
 </body>
 </html>
