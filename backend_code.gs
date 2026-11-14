@@ -1,15 +1,23 @@
 /**
  * ============================================================================
  * EMS Enterprise - Training Center TWP
- * Version: 1.20.0
+ * Version: 1.21.0
  * Architecture: Google Apps Script Backend (Serverless) + Google Sheets Database
  * Security: Zero-Trust Data Isolation + Multi-Operator Stamping + Concurrency Lock
  * Features: Multi-Device Sync + Team QR Pairing + PPC Standard A4 Report Engine (PDF & Word .docx)
  * ============================================================================
  */
 
-const SYSTEM_VERSION = '1.20.0';
+const SYSTEM_VERSION = '1.21.0';
 const DEFAULT_ADMIN_PASS = 'admin0000';
+// =============================================================================
+// MULTI-ACCOUNT GOOGLE SHEETS CONNECTIVITY (Cross-Account Shared Editor Access)
+// =============================================================================
+// เพื่อส่งข้อมูลแยกไปยัง Google Sheet ใน Account อื่นๆ เช่น แผนกการเงิน/บัญชี หรือ ผู้บริหาร
+// ให้เปิด Google Sheet ปลายทางใน Account นั้น แล้วกด "Share" ใส่อีเมลของ Account นี้ในฐานะ "Editor"
+const SECONDARY_FINANCE_SHEET_ID = ''; // ใส่ Google Sheet ID ของฝ่ายการเงิน/บัญชี (ถ้ามี)
+const SECONDARY_AUDIT_SHEET_ID = '';   // ใส่ Google Sheet ID ของฝ่ายตรวจสอบ/ผู้บริหาร (ถ้ามี)
+
 
 function getSpreadsheet() {
   return SpreadsheetApp.getActiveSpreadsheet();
@@ -82,6 +90,65 @@ function doGet(e) {
 /**
  * API Gateway รองรับคำสั่งจาก Antigravity Single-Page Application (SPA)
  */
+
+// -----------------------------------------------------------------------------
+// V1.21.0: AUDIT LOGS, CHECKLIST & INCIDENT LOGGING HANDLERS
+// -----------------------------------------------------------------------------
+function handleLogAuditTrail(payload) {
+  const { eventId, operatorName, actionType, details, oldData, newData } = payload || {};
+  const ss = getSpreadsheet();
+  ensureRequiredSheets(ss);
+  const sheet = ss.getSheetByName('Audit_Logs');
+  if (sheet) {
+    sheet.appendRow([
+      'LOG-' + Date.now(),
+      eventId || 'GENERAL',
+      new Date().toISOString(),
+      operatorName || 'System',
+      actionType || 'UPDATE',
+      details || '',
+      typeof oldData === 'object' ? JSON.stringify(oldData) : String(oldData || ''),
+      typeof newData === 'object' ? JSON.stringify(newData) : String(newData || '')
+    ]);
+  }
+  return { success: true };
+}
+
+function handleUpdateOperationChecklist(payload) {
+  const { eventId, checklist, incidentLog, operatorName } = payload || {};
+  if (!eventId) throw new Error('Missing eventId');
+
+  const ss = getSpreadsheet();
+  ensureRequiredSheets(ss);
+  
+  // If incidentLog provided, append to Incident_Logs sheet
+  if (incidentLog && incidentLog.details) {
+    const incSheet = ss.getSheetByName('Incident_Logs');
+    if (incSheet) {
+      incSheet.appendRow([
+        'INC-' + Date.now(),
+        eventId,
+        new Date().toISOString(),
+        incidentLog.category || 'GENERAL',
+        incidentLog.severity || 'NORMAL',
+        incidentLog.details || '',
+        incidentLog.resolution || '',
+        operatorName || 'Team B'
+      ]);
+    }
+  }
+
+  // Also log audit trail
+  handleLogAuditTrail({
+    eventId: eventId,
+    operatorName: operatorName || 'Team B',
+    actionType: 'UPDATE_CHECKLIST',
+    details: 'บันทึก Operation Checklist และอุปสรรคหน้างาน'
+  });
+
+  return { success: true };
+}
+
 function doPost(e) {
   const lock = LockService.getScriptLock();
   try {
@@ -156,6 +223,12 @@ function doPost(e) {
         break;
       case 'CHECKIN_PARTICIPANT':
         result = handleCheckinParticipant(payload);
+        break;
+      case 'UPDATE_OPERATION_CHECKLIST':
+        data = handleUpdateOperationChecklist(payload);
+        break;
+      case 'LOG_AUDIT_TRAIL':
+        data = handleLogAuditTrail(payload);
         break;
       case 'CANCEL_CHECKIN':
       case 'UNDO_CHECKIN':
@@ -419,11 +492,53 @@ function getInitialData() {
     transportDetails: Array.from(optionSets.transportDetails)
   };
 
+  // Load Incident_Logs
+  const incSheet = ss.getSheetByName('Incident_Logs');
+  const incRows = incSheet ? incSheet.getDataRange().getValues() : [];
+  const incidentLogs = [];
+  for (let i = 1; i < incRows.length; i++) {
+    const ir = incRows[i];
+    if (ir[0]) {
+      incidentLogs.push({
+        logId: String(ir[0]),
+        eventId: String(ir[1] || ''),
+        createdAt: ir[2] ? Utilities.formatDate(new Date(ir[2]), "GMT+7", "yyyy-MM-dd HH:mm") : '',
+        category: String(ir[3] || 'GENERAL'),
+        severity: String(ir[4] || 'NORMAL'),
+        details: String(ir[5] || ''),
+        resolution: String(ir[6] || ''),
+        operatorName: String(ir[7] || 'Team B')
+      });
+    }
+  }
+
+  // Load Audit_Logs
+  const auditSheet = ss.getSheetByName('Audit_Logs');
+  const auditRows = auditSheet ? auditSheet.getDataRange().getValues() : [];
+  const auditLogs = [];
+  for (let i = 1; i < auditRows.length; i++) {
+    const ar = auditRows[i];
+    if (ar[0]) {
+      auditLogs.push({
+        logId: String(ar[0]),
+        eventId: String(ar[1] || ''),
+        createdAt: ar[2] ? Utilities.formatDate(new Date(ar[2]), "GMT+7", "yyyy-MM-dd HH:mm") : '',
+        operatorName: String(ar[3] || 'System'),
+        actionType: String(ar[4] || 'UPDATE'),
+        details: String(ar[5] || ''),
+        oldData: ar[6] || '',
+        newData: ar[7] || ''
+      });
+    }
+  }
+
   return {
     masterData: masterData,
     requests: requests.reverse(), // คำขอล่าสุดขึ้นก่อน
     autoOptions: autoOptions,
-    systemVersion: SYSTEM_VERSION
+    systemVersion: SYSTEM_VERSION,
+    incidentLogs: incidentLogs,
+    auditLogs: auditLogs
   };
 }
 
@@ -433,6 +548,83 @@ function createRequestTeamA(payload) {
   const ss = getSpreadsheet();
   const sheet = ss.getSheetByName('Event_Requests');
   const now = new Date().toISOString();
+  // EDIT_REQUEST_A_CHECK: Support editing request prior to Team B review
+  if (payload.eventId) {
+    const data = sheet.getDataRange().getValues();
+    let targetRowIndex = -1;
+    let existingStatus = '';
+    let oldValues = null;
+
+    for (let r = 1; r < data.length; r++) {
+      if (String(data[r][0]).trim() === String(payload.eventId).trim()) {
+        targetRowIndex = r + 1; // 1-based index
+        existingStatus = String(data[r][2]).trim();
+        oldValues = {
+          topic: data[r][4],
+          school: data[r][10],
+          targetSales: data[r][14],
+          estBudget: data[r][15]
+        };
+        break;
+      }
+    }
+
+    if (targetRowIndex > -1) {
+      if (existingStatus === 'APPROVED' || existingStatus === 'COMPLETED') {
+        throw new Error('ไม่อนุญาตให้แก้ไขโครงการที่ได้รับการอนุมัติงบประมาณแล้ว (Status: ' + existingStatus + ') เพื่อความถูกต้องตามระเบียบการเงิน');
+      }
+      if (existingStatus === 'WAITING_EXEC') {
+        throw new Error('คำขอนี้อยู่ระหว่างการพิจารณาอนุมัติของผู้บริหาร ไม่สามารถแก้ไขได้โดยตรง');
+      }
+
+      const operator = payload.operatorName || payload.saleName || 'ทีม A (Sales)';
+      sheet.getRange(targetRowIndex, 4).setValue(payload.activityType || '');
+      sheet.getRange(targetRowIndex, 5).setValue(payload.courseTopic || '');
+      sheet.getRange(targetRowIndex, 6).setValue(payload.customTopic || '');
+      sheet.getRange(targetRowIndex, 7).setValue(payload.eventDate || '');
+      sheet.getRange(targetRowIndex, 8).setValue(payload.province || '');
+      sheet.getRange(targetRowIndex, 9).setValue(payload.saleName || '');
+      sheet.getRange(targetRowIndex, 10).setValue(payload.schoolId || '');
+      sheet.getRange(targetRowIndex, 11).setValue(payload.schoolName || '');
+      sheet.getRange(targetRowIndex, 12).setValue(payload.speakerType || '');
+      sheet.getRange(targetRowIndex, 13).setValue(payload.venueType || '');
+      sheet.getRange(targetRowIndex, 14).setValue(payload.objective || '');
+      sheet.getRange(targetRowIndex, 15).setValue(Number(payload.targetSales) || 0);
+      sheet.getRange(targetRowIndex, 16).setValue(Number(payload.estBudget) || 0);
+      sheet.getRange(targetRowIndex, 23).setValue(operator); // Last_Modified_By
+      sheet.getRange(targetRowIndex, 28).setValue(payload.needAccommodation ? 'YES' : 'NO');
+      sheet.getRange(targetRowIndex, 29).setValue(Number(payload.roomCount) || 0);
+      sheet.getRange(targetRowIndex, 30).setValue(payload.needTransportation ? 'YES' : 'NO');
+      sheet.getRange(targetRowIndex, 31).setValue(payload.transportDetails || '');
+      sheet.getRange(targetRowIndex, 33).setValue(payload.isOutOfPlan || 'NO');
+      sheet.getRange(targetRowIndex, 34).setValue(payload.outOfPlanReason || '');
+      sheet.getRange(targetRowIndex, 35).setValue(payload.annualPlanId || '');
+      sheet.getRange(targetRowIndex, 36).setValue(Number(payload.expectedTrainees) || 50);
+      sheet.getRange(targetRowIndex, 38).setValue(payload.needCatering === 'YES' ? 'YES' : 'NO');
+      sheet.getRange(targetRowIndex, 39).setValue(payload.needProductMedia === 'YES' ? 'YES' : 'NO');
+      sheet.getRange(targetRowIndex, 40).setValue(payload.otherSupportDetails || '');
+
+      handleLogAuditTrail({
+        eventId: payload.eventId,
+        operatorName: operator,
+        actionType: 'EDIT_REQUEST_A',
+        details: 'ทีม A ปรับปรุงคำขอจัดอบรมก่อนทีม B รับงาน',
+        oldData: oldValues,
+        newData: {
+          topic: payload.courseTopic,
+          school: payload.schoolName,
+          targetSales: payload.targetSales,
+          estBudget: payload.estBudget
+        }
+      });
+
+      return {
+        success: true,
+        eventId: payload.eventId,
+        message: 'อัปเดตคำขอจัดอบรม ' + payload.eventId + ' เรียบร้อยแล้ว'
+      };
+    }
+  }
   
   const eventId = 'EVT-' + Utilities.formatDate(new Date(), "GMT+7", "yyyyMMdd") + '-' + Math.floor(1000 + Math.random() * 9000);
   const operator = payload.operatorName || payload.saleName || 'ทีม A (Sales)';

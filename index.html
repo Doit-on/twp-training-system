@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-  <title>Training Center TWP - ระบบบริหารคำขอจัดอบรมและประเมินผล v1.20.0</title>
+  <title>Training Center TWP - ระบบบริหารคำขอจัดอบรมและประเมินผล v1.21.0</title>
   <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
   <!-- Google Fonts: Sarabun -->
@@ -314,7 +314,7 @@
       <div class="flex items-center space-x-3 text-xs">
         <span class="bg-white/15 px-3 py-1.5 rounded-full border border-white/20 backdrop-blur-sm font-mono text-blue-100 flex items-center">
           <span class="w-2 h-2 rounded-full bg-emerald-400 mr-2 animate-pulse"></span>
-          System v1.20.0
+          System v1.21.0
         </span>
       </div>
     </div>
@@ -395,7 +395,7 @@
     <!-- Bottom Footer on Landing Page -->
     <div class="max-w-7xl mx-auto w-full px-6 py-4 flex flex-col sm:flex-row items-center justify-between text-xs text-blue-200 border-t border-white/10 relative z-10 gap-2">
       <div>&copy; 2026 Training Center TWP - บริษัท ไทยวัฒนาพานิช จำกัด. All rights reserved.</div>
-      <div class="font-mono text-[11px] bg-white/10 px-3 py-1 rounded-full border border-white/15">EMS Enterprise Platform v1.20.0 (Live Apps Script Engine)</div>
+      <div class="font-mono text-[11px] bg-white/10 px-3 py-1 rounded-full border border-white/15">EMS Enterprise Platform v1.21.0 (Live Apps Script Engine)</div>
     </div>
 
   </div>
@@ -420,7 +420,7 @@
           <div class="sidebar-brand-text truncate">
             <div class="flex items-center space-x-1.5">
               <span class="font-extrabold text-sm tracking-wide text-white">TWP</span>
-              <span onclick="openVersionReleaseModal()" class="bg-blue-400/20 hover:bg-blue-400/30 text-blue-200 text-[9px] font-mono px-1.5 py-0.5 rounded-full border border-blue-300/30 cursor-pointer transition flex items-center gap-1" title="คลิกดูรายละเอียดเวอร์ชัน v1.20.0"><i class="fa-solid fa-sparkles text-amber-300 text-[8px]"></i><span class="bg-emerald-500 text-white font-black px-2 py-0.5 rounded-full">v1.20.0</span></span>
+              <span onclick="openVersionReleaseModal()" class="bg-blue-400/20 hover:bg-blue-400/30 text-blue-200 text-[9px] font-mono px-1.5 py-0.5 rounded-full border border-blue-300/30 cursor-pointer transition flex items-center gap-1" title="คลิกดูรายละเอียดเวอร์ชัน v1.21.0"><i class="fa-solid fa-sparkles text-amber-300 text-[8px]"></i><span class="bg-emerald-500 text-white font-black px-2 py-0.5 rounded-full">v1.21.0</span></span>
             </div>
             <p class="text-[10px] text-blue-200 truncate">ระบบบริหารงานฝึกอบรม</p>
           </div>
@@ -669,6 +669,82 @@
       <button onclick="document.getElementById('syncToastBox').classList.add('hidden')" class="text-white/80 hover:text-white ml-3 text-sm">
         <i class="fa-solid fa-xmark"></i>
       </button>
+    </div>
+
+    <!-- Role-Based Asynchronous Action Inbox Banner (v1.21.0) -->
+    <div id="actionInboxBanner" class="bg-gradient-to-r from-slate-900 via-indigo-950 to-[#08539E] text-white rounded-2xl p-4 sm:p-5 shadow-lg border border-slate-700/60 transition-all mb-4">
+      <div class="flex flex-col md:flex-row md:items-center justify-between gap-3 border-b border-white/10 pb-3">
+        <div class="flex items-center space-x-3">
+          <div class="w-9 h-9 rounded-xl bg-amber-400/20 text-amber-300 flex items-center justify-center font-bold text-base shadow-inner">
+            <i class="fa-solid fa-bell animate-bounce"></i>
+          </div>
+          <div>
+            <h3 class="text-sm sm:text-base font-black text-white flex items-center gap-2">
+              <span>กล่องเตือนงานค้างสำหรับทุกทีม (Role-Based Action Inbox)</span>
+              <span class="text-[10px] bg-emerald-500/30 text-emerald-300 border border-emerald-400/30 px-2 py-0.5 rounded-full font-mono font-bold">Asynchronous Hub</span>
+            </h3>
+            <p class="text-xs text-slate-300">แจ้งเตือนสถานะงานค้างและขั้นตอนถัดไป แม้สมาชิกต่างทีมจะเปิดปิดระบบไม่พร้อมกัน</p>
+          </div>
+        </div>
+        <button type="button" onclick="toggleActionInboxCollapse()" class="text-xs text-slate-300 hover:text-white px-2.5 py-1 bg-white/10 hover:bg-white/20 rounded-lg transition flex items-center space-x-1.5 self-start md:self-auto cursor-pointer">
+          <i id="inboxCollapseIcon" class="fa-solid fa-chevron-up"></i>
+          <span id="inboxCollapseText">ย่อ/ขยาย</span>
+        </button>
+      </div>
+
+      <!-- Action Inbox Cards -->
+      <div id="actionInboxCardsContainer" class="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-3">
+        <!-- Team A Queue Pill -->
+        <div onclick="switchTab('teamA')" class="cursor-pointer bg-white/5 hover:bg-emerald-950/40 p-3 rounded-xl border border-emerald-500/30 transition hover:scale-[1.02] flex items-center justify-between group">
+          <div class="flex items-center space-x-2.5">
+            <div class="w-8 h-8 rounded-lg bg-emerald-500/20 text-emerald-400 flex items-center justify-center text-sm font-bold">
+              <i class="fa-solid fa-file-signature"></i>
+            </div>
+            <div>
+              <span class="text-[11px] font-bold text-emerald-300 block">ทีม A (ฝ่ายขาย)</span>
+              <span class="text-xs text-slate-200">คำขอรอส่งต่อ/ติดตาม</span>
+            </div>
+          </div>
+          <div class="text-right">
+            <span id="inboxBadgeTeamA" class="text-base font-black text-emerald-400 font-mono">0</span>
+            <span class="text-[10px] text-slate-400 block">รายการ</span>
+          </div>
+        </div>
+
+        <!-- Team B Queue Pill -->
+        <div onclick="switchTab('teamB')" class="cursor-pointer bg-white/5 hover:bg-purple-950/40 p-3 rounded-xl border border-purple-500/30 transition hover:scale-[1.02] flex items-center justify-between group">
+          <div class="flex items-center space-x-2.5">
+            <div class="w-8 h-8 rounded-lg bg-purple-500/20 text-purple-300 flex items-center justify-center text-sm font-bold">
+              <i class="fa-solid fa-clipboard-check"></i>
+            </div>
+            <div>
+              <span class="text-[11px] font-bold text-purple-300 block">ทีม B (วิชาการ)</span>
+              <span class="text-xs text-slate-200">รอจัดวิทยากร / หน้างาน</span>
+            </div>
+          </div>
+          <div class="text-right">
+            <span id="inboxBadgeTeamB" class="text-base font-black text-purple-300 font-mono">0</span>
+            <span class="text-[10px] text-slate-400 block">รายการ</span>
+          </div>
+        </div>
+
+        <!-- Executive Queue Pill -->
+        <div onclick="switchTab('exec')" class="cursor-pointer bg-white/5 hover:bg-blue-950/40 p-3 rounded-xl border border-blue-500/30 transition hover:scale-[1.02] flex items-center justify-between group">
+          <div class="flex items-center space-x-2.5">
+            <div class="w-8 h-8 rounded-lg bg-blue-500/20 text-blue-300 flex items-center justify-center text-sm font-bold">
+              <i class="fa-solid fa-stamp"></i>
+            </div>
+            <div>
+              <span class="text-[11px] font-bold text-blue-300 block">ฝ่ายบริหาร (Exec)</span>
+              <span class="text-xs text-slate-200">รออนุมัติงบประมาณ</span>
+            </div>
+          </div>
+          <div class="text-right">
+            <span id="inboxBadgeExec" class="text-base font-black text-amber-400 font-mono">0</span>
+            <span class="text-[10px] text-slate-400 block">รายการ</span>
+          </div>
+        </div>
+      </div>
     </div>
 
     <!-- Notification Alert Bar -->
@@ -1212,6 +1288,17 @@
           </div>
         </div>
 
+        <!-- Orange Edit Notice Banner for Team A (v1.21.0) -->
+        <div id="teamAEditBanner" class="hidden mb-4 p-3.5 bg-amber-500/15 border border-amber-400/50 rounded-xl flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-amber-900 animate-fadeIn">
+          <div class="flex items-center space-x-2.5 text-xs">
+            <i class="fa-solid fa-pen-to-square text-amber-600 text-sm"></i>
+            <span><strong>โหมดแก้ไขคำขอจัดอบรม:</strong> รหัส <span id="editingEventIdSpan" class="font-mono font-bold text-amber-800"></span> (กำลังปรับปรุงก่อนทีม B รับงาน)</span>
+          </div>
+          <button type="button" onclick="cancelTeamAEdit()" class="px-3 py-1 bg-white hover:bg-amber-100 text-amber-900 border border-amber-300 rounded-lg text-xs font-bold transition shadow-sm self-start sm:self-auto cursor-pointer">
+            <i class="fa-solid fa-xmark mr-1 text-amber-600"></i> ยกเลิกการแก้ไข
+          </button>
+        </div>
+
         <form id="teamAForm" onsubmit="handleTeamASubmit(event)" class="space-y-6">
           
           <!-- Quick Selection from Annual Principle Plans (โครงการอนุมัติหลักการประจำปี) -->
@@ -1506,6 +1593,45 @@
         </form>
       </div>
 
+      <!-- Team A Submitted Requests Tracking Table (v1.21.0) -->
+      <div id="teamAMyRequestsCard" class="bg-white rounded-2xl border border-slate-200 shadow-sm p-5 space-y-4 max-w-4xl mx-auto">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between pb-3 border-b border-slate-100 gap-2">
+          <div class="flex items-center space-x-2.5">
+            <div class="w-8 h-8 rounded-lg bg-emerald-100 text-emerald-700 flex items-center justify-center font-bold text-xs">
+              <i class="fa-solid fa-clock-rotate-left"></i>
+            </div>
+            <div>
+              <h3 class="text-sm font-bold text-slate-900">ทะเบียนคำขอที่บันทึกแล้ว & สถานะการส่งต่องาน (My Requests & Handover Status)</h3>
+              <p class="text-[11px] text-slate-400">ตรวจสอบสถานะการรับงานของทีม B และแก้ไขรายละเอียดคำขอได้ตราบใดที่ทีม B ยังไม่ได้รับงาน</p>
+            </div>
+          </div>
+          <button type="button" onclick="renderTeamAMyRequests()" class="text-xs text-slate-500 hover:text-emerald-700 font-semibold px-2.5 py-1 rounded-lg border border-slate-200 hover:border-emerald-300 transition flex items-center space-x-1 cursor-pointer">
+            <i class="fa-solid fa-arrows-rotate"></i>
+            <span>รีเฟรชตาราง</span>
+          </button>
+        </div>
+
+        <!-- Table -->
+        <div class="overflow-x-auto border border-slate-200 rounded-xl">
+          <table class="w-full text-left text-xs border-collapse">
+            <thead>
+              <tr class="bg-slate-50 text-slate-700 font-bold border-b border-slate-200 text-[11px]">
+                <th class="p-3 text-center w-28">รหัสคำขอ</th>
+                <th class="p-3">โรงเรียน / จังหวัด</th>
+                <th class="p-3">หัวข้ออบรม</th>
+                <th class="p-3 text-center">วันที่จัด</th>
+                <th class="p-3 text-right">งบเสนอ</th>
+                <th class="p-3 text-center">สถานะการส่งต่องาน</th>
+                <th class="p-3 text-center w-36">สิทธิ์การจัดการ</th>
+              </tr>
+            </thead>
+            <tbody id="teamAMyRequestsTableBody" class="divide-y divide-slate-100 bg-white">
+              <!-- Dynamically populated -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+
     </section>
 
     <!-- ========================================== -->
@@ -1602,6 +1728,48 @@
     <!-- TAB 4: EXECUTIVE APPROVAL & MEMO SIGN OFF  -->
     <!-- ========================================== -->
     <section id="view-exec" class="hidden space-y-6">
+
+      <!-- Executive Annual Incident & Obstacle Ledger Widget (v1.21.0) -->
+      <div id="execIncidentLedgerCard" class="bg-gradient-to-br from-slate-900 via-indigo-950 to-slate-900 text-white rounded-3xl p-5 sm:p-6 shadow-xl border border-indigo-500/30 space-y-4">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between border-b border-white/10 pb-3 gap-2">
+          <div class="flex items-center space-x-3">
+            <div class="w-10 h-10 rounded-2xl bg-amber-500/20 text-amber-400 flex items-center justify-center font-bold text-lg shadow-inner">
+              <i class="fa-solid fa-triangle-exclamation"></i>
+            </div>
+            <div>
+              <h3 class="text-base font-black text-white flex items-center gap-2">
+                <span>สมุดบันทึกอุปสรรคและบทเรียนหน้างานประจำปี 2569 (Incident & Lesson Learned Ledger)</span>
+                <span class="text-[10px] bg-amber-500/30 text-amber-300 border border-amber-400/30 px-2 py-0.5 rounded-full font-mono font-bold">Executive Audit</span>
+              </h3>
+              <p class="text-xs text-slate-300">รายงานอุปสรรคหน้างาน 6 ด้านที่ทีมวิชาการและวิทยากรบันทึกสด เพื่อใช้ประเมินความสามารถและป้องกันข้อผิดพลาดซ้ำ</p>
+            </div>
+          </div>
+          <button type="button" onclick="renderExecutiveIncidentLedger()" class="text-xs text-slate-300 hover:text-white px-3 py-1.5 bg-white/10 hover:bg-white/20 rounded-xl transition flex items-center space-x-1.5 self-start sm:self-auto cursor-pointer">
+            <i class="fa-solid fa-arrows-rotate"></i>
+            <span>รีเฟรชบันทึก</span>
+          </button>
+        </div>
+
+        <!-- Ledger Table -->
+        <div class="overflow-x-auto border border-white/10 rounded-2xl bg-black/20">
+          <table class="w-full text-left text-xs border-collapse">
+            <thead>
+              <tr class="bg-white/5 text-slate-300 font-bold border-b border-white/10 text-[11px]">
+                <th class="p-3 text-center w-28">รหัสเหตุการณ์</th>
+                <th class="p-3">โครงการ / รหัส</th>
+                <th class="p-3 text-center w-28">หมวดอุปสรรค</th>
+                <th class="p-3 text-center w-24">ระดับ</th>
+                <th class="p-3">รายละเอียดปัญหาที่พบ</th>
+                <th class="p-3">แนวทางแก้ไขหน้างาน</th>
+                <th class="p-3 text-center">ผู้บันทึก / วันที่</th>
+              </tr>
+            </thead>
+            <tbody id="execIncidentLedgerTableBody" class="divide-y divide-white/5 text-slate-200">
+              <!-- Dynamically populated -->
+            </tbody>
+          </table>
+        </div>
+      </div>
       
       <!-- Executive Collaboration & QR Banner -->
       <div class="bg-gradient-to-r from-amber-500/10 via-amber-500/5 to-transparent p-4 rounded-2xl border border-amber-200/80 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
@@ -3068,10 +3236,10 @@
               <i class="fa-solid fa-code-compare text-amber-300"></i>
               <span class="text-xs font-bold uppercase tracking-wider">รายละเอียดการปรับปรุงเวอร์ชัน (Version Release Notes)</span>
             </div>
-            <span class="text-[10px] bg-amber-400 text-slate-950 font-black px-2 py-0.5 rounded-full">v1.20.0 Live</span>
+            <span class="text-[10px] bg-amber-400 text-slate-950 font-black px-2 py-0.5 rounded-full">v1.21.0 Live</span>
           </div>
           <p class="text-xs text-blue-100 leading-relaxed">
-            <strong>v1.20.0 (Enterprise Compact QR & Drive Standard):</strong> ปรับขนาดหน้าต่างแท่นแสดงผล QR Code ให้กะทัดรัด (Compact Responsive) รองรับโน้ตบุ๊กทุกขนาดหน้าจอ, เพิ่มปุ่มปิดหน้าต่างทั้งบน ล่าง และกด Esc/คลิกนอกกรอบเพื่อปิดได้ทันที, พร้อมกำหนด Google Drive โฟลเดอร์กลางสำหรับเก็บเอกสารโครงการ
+            <strong>v1.21.0 (Enterprise Compact QR & Drive Standard):</strong> ปรับขนาดหน้าต่างแท่นแสดงผล QR Code ให้กะทัดรัด (Compact Responsive) รองรับโน้ตบุ๊กทุกขนาดหน้าจอ, เพิ่มปุ่มปิดหน้าต่างทั้งบน ล่าง และกด Esc/คลิกนอกกรอบเพื่อปิดได้ทันที, พร้อมกำหนด Google Drive โฟลเดอร์กลางสำหรับเก็บเอกสารโครงการ
           </p>
           <div class="pt-1 flex items-center justify-between text-[11px] text-blue-200">
             <span>ฐานข้อมูล: Google Sheets + Local Offline Cache</span>
@@ -4494,7 +4662,7 @@
 
     // System Global State (Synchronously initialized with complete Master Data)
     const AppState = {
-      version: '1.18.1',
+      version: '1.21.0',
       clientId: 'DEV-' + Math.random().toString(36).substring(2, 7).toUpperCase(),
       activeTab: 'dashboard',
       activeDevices: {},
@@ -4511,6 +4679,9 @@
         schools: getPersistedSchools()
       },
       requests: getPersistedRequests(),
+      incidentLogs: JSON.parse(localStorage.getItem('twp_incident_logs') || '[]'),
+      auditLogs: JSON.parse(localStorage.getItem('twp_audit_logs') || '[]'),
+      editingEventId: null,
       fy2569Projects: getPersistedFy2569Projects(),
       fy2569TuLedger: getPersistedFy2569TuLedger(),
       annualPlans: getPersistedAnnualPlans(),
@@ -4737,6 +4908,9 @@
     function handleIncomingSyncUpdate(syncEvent) {
       AppState.lastSyncTime = new Date();
       updateSyncStatusUI('synced');
+              renderActionInbox();
+              renderTeamAMyRequests();
+              renderExecutiveIncidentLedger();
 
       if (!AppState.gasEndpoint) {
         const stored = localStorage.getItem('twp_requests_store');
@@ -5969,6 +6143,17 @@
           </div>
         `;
       }).join('');
+
+      // V1.21.0: Initialize checklist states and incident logs for each rendered card
+      approved.forEach(req => {
+        const cl = req.operationChecklist || {};
+        ['venue', 'handouts', 'display', 'speaker', 'catering', 'checkin'].forEach(p => {
+          const chk = document.getElementById('chk_' + p + '_' + req.eventId);
+          if (chk) chk.checked = !!cl[p];
+        });
+        updateChecklistProgressUI(req.eventId);
+        renderEventIncidentsList(req.eventId);
+      });
     }
 
     function renderTeamBExecutionQueue() {
@@ -6112,6 +6297,98 @@
                 </button>
               </div>
             </div>
+
+            <!-- 6-Pillar Operation Readiness Checklist (v1.21.0) -->
+            <div class="bg-white/95 backdrop-blur-sm rounded-2xl p-4 border border-indigo-100 shadow-xs space-y-3">
+              <div class="flex items-center justify-between">
+                <span class="text-xs font-bold text-slate-800 flex items-center gap-1.5">
+                  <i class="fa-solid fa-list-check text-indigo-600"></i>
+                  <span>Checklist ความพร้อม 6 ด้าน (Operation Readiness)</span>
+                </span>
+                <span id="checklistText_${req.eventId}" class="text-xs font-mono font-bold text-indigo-700">0/6 (0%)</span>
+              </div>
+              <div class="w-full bg-slate-100 h-2 rounded-full overflow-hidden">
+                <div id="checklistBar_${req.eventId}" class="bg-indigo-600 h-full transition-all duration-300" style="width: 0%"></div>
+              </div>
+              <div class="grid grid-cols-2 sm:grid-cols-3 gap-2 text-xs">
+                <label class="flex items-center space-x-2 p-2 rounded-lg hover:bg-slate-50 border border-slate-100 cursor-pointer">
+                  <input type="checkbox" id="chk_venue_${req.eventId}" onchange="handleToggleChecklistPillar('${req.eventId}', 'venue')" class="rounded text-indigo-600 focus:ring-indigo-500">
+                  <span>1. สถานที่ & ระบบโสตฯ</span>
+                </label>
+                <label class="flex items-center space-x-2 p-2 rounded-lg hover:bg-slate-50 border border-slate-100 cursor-pointer">
+                  <input type="checkbox" id="chk_handouts_${req.eventId}" onchange="handleToggleChecklistPillar('${req.eventId}', 'handouts')" class="rounded text-indigo-600 focus:ring-indigo-500">
+                  <span>2. เอกสาร & สื่อคู่มือ</span>
+                </label>
+                <label class="flex items-center space-x-2 p-2 rounded-lg hover:bg-slate-50 border border-slate-100 cursor-pointer">
+                  <input type="checkbox" id="chk_display_${req.eventId}" onchange="handleToggleChecklistPillar('${req.eventId}', 'display')" class="rounded text-indigo-600 focus:ring-indigo-500">
+                  <span>3. บูธจัดแสดง & ป้ายงาน</span>
+                </label>
+                <label class="flex items-center space-x-2 p-2 rounded-lg hover:bg-slate-50 border border-slate-100 cursor-pointer">
+                  <input type="checkbox" id="chk_speaker_${req.eventId}" onchange="handleToggleChecklistPillar('${req.eventId}', 'speaker')" class="rounded text-indigo-600 focus:ring-indigo-500">
+                  <span>4. วิทยากร & เดินทาง/ที่พัก</span>
+                </label>
+                <label class="flex items-center space-x-2 p-2 rounded-lg hover:bg-slate-50 border border-slate-100 cursor-pointer">
+                  <input type="checkbox" id="chk_catering_${req.eventId}" onchange="handleToggleChecklistPillar('${req.eventId}', 'catering')" class="rounded text-indigo-600 focus:ring-indigo-500">
+                  <span>5. อาหาร & กาแฟเบรก</span>
+                </label>
+                <label class="flex items-center space-x-2 p-2 rounded-lg hover:bg-slate-50 border border-slate-100 cursor-pointer">
+                  <input type="checkbox" id="chk_checkin_${req.eventId}" onchange="handleToggleChecklistPillar('${req.eventId}', 'checkin')" class="rounded text-indigo-600 focus:ring-indigo-500">
+                  <span>6. จุดสแกนเช็คชื่อ & e-Cer</span>
+                </label>
+              </div>
+            </div>
+
+            <!-- On-Site Incident & Obstacle Logger Collapsible (v1.21.0) -->
+            <div class="bg-amber-50/60 rounded-2xl p-4 border border-amber-200/80 space-y-3">
+              <div class="flex items-center justify-between cursor-pointer" onclick="document.getElementById('incBox_${req.eventId}').classList.toggle('hidden')">
+                <div class="flex items-center space-x-2 text-xs font-bold text-amber-900">
+                  <i class="fa-solid fa-triangle-exclamation text-amber-600"></i>
+                  <span>บันทึกอุปสรรค & บทเรียนหน้างาน (Incident & Obstacle Logger)</span>
+                </div>
+                <span class="text-[11px] text-amber-700 bg-amber-100 px-2 py-0.5 rounded-full font-bold">กดเพื่อบันทึก / ดูประวัติ <i class="fa-solid fa-chevron-down ml-1"></i></span>
+              </div>
+              <div id="incBox_${req.eventId}" class="hidden space-y-3 pt-2 border-t border-amber-200/60">
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
+                  <div>
+                    <label class="block font-bold text-slate-700 mb-0.5">หมวดหมู่อุปสรรค</label>
+                    <select id="incCat_${req.eventId}" class="w-full p-2 bg-white border border-slate-200 rounded-lg text-xs">
+                      <option value="VENUE">สถานที่ / ไฟฟ้า / โสตทัศนูปกรณ์</option>
+                      <option value="SCHEDULE">เวลา / ล่าช้า / การเปลี่ยนแปลงกำหนดการ</option>
+                      <option value="ATTENDEES">ผู้เข้าร่วม / การเช็คชื่อ / จำลองกลุ่ม</option>
+                      <option value="MATERIALS">เอกสาร / สื่อสาธิต / หนังสือ</option>
+                      <option value="CATERING">อาหาร / เครื่องดื่ม</option>
+                      <option value="OTHER">อื่นๆ</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label class="block font-bold text-slate-700 mb-0.5">ระดับความรุนแรง</label>
+                    <select id="incSev_${req.eventId}" class="w-full p-2 bg-white border border-slate-200 rounded-lg text-xs">
+                      <option value="NORMAL">ปกติ (แก้ปัญหาได้ทันที)</option>
+                      <option value="HIGH">ปานกลาง (ส่งผลกระทบต่อกำหนดการ)</option>
+                      <option value="CRITICAL">วิกฤต (ต้องขออนุมัติหรือปรับแผนเร่งด่วน)</option>
+                    </select>
+                  </div>
+                </div>
+                <div class="text-xs space-y-1">
+                  <label class="block font-bold text-slate-700">รายละเอียดอุปสรรคที่พบหน้างาน *</label>
+                  <input type="text" id="incDet_${req.eventId}" class="w-full p-2 bg-white border border-slate-200 rounded-lg text-xs" placeholder="เช่น ไฟฟ้าห้องประชุมดับชั่วคราว 15 นาที, ระบบโปรเจกเตอร์ไม่รองรับ HDMI" />
+                </div>
+                <div class="text-xs space-y-1">
+                  <label class="block font-bold text-slate-700">แนวทางแก้ไขเฉพาะหน้า (Action Taken / Resolution)</label>
+                  <input type="text" id="incRes_${req.eventId}" class="w-full p-2 bg-white border border-slate-200 rounded-lg text-xs" placeholder="เช่น ใช้อุปกรณ์แปลงสัญญาณสำรองของทีม B และเลื่อนเวลาเบรกขึ้นมาทดแทน" />
+                </div>
+                <div class="flex items-center justify-between pt-1">
+                  <span class="text-[10px] text-slate-500 italic">* บันทึกนี้จะรายงานตรงสู่สมุดบันทึกผู้บริหารเพื่อใช้ประเมินผลปี 2569</span>
+                  <button type="button" onclick="handleSaveIncidentLog('${req.eventId}')" class="px-4 py-1.5 bg-amber-600 hover:bg-amber-700 text-white rounded-lg text-xs font-bold transition flex items-center space-x-1.5 shadow-sm cursor-pointer">
+                    <i class="fa-solid fa-floppy-disk"></i>
+                    <span>บันทึกเหตุการณ์</span>
+                  </button>
+                </div>
+                <div id="incList_${req.eventId}" class="pt-2 border-t border-amber-200/40 space-y-1.5">
+                  <!-- Incident list for this event -->
+                </div>
+              </div>
+            </div>
           </div>
         `;
       }).join('');
@@ -6166,6 +6443,377 @@
 
     // ------------------- TAB SWITCHER -------------------
 
+        // =========================================================================
+    // V1.21.0: ENTERPRISE OPERATIONS & AUDIT GOVERNANCE FUNCTIONS
+    // =========================================================================
+
+    // --- 1. Top Role-Based Asynchronous Action Inbox ---
+    function toggleActionInboxCollapse() {
+      const container = document.getElementById('actionInboxCardsContainer');
+      const icon = document.getElementById('inboxCollapseIcon');
+      if (!container) return;
+      if (container.classList.contains('hidden')) {
+        container.classList.remove('hidden');
+        if (icon) { icon.classList.remove('fa-chevron-down'); icon.classList.add('fa-chevron-up'); }
+      } else {
+        container.classList.add('hidden');
+        if (icon) { icon.classList.remove('fa-chevron-up'); icon.classList.add('fa-chevron-down'); }
+      }
+    }
+
+    function renderActionInbox() {
+      const reqs = AppState.requests || [];
+      const teamAWait = reqs.filter(r => r.status === 'WAITING_B').length;
+      const teamBWait = reqs.filter(r => r.status === 'WAITING_B').length;
+      const teamBExec = reqs.filter(r => r.status === 'APPROVED' || r.status === 'COMPLETED').length;
+      const execWait = reqs.filter(r => r.status === 'WAITING_EXEC').length;
+
+      const badgeA = document.getElementById('inboxBadgeTeamA');
+      const badgeB = document.getElementById('inboxBadgeTeamB');
+      const badgeExec = document.getElementById('inboxBadgeExec');
+
+      if (badgeA) badgeA.innerText = teamAWait;
+      if (badgeB) badgeB.innerText = teamBWait + ' / ' + teamBExec;
+      if (badgeExec) badgeExec.innerText = execWait;
+    }
+
+    // --- 2. Team A My Requests & Handover Tracking ---
+    function renderTeamAMyRequests() {
+      const tbody = document.getElementById('teamAMyRequestsTableBody');
+      if (!tbody) return;
+      const reqs = AppState.requests || [];
+
+      if (reqs.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="7" class="p-6 text-center text-slate-400">ยังไม่มีรายการคำขอจัดอบรมที่บันทึก</td></tr>';
+        return;
+      }
+
+      tbody.innerHTML = reqs.map(req => {
+        let statusBadge = '';
+        let actionBtn = '';
+
+        if (req.status === 'WAITING_B') {
+          statusBadge = '<span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold bg-amber-50 text-amber-700 border border-amber-200"><i class="fa-solid fa-hourglass-start mr-1"></i>รอทีม B ตรวจสอบ</span>';
+          actionBtn = '<button type="button" onclick="editTeamARequest(\'' + req.eventId + '\')" class="px-2.5 py-1 bg-amber-500 hover:bg-amber-600 text-white rounded-lg text-xs font-bold transition flex items-center space-x-1 shadow-sm btn-tactile cursor-pointer mx-auto"><i class="fa-solid fa-pen text-[10px]"></i><span>แก้ไขคำขอ</span></button>';
+        } else if (req.status === 'WAITING_EXEC') {
+          statusBadge = '<span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold bg-indigo-50 text-indigo-700 border border-indigo-200"><i class="fa-solid fa-stamp mr-1"></i>รอผู้บริหารอนุมัติ</span>';
+          actionBtn = '<span class="inline-flex items-center text-[10px] text-slate-500 bg-slate-100 px-2 py-1 rounded font-bold"><i class="fa-solid fa-lock text-slate-400 mr-1"></i>ล็อกระหว่างพิจารณา</span>';
+        } else if (req.status === 'APPROVED') {
+          statusBadge = '<span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-50 text-emerald-700 border border-emerald-200"><i class="fa-solid fa-circle-check mr-1"></i>อนุมัติงบแล้ว</span>';
+          actionBtn = '<div class="flex items-center justify-center space-x-1"><span class="inline-flex items-center text-[10px] text-emerald-800 bg-emerald-100/60 px-1.5 py-0.5 rounded font-bold"><i class="fa-solid fa-lock mr-1"></i>ล็อกงบ</span><button type="button" onclick="openAuditRevisionModal(\'' + req.eventId + '\')" class="px-2 py-0.5 bg-slate-100 hover:bg-amber-100 text-slate-700 hover:text-amber-800 border border-slate-300 rounded text-[10px] font-bold transition cursor-pointer"><i class="fa-solid fa-shield-halved text-amber-600 mr-0.5"></i>ขอปรับแก้</button></div>';
+        } else if (req.status === 'COMPLETED') {
+          statusBadge = '<span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold bg-blue-50 text-blue-700 border border-blue-200"><i class="fa-solid fa-trophy mr-1"></i>จัดเสร็จสิ้น</span>';
+          actionBtn = '<span class="inline-flex items-center text-[10px] text-slate-500 bg-slate-100 px-2 py-1 rounded font-bold"><i class="fa-solid fa-lock text-slate-400 mr-1"></i>ปิดโครงการแล้ว</span>';
+        } else if (req.status === 'REJECTED') {
+          statusBadge = '<span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold bg-rose-50 text-rose-700 border border-rose-200"><i class="fa-solid fa-ban mr-1"></i>ส่งกลับแก้ไข</span>';
+          actionBtn = '<button type="button" onclick="editTeamARequest(\'' + req.eventId + '\')" class="px-2.5 py-1 bg-rose-600 hover:bg-rose-700 text-white rounded-lg text-xs font-bold transition flex items-center space-x-1 shadow-sm btn-tactile cursor-pointer mx-auto"><i class="fa-solid fa-wrench text-[10px]"></i><span>แก้ไขใหม่</span></button>';
+        } else {
+          statusBadge = '<span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold bg-slate-100 text-slate-700">' + (req.status || 'DRAFT') + '</span>';
+          actionBtn = '-';
+        }
+
+        return `
+          <tr class="hover:bg-slate-50/80 transition text-xs reading-row">
+            <td class="p-3 text-center font-mono font-bold text-twp-700">${req.eventId}</td>
+            <td class="p-3">
+              <span class="font-bold text-slate-800 block truncate max-w-xs">${req.schoolName || '-'}</span>
+              <span class="text-[10px] text-slate-400">${req.province || ''} ${req.saleName ? '(' + req.saleName + ')' : ''}</span>
+            </td>
+            <td class="p-3">
+              <span class="font-medium text-slate-700 block truncate max-w-sm">${req.courseTopic || req.customTopic || '-'}</span>
+              <span class="text-[10px] text-slate-400">${req.activityType || 'วิชาการ'}</span>
+            </td>
+            <td class="p-3 text-center text-slate-600 font-mono">${req.eventDate || '-'}</td>
+            <td class="p-3 text-right font-mono font-bold text-slate-800">฿${Number(req.estBudget || 0).toLocaleString()}</td>
+            <td class="p-3 text-center">${statusBadge}</td>
+            <td class="p-3 text-center">${actionBtn}</td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    function editTeamARequest(eventId) {
+      const req = (AppState.requests || []).find(r => r.eventId === eventId);
+      if (!req) {
+        showAlert('ไม่พบข้อมูลคำขอ ' + eventId, 'error');
+        return;
+      }
+
+      if (req.status !== 'WAITING_B' && req.status !== 'REJECTED') {
+        showAlert('คำขอนี้อยู่ในสถานะ [' + req.status + '] ไม่สามารถแก้ไขโดยตรงได้ เพื่อป้องกันข้อผิดพลาดทางงบประมาณ', 'warning');
+        return;
+      }
+
+      AppState.editingEventId = eventId;
+      const banner = document.getElementById('teamAEditBanner');
+      const span = document.getElementById('editingEventIdSpan');
+      if (banner) banner.classList.remove('hidden');
+      if (span) span.innerText = eventId;
+
+      // Populate form
+      if (document.getElementById('activityType')) document.getElementById('activityType').value = req.activityType || '';
+      if (document.getElementById('courseTopic')) document.getElementById('courseTopic').value = req.courseTopic || '';
+      if (document.getElementById('customTopic')) document.getElementById('customTopic').value = req.customTopic || '';
+      if (document.getElementById('eventDate')) document.getElementById('eventDate').value = req.eventDate || '';
+      if (document.getElementById('provSelect')) {
+        document.getElementById('provSelect').value = req.province || '';
+        filterSchoolsByProvince(req.province || '');
+      }
+      if (document.getElementById('schoolInput')) document.getElementById('schoolInput').value = req.schoolName || '';
+      if (document.getElementById('schoolSelect')) document.getElementById('schoolSelect').value = req.schoolName || '';
+      if (document.getElementById('saleInput')) document.getElementById('saleInput').value = req.saleName || '';
+      if (document.getElementById('speakerType')) document.getElementById('speakerType').value = req.speakerType || '';
+      if (document.getElementById('venueType')) document.getElementById('venueType').value = req.venueType || '';
+      if (document.getElementById('objective')) document.getElementById('objective').value = req.objective || '';
+      if (document.getElementById('expectedTrainees')) document.getElementById('expectedTrainees').value = req.expectedTrainees || 50;
+      if (document.getElementById('estBudget')) document.getElementById('estBudget').value = req.estBudget || 0;
+      if (document.getElementById('targetSales')) document.getElementById('targetSales').value = req.targetSales || 0;
+
+      const needAccom = req.needAccommodation === 'YES';
+      if (document.getElementById('needAccommodation')) {
+        document.getElementById('needAccommodation').checked = needAccom;
+        toggleAccommodationFields(needAccom);
+      }
+      if (document.getElementById('roomCount')) document.getElementById('roomCount').value = req.roomCount || 1;
+
+      const needTrans = req.needTransportation === 'YES';
+      if (document.getElementById('needTransportation')) {
+        document.getElementById('needTransportation').checked = needTrans;
+        toggleTransportFields(needTrans);
+      }
+      if (document.getElementById('transportDetails')) document.getElementById('transportDetails').value = req.transportDetails || '';
+
+      if (document.getElementById('needCatering')) document.getElementById('needCatering').checked = (req.needCatering === 'YES');
+      if (document.getElementById('needProductMedia')) document.getElementById('needProductMedia').checked = (req.needProductMedia === 'YES');
+      
+      const otherSupp = !!req.otherSupportDetails;
+      if (document.getElementById('needOtherSupport')) {
+        document.getElementById('needOtherSupport').checked = otherSupp;
+        toggleOtherSupportFields(otherSupp);
+      }
+      if (document.getElementById('otherSupportDetails')) document.getElementById('otherSupportDetails').value = req.otherSupportDetails || '';
+
+      const btn = document.getElementById('teamASubmitBtn');
+      if (btn) btn.innerHTML = '<i class="fa-solid fa-floppy-disk mr-2"></i> บันทึกการแก้ไขคำขอ (ซิงค์ทีม B)';
+
+      // Smooth scroll to form
+      const formEl = document.getElementById('teamAForm');
+      if (formEl) formEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+      showAlert('โหลดข้อมูลคำขอ ' + eventId + ' เข้าสู่แบบฟอร์มแล้ว สามารถแก้ไขและบันทึกได้ทันที', 'info');
+    }
+
+    function cancelTeamAEdit() {
+      AppState.editingEventId = null;
+      const banner = document.getElementById('teamAEditBanner');
+      if (banner) banner.classList.add('hidden');
+      const form = document.getElementById('teamAForm');
+      if (form) form.reset();
+      toggleAccommodationFields(false);
+      toggleTransportFields(false);
+      toggleOtherSupportFields(false);
+      const btn = document.getElementById('teamASubmitBtn');
+      if (btn) btn.innerHTML = '<i class="fa-solid fa-paper-plane mr-2"></i> ส่งคำขอให้ฝ่ายวิชาการ (ทีม B) ตรวจสอบ';
+      showAlert('ยกเลิกโหมดแก้ไขคำขอแล้ว', 'info');
+    }
+
+    // --- 3. Audit Revision Modal (Strict Post-Approval Freeze) ---
+    function openAuditRevisionModal(eventId) {
+      const modal = document.getElementById('auditRevisionModal');
+      const idInput = document.getElementById('auditModalEventId');
+      const idDisplay = document.getElementById('auditModalEventIdDisplay');
+      const opInput = document.getElementById('auditModalOperatorName');
+      if (!modal) return;
+      if (idInput) idInput.value = eventId;
+      if (idDisplay) idDisplay.value = eventId;
+      if (opInput) opInput.value = AppState.operatorName || '';
+      modal.classList.remove('hidden');
+    }
+
+    function closeAuditRevisionModal() {
+      const modal = document.getElementById('auditRevisionModal');
+      if (modal) modal.classList.add('hidden');
+      if (document.getElementById('auditModalReason')) document.getElementById('auditModalReason').value = '';
+    }
+
+    function submitAuditRevision() {
+      const eventId = document.getElementById('auditModalEventId')?.value;
+      const operator = document.getElementById('auditModalOperatorName')?.value?.trim();
+      const category = document.getElementById('auditModalCategory')?.value;
+      const reason = document.getElementById('auditModalReason')?.value?.trim();
+
+      if (!operator) {
+        showAlert('กรุณาระบุชื่อผู้ขอปรับปรุง', 'error');
+        return;
+      }
+      if (!reason) {
+        showAlert('กรุณาระบุเหตุผลความจำเป็นในการขอปรับปรุงงบประมาณหรือโครงการ', 'error');
+        return;
+      }
+
+      const auditEntry = {
+        logId: 'AUD-' + Date.now(),
+        eventId: eventId,
+        createdAt: new Date().toISOString(),
+        operatorName: operator,
+        actionType: 'REVISION_REQUEST',
+        details: '[' + category + '] ' + reason
+      };
+
+      if (!AppState.auditLogs) AppState.auditLogs = [];
+      AppState.auditLogs.unshift(auditEntry);
+      try {
+        localStorage.setItem('twp_audit_logs', JSON.stringify(AppState.auditLogs));
+      } catch(e) {}
+
+      if (AppState.gasEndpoint) {
+        postToBackend('LOG_AUDIT_TRAIL', auditEntry)
+          .catch(e => console.warn('Audit log backend sync error:', e));
+      }
+
+      showAlert('บันทึกคำขอปรับปรุงเข้าสู่ตาราง Audit Log สำหรับตรวจสอบแล้ว (รหัส: ' + auditEntry.logId + ')', 'success');
+      closeAuditRevisionModal();
+    }
+
+    // --- 4. Team B 6-Pillar Checklist & Incident Logging ---
+    function handleToggleChecklistPillar(eventId, pillarKey) {
+      const req = (AppState.requests || []).find(r => r.eventId === eventId);
+      if (!req) return;
+      if (!req.operationChecklist) req.operationChecklist = {};
+      const chk = document.getElementById('chk_' + pillarKey + '_' + eventId);
+      req.operationChecklist[pillarKey] = chk ? chk.checked : false;
+
+      // Update progress bar
+      updateChecklistProgressUI(eventId);
+
+      // Save locally
+      try {
+        localStorage.setItem('twp_requests_store', JSON.stringify(AppState.requests));
+      } catch(e) {}
+
+      // Background sync
+      if (AppState.gasEndpoint) {
+        postToBackend('UPDATE_OPERATION_CHECKLIST', {
+          eventId: eventId,
+          checklist: req.operationChecklist,
+          operatorName: AppState.operatorName
+        }).catch(e => console.warn('Checklist sync error:', e));
+      }
+    }
+
+    function updateChecklistProgressUI(eventId) {
+      const req = (AppState.requests || []).find(r => r.eventId === eventId);
+      if (!req) return;
+      const cl = req.operationChecklist || {};
+      const pillars = ['venue', 'handouts', 'display', 'speaker', 'catering', 'checkin'];
+      const completed = pillars.filter(p => !!cl[p]).length;
+      const pct = Math.round((completed / pillars.length) * 100);
+
+      const bar = document.getElementById('checklistBar_' + eventId);
+      const text = document.getElementById('checklistText_' + eventId);
+      if (bar) bar.style.width = pct + '%';
+      if (text) text.innerText = completed + '/' + pillars.length + ' (' + pct + '%)';
+    }
+
+    function handleSaveIncidentLog(eventId) {
+      const catEl = document.getElementById('incCat_' + eventId);
+      const sevEl = document.getElementById('incSev_' + eventId);
+      const detEl = document.getElementById('incDet_' + eventId);
+      const resEl = document.getElementById('incRes_' + eventId);
+
+      const category = catEl ? catEl.value : 'GENERAL';
+      const severity = sevEl ? sevEl.value : 'NORMAL';
+      const details = detEl ? detEl.value.trim() : '';
+      const resolution = resEl ? resEl.value.trim() : '';
+
+      if (!details) {
+        showAlert('กรุณาระบุรายละเอียดอุปสรรคหรือปัญหาที่พบหน้างาน', 'error');
+        return;
+      }
+
+      const incidentEntry = {
+        logId: 'INC-' + Date.now(),
+        eventId: eventId,
+        createdAt: new Date().toISOString(),
+        category: category,
+        severity: severity,
+        details: details,
+        resolution: resolution,
+        operatorName: AppState.operatorName || 'Team B'
+      };
+
+      if (!AppState.incidentLogs) AppState.incidentLogs = [];
+      AppState.incidentLogs.unshift(incidentEntry);
+      try {
+        localStorage.setItem('twp_incident_logs', JSON.stringify(AppState.incidentLogs));
+      } catch(e) {}
+
+      if (AppState.gasEndpoint) {
+        postToBackend('UPDATE_OPERATION_CHECKLIST', {
+          eventId: eventId,
+          incidentLog: incidentEntry,
+          operatorName: AppState.operatorName
+        }).catch(e => console.warn('Incident log sync error:', e));
+      }
+
+      showAlert('บันทึกอุปสรรคหน้างานและแนวทางแก้ไขเรียบร้อยแล้ว', 'success');
+      if (detEl) detEl.value = '';
+      if (resEl) resEl.value = '';
+      renderEventIncidentsList(eventId);
+      renderExecutiveIncidentLedger();
+    }
+
+    function renderEventIncidentsList(eventId) {
+      const container = document.getElementById('incList_' + eventId);
+      if (!container) return;
+      const logs = (AppState.incidentLogs || []).filter(l => l.eventId === eventId);
+      if (logs.length === 0) {
+        container.innerHTML = '<p class="text-[11px] text-slate-400 italic">ยังไม่มีการบันทึกอุปสรรคสำหรับโครงการนี้</p>';
+        return;
+      }
+      container.innerHTML = logs.map(l => `
+        <div class="p-2.5 bg-slate-50 border border-slate-200 rounded-xl space-y-1 text-xs">
+          <div class="flex items-center justify-between">
+            <span class="font-bold text-slate-800">[${l.category}] ${l.severity === 'CRITICAL' ? '<span class="text-rose-600 font-black">วิกฤต</span>' : (l.severity === 'HIGH' ? '<span class="text-amber-600 font-bold">สูง</span>' : '<span class="text-slate-600">ปกติ</span>')}</span>
+            <span class="text-[10px] text-slate-400 font-mono">${l.createdAt ? l.createdAt.substring(0, 16) : ''}</span>
+          </div>
+          <p class="text-slate-700"><strong>ปัญหา:</strong> ${l.details}</p>
+          ${l.resolution ? `<p class="text-emerald-700"><strong>การแก้ปัญหา:</strong> ${l.resolution}</p>` : ''}
+        </div>
+      `).join('');
+    }
+
+    // --- 5. Executive Incident & Lesson Learned Ledger ---
+    function renderExecutiveIncidentLedger() {
+      const tbody = document.getElementById('execIncidentLedgerTableBody');
+      if (!tbody) return;
+      const logs = AppState.incidentLogs || [];
+
+      if (logs.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="7" class="p-6 text-center text-slate-400">ยังไม่มีบันทึกอุปสรรคหน้างานในระบบ</td></tr>';
+        return;
+      }
+
+      tbody.innerHTML = logs.map(l => {
+        let sevClass = 'bg-slate-700 text-slate-200';
+        if (l.severity === 'CRITICAL') sevClass = 'bg-rose-500/20 text-rose-300 border border-rose-500/40';
+        else if (l.severity === 'HIGH') sevClass = 'bg-amber-500/20 text-amber-300 border border-amber-500/40';
+
+        return `
+          <tr class="hover:bg-white/5 transition text-xs">
+            <td class="p-3 text-center font-mono text-amber-400 font-bold">${l.logId}</td>
+            <td class="p-3 font-mono font-bold text-slate-200">${l.eventId}</td>
+            <td class="p-3 text-center"><span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-white/10 text-slate-300">${l.category}</span></td>
+            <td class="p-3 text-center"><span class="px-2 py-0.5 rounded-full text-[10px] font-bold ${sevClass}">${l.severity}</span></td>
+            <td class="p-3 text-slate-200 max-w-xs truncate">${l.details}</td>
+            <td class="p-3 text-emerald-300 max-w-xs truncate">${l.resolution || '-'}</td>
+            <td class="p-3 text-center text-slate-400 text-[10px]">${l.operatorName || 'Team B'}<br/>${l.createdAt ? l.createdAt.substring(0, 16) : ''}</td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+
     function switchTab(tabId) {
       AppState.activeTab = tabId;
       
@@ -6205,11 +6853,13 @@
         renderAnnualPlanView();
       } else if (tabId === 'teamA') {
         renderAnnualPlanSelectOptions();
+        renderTeamAMyRequests();
       } else if (tabId === 'teamB') {
         renderTeamBQueue();
         renderTeamBExecutionQueue();
       } else if (tabId === 'exec') {
         renderExecQueue();
+        renderExecutiveIncidentLedger();
       } else if (tabId === 'evaluation') {
         renderEvaluationCenter();
       } else if (tabId === 'teamBExpenses') {
@@ -7536,7 +8186,7 @@
         '</style></head><body>' +
         '<div class="header">' +
         '<div><h2 style="margin:0; color:#08539E; font-size:16pt;">บริษัท ไทยวัฒนาพานิช จำกัด (TWP)</h2><div style="font-size:11pt; color:#475569;">รายงานสรุปการกระทบยอดงบประมาณจัดอบรมกับยอดขายจริง ประจำปี 2569</div></div>' +
-        '<div style="text-align:right; font-size:9pt; color:#64748b;">ออกโดยระบบ EMS Enterprise v1.20.0<br>วันที่พิมพ์: ' + new Date().toLocaleDateString('th-TH') + '</div>' +
+        '<div style="text-align:right; font-size:9pt; color:#64748b;">ออกโดยระบบ EMS Enterprise v1.21.0<br>วันที่พิมพ์: ' + new Date().toLocaleDateString('th-TH') + '</div>' +
         '</div>' +
         '<div style="display:flex; justify-content:space-between; background:#f8fafc; padding:8px 12px; border-radius:6px; margin-bottom:10px; font-size:10pt;">' +
         '<div>โครงการทั้งหมด: <strong>' + projects.length + ' โครงการ</strong></div>' +
@@ -7561,7 +8211,63 @@
         '<div style="text-align:center; width:200px;"><div style="margin-bottom:40px;">ผู้จัดทำรายงาน (ฝ่ายขาย/PPC)</div><div>(___________________________)</div></div>' +
         '<div style="text-align:center; width:200px;"><div style="margin-bottom:40px;">ผู้ตรวจสอบ (ฝ่ายวิชาการ)</div><div>(___________________________)</div></div>' +
         '<div style="text-align:center; width:200px;"><div style="margin-bottom:40px;">ผู้อนุมัติ (ผู้บริหาร)</div><div>(___________________________)</div></div>' +
-        '</div></body></html>';
+        '</div><!-- Modal: Audit Revision Request (Strict Post-Approval Freeze - v1.21.0) -->
+  <div id="auditRevisionModal" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 animate-fadeIn">
+    <div class="bg-white rounded-3xl max-w-lg w-full p-6 shadow-2xl border border-slate-200 space-y-4">
+      <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+        <div class="flex items-center space-x-2.5">
+          <div class="w-9 h-9 rounded-xl bg-amber-100 text-amber-700 flex items-center justify-center font-bold text-base">
+            <i class="fa-solid fa-shield-halved"></i>
+          </div>
+          <div>
+            <h3 class="text-base font-black text-slate-900">บันทึกขอปรับปรุงโครงการหลังอนุมัติ</h3>
+            <p class="text-xs text-slate-400">ระบบ Audit Trail ป้องกันการแก้ไขงบประมาณโดยพลการ</p>
+          </div>
+        </div>
+        <button type="button" onclick="closeAuditRevisionModal()" class="text-slate-400 hover:text-slate-600 text-lg cursor-pointer">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+      <div class="p-3 bg-amber-50 rounded-xl border border-amber-200 text-xs text-amber-900 leading-relaxed">
+        <i class="fa-solid fa-lock text-amber-700 mr-1.5"></i>
+        <strong>มาตรการกำกับดูแล:</strong> โครงการนี้ผ่านการอนุมัติงบประมาณจากผู้บริหารแล้ว การปรับแก้ข้อมูลสำคัญจะต้องบันทึกเหตุผลความจำเป็นเข้าสู่ตาราง Audit Log เพื่อความโปร่งใส
+      </div>
+      <input type="hidden" id="auditModalEventId" />
+      <div class="space-y-3 text-xs">
+        <div>
+          <label class="block font-bold text-slate-700 mb-1">รหัสโครงการ</label>
+          <input type="text" id="auditModalEventIdDisplay" readonly class="w-full p-2.5 bg-slate-100 border border-slate-200 rounded-xl font-mono text-slate-600 font-bold" />
+        </div>
+        <div>
+          <label class="block font-bold text-slate-700 mb-1">ผู้ขอปรับแก้ *</label>
+          <input type="text" id="auditModalOperatorName" class="w-full p-2.5 border border-slate-300 rounded-xl font-medium focus:ring-2 focus:ring-amber-500" placeholder="ระบุชื่อ-นามสกุล และฝ่าย" />
+        </div>
+        <div>
+          <label class="block font-bold text-slate-700 mb-1">หมวดที่ต้องการขอปรับแก้ *</label>
+          <select id="auditModalCategory" class="w-full p-2.5 border border-slate-300 rounded-xl bg-white focus:ring-2 focus:ring-amber-500">
+            <option value="BUDGET">งบประมาณและค่าใช้จ่าย (Budget Modification)</option>
+            <option value="SCHEDULE">กำหนดการ / วันที่จัดอบรม (Date & Time)</option>
+            <option value="SPEAKER">วิทยากรและหัวข้อ (Speaker & Topic)</option>
+            <option value="LOGISTICS">สถานที่ / การเดินทาง / อาหาร (Logistics)</option>
+            <option value="OTHER">อื่นๆ</option>
+          </select>
+        </div>
+        <div>
+          <label class="block font-bold text-slate-700 mb-1">เหตุผลความจำเป็นและรายละเอียดการขอแก้ไข *</label>
+          <textarea id="auditModalReason" rows="3" class="w-full p-2.5 border border-slate-300 rounded-xl focus:ring-2 focus:ring-amber-500" placeholder="ระบุเหตุผลความจำเป็นอย่างชัดเจนเพื่อประกอบการตรวจสอบของฝ่ายบัญชีและผู้บริหาร..."></textarea>
+        </div>
+      </div>
+      <div class="flex items-center justify-end space-x-2 pt-2 border-t border-slate-100">
+        <button type="button" onclick="closeAuditRevisionModal()" class="px-4 py-2 border border-slate-200 text-slate-600 rounded-xl hover:bg-slate-50 transition text-xs font-bold cursor-pointer">ยกเลิก</button>
+        <button type="button" onclick="submitAuditRevision()" class="px-5 py-2 bg-amber-600 hover:bg-amber-700 text-white rounded-xl transition text-xs font-bold shadow-md flex items-center space-x-1.5 cursor-pointer">
+          <i class="fa-solid fa-stamp"></i>
+          <span>บันทึกเข้า Audit Log</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+</body></html>';
 
       printWin.document.write(docHtml);
       printWin.document.close();
@@ -8892,7 +9598,17 @@
       }
 
       const matchedSchool = AppState.masterData.schools.find(sc => cleanForComparison(sc.schoolName) === cleanForComparison(schoolNameInput));
+      if (AppState.editingEventId) {
+        // Anti-fraud check: ensure existing request is WAITING_B
+        const existingReq = (AppState.requests || []).find(r => r.eventId === AppState.editingEventId);
+        if (existingReq && (existingReq.status === 'APPROVED' || existingReq.status === 'COMPLETED')) {
+          showAlert('ไม่อนุญาตให้แก้ไขโครงการที่ผ่านการอนุมัติงบประมาณแล้วตามระเบียบการเงิน', 'error');
+          return;
+        }
+      }
+
       const payload = {
+        eventId: AppState.editingEventId || undefined,
         annualPlanId: isMatchedPlan && annualPlanSelectVal !== 'OUT_OF_PLAN' ? annualPlanSelectVal : 'OUT_OF_PLAN',
         isOutOfPlan: isOutOfPlan,
         outOfPlanReason: isOutOfPlan === 'YES' ? outOfPlanReasonVal : '',
@@ -8943,7 +9659,22 @@
           .then(res => {
             btn.disabled = false;
             btn.innerHTML = '<i class="fa-solid fa-paper-plane mr-2"></i> ส่งคำขอให้ฝ่ายวิชาการ (ทีม B) ตรวจสอบ';
-            showAlert('สร้างคำขอจัดอบรม ' + (res.data?.eventId || '') + ' เรียบร้อยแล้ว', 'success');
+            const savedEventId = res.data?.eventId || AppState.editingEventId || '';
+            if (AppState.editingEventId) {
+              showAlert('✅ บันทึกการแก้ไขคำขอ ' + savedEventId + ' เรียบร้อยแล้ว (อัปเดตและซิงค์ตรงไปยังทีม B แล้ว)', 'success');
+              // Update local request object
+              const exIdx = (AppState.requests || []).findIndex(r => r.eventId === savedEventId);
+              if (exIdx > -1) {
+                Object.assign(AppState.requests[exIdx], payload);
+              }
+            } else {
+              showAlert('✅ ส่งคำขอสำเร็จ! ระบบได้ส่งต่องานไปยังคิวของฝ่ายวิชาการ (Team B) เรียบร้อยแล้ว (รหัส: ' + savedEventId + ')', 'success');
+            }
+            AppState.editingEventId = null;
+            const editBanner = document.getElementById('teamAEditBanner');
+            if (editBanner) editBanner.classList.add('hidden');
+            renderTeamAMyRequests();
+            renderActionInbox();
             document.getElementById('teamAForm').reset();
             document.getElementById('needAccommodation').checked = false;
             toggleAccommodationFields(false);
@@ -10592,7 +11323,7 @@ function renderA4EvalReportHtmlClient(d) {
           <div style="border-top:1px dashed #cbd5e1; margin-top:10px; padding-top:4px; display:flex; justify-content:space-between; align-items:center; font-size:8.5pt; color:#64748b;">
             <div>
               <i class="fa-solid fa-file-contract mr-1 text-[#08539E]"></i>
-              รายงานประเมินและวิเคราะห์ต้นทุนการจัดอบรม A4 • ออกโดย TWP Training Enterprise Platform (v1.20.0)
+              รายงานประเมินและวิเคราะห์ต้นทุนการจัดอบรม A4 • ออกโดย TWP Training Enterprise Platform (v1.21.0)
             </div>
             <div>
               หน้า 1/1 • ${d.eventId}
@@ -10771,7 +11502,7 @@ function renderA4EvalReportHtmlClient(d) {
           <div style="border-top:1px dashed #cbd5e1; margin-top:14px; padding-top:6px; display:flex; justify-content:space-between; align-items:center; font-size:8.5pt; color:#64748b;">
             <div>
               <i class="fa-solid fa-shield-halved" style="color:#08539E; margin-right:4px;"></i>
-              เอกสารอิเล็กทรอนิกส์มาตรฐาน A4 ออกโดย TWP Training Enterprise Management System (EMS v1.20.0)
+              เอกสารอิเล็กทรอนิกส์มาตรฐาน A4 ออกโดย TWP Training Enterprise Management System (EMS v1.21.0)
             </div>
             <div>
               รหัสอ้างอิง: <span style="font-family:monospace; font-weight:700; color:#0f172a;">${d.eventId}</span> | หน้า 1/1
@@ -10944,7 +11675,7 @@ function renderA4EvalReportHtmlClient(d) {
           </table>
 
           <div style="margin-top:14px; padding-top:4px; border-top:1px solid #e2e8f0; font-size:8.5pt; color:#94a3b8; text-align:center;">
-            เอกสารฉบับนี้สร้างโดยระบบ Training Center TWP (EMS Enterprise Platform v1.20.0) • ใช้สำหรับติดตามและควบคุมผลการปฏิบัติงานภายใน (PPC Standard)
+            เอกสารฉบับนี้สร้างโดยระบบ Training Center TWP (EMS Enterprise Platform v1.21.0) • ใช้สำหรับติดตามและควบคุมผลการปฏิบัติงานภายใน (PPC Standard)
           </div>
         </div>
       `;
@@ -12001,7 +12732,7 @@ function renderA4EvalReportHtmlClient(d) {
 
 
     // ========================================================
-    // ONSITE REGISTRATION & CHECK-IN MODULE (v1.20.0)
+    // ONSITE REGISTRATION & CHECK-IN MODULE (v1.21.0)
     // ========================================================
     let currentRegEventId = null;
     let currentRegAttendees = [];
@@ -13000,7 +13731,7 @@ function renderA4EvalReportHtmlClient(d) {
           <div>
             <div class="flex items-center space-x-2">
               <h3 class="font-bold text-slate-900 text-lg">ประวัติและการปรับปรุงระบบเวอร์ชัน (Release Notes)</h3>
-              <span class="bg-blue-100 text-[#08539E] text-xs font-bold font-mono px-2 py-0.5 rounded-full">v1.20.0 Current</span>
+              <span class="bg-blue-100 text-[#08539E] text-xs font-bold font-mono px-2 py-0.5 rounded-full">v1.21.0 Current</span>
             </div>
             <p class="text-xs text-slate-500">บันทึกประวัติการปรับปรุงสถาปัตยกรรมและฟังก์ชันการทำงานอย่างละเอียด</p>
           </div>
@@ -13013,11 +13744,11 @@ function renderA4EvalReportHtmlClient(d) {
       <!-- Release Timeline List -->
       <div class="space-y-4">
         
-        <!-- v1.20.0 (Current Major Milestone) -->
+        <!-- v1.21.0 (Current Major Milestone) -->
         <div class="p-5 bg-gradient-to-br from-blue-50 via-white to-indigo-50/70 border-2 border-blue-300 rounded-3xl space-y-3 shadow-xs">
           <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-1">
             <div class="flex items-center space-x-2">
-              <span class="bg-blue-700 text-white text-xs font-black px-2.5 py-0.5 rounded-lg font-mono">v1.20.0</span>
+              <span class="bg-blue-700 text-white text-xs font-black px-2.5 py-0.5 rounded-lg font-mono">v1.21.0</span>
               <span class="font-bold text-slate-900 text-sm">แท่น QR กะทัดรัด (Compact Responsive), มาตรฐานคลังไฟล์ Google Drive & ยกระดับการปิด Modal</span>
             </div>
             <span class="text-[11px] text-blue-700 font-bold font-mono">2026-11-11 &bull; Latest Release</span>
@@ -13030,11 +13761,11 @@ function renderA4EvalReportHtmlClient(d) {
           </ul>
         </div>
 
-        <!-- v1.20.0 (Major Milestone) -->
+        <!-- v1.21.0 (Major Milestone) -->
         <div class="p-5 bg-gradient-to-br from-indigo-50/80 via-white to-sky-50/60 border border-slate-200 rounded-3xl space-y-3 shadow-xs">
           <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-1">
             <div class="flex items-center space-x-2">
-              <span class="bg-indigo-600 text-white text-xs font-black px-2.5 py-0.5 rounded-lg font-mono">v1.20.0</span>
+              <span class="bg-indigo-600 text-white text-xs font-black px-2.5 py-0.5 rounded-lg font-mono">v1.21.0</span>
               <span class="font-bold text-slate-900 text-sm">ระบบประเมิน 2 ขั้นตอน (Evaluation-First), รวมศูนย์ QR Code & Smart Expense Engine</span>
             </div>
             <span class="text-[11px] text-slate-400 font-mono">2026-11-11</span>
