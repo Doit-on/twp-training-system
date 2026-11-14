@@ -6814,6 +6814,32 @@
     }
 
 
+    
+    // --- V1.21.0: Release Notes / What's New Popup ---
+    function openWhatsNewModal() {
+      const modal = document.getElementById('whatsNewModal');
+      if (modal) modal.classList.remove('hidden');
+    }
+
+    function closeWhatsNewModal() {
+      const modal = document.getElementById('whatsNewModal');
+      if (modal) modal.classList.add('hidden');
+    }
+
+    function acknowledgeAndCloseWhatsNewModal() {
+      localStorage.setItem('twp_acknowledged_version', '1.21.0');
+      closeWhatsNewModal();
+    }
+
+    function checkAndShowWhatsNewOnEnter() {
+      const ackVer = localStorage.getItem('twp_acknowledged_version');
+      if (ackVer !== '1.21.0') {
+        setTimeout(() => {
+          openWhatsNewModal();
+        }, 800);
+      }
+    }
+
     function switchTab(tabId) {
       AppState.activeTab = tabId;
       
@@ -13904,6 +13930,116 @@ function renderA4EvalReportHtmlClient(d) {
   </div>
 
 
+
+
+
+  <!-- Modal: What's New Release Notes (v1.21.0) -->
+  <div id="whatsNewModal" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 animate-fadeIn">
+    <div class="bg-white rounded-3xl max-w-2xl w-full max-h-[90vh] flex flex-col shadow-2xl border border-slate-200 overflow-hidden">
+      
+      <!-- Header -->
+      <div class="bg-gradient-to-r from-slate-900 via-indigo-950 to-[#08539E] text-white p-5 sm:p-6 shrink-0 flex items-center justify-between">
+        <div class="flex items-center space-x-3.5">
+          <div class="w-12 h-12 rounded-2xl bg-amber-400/20 text-amber-300 flex items-center justify-center font-bold text-xl shadow-inner border border-amber-400/30">
+            <i class="fa-solid fa-bullhorn animate-bounce"></i>
+          </div>
+          <div>
+            <div class="flex items-center space-x-2">
+              <span class="text-xs bg-emerald-500/30 text-emerald-300 border border-emerald-400/40 px-2 py-0.5 rounded-full font-mono font-bold">Release Note</span>
+              <span class="text-xs text-slate-300">อัปเดตระบบเวอร์ชัน 1.21.0</span>
+            </div>
+            <h2 class="text-lg sm:text-xl font-black text-white mt-1">ประกาศอัปเดตระบบ Training Center TWP v1.21.0</h2>
+          </div>
+        </div>
+        <button type="button" onclick="closeWhatsNewModal()" class="text-white/70 hover:text-white text-xl p-1 cursor-pointer">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+
+      <!-- Body / Release Items -->
+      <div class="p-6 overflow-y-auto custom-scrollbar space-y-3.5 text-xs">
+        <p class="text-slate-600 font-medium leading-relaxed">
+          ระบบได้รับการยกระดับสู่ <strong>Enterprise Operations & Audit Governance Edition</strong> เพื่อให้ทุกทีม (ฝ่ายขาย, วิชาการ, ผู้บริหาร) ทำงานประสานกันได้อย่างราบรื่นและมีธรรมาภิบาลข้อมูลสูงสุด:
+        </p>
+
+        <!-- Feature 1 -->
+        <div class="p-3 bg-slate-50 border border-slate-200 rounded-2xl flex items-start space-x-3">
+          <div class="w-8 h-8 rounded-xl bg-twp-100 text-twp-700 flex items-center justify-center font-bold text-sm shrink-0 mt-0.5">
+            <i class="fa-solid fa-bell"></i>
+          </div>
+          <div class="space-y-0.5 flex-1">
+            <h4 class="font-bold text-slate-900 text-xs sm:text-sm">1. กล่องเตือนงานค้างสำหรับทุกทีม (Role-Based Action Inbox)</h4>
+            <p class="text-slate-600 leading-relaxed">สรุปจำนวนงานค้างของฝ่ายขาย (รอส่งต่อ), วิชาการ (รอจัดวิทยากร/หน้างาน) และผู้บริหาร (รออนุมัติงบ) ไว้บนแถบด้านบนสุด เข้าสู่ระบบแล้วเห็นทันทีแม้เปิดปิดระบบไม่พร้อมกัน</p>
+          </div>
+        </div>
+
+        <!-- Feature 2 -->
+        <div class="p-3 bg-slate-50 border border-slate-200 rounded-2xl flex items-start space-x-3">
+          <div class="w-8 h-8 rounded-xl bg-emerald-100 text-emerald-700 flex items-center justify-center font-bold text-sm shrink-0 mt-0.5">
+            <i class="fa-solid fa-pen-to-square"></i>
+          </div>
+          <div class="space-y-0.5 flex-1">
+            <h4 class="font-bold text-slate-900 text-xs sm:text-sm">2. ฝ่ายขาย (ทีม A): ตารางติดตามงาน & แก้ไขคำขอก่อนทีม B รับงาน</h4>
+            <p class="text-slate-600 leading-relaxed">มีตาราง "ทะเบียนคำขอที่บันทึกแล้ว" ด้านล่างฟอร์มทีม A แสดงสถานะ Real-time พร้อมปุ่ม <code>[ ✏️ แก้ไขคำขอ ]</code> ที่เปิดให้ฝ่ายขายปรับแก้รายละเอียดได้ตราบใดที่ทีม B ยังไม่ได้รับงาน</p>
+          </div>
+        </div>
+
+        <!-- Feature 3 -->
+        <div class="p-3 bg-slate-50 border border-slate-200 rounded-2xl flex items-start space-x-3">
+          <div class="w-8 h-8 rounded-xl bg-amber-100 text-amber-700 flex items-center justify-center font-bold text-sm shrink-0 mt-0.5">
+            <i class="fa-solid fa-lock"></i>
+          </div>
+          <div class="space-y-0.5 flex-1">
+            <h4 class="font-bold text-slate-900 text-xs sm:text-sm">3. มาตรการล็อกงบประมาณและบันทึกประวัติ (Post-Approval Freeze & Audit Log)</h4>
+            <p class="text-slate-600 leading-relaxed">เมื่อผู้บริหารอนุมัติโครงการแล้ว งบประมาณและหัวข้อจะถูกล็อกถาวร ห้ามแก้ไขโดยพลการ หากจำเป็นต้องปรับแก้จะต้องกดปุ่ม <code>[ 📝 ขอปรับแก้ ]</code> เพื่อบันทึกเหตุผลเข้าตาราง Audit Log ใน Google Sheets</p>
+          </div>
+        </div>
+
+        <!-- Feature 4 -->
+        <div class="p-3 bg-slate-50 border border-slate-200 rounded-2xl flex items-start space-x-3">
+          <div class="w-8 h-8 rounded-xl bg-purple-100 text-purple-700 flex items-center justify-center font-bold text-sm shrink-0 mt-0.5">
+            <i class="fa-solid fa-list-check"></i>
+          </div>
+          <div class="space-y-0.5 flex-1">
+            <h4 class="font-bold text-slate-900 text-xs sm:text-sm">4. ฝ่ายวิชาการ (ทีม B): แท่นตรวจความพร้อม 6 เสาหลัก (Checklist)</h4>
+            <p class="text-slate-600 leading-relaxed">เพิ่ม Checklist ตรวจความพร้อมหน้างาน 6 ด้าน (สถานที่, เอกสาร, บูธ, วิทยากร, อาหาร, เช็คชื่อ QR) พร้อมแถบวัด % ความพร้อมและบันทึกซิงค์กับฐานข้อมูลส่วนกลาง</p>
+          </div>
+        </div>
+
+        <!-- Feature 5 -->
+        <div class="p-3 bg-slate-50 border border-slate-200 rounded-2xl flex items-start space-x-3">
+          <div class="w-8 h-8 rounded-xl bg-rose-100 text-rose-700 flex items-center justify-center font-bold text-sm shrink-0 mt-0.5">
+            <i class="fa-solid fa-triangle-exclamation"></i>
+          </div>
+          <div class="space-y-0.5 flex-1">
+            <h4 class="font-bold text-slate-900 text-xs sm:text-sm">5. สมุดบันทึกอุปสรรคและบทเรียนหน้างาน (On-Site Incident Ledger)</h4>
+            <p class="text-slate-600 leading-relaxed">ทีมวิชาการบันทึกปัญหาเฉพาะหน้าและแนวทางแก้ไข ส่งตรงสู่ "สมุดบันทึกอุปสรรคประจำปี 2569" บนหน้าจอผู้บริหาร เพื่อใช้ประเมินความสามารถและป้องกันข้อผิดพลาดซ้ำ</p>
+          </div>
+        </div>
+
+        <!-- Feature 6 -->
+        <div class="p-3 bg-slate-50 border border-slate-200 rounded-2xl flex items-start space-x-3">
+          <div class="w-8 h-8 rounded-xl bg-sky-100 text-sky-700 flex items-center justify-center font-bold text-sm shrink-0 mt-0.5">
+            <i class="fa-solid fa-qrcode"></i>
+          </div>
+          <div class="space-y-0.5 flex-1">
+            <h4 class="font-bold text-slate-900 text-xs sm:text-sm">6. ปรับปรุง QR เช็คชื่อหน้างาน & ปุ่มถอนการเช็คชื่อ</h4>
+            <p class="text-slate-600 leading-relaxed">QR Code โมดูลใหญ่ คมชัด สแกนเร็ว รองรับทั้งชื่อไทยและอังกฤษ และสามารถกดยกเลิกการเช็คชื่อผิดคนได้ใน 1 คลิก</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Footer -->
+      <div class="p-4 sm:p-5 bg-slate-50 border-t border-slate-200 flex flex-col sm:flex-row items-center justify-between gap-3 shrink-0 text-xs">
+        <span class="text-slate-500 italic">* ท่านสามารถกดดูประกาศนี้ซ้ำได้ตลอดเวลาที่ปุ่ม "📢 ข้อมูลอัปเดต" บนแถบด้านบน</span>
+        <button type="button" onclick="acknowledgeAndCloseWhatsNewModal()" class="w-full sm:w-auto px-6 py-2.5 bg-[#08539E] hover:bg-[#07488a] text-white rounded-xl font-bold shadow-md hover:shadow-lg transition cursor-pointer flex items-center justify-center space-x-2">
+          <span>รับทราบและเข้าสู่ระบบ</span>
+          <i class="fa-solid fa-arrow-right"></i>
+        </button>
+      </div>
+
+    </div>
+  </div>
 
 </body>
 </html>
