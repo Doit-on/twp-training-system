@@ -7593,7 +7593,8 @@
     
     // --- V1.22.0: Individual Attendee Edit & Delete Functions ---
     function openEditAttendeeModal(regId) {
-      const att = (AppState.regAttendees || []).find(a => a.regId === regId);
+      const list = currentRegAttendees || [];
+      const att = list.find(a => a.regId === regId);
       if (!att) {
         showAlert('ไม่พบข้อมูลผู้เข้าอบรมรหัส ' + regId, 'error');
         return;
@@ -7601,12 +7602,19 @@
       const modal = document.getElementById('editAttendeeModal');
       if (!modal) return;
 
-      document.getElementById('editAttRegId').value = regId;
-      document.getElementById('editAttNameTh').value = att.nameTh || '';
-      document.getElementById('editAttNameEn').value = att.nameEn || '';
-      document.getElementById('editAttSchool').value = att.school || '';
-      document.getElementById('editAttEmail').value = att.email || '';
-      document.getElementById('editAttPhone').value = att.phone || '';
+      const regIdIn = document.getElementById('editAttRegId');
+      const nameThIn = document.getElementById('editAttNameTh');
+      const nameEnIn = document.getElementById('editAttNameEn');
+      const schoolIn = document.getElementById('editAttSchool');
+      const emailIn = document.getElementById('editAttEmail');
+      const phoneIn = document.getElementById('editAttPhone');
+
+      if (regIdIn) regIdIn.value = regId;
+      if (nameThIn) nameThIn.value = att.nameTh || '';
+      if (nameEnIn) nameEnIn.value = att.nameEn || '';
+      if (schoolIn) schoolIn.value = att.school || '';
+      if (emailIn) emailIn.value = att.email || '';
+      if (phoneIn) phoneIn.value = att.phone || '';
 
       modal.classList.remove('hidden');
     }
@@ -7617,19 +7625,20 @@
     }
 
     function saveEditAttendee() {
-      const regId = document.getElementById('editAttRegId').value;
-      const nameTh = document.getElementById('editAttNameTh').value.trim();
-      const nameEn = document.getElementById('editAttNameEn').value.trim();
-      const school = document.getElementById('editAttSchool').value.trim();
-      const email = document.getElementById('editAttEmail').value.trim();
-      const phone = document.getElementById('editAttPhone').value.trim();
+      const regId = document.getElementById('editAttRegId')?.value;
+      const nameTh = document.getElementById('editAttNameTh')?.value?.trim();
+      const nameEn = document.getElementById('editAttNameEn')?.value?.trim();
+      const school = document.getElementById('editAttSchool')?.value?.trim();
+      const email = document.getElementById('editAttEmail')?.value?.trim();
+      const phone = document.getElementById('editAttPhone')?.value?.trim();
 
       if (!nameTh && !nameEn) {
         showAlert('กรุณาระบุชื่อ-นามสกุล', 'error');
         return;
       }
 
-      const att = (AppState.regAttendees || []).find(a => a.regId === regId);
+      const list = currentRegAttendees || [];
+      const att = list.find(a => a.regId === regId);
       if (att) {
         att.nameTh = nameTh;
         att.nameEn = nameEn;
@@ -7637,9 +7646,23 @@
         att.email = email;
         att.phone = phone;
       }
+      AppState.regAttendees = currentRegAttendees;
 
+      // 1. Persist to localStorage immediately
+      const eventId = currentRegEventId || currentLandingRegEventId || (AppState.requests && AppState.requests[0]?.eventId);
+      if (eventId) {
+        localStorage.setItem('twp_onsite_attendees_' + eventId, JSON.stringify(currentRegAttendees));
+      }
+
+      // 2. Re-render table and update stats
+      updateRegKpis();
+      filterAttendeeTable();
+      closeEditAttendeeModal();
+
+      // 3. Sync to Google Sheets backend
       if (AppState.gasEndpoint) {
         postToBackend('UPDATE_REGISTRATION', {
+          eventId: eventId,
           regId: regId,
           nameTh: nameTh,
           nameEn: nameEn,
@@ -7647,12 +7670,47 @@
           email: email,
           phone: phone,
           operatorName: AppState.operatorName
-        }).catch(e => console.warn('Update attendee error:', e));
+        }).catch(e => console.warn('Update attendee cloud error:', e));
       }
 
       showAlert('บันทึกการแก้ไขข้อมูลคุณ ' + (nameTh || nameEn) + ' เรียบร้อยแล้ว', 'success');
-      closeEditAttendeeModal();
-      renderRegTable(AppState.regAttendees);
+    }
+
+    function deleteAttendee(regId) {
+      const list = currentRegAttendees || [];
+      const att = list.find(a => a.regId === regId);
+      const name = att ? (att.nameTh || att.nameEn || regId) : regId;
+
+      if (!confirm('ยืนยันลบรายชื่อคุณ "' + name + '" ออกจากโครงการนี้หรือไม่?\n(ข้อมูลจะถูกลบออกจากฐานข้อมูลและระบบเช็กชื่อทันที)')) {
+        return;
+      }
+
+      // 1. Remove from local memory array immediately
+      currentRegAttendees = list.filter(a => a.regId !== regId);
+      AppState.regAttendees = currentRegAttendees;
+
+      // 2. Persist updated array to browser localStorage immediately
+      const eventId = currentRegEventId || currentLandingRegEventId || (AppState.requests && AppState.requests[0]?.eventId);
+      if (eventId) {
+        localStorage.setItem('twp_onsite_attendees_' + eventId, JSON.stringify(currentRegAttendees));
+      }
+
+      // 3. Re-render the active table and recalculate KPIs
+      updateRegKpis();
+      filterAttendeeTable();
+
+      // 4. Asynchronously delete from Google Sheets Onsite_Registrations sheet
+      if (AppState.gasEndpoint) {
+        postToBackend('DELETE_REGISTRATION', {
+          eventId: eventId,
+          regId: regId,
+          operatorName: AppState.operatorName
+        }).then(res => {
+          console.log('Delete registration synced to cloud:', res);
+        }).catch(e => console.warn('Delete attendee cloud sync error:', e));
+      }
+
+      showAlert('ลบรายชื่อคุณ ' + name + ' ออกจากระบบเรียบร้อยแล้ว', 'success');
     }
 
     function deleteAttendee(regId) {
