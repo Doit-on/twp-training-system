@@ -1730,6 +1730,33 @@
     <section id="view-exec" class="hidden space-y-6">
 
       <!-- Executive Annual Incident & Obstacle Ledger Widget (v1.21.0) -->
+      <!-- Executive Post-Approval Revision & Unlock Queue (v1.21.0) -->
+      <div id="execRevisionQueueCard" class="bg-white rounded-3xl p-5 sm:p-6 shadow-sm border-2 border-amber-300/80 space-y-4">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between border-b border-slate-100 pb-3 gap-2">
+          <div class="flex items-center space-x-3">
+            <div class="w-10 h-10 rounded-2xl bg-amber-500/20 text-amber-700 flex items-center justify-center font-bold text-lg shadow-inner">
+              <i class="fa-solid fa-key"></i>
+            </div>
+            <div>
+              <h3 class="text-base font-black text-slate-900 flex items-center gap-2">
+                <span>คิวพิจารณาคำขอปรับปรุงและปลดล็อกโครงการหลังอนุมัติ (Revision & Unlock Queue)</span>
+                <span id="execRevisionCountBadge" class="text-xs bg-amber-500 text-white font-mono font-bold px-2 py-0.5 rounded-full">0</span>
+              </h3>
+              <p class="text-xs text-slate-500">โครงการที่เคยอนุมัติงบไปแล้ว แต่ฝ่ายขายหรือวิชาการยื่นขอปรับแก้ พิจารณาปลดล็อกเพื่อให้ทีมงานเข้าไปปรับแก้ข้อมูล</p>
+            </div>
+          </div>
+          <button type="button" onclick="renderExecRevisionQueue()" class="text-xs text-slate-500 hover:text-amber-800 px-3 py-1.5 bg-slate-50 hover:bg-amber-50 border border-slate-200 rounded-xl transition flex items-center space-x-1.5 self-start sm:self-auto cursor-pointer">
+            <i class="fa-solid fa-arrows-rotate"></i>
+            <span>รีเฟรชคิวปลดล็อก</span>
+          </button>
+        </div>
+
+        <!-- Revision Queue List Container -->
+        <div id="execRevisionQueueContainer" class="space-y-3">
+          <!-- Dynamically populated by renderExecRevisionQueue() -->
+        </div>
+      </div>
+
       <div id="execIncidentLedgerCard" class="bg-gradient-to-br from-slate-900 via-indigo-950 to-slate-900 text-white rounded-3xl p-5 sm:p-6 shadow-xl border border-indigo-500/30 space-y-4">
         <div class="flex flex-col sm:flex-row sm:items-center justify-between border-b border-white/10 pb-3 gap-2">
           <div class="flex items-center space-x-3">
@@ -4682,6 +4709,14 @@
       incidentLogs: JSON.parse(localStorage.getItem('twp_incident_logs') || '[]'),
       auditLogs: JSON.parse(localStorage.getItem('twp_audit_logs') || '[]'),
       editingEventId: null,
+      currentUser: JSON.parse(localStorage.getItem('twp_current_user') || 'null') || {
+        userId: 'USR-002',
+        username: 'sale.lead',
+        fullName: 'สมชาย มุ่งมั่น (หัวหน้าทีมขาย A)',
+        teamRole: 'TEAM_A_LEAD',
+        team: 'TEAM_A'
+      },
+      teamAccounts: JSON.parse(localStorage.getItem('twp_team_accounts') || '[]'),
       fy2569Projects: getPersistedFy2569Projects(),
       fy2569TuLedger: getPersistedFy2569TuLedger(),
       annualPlans: getPersistedAnnualPlans(),
@@ -6498,6 +6533,12 @@
         } else if (req.status === 'WAITING_EXEC') {
           statusBadge = '<span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold bg-indigo-50 text-indigo-700 border border-indigo-200"><i class="fa-solid fa-stamp mr-1"></i>รอผู้บริหารอนุมัติ</span>';
           actionBtn = '<span class="inline-flex items-center text-[10px] text-slate-500 bg-slate-100 px-2 py-1 rounded font-bold"><i class="fa-solid fa-lock text-slate-400 mr-1"></i>ล็อกระหว่างพิจารณา</span>';
+        } else if (req.status === 'REVISION_REQUESTED') {
+          statusBadge = '<span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold bg-amber-100 text-amber-900 border border-amber-300 animate-pulse"><i class="fa-solid fa-hourglass-half mr-1"></i>รอผู้บริหารปลดล็อก</span>';
+          actionBtn = '<span class="inline-flex items-center text-[10px] text-amber-800 bg-amber-50 px-2 py-1 rounded font-bold border border-amber-200">ยื่นขอปรับแก้แล้ว</span>';
+        } else if (req.status === 'UNLOCKED_FOR_EDIT') {
+          statusBadge = '<span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-100 text-emerald-900 border border-emerald-300 animate-bounce"><i class="fa-solid fa-lock-open mr-1"></i>ปลดล็อกให้แก้ไข</span>';
+          actionBtn = '<button type="button" onclick="editTeamARequest(\'' + req.eventId + '\')" class="px-2.5 py-1 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg text-xs font-bold transition flex items-center space-x-1 shadow-sm btn-tactile cursor-pointer mx-auto"><i class="fa-solid fa-pen text-[10px]"></i><span>แก้ไขข้อมูลใหม่</span></button>';
         } else if (req.status === 'APPROVED') {
           statusBadge = '<span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-50 text-emerald-700 border border-emerald-200"><i class="fa-solid fa-circle-check mr-1"></i>อนุมัติงบแล้ว</span>';
           actionBtn = '<div class="flex items-center justify-center space-x-1"><span class="inline-flex items-center text-[10px] text-emerald-800 bg-emerald-100/60 px-1.5 py-0.5 rounded font-bold"><i class="fa-solid fa-lock mr-1"></i>ล็อกงบ</span><button type="button" onclick="openAuditRevisionModal(\'' + req.eventId + '\')" class="px-2 py-0.5 bg-slate-100 hover:bg-amber-100 text-slate-700 hover:text-amber-800 border border-slate-300 rounded text-[10px] font-bold transition cursor-pointer"><i class="fa-solid fa-shield-halved text-amber-600 mr-0.5"></i>ขอปรับแก้</button></div>';
@@ -6838,6 +6879,294 @@
           openWhatsNewModal();
         }, 800);
       }
+    }
+
+    
+    // =========================================================================
+    // V1.21.0: TEAM ACCOUNTS & EXECUTIVE REVISION UNLOCK FUNCTIONS
+    // =========================================================================
+
+    function openTeamAccountsModal() {
+      const modal = document.getElementById('teamAccountsModal');
+      if (!modal) return;
+      renderTeamAccountsList();
+      updateCurrentLoginUserUI();
+      modal.classList.remove('hidden');
+    }
+
+    function closeTeamAccountsModal() {
+      const modal = document.getElementById('teamAccountsModal');
+      if (modal) modal.classList.add('hidden');
+    }
+
+    function updateCurrentLoginUserUI() {
+      const user = AppState.currentUser || {};
+      const spanName = document.getElementById('currentLoggedUserName');
+      const spanRole = document.getElementById('currentLoggedUserRole');
+      const headerUserDisplay = document.getElementById('topBarUserDisplay');
+      
+      let roleText = 'ผู้ใช้งาน';
+      let roleBg = 'bg-slate-100 text-slate-800';
+
+      if (user.teamRole === 'ADMIN') {
+        roleText = 'แอดมิน (Admin)';
+        roleBg = 'bg-rose-100 text-rose-800 border-rose-200';
+      } else if (user.teamRole === 'EXEC') {
+        roleText = 'ฝ่ายบริหาร (Executive)';
+        roleBg = 'bg-blue-100 text-blue-800 border-blue-200';
+      } else if (user.teamRole === 'TEAM_B_LEAD' || user.teamRole === 'TEAM_B_MEMBER') {
+        roleText = 'ทีมวิชาการ (Team B)';
+        roleBg = 'bg-purple-100 text-purple-800 border-purple-200';
+      } else {
+        roleText = 'ฝ่ายขาย (Team A)';
+        roleBg = 'bg-emerald-100 text-emerald-800 border-emerald-200';
+      }
+
+      if (spanName) spanName.innerText = user.fullName || user.username || 'ไม่ได้เข้าสู่ระบบ';
+      if (spanRole) {
+        spanRole.innerText = roleText;
+        spanRole.className = 'text-[11px] font-bold px-2 py-0.5 rounded-full border ' + roleBg;
+      }
+      if (headerUserDisplay) {
+        headerUserDisplay.innerText = user.fullName ? user.fullName.split(' ')[0] : 'ผู้ใช้งาน';
+      }
+    }
+
+    function handleLoginUserSubmit(e) {
+      e.preventDefault();
+      const u = document.getElementById('loginUsernameInput')?.value?.trim();
+      const p = document.getElementById('loginPasswordInput')?.value?.trim();
+
+      if (!u || !p) {
+        showAlert('กรุณากรอก Username และ Password', 'error');
+        return;
+      }
+
+      const accs = AppState.teamAccounts && AppState.teamAccounts.length > 0 ? AppState.teamAccounts : [
+        { userId: 'USR-001', username: 'admin', password: 'admin0000', fullName: 'ผู้ดูแลระบบส่วนกลาง (Admin)', teamRole: 'ADMIN' },
+        { userId: 'USR-002', username: 'sale.lead', password: 'sale1234', fullName: 'สมชาย มุ่งมั่น (หัวหน้าทีมขาย A)', teamRole: 'TEAM_A_LEAD' },
+        { userId: 'USR-003', username: 'acad.lead', password: 'acad1234', fullName: 'ณัฐพล วิชาการ (หัวหน้าฝ่ายวิชาการ B)', teamRole: 'TEAM_B_LEAD' },
+        { userId: 'USR-004', username: 'exec.lead', password: 'exec1234', fullName: 'ผศ.อินทิรา บุนนาค (กรรมการผู้จัดการ)', teamRole: 'EXEC' }
+      ];
+
+      const matched = accs.find(a => a.username.toLowerCase() === u.toLowerCase() && a.password === p);
+
+      if (matched) {
+        AppState.currentUser = {
+          userId: matched.userId,
+          username: matched.username,
+          fullName: matched.fullName,
+          teamRole: matched.teamRole,
+          team: matched.teamRole.startsWith('TEAM_A') ? 'TEAM_A' : (matched.teamRole.startsWith('TEAM_B') ? 'TEAM_B' : (matched.teamRole === 'EXEC' ? 'EXEC' : 'ADMIN'))
+        };
+        AppState.operatorName = matched.fullName;
+        localStorage.setItem('twp_current_user', JSON.stringify(AppState.currentUser));
+        localStorage.setItem('ems_operator_name', matched.fullName);
+
+        updateCurrentLoginUserUI();
+        showAlert('เข้าสู่ระบบสำเร็จในฐานะ ' + matched.fullName, 'success');
+        closeTeamAccountsModal();
+
+        // Auto switch tab based on role
+        if (AppState.currentUser.team === 'TEAM_A') switchTab('teamA');
+        else if (AppState.currentUser.team === 'TEAM_B') switchTab('teamB');
+        else if (AppState.currentUser.team === 'EXEC') switchTab('exec');
+      } else {
+        showAlert('Username หรือ Password ไม่ถูกต้อง กรุณาตรวจสอบอีกครั้ง', 'error');
+      }
+    }
+
+    function renderTeamAccountsList() {
+      const tbody = document.getElementById('teamAccountsTableBody');
+      if (!tbody) return;
+      const accs = AppState.teamAccounts && AppState.teamAccounts.length > 0 ? AppState.teamAccounts : [
+        { userId: 'USR-001', username: 'admin', password: 'admin0000', fullName: 'ผู้ดูแลระบบส่วนกลาง (Admin)', teamRole: 'ADMIN' },
+        { userId: 'USR-002', username: 'sale.lead', password: 'sale1234', fullName: 'สมชาย มุ่งมั่น (หัวหน้าทีมขาย A)', teamRole: 'TEAM_A_LEAD' },
+        { userId: 'USR-003', username: 'sale.member', password: 'sale1234', fullName: 'สุรศักดิ์ จันทรศิลปิน (ฝ่ายขาย)', teamRole: 'TEAM_A_MEMBER' },
+        { userId: 'USR-004', username: 'acad.lead', password: 'acad1234', fullName: 'ณัฐพล วิชาการ (หัวหน้าฝ่ายวิชาการ B)', teamRole: 'TEAM_B_LEAD' },
+        { userId: 'USR-005', username: 'acad.member', password: 'acad1234', fullName: 'กานดา ปฏิบัติการ (เจ้าหน้าที่วิชาการ)', teamRole: 'TEAM_B_MEMBER' },
+        { userId: 'USR-006', username: 'exec.lead', password: 'exec1234', fullName: 'ผศ.อินทิรา บุนนาค (กรรมการผู้จัดการ)', teamRole: 'EXEC' }
+      ];
+
+      tbody.innerHTML = accs.map(a => `
+        <tr class="hover:bg-slate-50 transition text-xs">
+          <td class="p-2.5 font-mono font-bold text-slate-700 text-center">${a.userId}</td>
+          <td class="p-2.5 font-bold text-slate-900">${a.username}</td>
+          <td class="p-2.5 text-slate-700">${a.fullName}</td>
+          <td class="p-2.5 text-center"><span class="px-2 py-0.5 rounded-full text-[10px] font-bold ${a.teamRole.includes('EXEC') ? 'bg-blue-100 text-blue-800' : (a.teamRole.includes('TEAM_B') ? 'bg-purple-100 text-purple-800' : (a.teamRole.includes('ADMIN') ? 'bg-rose-100 text-rose-800' : 'bg-emerald-100 text-emerald-800'))}">${a.teamRole}</span></td>
+          <td class="p-2.5 font-mono text-slate-500 text-center">••••••</td>
+        </tr>
+      `).join('');
+    }
+
+    // Generate Team QR for Member Onboarding
+    function generateTeamOnboardQR(teamRole) {
+      const container = document.getElementById('teamOnboardQrDisplay');
+      const label = document.getElementById('teamOnboardQrLabel');
+      if (!container) return;
+      container.innerHTML = '';
+
+      let roleName = 'ทีมขาย A';
+      let autoUser = 'sale.member';
+      let autoPass = 'sale1234';
+
+      if (teamRole === 'TEAM_B') {
+        roleName = 'ทีมวิชาการ B';
+        autoUser = 'acad.member';
+        autoPass = 'acad1234';
+      }
+
+      if (label) label.innerText = 'สแกนเพื่อเข้าใช้งานในฐานะ ' + roleName + ' อัตโนมัติ';
+
+      const currentOrigin = window.location.origin + window.location.pathname;
+      const onboardUrl = currentOrigin + '?autologin=' + encodeURIComponent(autoUser) + '&token=' + encodeURIComponent(autoPass);
+
+      new QRCode(container, {
+        text: onboardUrl,
+        width: 170,
+        height: 170,
+        colorDark: '#08539E',
+        colorLight: '#ffffff',
+        correctLevel: QRCode.CorrectLevel.L
+      });
+
+      showAlert('สร้าง QR ให้ลูกทีม ' + roleName + ' เรียบร้อยแล้ว สามารถให้ลูกทีมสแกนเพื่อเข้าใช้งานได้ทันที', 'info');
+    }
+
+    // Auto Login from QR parameters if present
+    function checkAutoLoginFromQr() {
+      const params = new URLSearchParams(window.location.search);
+      const autoUser = params.get('autologin');
+      const token = params.get('token');
+      if (autoUser && token) {
+        document.getElementById('loginUsernameInput').value = autoUser;
+        document.getElementById('loginPasswordInput').value = token;
+        handleLoginUserSubmit({ preventDefault: () => {} });
+      }
+    }
+
+    // --- Executive Post-Approval Revision & Unlock Queue Functions ---
+    function renderExecRevisionQueue() {
+      const container = document.getElementById('execRevisionQueueContainer');
+      const countBadge = document.getElementById('execRevisionCountBadge');
+      if (!container) return;
+
+      const reqs = AppState.requests || [];
+      const revisionReqs = reqs.filter(r => r.status === 'REVISION_REQUESTED');
+
+      if (countBadge) countBadge.innerText = revisionReqs.length;
+
+      if (revisionReqs.length === 0) {
+        container.innerHTML = `
+          <div class="p-6 text-center bg-slate-50 border border-dashed border-slate-200 rounded-2xl text-slate-400 space-y-1">
+            <i class="fa-solid fa-circle-check text-emerald-500 text-2xl"></i>
+            <p class="text-xs font-bold text-slate-600">ไม่มีคำขอปรับแก้โครงการค้างพิจารณา</p>
+            <p class="text-[11px] text-slate-400">เมื่อทีม A หรือทีม B ยื่นขอปรับแก้งบประมาณหลังอนุมัติ รายการจะปรากฏที่นี่เพื่อให้ผู้บริหารตัดสินใจปลดล็อก</p>
+          </div>`;
+        return;
+      }
+
+      container.innerHTML = revisionReqs.map(req => {
+        // Find latest audit reason
+        const auditLog = (AppState.auditLogs || []).find(l => l.eventId === req.eventId && l.actionType === 'REVISION_REQUEST');
+        const reason = auditLog ? auditLog.details : (req.revisionReason || 'มีความจำเป็นต้องปรับปรุงรายละเอียดงบประมาณหรือโครงการ');
+        const requester = auditLog ? auditLog.operatorName : (req.lastModifiedBy || req.saleName || 'ฝ่ายที่ยื่นคำขอ');
+
+        return `
+          <div class="bg-gradient-to-r from-amber-500/10 via-amber-500/5 to-white border-2 border-amber-300 rounded-2xl p-4 sm:p-5 shadow-sm space-y-3">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between border-b border-amber-200/80 pb-2.5 gap-2">
+              <div class="flex items-center space-x-2">
+                <span class="w-2.5 h-2.5 rounded-full bg-amber-500 animate-ping"></span>
+                <span class="font-mono font-black text-slate-900 text-sm sm:text-base">${req.eventId}</span>
+                <span class="text-[10px] bg-amber-100 text-amber-900 border border-amber-300 px-2 py-0.5 rounded-full font-bold">รอปลดล็อกแก้ไข</span>
+              </div>
+              <span class="text-xs text-slate-500">ผู้ยื่นคำขอ: <strong class="text-slate-800">${requester}</strong></span>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+              <div class="space-y-1">
+                <p class="text-slate-500">โรงเรียน / จังหวัด: <strong class="text-slate-800">${req.schoolName} (${req.province})</strong></p>
+                <p class="text-slate-500">หัวข้ออบรม: <strong class="text-slate-800">${req.courseTopic}</strong></p>
+                <p class="text-slate-500">วันที่จัด: <strong class="text-slate-800 font-mono">${req.eventDate || '-'}</strong></p>
+              </div>
+              <div class="space-y-1 sm:text-right">
+                <p class="text-slate-500">งบประมาณที่เคยอนุมัติ: <strong class="text-emerald-700 font-mono text-sm">฿${Number(req.estBudget || 0).toLocaleString()}</strong></p>
+                <p class="text-slate-500">เป้าหมายยอดขาย: <strong class="text-slate-800 font-mono">฿${Number(req.targetSales || 0).toLocaleString()}</strong></p>
+              </div>
+            </div>
+
+            <div class="p-3 bg-white/90 border border-amber-200 rounded-xl text-xs space-y-1 text-slate-800">
+              <span class="font-bold text-amber-900 block flex items-center gap-1.5">
+                <i class="fa-solid fa-circle-exclamation text-amber-600"></i>
+                <span>เหตุผลความจำเป็นในการขอปรับแก้ (Audit Justification):</span>
+              </span>
+              <p class="text-slate-700 pl-4 border-l-2 border-amber-300 leading-relaxed italic">${reason}</p>
+            </div>
+
+            <div class="flex flex-col sm:flex-row items-center justify-end gap-2 pt-1">
+              <button type="button" onclick="execRejectRevision('${req.eventId}')" class="w-full sm:w-auto px-4 py-2 border border-slate-300 text-slate-700 hover:bg-slate-100 rounded-xl text-xs font-bold transition flex items-center justify-center space-x-1.5 cursor-pointer">
+                <i class="fa-solid fa-ban text-rose-500"></i>
+                <span>⛔ ไม่อนุญาต (คงงบเดิม)</span>
+              </button>
+              <button type="button" onclick="execApproveUnlock('${req.eventId}')" class="w-full sm:w-auto px-5 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-bold shadow-md hover:shadow-lg transition flex items-center justify-center space-x-1.5 cursor-pointer btn-tactile">
+                <i class="fa-solid fa-lock-open text-emerald-200"></i>
+                <span>🔓 อนุมัติการปรับแก้ & ปลดล็อกโครงการ</span>
+              </button>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function execApproveUnlock(eventId) {
+      if (!confirm('ยืนยันอนุมัติการปรับแก้และปลดล็อกโครงการ ' + eventId + ' หรือไม่? ทีมผู้ยื่นจะสามารถเข้าแก้ไขข้อมูลในแบบฟอร์มได้')) return;
+      const req = (AppState.requests || []).find(r => r.eventId === eventId);
+      if (!req) return;
+
+      req.status = 'UNLOCKED_FOR_EDIT';
+      req.lastModifiedBy = AppState.operatorName || 'Executive';
+      try {
+        localStorage.setItem('twp_requests_store', JSON.stringify(AppState.requests));
+      } catch(e) {}
+
+      if (AppState.gasEndpoint) {
+        postToBackend('APPROVE_REVISION_UNLOCK', {
+          eventId: eventId,
+          operatorName: AppState.operatorName || 'Executive',
+          reason: 'ผู้บริหารลงนามอนุมัติให้ปลดล็อกโครงการ'
+        }).catch(e => console.warn('Unlock sync error:', e));
+      }
+
+      showAlert('🔓 อนุมัติการปลดล็อกโครงการ ' + eventId + ' สำเร็จแล้ว! ทีมผู้ยื่นสามารถเข้าไปแก้ไขรายละเอียดได้ทันที', 'success');
+      renderExecRevisionQueue();
+      renderTeamAMyRequests();
+      renderActionInbox();
+    }
+
+    function execRejectRevision(eventId) {
+      const reason = prompt('กรุณาระบุเหตุผลที่ไม่อนุมัติการปรับแก้โครงการ (ส่งแจ้งผู้ยื่น):', 'เกินกรอบงบประมาณประจำปีที่ได้รับอนุมัติ');
+      if (reason === null) return;
+
+      const req = (AppState.requests || []).find(r => r.eventId === eventId);
+      if (!req) return;
+
+      req.status = 'APPROVED'; // Revert back to approved
+      try {
+        localStorage.setItem('twp_requests_store', JSON.stringify(AppState.requests));
+      } catch(e) {}
+
+      if (AppState.gasEndpoint) {
+        postToBackend('REJECT_REVISION', {
+          eventId: eventId,
+          operatorName: AppState.operatorName || 'Executive',
+          reason: reason
+        }).catch(e => console.warn('Reject revision sync error:', e));
+      }
+
+      showAlert('⛔ บันทึกไม่อนุมัติการปรับแก้โครงการ ' + eventId + ' เรียบร้อยแล้ว (คงงบเดิม)', 'info');
+      renderExecRevisionQueue();
+      renderTeamAMyRequests();
+      renderActionInbox();
     }
 
     function switchTab(tabId) {
@@ -14035,6 +14364,142 @@ function renderA4EvalReportHtmlClient(d) {
         <button type="button" onclick="acknowledgeAndCloseWhatsNewModal()" class="w-full sm:w-auto px-6 py-2.5 bg-[#08539E] hover:bg-[#07488a] text-white rounded-xl font-bold shadow-md hover:shadow-lg transition cursor-pointer flex items-center justify-center space-x-2">
           <span>รับทราบและเข้าสู่ระบบ</span>
           <i class="fa-solid fa-arrow-right"></i>
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+
+
+  <!-- Modal: Team Accounts & Member QR Onboarding (v1.21.0) -->
+  <div id="teamAccountsModal" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 animate-fadeIn">
+    <div class="bg-white rounded-3xl max-w-2xl w-full max-h-[90vh] flex flex-col shadow-2xl border border-slate-200 overflow-hidden">
+      
+      <!-- Header -->
+      <div class="bg-gradient-to-r from-slate-900 via-indigo-950 to-[#08539E] text-white p-5 sm:p-6 shrink-0 flex items-center justify-between">
+        <div class="flex items-center space-x-3.5">
+          <div class="w-12 h-12 rounded-2xl bg-blue-500/20 text-blue-300 flex items-center justify-center font-bold text-xl shadow-inner border border-blue-400/30">
+            <i class="fa-solid fa-users-gear"></i>
+          </div>
+          <div>
+            <div class="flex items-center space-x-2">
+              <span class="text-xs bg-emerald-500/30 text-emerald-300 border border-emerald-400/40 px-2 py-0.5 rounded-full font-mono font-bold">Role & Permissions</span>
+              <span class="text-xs text-slate-300">ระบบสิทธิ์และบัญชีประจำทีม</span>
+            </div>
+            <h2 class="text-lg sm:text-xl font-black text-white mt-1">จัดการบัญชีผู้ใช้งาน & สิทธิ์ประจำทีม</h2>
+          </div>
+        </div>
+        <button type="button" onclick="closeTeamAccountsModal()" class="text-white/70 hover:text-white text-xl p-1 cursor-pointer">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+
+      <!-- Body -->
+      <div class="p-6 overflow-y-auto custom-scrollbar space-y-5 text-xs">
+        
+        <!-- Active User Status Card -->
+        <div class="p-4 bg-slate-50 border border-slate-200 rounded-2xl flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+          <div class="flex items-center space-x-3">
+            <div class="w-10 h-10 rounded-full bg-twp-100 text-twp-700 flex items-center justify-center font-bold text-base">
+              <i class="fa-solid fa-user-check"></i>
+            </div>
+            <div>
+              <span class="text-[10px] text-slate-400 block">บัญชีที่กำลังใช้งานในเครื่องนี้:</span>
+              <h4 id="currentLoggedUserName" class="text-sm font-bold text-slate-900">สมชาย มุ่งมั่น (หัวหน้าทีมขาย A)</h4>
+              <span id="currentLoggedUserRole" class="text-[11px] font-bold px-2 py-0.5 rounded-full border bg-emerald-100 text-emerald-800 border-emerald-200 inline-block mt-0.5">ฝ่ายขาย (Team A)</span>
+            </div>
+          </div>
+          <span class="text-[11px] text-emerald-700 font-semibold flex items-center gap-1 self-start sm:self-auto">
+            <i class="fa-solid fa-circle text-[8px] animate-pulse"></i> เชื่อมต่อพร้อมปฏิบัติงาน
+          </span>
+        </div>
+
+        <!-- Section 1: Sign-in / Switch Account -->
+        <div class="p-4 bg-blue-50/50 border border-blue-200 rounded-2xl space-y-3">
+          <h4 class="font-bold text-slate-800 text-xs flex items-center gap-2">
+            <i class="fa-solid fa-right-to-bracket text-[#08539E]"></i>
+            <span>เข้าสู่ระบบ / สลับบัญชีผู้ใช้งาน (Sign-in / Switch Role)</span>
+          </h4>
+          <form onsubmit="handleLoginUserSubmit(event)" class="grid grid-cols-1 sm:grid-cols-3 gap-2">
+            <div>
+              <label class="block text-[11px] font-bold text-slate-600 mb-1">Username</label>
+              <input type="text" id="loginUsernameInput" class="w-full p-2 bg-white border border-slate-300 rounded-xl text-xs" placeholder="เช่น sale.lead, acad.lead" required />
+            </div>
+            <div>
+              <label class="block text-[11px] font-bold text-slate-600 mb-1">Password</label>
+              <input type="password" id="loginPasswordInput" class="w-full p-2 bg-white border border-slate-300 rounded-xl text-xs" placeholder="รหัสผ่าน" required />
+            </div>
+            <div class="flex items-end">
+              <button type="submit" class="w-full py-2 bg-[#08539E] hover:bg-[#07488a] text-white rounded-xl font-bold transition shadow-sm text-xs cursor-pointer btn-tactile">
+                <i class="fa-solid fa-arrow-right-to-bracket mr-1"></i> เข้าสู่ระบบ
+              </button>
+            </div>
+          </form>
+          <p class="text-[10px] text-slate-500 italic">* รหัสผ่านเริ่มต้น: ฝ่ายขาย (<code>sale.lead</code> / <code>sale1234</code>), ฝ่ายวิชาการ (<code>acad.lead</code> / <code>acad1234</code>), ผู้บริหาร (<code>exec.lead</code> / <code>exec1234</code>)</p>
+        </div>
+
+        <!-- Section 2: Team Lead QR Generator -->
+        <div class="p-4 bg-amber-50/60 border border-amber-200 rounded-2xl space-y-3">
+          <div class="flex items-center justify-between">
+            <h4 class="font-bold text-amber-950 text-xs flex items-center gap-2">
+              <i class="fa-solid fa-qrcode text-amber-600"></i>
+              <span>สร้าง QR ให้ลูกทีมเข้าใช้งาน (Team QR Onboarding)</span>
+            </h4>
+            <span class="text-[10px] bg-amber-100 text-amber-800 px-2 py-0.5 rounded-full font-bold">สำหรับหัวหน้าทีม</span>
+          </div>
+          <p class="text-slate-600 text-[11px]">เลือกทีมที่ต้องการ แล้วกดปุ่มเพื่อสร้าง QR Code เมื่อลูกทีมสแกนจะล็อกอินและได้รับสิทธิ์ประจำทีมทันทีโดยไม่ต้องพิมพ์รหัสผ่าน:</p>
+          <div class="flex flex-wrap items-center gap-2">
+            <button type="button" onclick="generateTeamOnboardQR('TEAM_A')" class="px-3.5 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl font-bold text-xs transition shadow-xs flex items-center space-x-1.5 cursor-pointer btn-tactile">
+              <i class="fa-solid fa-qrcode"></i>
+              <span>สร้าง QR ให้ทีมขาย (Team A)</span>
+            </button>
+            <button type="button" onclick="generateTeamOnboardQR('TEAM_B')" class="px-3.5 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-xl font-bold text-xs transition shadow-xs flex items-center space-x-1.5 cursor-pointer btn-tactile">
+              <i class="fa-solid fa-qrcode"></i>
+              <span>สร้าง QR ให้ทีมวิชาการ (Team B)</span>
+            </button>
+          </div>
+          <!-- QR Display Area -->
+          <div class="flex flex-col items-center justify-center p-3 bg-white rounded-xl border border-amber-200/80 space-y-2">
+            <div id="teamOnboardQrDisplay" class="p-2 bg-white rounded-lg"></div>
+            <span id="teamOnboardQrLabel" class="text-[11px] font-bold text-slate-700">คลิกเลือกทีมด้านบนเพื่อสร้าง QR</span>
+          </div>
+        </div>
+
+        <!-- Section 3: Accounts Ledger Table -->
+        <div class="space-y-2">
+          <div class="flex items-center justify-between">
+            <h4 class="font-bold text-slate-800 text-xs flex items-center gap-2">
+              <i class="fa-solid fa-table-list text-slate-500"></i>
+              <span>ทะเบียนบัญชีผู้ใช้งานในระบบ (เก็บในชีต Google Sheet: Team_Accounts)</span>
+            </h4>
+            <span class="text-[10px] text-slate-400">แอดมินแก้ไขรหัสผ่านได้ในชีต</span>
+          </div>
+          <div class="overflow-x-auto border border-slate-200 rounded-xl">
+            <table class="w-full text-left text-xs border-collapse">
+              <thead>
+                <tr class="bg-slate-100 text-slate-700 font-bold border-b border-slate-200 text-[11px]">
+                  <th class="p-2.5 text-center w-20">รหัส</th>
+                  <th class="p-2.5">Username</th>
+                  <th class="p-2.5">ชื่อ-นามสกุล / ตำแหน่ง</th>
+                  <th class="p-2.5 text-center">บทบาทสิทธิ์</th>
+                  <th class="p-2.5 text-center w-24">รหัสผ่าน</th>
+                </tr>
+              </thead>
+              <tbody id="teamAccountsTableBody" class="divide-y divide-slate-100 bg-white">
+                <!-- Dynamically populated -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Footer -->
+      <div class="p-4 bg-slate-50 border-t border-slate-200 flex items-center justify-between shrink-0 text-xs">
+        <span class="text-slate-500 italic">* ระบบรองรับการเปลี่ยนรหัสผ่านใน Google Sheets โดยตรง</span>
+        <button type="button" onclick="closeTeamAccountsModal()" class="px-5 py-2 bg-slate-200 hover:bg-slate-300 text-slate-700 rounded-xl font-bold transition cursor-pointer">
+          ปิดหน้าต่าง
         </button>
       </div>
 
