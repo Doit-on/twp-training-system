@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-  <title>Training Center TWP - ระบบบริหารคำขอจัดอบรมและประเมินผล v1.22.0</title>
+  <title>Training Center TWP - ระบบบริหารคำขอจัดอบรมและประเมินผล v1.22.1</title>
   <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
   <!-- Google Fonts: Sarabun -->
@@ -311,11 +311,28 @@
           <span class="text-xs text-blue-200 block">Thai Wattana Panich</span>
         </div>
       </div>
-      <div class="flex items-center space-x-3 text-xs">
-        <span class="bg-white/15 px-3 py-1.5 rounded-full border border-white/20 backdrop-blur-sm font-mono text-blue-100 flex items-center">
-          <span class="w-2 h-2 rounded-full bg-emerald-400 mr-2 animate-pulse"></span>
-          System v1.22.0
-        </span>
+      <div class="flex items-center space-x-2 sm:space-x-3 text-xs">
+        <!-- Release Notes Button on Landing -->
+        <button type="button" onclick="openWhatsNewModal()" class="bg-amber-400/20 hover:bg-amber-400/30 text-amber-200 px-3 py-1.5 rounded-full border border-amber-300/40 backdrop-blur-sm font-bold flex items-center space-x-1.5 transition cursor-pointer" title="ดูรายละเอียดการอัปเดตระบบ v1.22.1">
+          <i class="fa-solid fa-bullhorn text-amber-300 animate-pulse"></i>
+          <span class="hidden sm:inline">อัปเดต</span>
+          <span class="bg-emerald-500 text-white font-mono font-black text-[10px] px-1.5 py-0.2 rounded-full">v1.22.1</span>
+        </button>
+        <!-- Team Login Gate Button / User Badge -->
+        <button id="landingLoginBtn" type="button" onclick="openSwitchProfileModal()" class="bg-gradient-to-r from-amber-400 to-amber-500 hover:from-amber-300 hover:to-amber-400 text-slate-950 font-black px-3.5 py-1.5 rounded-xl shadow-md transition cursor-pointer flex items-center space-x-1.5">
+          <i class="fa-solid fa-key"></i>
+          <span>เข้าสู่ระบบประจำทีม</span>
+        </button>
+        <div id="landingUserBadge" onclick="openSwitchProfileModal()" class="hidden items-center space-x-2 bg-white/20 hover:bg-white/30 border border-white/30 px-3 py-1.5 rounded-xl cursor-pointer transition backdrop-blur-sm">
+          <div class="w-6 h-6 rounded-full bg-emerald-400/30 text-emerald-300 flex items-center justify-center font-bold text-xs">
+            <i class="fa-solid fa-user-check"></i>
+          </div>
+          <div class="text-left leading-tight">
+            <span id="landingUserName" class="font-bold text-white block text-xs">ผู้ใช้งาน</span>
+            <span id="landingUserRole" class="text-[10px] text-blue-200 font-mono block">ทีมขาย A</span>
+          </div>
+          <i class="fa-solid fa-chevron-down text-[10px] text-white/70 ml-1"></i>
+        </div>
       </div>
     </div>
 
@@ -341,29 +358,46 @@
         </p>
       </div>
 
+      <!-- Mandatory Login Gate Alert Card on Landing Page (if not logged in) -->
+      <div id="landingAuthAlertCard" class="hidden max-w-xl mx-auto w-full p-4 bg-amber-500/20 border-2 border-amber-300/50 rounded-2xl backdrop-blur-md text-center space-y-2 shadow-xl animate-fadeIn">
+        <div class="flex items-center justify-center space-x-2 text-amber-300 font-bold text-sm">
+          <i class="fa-solid fa-shield-halved text-base animate-bounce"></i>
+          <span>กรุณาเข้าสู่ระบบด้วย Username & Password ประจำทีมก่อนเริ่มใช้งาน</span>
+        </div>
+        <p class="text-xs text-blue-100 leading-relaxed">
+          ระบบแยกสิทธิ์ตามบทบาท (ฝ่ายขาย A, วิชาการ B, ผู้บริหาร, แอดมิน) เพื่อความถูกต้องของข้อมูลตามมาตรฐานธรรมาภิบาล
+        </p>
+        <div class="flex items-center justify-center gap-2 pt-1">
+          <button type="button" onclick="openSwitchProfileModal()" class="px-5 py-2 bg-amber-400 hover:bg-amber-300 text-slate-950 font-black rounded-xl text-xs shadow-md transition cursor-pointer flex items-center space-x-1.5">
+            <i class="fa-solid fa-arrow-right-to-bracket"></i>
+            <span>เข้าสู่ระบบประจำทีม (Sign In)</span>
+          </button>
+        </div>
+      </div>
+
       <!-- Feature Highlights Grid -->
       <div class="grid grid-cols-2 sm:grid-cols-5 gap-3 max-w-4xl w-full pt-2">
-        <div onclick="enterAnnualPlan()" class="bg-white/10 hover:bg-white/20 transition backdrop-blur-md border border-white/20 rounded-2xl p-3.5 text-center space-y-1.5 shadow-lg cursor-pointer transform hover:-translate-y-1">
+        <div onclick="handleLandingEnterClick('annualPlan')" class="bg-white/10 hover:bg-white/20 transition backdrop-blur-md border border-white/20 rounded-2xl p-3.5 text-center space-y-1.5 shadow-lg cursor-pointer transform hover:-translate-y-1">
           <i class="fa-solid fa-file-shield text-indigo-300 text-xl"></i>
           <div class="font-bold text-xs sm:text-sm text-white">1. แผนหลักการปี</div>
           <div class="text-[11px] text-blue-200">อนุมัติโดย กก.ผจก.</div>
         </div>
-        <div onclick="enterPortal(); switchTab('teamA');" class="bg-white/10 hover:bg-white/20 transition backdrop-blur-md border border-white/20 rounded-2xl p-3.5 text-center space-y-1.5 shadow-lg cursor-pointer transform hover:-translate-y-1">
+        <div onclick="handleLandingEnterClick('teamA')" class="bg-white/10 hover:bg-white/20 transition backdrop-blur-md border border-white/20 rounded-2xl p-3.5 text-center space-y-1.5 shadow-lg cursor-pointer transform hover:-translate-y-1">
           <i class="fa-solid fa-paper-plane text-emerald-300 text-xl"></i>
           <div class="font-bold text-xs sm:text-sm text-white">2. ทีม A ขอจัดอบรม</div>
           <div class="text-[11px] text-blue-200">ดึงจากแผนหลักการ</div>
         </div>
-        <div onclick="enterPortal(); switchTab('teamB');" class="bg-white/10 hover:bg-white/20 transition backdrop-blur-md border border-white/20 rounded-2xl p-3.5 text-center space-y-1.5 shadow-lg cursor-pointer transform hover:-translate-y-1">
+        <div onclick="handleLandingEnterClick('teamB')" class="bg-white/10 hover:bg-white/20 transition backdrop-blur-md border border-white/20 rounded-2xl p-3.5 text-center space-y-1.5 shadow-lg cursor-pointer transform hover:-translate-y-1">
           <i class="fa-solid fa-clipboard-check text-purple-300 text-xl"></i>
           <div class="font-bold text-xs sm:text-sm text-white">3. ทีม B ตรวจวิชาการ</div>
           <div class="text-[11px] text-blue-200">วิทยากร & งบตัดจ่าย</div>
         </div>
-        <div onclick="enterPortal(); switchTab('exec');" class="bg-white/10 hover:bg-white/20 transition backdrop-blur-md border border-white/20 rounded-2xl p-3.5 text-center space-y-1.5 shadow-lg cursor-pointer transform hover:-translate-y-1">
+        <div onclick="handleLandingEnterClick('exec')" class="bg-white/10 hover:bg-white/20 transition backdrop-blur-md border border-white/20 rounded-2xl p-3.5 text-center space-y-1.5 shadow-lg cursor-pointer transform hover:-translate-y-1">
           <i class="fa-solid fa-stamp text-amber-300 text-xl"></i>
           <div class="font-bold text-xs sm:text-sm text-white">4. ผู้บริหารอนุมัติ</div>
           <div class="text-[11px] text-blue-200">ออก PDF & Word A4</div>
         </div>
-        <div onclick="enterPortal(); switchTab('evaluation');" class="bg-white/10 hover:bg-white/20 transition backdrop-blur-md border border-white/20 rounded-2xl p-3.5 text-center space-y-1.5 shadow-lg cursor-pointer transform hover:-translate-y-1">
+        <div onclick="handleLandingEnterClick('evaluation')" class="bg-white/10 hover:bg-white/20 transition backdrop-blur-md border border-white/20 rounded-2xl p-3.5 text-center space-y-1.5 shadow-lg cursor-pointer transform hover:-translate-y-1">
           <i class="fa-solid fa-qrcode text-sky-300 text-xl"></i>
           <div class="font-bold text-xs sm:text-sm text-white">5. QR ปิดลูปประเมิน</div>
           <div class="text-[11px] text-blue-200">Zero-Trust ปลอดภัย</div>
@@ -372,15 +406,15 @@
 
       <!-- Tactile 3D Action Buttons: Enter System & Annual Plan & Executive Dashboard & Team QR -->
       <div class="pt-4 flex flex-wrap items-center justify-center gap-3">
-        <button onclick="enterPortal()" class="w-full sm:w-auto px-6 py-3.5 bg-gradient-to-r from-amber-400 via-amber-500 to-amber-600 hover:from-amber-300 hover:to-amber-500 text-slate-950 font-black text-sm sm:text-base rounded-2xl shadow-xl shadow-amber-950/40 border-b-4 border-amber-700 active:border-b-0 active:translate-y-1 transition duration-150 flex items-center justify-center space-x-2 cursor-pointer btn-tactile">
+        <button onclick="handleLandingEnterClick('portal')" class="w-full sm:w-auto px-6 py-3.5 bg-gradient-to-r from-amber-400 via-amber-500 to-amber-600 hover:from-amber-300 hover:to-amber-500 text-slate-950 font-black text-sm sm:text-base rounded-2xl shadow-xl shadow-amber-950/40 border-b-4 border-amber-700 active:border-b-0 active:translate-y-1 transition duration-150 flex items-center justify-center space-x-2 cursor-pointer btn-tactile">
           <i class="fa-solid fa-arrow-right-to-bracket text-base"></i>
           <span>เข้าสู่ระบบบริหารคำขอ (Enter Portal)</span>
         </button>
-        <button onclick="enterAnnualPlan()" class="w-full sm:w-auto px-6 py-3.5 bg-gradient-to-r from-indigo-600 via-indigo-700 to-blue-800 hover:from-indigo-500 hover:to-blue-700 text-white font-bold text-sm sm:text-base rounded-2xl shadow-xl shadow-indigo-950/50 border border-indigo-300/40 active:translate-y-1 transition duration-150 flex items-center justify-center space-x-2 cursor-pointer btn-tactile">
+        <button onclick="handleLandingEnterClick('annualPlan')" class="w-full sm:w-auto px-6 py-3.5 bg-gradient-to-r from-indigo-600 via-indigo-700 to-blue-800 hover:from-indigo-500 hover:to-blue-700 text-white font-bold text-sm sm:text-base rounded-2xl shadow-xl shadow-indigo-950/50 border border-indigo-300/40 active:translate-y-1 transition duration-150 flex items-center justify-center space-x-2 cursor-pointer btn-tactile">
           <i class="fa-solid fa-file-shield text-indigo-300 text-base"></i>
           <span>โครงการอนุมัติหลักการประจำปี</span>
         </button>
-        <button onclick="enterExecutiveDashboard()" class="w-full sm:w-auto px-6 py-3.5 bg-gradient-to-r from-blue-700 via-indigo-600 to-blue-800 hover:from-blue-600 hover:to-indigo-500 text-white font-bold text-sm sm:text-base rounded-2xl shadow-xl shadow-blue-950/50 border border-blue-300/40 active:translate-y-1 transition duration-150 flex items-center justify-center space-x-2 cursor-pointer btn-tactile">
+        <button onclick="handleLandingEnterClick('dashboard')" class="w-full sm:w-auto px-6 py-3.5 bg-gradient-to-r from-blue-700 via-indigo-600 to-blue-800 hover:from-blue-600 hover:to-indigo-500 text-white font-bold text-sm sm:text-base rounded-2xl shadow-xl shadow-blue-950/50 border border-blue-300/40 active:translate-y-1 transition duration-150 flex items-center justify-center space-x-2 cursor-pointer btn-tactile">
           <i class="fa-solid fa-chart-line text-amber-300 text-base"></i>
           <span>ผู้บริหาร: ดู Dashboard</span>
         </button>
@@ -395,7 +429,7 @@
     <!-- Bottom Footer on Landing Page -->
     <div class="max-w-7xl mx-auto w-full px-6 py-4 flex flex-col sm:flex-row items-center justify-between text-xs text-blue-200 border-t border-white/10 relative z-10 gap-2">
       <div>&copy; 2026 Training Center TWP - บริษัท ไทยวัฒนาพานิช จำกัด. All rights reserved.</div>
-      <div class="font-mono text-[11px] bg-white/10 px-3 py-1 rounded-full border border-white/15">EMS Enterprise Platform v1.22.0 (Live Apps Script Engine)</div>
+      <div class="font-mono text-[11px] bg-white/10 px-3 py-1 rounded-full border border-white/15">EMS Enterprise Platform v1.22.1 (Live Apps Script Engine)</div>
     </div>
 
   </div>
@@ -420,7 +454,7 @@
           <div class="sidebar-brand-text truncate">
             <div class="flex items-center space-x-1.5">
               <span class="font-extrabold text-sm tracking-wide text-white">TWP</span>
-              <span onclick="openVersionReleaseModal()" class="bg-blue-400/20 hover:bg-blue-400/30 text-blue-200 text-[9px] font-mono px-1.5 py-0.5 rounded-full border border-blue-300/30 cursor-pointer transition flex items-center gap-1" title="คลิกดูรายละเอียดเวอร์ชัน v1.22.0"><i class="fa-solid fa-sparkles text-amber-300 text-[8px]"></i><span class="bg-emerald-500 text-white font-black px-2 py-0.5 rounded-full">v1.22.0</span></span>
+              <span onclick="openVersionReleaseModal()" class="bg-blue-400/20 hover:bg-blue-400/30 text-blue-200 text-[9px] font-mono px-1.5 py-0.5 rounded-full border border-blue-300/30 cursor-pointer transition flex items-center gap-1" title="คลิกดูรายละเอียดเวอร์ชัน v1.22.1"><i class="fa-solid fa-sparkles text-amber-300 text-[8px]"></i><span class="bg-emerald-500 text-white font-black px-2 py-0.5 rounded-full">v1.22.1</span></span>
             </div>
             <p class="text-[10px] text-blue-200 truncate">ระบบบริหารงานฝึกอบรม</p>
           </div>
@@ -3263,7 +3297,7 @@
               <i class="fa-solid fa-code-compare text-amber-300"></i>
               <span class="text-xs font-bold uppercase tracking-wider">รายละเอียดการปรับปรุงเวอร์ชัน (Version Release Notes)</span>
             </div>
-            <span class="text-[10px] bg-amber-400 text-slate-950 font-black px-2 py-0.5 rounded-full">v1.22.0 Live</span>
+            <span class="text-[10px] bg-amber-400 text-slate-950 font-black px-2 py-0.5 rounded-full">v1.22.1 Live</span>
           </div>
           <p class="text-xs text-blue-100 leading-relaxed">
             <strong>v1.22.0 (Enterprise Compact QR & Drive Standard):</strong> ปรับขนาดหน้าต่างแท่นแสดงผล QR Code ให้กะทัดรัด (Compact Responsive) รองรับโน้ตบุ๊กทุกขนาดหน้าจอ, เพิ่มปุ่มปิดหน้าต่างทั้งบน ล่าง และกด Esc/คลิกนอกกรอบเพื่อปิดได้ทันที, พร้อมกำหนด Google Drive โฟลเดอร์กลางสำหรับเก็บเอกสารโครงการ
@@ -4253,47 +4287,195 @@
   <!-- ========================================== -->
   <!-- MODAL: SWITCH OPERATOR PROFILE (เลือกโปรไฟล์) -->
   <!-- ========================================== -->
-  <div id="switchProfileModal" class="hidden fixed inset-0 z-50 bg-slate-900/70 backdrop-blur-sm flex items-center justify-center p-4">
-    <div class="bg-white rounded-3xl max-w-md w-full p-6 space-y-4 shadow-2xl">
-      <div class="flex items-center justify-between pb-3 border-b border-slate-100">
-        <div class="flex items-center space-x-2.5">
-          <div class="w-10 h-10 rounded-2xl bg-blue-100 text-[#08539E] flex items-center justify-center text-xl shadow-sm">
-            <i class="fa-solid fa-user-gear"></i>
+  <!-- ======================================================== -->
+  <!-- MODAL: ENTERPRISE TEAM AUTHENTICATION & LOGIN HUB (v1.22.0) -->
+  <!-- ======================================================== -->
+  <div id="switchProfileModal" class="hidden fixed inset-0 z-[9990] bg-slate-900/80 backdrop-blur-md flex items-center justify-center p-4 animate-fadeIn">
+    <div class="bg-white rounded-3xl max-w-lg w-full overflow-hidden shadow-2xl border border-slate-200 space-y-0">
+      
+      <!-- Top Header -->
+      <div class="bg-gradient-to-r from-slate-900 via-indigo-950 to-[#08539E] text-white p-5 sm:p-6 flex items-center justify-between">
+        <div class="flex items-center space-x-3.5">
+          <div class="w-12 h-12 rounded-2xl bg-white/10 text-white flex items-center justify-center text-xl font-bold border border-white/20 shadow-inner">
+            <i class="fa-solid fa-shield-halved"></i>
           </div>
           <div>
-            <h3 class="font-bold text-slate-800 text-base">สลับโปรไฟล์ผู้ปฏิบัติงาน</h3>
-            <p class="text-xs text-slate-400">เลือกโปรไฟล์สมาชิกจากทีมที่กำหนดไว้ใน Setting</p>
+            <div class="flex items-center space-x-2">
+              <span class="text-xs bg-emerald-500/30 text-emerald-300 border border-emerald-400/40 px-2 py-0.5 rounded-full font-mono font-bold">Authentication Gate</span>
+              <span class="text-xs text-slate-300">v1.22.1</span>
+            </div>
+            <h3 class="font-black text-white text-base sm:text-lg mt-0.5">เข้าสู่ระบบประจำทีม (Team Sign-In)</h3>
           </div>
         </div>
-        <button onclick="closeSwitchProfileModal()" class="text-slate-400 hover:text-slate-600"><i class="fa-solid fa-xmark text-lg"></i></button>
+        <button type="button" onclick="closeSwitchProfileModal()" class="text-white/70 hover:text-white text-xl p-1 cursor-pointer">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
       </div>
 
-      <!-- Quick Manual Override -->
-      <div class="bg-slate-50 p-3 rounded-2xl border border-slate-200 space-y-2">
-        <label class="block text-[11px] font-bold text-slate-600">หรือพิมพ์ระบุชื่อเองชั่วคราว:</label>
-        <div class="flex space-x-2">
-          <input type="text" id="manualProfileNameInput" placeholder="พิมพ์ชื่อ-นามสกุล..." class="w-full bg-white border border-slate-300 rounded-xl px-3 py-1.5 text-xs focus:ring-2 focus:ring-blue-500 focus:outline-none">
-          <button onclick="saveManualProfileName()" class="px-3 py-1.5 bg-blue-600 text-white font-bold text-xs rounded-xl whitespace-nowrap">บันทึก</button>
+      <!-- Navigation Tabs: Login | Team QR Onboarding | Accounts List -->
+      <div class="bg-slate-100 p-1.5 flex items-center border-b border-slate-200 text-xs font-bold">
+        <button type="button" id="tabAuthLoginBtn" onclick="switchAuthTab('LOGIN')" class="flex-1 py-2 rounded-xl text-center transition bg-white text-slate-900 shadow-xs cursor-pointer">
+          <i class="fa-solid fa-key mr-1.5 text-blue-600"></i>เข้าสู่ระบบด้วยรหัสผ่าน
+        </button>
+        <button type="button" id="tabAuthQrBtn" onclick="switchAuthTab('QR')" class="flex-1 py-2 rounded-xl text-center transition text-slate-600 hover:text-slate-900 cursor-pointer">
+          <i class="fa-solid fa-qrcode mr-1.5 text-amber-600"></i>สแกน QR ประจำทีม
+        </button>
+        <button type="button" id="tabAuthAccountsBtn" onclick="switchAuthTab('ACCOUNTS')" class="flex-1 py-2 rounded-xl text-center transition text-slate-600 hover:text-slate-900 cursor-pointer">
+          <i class="fa-solid fa-users mr-1.5 text-purple-600"></i>บัญชีทั้งหมด
+        </button>
+      </div>
+
+      <!-- Body Container -->
+      <div class="p-6 space-y-4 text-xs max-h-[70vh] overflow-y-auto custom-scrollbar">
+
+        <!-- Active Logged In Identity Banner -->
+        <div class="p-3.5 bg-slate-50 border border-slate-200 rounded-2xl flex items-center justify-between">
+          <div class="flex items-center space-x-3">
+            <div class="w-9 h-9 rounded-full bg-blue-100 text-[#08539E] flex items-center justify-center font-bold text-sm">
+              <i class="fa-solid fa-user-check"></i>
+            </div>
+            <div>
+              <span class="text-[10px] text-slate-400 block">ผู้ใช้งานปัจจุบัน:</span>
+              <strong id="authModalCurrentUserName" class="text-xs font-bold text-slate-900">สมชาย มุ่งมั่น</strong>
+              <span id="authModalCurrentUserRole" class="text-[10px] px-1.5 py-0.2 rounded-full font-bold bg-emerald-100 text-emerald-800 ml-1.5">ทีมขาย A</span>
+            </div>
+          </div>
+          <button type="button" onclick="handleLogoutUser()" class="px-2.5 py-1 text-[11px] text-rose-600 hover:bg-rose-50 border border-rose-200 rounded-lg font-bold transition cursor-pointer">
+            ออกจากระบบ
+          </button>
         </div>
-      </div>
 
-      <!-- Member List to Select -->
-      <div>
-        <label class="block text-xs font-bold text-slate-700 mb-2">เลือกจากรายชื่อสมาชิกในทีม:</label>
-        <div id="switchProfileListContainer" class="space-y-2 max-h-56 overflow-y-auto custom-scrollbar p-1">
-          <!-- Rendered dynamically -->
+        <!-- TAB 1: USERNAME & PASSWORD LOGIN FORM -->
+        <div id="authSectionLogin" class="space-y-4">
+          <form onsubmit="handleAuthLoginSubmit(event)" class="space-y-3">
+            <div>
+              <label class="block font-bold text-slate-700 mb-1">ชื่อผู้ใช้งาน (Username) *</label>
+              <div class="relative">
+                <i class="fa-solid fa-user absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"></i>
+                <input type="text" id="authUsernameInput" required class="w-full pl-9 pr-3 py-2.5 bg-white border border-slate-300 rounded-xl focus:ring-2 focus:ring-blue-500 font-medium text-xs" placeholder="เช่น sale.lead, acad.lead, exec.lead, admin" />
+              </div>
+            </div>
+
+            <div>
+              <label class="block font-bold text-slate-700 mb-1">รหัสผ่าน (Password) *</label>
+              <div class="relative">
+                <i class="fa-solid fa-lock absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"></i>
+                <input type="password" id="authPasswordInput" required class="w-full pl-9 pr-10 py-2.5 bg-white border border-slate-300 rounded-xl focus:ring-2 focus:ring-blue-500 font-medium text-xs font-mono" placeholder="รหัสผ่านเข้าสู่ระบบ" />
+                <button type="button" onclick="togglePasswordVisibility('authPasswordInput')" class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 text-xs">
+                  <i class="fa-solid fa-eye"></i>
+                </button>
+              </div>
+            </div>
+
+            <button type="submit" class="w-full py-2.5 bg-[#08539E] hover:bg-[#07488a] text-white rounded-xl font-bold shadow-md hover:shadow-lg transition text-xs cursor-pointer btn-tactile flex items-center justify-center space-x-1.5">
+              <i class="fa-solid fa-arrow-right-to-bracket"></i>
+              <span>เข้าสู่ระบบ (Sign In)</span>
+            </button>
+          </form>
+
+          <!-- Quick Fast-Switch Pills for Easy Testing -->
+          <div class="pt-2 border-t border-slate-100 space-y-2">
+            <span class="text-[10px] text-slate-400 font-bold uppercase tracking-wider block">คลิกด่วนเพื่อทดสอบบทบาท (Quick Role Selector):</span>
+            <div class="grid grid-cols-2 gap-2">
+              <button type="button" onclick="quickFillLogin('sale.lead', 'sale1234')" class="p-2 bg-emerald-50 hover:bg-emerald-100 border border-emerald-200 rounded-xl text-left transition flex items-center space-x-2 cursor-pointer">
+                <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+                <div>
+                  <div class="font-bold text-emerald-950 text-[11px]">ทีมขาย (Team A)</div>
+                  <div class="text-[10px] text-emerald-700">sale.lead / sale1234</div>
+                </div>
+              </button>
+
+              <button type="button" onclick="quickFillLogin('acad.lead', 'acad1234')" class="p-2 bg-purple-50 hover:bg-purple-100 border border-purple-200 rounded-xl text-left transition flex items-center space-x-2 cursor-pointer">
+                <span class="w-2 h-2 rounded-full bg-purple-500"></span>
+                <div>
+                  <div class="font-bold text-purple-950 text-[11px]">ทีมวิชาการ (Team B)</div>
+                  <div class="text-[10px] text-purple-700">acad.lead / acad1234</div>
+                </div>
+              </button>
+
+              <button type="button" onclick="quickFillLogin('exec.lead', 'exec1234')" class="p-2 bg-blue-50 hover:bg-blue-100 border border-blue-200 rounded-xl text-left transition flex items-center space-x-2 cursor-pointer">
+                <span class="w-2 h-2 rounded-full bg-blue-500"></span>
+                <div>
+                  <div class="font-bold text-blue-950 text-[11px]">ฝ่ายบริหาร (Executive)</div>
+                  <div class="text-[10px] text-blue-700">exec.lead / exec1234</div>
+                </div>
+              </button>
+
+              <button type="button" onclick="quickFillLogin('admin', 'admin0000')" class="p-2 bg-rose-50 hover:bg-rose-100 border border-rose-200 rounded-xl text-left transition flex items-center space-x-2 cursor-pointer">
+                <span class="w-2 h-2 rounded-full bg-rose-500"></span>
+                <div>
+                  <div class="font-bold text-rose-950 text-[11px]">แอดมิน (Admin)</div>
+                  <div class="text-[10px] text-rose-700">admin / admin0000</div>
+                </div>
+              </button>
+            </div>
+          </div>
         </div>
+
+        <!-- TAB 2: TEAM QR ONBOARDING -->
+        <div id="authSectionQr" class="hidden space-y-3">
+          <div class="p-3 bg-amber-50 rounded-xl border border-amber-200 text-slate-700 space-y-1">
+            <span class="font-bold text-amber-950 flex items-center gap-1.5">
+              <i class="fa-solid fa-qrcode text-amber-600"></i>
+              <span>ระบบ QR สำหรับหัวหน้าทีม (Team QR Onboarding):</span>
+            </span>
+            <p class="text-[11px] leading-relaxed">เลือกทีมที่ต้องการ แล้วให้ลูกทีมสแกน QR Code จากโทรศัพท์มือถือ เพื่อเข้าสู่ระบบและได้รับสิทธิ์ประจำทีมทันทีโดยไม่ต้องพิมพ์รหัสผ่าน</p>
+          </div>
+
+          <div class="flex items-center gap-2">
+            <button type="button" onclick="generateTeamOnboardQR('TEAM_A')" class="flex-1 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl font-bold transition flex items-center justify-center gap-1.5 cursor-pointer">
+              <i class="fa-solid fa-qrcode"></i>
+              <span>สร้าง QR ให้ทีมขาย A</span>
+            </button>
+            <button type="button" onclick="generateTeamOnboardQR('TEAM_B')" class="flex-1 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-xl font-bold transition flex items-center justify-center gap-1.5 cursor-pointer">
+              <i class="fa-solid fa-qrcode"></i>
+              <span>สร้าง QR ให้ทีมวิชาการ B</span>
+            </button>
+          </div>
+
+          <div class="flex flex-col items-center justify-center p-4 bg-slate-50 rounded-2xl border border-slate-200 space-y-2">
+            <div id="teamOnboardQrDisplay" class="p-3 bg-white rounded-xl border border-slate-200 shadow-xs"></div>
+            <span id="teamOnboardQrLabel" class="text-xs font-bold text-slate-700">คลิกเลือกทีมด้านบนเพื่อสร้าง QR</span>
+          </div>
+        </div>
+
+        <!-- TAB 3: ACCOUNTS LIST IN GOOGLE SHEETS -->
+        <div id="authSectionAccounts" class="hidden space-y-3">
+          <div class="flex items-center justify-between">
+            <span class="font-bold text-slate-800">บัญชีผู้ใช้ในชีต Google Sheets: Team_Accounts</span>
+            <span class="text-[10px] text-slate-400">แอดมินแก้ไขรหัสในชีตได้</span>
+          </div>
+          <div class="overflow-x-auto border border-slate-200 rounded-xl">
+            <table class="w-full text-left text-xs border-collapse">
+              <thead>
+                <tr class="bg-slate-100 text-slate-700 font-bold border-b border-slate-200 text-[11px]">
+                  <th class="p-2.5 text-center w-16">รหัส</th>
+                  <th class="p-2.5">Username</th>
+                  <th class="p-2.5">ชื่อ-นามสกุล</th>
+                  <th class="p-2.5 text-center">ทีม</th>
+                  <th class="p-2.5 text-center">รหัสผ่าน</th>
+                </tr>
+              </thead>
+              <tbody id="authAccountsListBody" class="divide-y divide-slate-100 bg-white">
+                <!-- Dynamically populated -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+
       </div>
 
-      <div class="pt-2 flex justify-end">
-        <button onclick="closeSwitchProfileModal()" class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-600 font-semibold text-xs rounded-xl">ปิด</button>
+      <!-- Footer -->
+      <div class="p-4 bg-slate-50 border-t border-slate-200 flex items-center justify-between text-xs">
+        <span class="text-slate-400 italic">* บัญชีผู้ใช้ถูกจัดเก็บและซิงค์กับ Google Sheets</span>
+        <button type="button" onclick="closeSwitchProfileModal()" class="px-5 py-2 bg-slate-200 hover:bg-slate-300 text-slate-700 rounded-xl font-bold transition cursor-pointer">
+          ปิดหน้าต่าง
+        </button>
       </div>
+
     </div>
-  </div>
-
-  <!-- ========================================== -->
-  <!-- MODAL: ADD NEW TEAM MEMBER (เพิ่มสมาชิกในทีม) -->
-  <!-- ========================================== -->
+  </div>\n\n  
+<!-- ========================================== -->
   <div id="addMemberModal" class="hidden fixed inset-0 z-50 bg-slate-900/70 backdrop-blur-sm flex items-center justify-center p-4">
     <div class="bg-white rounded-3xl max-w-md w-full p-6 space-y-4 shadow-2xl">
       <div class="flex items-center justify-between pb-3 border-b border-slate-100">
@@ -4689,7 +4871,7 @@
 
     // System Global State (Synchronously initialized with complete Master Data)
     const AppState = {
-      version: '1.22.0',
+      version: '1.22.1',
       clientId: 'DEV-' + Math.random().toString(36).substring(2, 7).toUpperCase(),
       activeTab: 'dashboard',
       activeDevices: {},
@@ -4709,13 +4891,7 @@
       incidentLogs: JSON.parse(localStorage.getItem('twp_incident_logs') || '[]'),
       auditLogs: JSON.parse(localStorage.getItem('twp_audit_logs') || '[]'),
       editingEventId: null,
-      currentUser: JSON.parse(localStorage.getItem('twp_current_user') || 'null') || {
-        userId: 'USR-002',
-        username: 'sale.lead',
-        fullName: 'สมชาย มุ่งมั่น (หัวหน้าทีมขาย A)',
-        teamRole: 'TEAM_A_LEAD',
-        team: 'TEAM_A'
-      },
+      currentUser: JSON.parse(localStorage.getItem('twp_current_user') || 'null'),
       teamAccounts: JSON.parse(localStorage.getItem('twp_team_accounts') || '[]'),
       fy2569Projects: getPersistedFy2569Projects(),
       fy2569TuLedger: getPersistedFy2569TuLedger(),
@@ -4732,8 +4908,40 @@
 
     
 
-    // Landing Page Navigation
-    function enterPortal() {
+    // Landing Page Navigation & Authentication Gate
+    function handleLandingEnterClick(target) {
+      if (!AppState.currentUser || !AppState.currentUser.userId) {
+        showAlert('🔒 กรุณาเข้าสู่ระบบด้วย Username & Password ประจำทีมก่อนเริ่มใช้งาน', 'warning');
+        window._pendingAuthAction = () => {
+          enterPortal(true);
+          if (target === 'annualPlan') switchTab('annualPlan');
+          else if (target === 'dashboard') switchTab('dashboard');
+          else if (target === 'teamA') switchTab('teamA');
+          else if (target === 'teamB') switchTab('teamB');
+          else if (target === 'exec') switchTab('exec');
+          else if (target === 'evaluation') switchTab('evaluation');
+        };
+        openSwitchProfileModal();
+        return;
+      }
+
+      enterPortal(true);
+      if (target === 'annualPlan') switchTab('annualPlan');
+      else if (target === 'dashboard') switchTab('dashboard');
+      else if (target === 'teamA') switchTab('teamA');
+      else if (target === 'teamB') switchTab('teamB');
+      else if (target === 'exec') switchTab('exec');
+      else if (target === 'evaluation') switchTab('evaluation');
+    }
+
+    function enterPortal(bypassAuthCheck) {
+      if (!bypassAuthCheck && (!AppState.currentUser || !AppState.currentUser.userId)) {
+        showAlert('🔒 กรุณาเข้าสู่ระบบด้วย Username & Password ประจำทีมก่อนเริ่มใช้งาน', 'warning');
+        window._pendingAuthAction = () => enterPortal(true);
+        openSwitchProfileModal();
+        return;
+      }
+
       const landing = document.getElementById('landingPageView');
       const portal = document.getElementById('mainPortalView');
       if (landing) {
@@ -4758,14 +4966,26 @@
 
     // Direct access to Dashboard for Executives from Landing Page
     function enterExecutiveDashboard() {
-      enterPortal();
+      if (!AppState.currentUser || !AppState.currentUser.userId) {
+        showAlert('🔒 กรุณาเข้าสู่ระบบด้วย Username & Password ประจำทีมก่อนเริ่มใช้งาน', 'warning');
+        window._pendingAuthAction = () => enterExecutiveDashboard();
+        openSwitchProfileModal();
+        return;
+      }
+      enterPortal(true);
       switchTab('dashboard');
       showAlert('ยินดีต้อนรับท่านผู้บริหาร: เข้าสู่ศูนย์กลางข้อมูลและวิเคราะห์ผลการดำเนินงานเรียบร้อยแล้ว', 'info');
     }
 
     // Direct access to Annual Principle Plan from Landing Page
     function enterAnnualPlan() {
-      enterPortal();
+      if (!AppState.currentUser || !AppState.currentUser.userId) {
+        showAlert('🔒 กรุณาเข้าสู่ระบบด้วย Username & Password ประจำทีมก่อนเริ่มใช้งาน', 'warning');
+        window._pendingAuthAction = () => enterAnnualPlan();
+        openSwitchProfileModal();
+        return;
+      }
+      enterPortal(true);
       switchTab('annualPlan');
       showAlert('ยินดีต้อนรับ: เข้าสู่โครงการอนุมัติหลักการประจำปี (แผนหลัก) เรียบร้อยแล้ว', 'info');
     }
@@ -5590,10 +5810,14 @@
       renderAll();
       updateOperatorProfileUI();
       renderAdminTeamMembersList();
+      updateLandingPageAuthUI();
       if (AppState.gasEndpoint) {
         const epInput = document.getElementById('customEndpointInput');
         if (epInput) epInput.value = AppState.gasEndpoint;
       }
+
+      // 1.1 Check Release Notes Popup (v1.22.1) and Mandatory Login Gate on System Enter
+      checkAndShowWhatsNewOnEnter();
       
       // 2. Fetch latest cloud updates asynchronously in background without blocking UI
       fetchInitialData(true);
@@ -6856,7 +7080,7 @@
 
 
     
-    // --- V1.22.0: Release Notes / What's New Popup ---
+    // --- V1.22.1: Release Notes / What's New Popup ---
     function openWhatsNewModal() {
       const modal = document.getElementById('whatsNewModal');
       if (modal) modal.classList.remove('hidden');
@@ -6868,16 +7092,60 @@
     }
 
     function acknowledgeAndCloseWhatsNewModal() {
-      localStorage.setItem('twp_acknowledged_version', '1.22.0');
+      localStorage.setItem('twp_acknowledged_version', '1.22.1');
       closeWhatsNewModal();
+      // If user is not yet logged in, immediately open the Team Login Gate!
+      if (!AppState.currentUser || !AppState.currentUser.userId) {
+        setTimeout(() => {
+          openSwitchProfileModal();
+        }, 300);
+      }
     }
 
     function checkAndShowWhatsNewOnEnter() {
       const ackVer = localStorage.getItem('twp_acknowledged_version');
-      if (ackVer !== '1.22.0') {
+      if (ackVer !== '1.22.1') {
         setTimeout(() => {
           openWhatsNewModal();
-        }, 800);
+        }, 500);
+      } else if (!AppState.currentUser || !AppState.currentUser.userId) {
+        setTimeout(() => {
+          openSwitchProfileModal();
+        }, 600);
+      }
+    }
+
+    function updateLandingPageAuthUI() {
+      const user = AppState.currentUser;
+      const loginBtn = document.getElementById('landingLoginBtn');
+      const userBadge = document.getElementById('landingUserBadge');
+      const userNameEl = document.getElementById('landingUserName');
+      const userRoleEl = document.getElementById('landingUserRole');
+      const alertCard = document.getElementById('landingAuthAlertCard');
+
+      if (user && user.userId) {
+        if (loginBtn) loginBtn.classList.add('hidden');
+        if (userBadge) {
+          userBadge.classList.remove('hidden');
+          userBadge.classList.add('flex');
+        }
+        if (userNameEl) userNameEl.innerText = user.fullName ? user.fullName.split(' ')[0] : (user.username || 'ผู้ใช้งาน');
+        if (userRoleEl) {
+          let rText = 'ทีมทั่วไป';
+          if (user.team === 'TEAM_A') rText = 'ฝ่ายขาย (Team A)';
+          else if (user.team === 'TEAM_B') rText = 'วิชาการ (Team B)';
+          else if (user.team === 'EXEC') rText = 'ผู้บริหาร (Executive)';
+          else if (user.team === 'ADMIN') rText = 'แอดมิน (Admin)';
+          userRoleEl.innerText = rText;
+        }
+        if (alertCard) alertCard.classList.add('hidden');
+      } else {
+        if (loginBtn) loginBtn.classList.remove('hidden');
+        if (userBadge) {
+          userBadge.classList.add('hidden');
+          userBadge.classList.remove('flex');
+        }
+        if (alertCard) alertCard.classList.remove('hidden');
       }
     }
 
@@ -12063,7 +12331,7 @@ function renderA4EvalReportHtmlClient(d) {
           </table>
 
           <div style="margin-top:14px; padding-top:4px; border-top:1px solid #e2e8f0; font-size:8.5pt; color:#94a3b8; text-align:center;">
-            เอกสารฉบับนี้สร้างโดยระบบ Training Center TWP (EMS Enterprise Platform v1.22.0) • ใช้สำหรับติดตามและควบคุมผลการปฏิบัติงานภายใน (PPC Standard)
+            เอกสารฉบับนี้สร้างโดยระบบ Training Center TWP (EMS Enterprise Platform v1.22.1) • ใช้สำหรับติดตามและควบคุมผลการปฏิบัติงานภายใน (PPC Standard)
           </div>
         </div>
       `;
@@ -12324,56 +12592,176 @@ function renderA4EvalReportHtmlClient(d) {
 
     function openSwitchProfileModal() {
       const modal = document.getElementById('switchProfileModal');
-      const container = document.getElementById('switchProfileListContainer');
-      document.getElementById('manualProfileNameInput').value = currentProfile.name;
-
-      container.innerHTML = teamMembers.map(m => {
-        const isSelected = m.name === currentProfile.name;
-        return `
-          <div onclick="selectOperatorProfile('${m.id}')" class="p-3 ${isSelected ? 'bg-blue-50 border-blue-300 ring-2 ring-blue-500/20' : 'bg-slate-50 border-slate-200'} hover:bg-white rounded-2xl border flex items-center justify-between text-xs cursor-pointer transition">
-            <div class="flex items-center space-x-2.5">
-              <div class="w-8 h-8 rounded-xl ${isSelected ? 'bg-blue-600 text-white' : 'bg-slate-200 text-slate-700'} flex items-center justify-center font-bold text-xs">
-                <i class="fa-solid fa-user"></i>
-              </div>
-              <div>
-                <div class="font-bold text-slate-800 flex items-center space-x-1.5">
-                  <span>${m.name}</span>
-                  <span class="text-[10px] bg-slate-200 text-slate-700 px-1.5 py-0.2 rounded font-semibold">${m.team}</span>
-                </div>
-                <div class="text-[11px] text-slate-500">${m.position} • ${m.company}</div>
-              </div>
-            </div>
-            ${isSelected ? '<span class="text-blue-600 font-bold text-sm"><i class="fa-solid fa-circle-check"></i></span>' : '<span class="text-xs text-slate-400 font-semibold hover:text-blue-600">เลือก</span>'}
-          </div>
-        `;
-      }).join('');
-
+      if (!modal) return;
+      updateAuthModalCurrentUserInfo();
+      renderAuthAccountsTable();
+      switchAuthTab('LOGIN');
       modal.classList.remove('hidden');
     }
 
     function closeSwitchProfileModal() {
-      document.getElementById('switchProfileModal').classList.add('hidden');
+      const modal = document.getElementById('switchProfileModal');
+      if (modal) modal.classList.add('hidden');
     }
 
-    function selectOperatorProfile(memberId) {
-      const found = teamMembers.find(m => m.id === memberId);
-      if (!found) return;
-      currentProfile = { ...found };
-      updateOperatorProfileUI();
-      closeSwitchProfileModal();
-      showAlert(`สลับโปรไฟล์ผู้ใช้งานเป็น: ${currentProfile.name} [${currentProfile.team} - ${currentProfile.position}]`, 'success');
-      sendPresenceHeartbeat();
+    function switchAuthTab(tab) {
+      const secLogin = document.getElementById('authSectionLogin');
+      const secQr = document.getElementById('authSectionQr');
+      const secAcc = document.getElementById('authSectionAccounts');
+
+      const btnLogin = document.getElementById('tabAuthLoginBtn');
+      const btnQr = document.getElementById('tabAuthQrBtn');
+      const btnAcc = document.getElementById('tabAuthAccountsBtn');
+
+      if (secLogin) secLogin.classList.add('hidden');
+      if (secQr) secQr.classList.add('hidden');
+      if (secAcc) secAcc.classList.add('hidden');
+
+      if (btnLogin) { btnLogin.className = 'flex-1 py-2 rounded-xl text-center transition text-slate-600 hover:text-slate-900 cursor-pointer'; }
+      if (btnQr) { btnQr.className = 'flex-1 py-2 rounded-xl text-center transition text-slate-600 hover:text-slate-900 cursor-pointer'; }
+      if (btnAcc) { btnAcc.className = 'flex-1 py-2 rounded-xl text-center transition text-slate-600 hover:text-slate-900 cursor-pointer'; }
+
+      if (tab === 'LOGIN') {
+        if (secLogin) secLogin.classList.remove('hidden');
+        if (btnLogin) btnLogin.className = 'flex-1 py-2 rounded-xl text-center transition bg-white text-slate-900 shadow-xs cursor-pointer';
+      } else if (tab === 'QR') {
+        if (secQr) secQr.classList.remove('hidden');
+        if (btnQr) btnQr.className = 'flex-1 py-2 rounded-xl text-center transition bg-white text-slate-900 shadow-xs cursor-pointer';
+      } else if (tab === 'ACCOUNTS') {
+        if (secAcc) secAcc.classList.remove('hidden');
+        if (btnAcc) btnAcc.className = 'flex-1 py-2 rounded-xl text-center transition bg-white text-slate-900 shadow-xs cursor-pointer';
+        renderAuthAccountsTable();
+      }
     }
 
-    function saveManualProfileName() {
-      const name = document.getElementById('manualProfileNameInput').value.trim();
-      if (!name) return;
-      currentProfile.name = name;
-      updateOperatorProfileUI();
-      closeSwitchProfileModal();
-      showAlert('บันทึกชื่อผู้ปฏิบัติงาน: ' + name, 'success');
-      sendPresenceHeartbeat();
+    function updateAuthModalCurrentUserInfo() {
+      const user = AppState.currentUser || {};
+      const nameEl = document.getElementById('authModalCurrentUserName');
+      const roleEl = document.getElementById('authModalCurrentUserRole');
+      const topName = document.getElementById('headerOperatorName');
+      const topBadge = document.getElementById('headerOperatorTeamBadge');
+
+      if (nameEl) nameEl.innerText = user.fullName || user.username || 'ยังไม่ได้เข้าสู่ระบบ';
+      if (roleEl) {
+        let roleName = 'ทั่วไป';
+        let roleBg = 'bg-slate-100 text-slate-700';
+        if (user.teamRole === 'ADMIN') { roleName = 'แอดมิน (Admin)'; roleBg = 'bg-rose-100 text-rose-800'; }
+        else if (user.teamRole === 'EXEC') { roleName = 'ฝ่ายบริหาร (Executive)'; roleBg = 'bg-blue-100 text-blue-800'; }
+        else if (user.teamRole && user.teamRole.startsWith('TEAM_B')) { roleName = 'วิชาการ (Team B)'; roleBg = 'bg-purple-100 text-purple-800'; }
+        else if (user.teamRole && user.teamRole.startsWith('TEAM_A')) { roleName = 'ฝ่ายขาย (Team A)'; roleBg = 'bg-emerald-100 text-emerald-800'; }
+        roleEl.innerText = roleName;
+        roleEl.className = 'text-[10px] px-1.5 py-0.2 rounded-full font-bold ml-1.5 ' + roleBg;
+      }
+
+      if (topName) topName.innerText = user.fullName ? user.fullName.split(' ')[0] : 'เข้าสู่ระบบ';
+      if (topBadge) {
+        let bText = 'ล็อกอิน';
+        if (user.team === 'TEAM_A') bText = 'ทีม A';
+        else if (user.team === 'TEAM_B') bText = 'ทีม B';
+        else if (user.team === 'EXEC') bText = 'ผู้บริหาร';
+        else if (user.team === 'ADMIN') bText = 'แอดมิน';
+        topBadge.innerText = bText;
+      }
+
+      updateLandingPageAuthUI();
+      updateCurrentLoginUserUI();
     }
+
+    function quickFillLogin(u, p) {
+      const uIn = document.getElementById('authUsernameInput');
+      const pIn = document.getElementById('authPasswordInput');
+      if (uIn) uIn.value = u;
+      if (pIn) pIn.value = p;
+      handleAuthLoginSubmit({ preventDefault: () => {} });
+    }
+
+    function togglePasswordVisibility(id) {
+      const el = document.getElementById(id);
+      if (!el) return;
+      el.type = el.type === 'password' ? 'text' : 'password';
+    }
+
+    function handleAuthLoginSubmit(e) {
+      if (e && e.preventDefault) e.preventDefault();
+      const u = document.getElementById('authUsernameInput')?.value?.trim();
+      const p = document.getElementById('authPasswordInput')?.value?.trim();
+
+      if (!u || !p) {
+        showAlert('กรุณากรอก Username และ Password', 'error');
+        return;
+      }
+
+      const accs = (AppState.teamAccounts && AppState.teamAccounts.length > 0) ? AppState.teamAccounts : [
+        { userId: 'USR-001', username: 'admin', password: 'admin0000', fullName: 'ผู้ดูแลระบบส่วนกลาง (Admin)', teamRole: 'ADMIN' },
+        { userId: 'USR-002', username: 'sale.lead', password: 'sale1234', fullName: 'สมชาย มุ่งมั่น (หัวหน้าทีมขาย A)', teamRole: 'TEAM_A_LEAD' },
+        { userId: 'USR-003', username: 'acad.lead', password: 'acad1234', fullName: 'ณัฐพล วิชาการ (หัวหน้าฝ่ายวิชาการ B)', teamRole: 'TEAM_B_LEAD' },
+        { userId: 'USR-004', username: 'exec.lead', password: 'exec1234', fullName: 'ผศ.อินทิรา บุนนาค (กรรมการผู้จัดการ)', teamRole: 'EXEC' }
+      ];
+
+      const matched = accs.find(a => a.username.toLowerCase() === u.toLowerCase() && a.password === p);
+
+      if (matched) {
+        AppState.currentUser = {
+          userId: matched.userId,
+          username: matched.username,
+          fullName: matched.fullName,
+          teamRole: matched.teamRole,
+          team: matched.teamRole.startsWith('TEAM_A') ? 'TEAM_A' : (matched.teamRole.startsWith('TEAM_B') ? 'TEAM_B' : (matched.teamRole === 'EXEC' ? 'EXEC' : 'ADMIN'))
+        };
+        AppState.operatorName = matched.fullName;
+        localStorage.setItem('twp_current_user', JSON.stringify(AppState.currentUser));
+        localStorage.setItem('ems_operator_name', matched.fullName);
+
+        updateAuthModalCurrentUserInfo();
+        showAlert('เข้าสู่ระบบสำเร็จในฐานะ ' + matched.fullName, 'success');
+        closeSwitchProfileModal();
+
+        if (window._pendingAuthAction) {
+          const action = window._pendingAuthAction;
+          window._pendingAuthAction = null;
+          action();
+        } else {
+          // If on landing page, transition smoothly into portal and switch to their role tab
+          enterPortal(true);
+          if (AppState.currentUser.team === 'TEAM_A') switchTab('teamA');
+          else if (AppState.currentUser.team === 'TEAM_B') switchTab('teamB');
+          else if (AppState.currentUser.team === 'EXEC') switchTab('exec');
+        }
+      } else {
+        showAlert('Username หรือ Password ไม่ถูกต้อง กรุณาตรวจสอบอีกครั้ง', 'error');
+      }
+    }
+
+    function handleLogoutUser() {
+      AppState.currentUser = null;
+      localStorage.removeItem('twp_current_user');
+      updateAuthModalCurrentUserInfo();
+      showAlert('ออกจากระบบเรียบร้อยแล้ว กรุณาเข้าสู่ระบบใหม่', 'info');
+      showLandingPage();
+      switchAuthTab('LOGIN');
+    }
+
+    function renderAuthAccountsTable() {
+      const tbody = document.getElementById('authAccountsListBody');
+      if (!tbody) return;
+      const accs = (AppState.teamAccounts && AppState.teamAccounts.length > 0) ? AppState.teamAccounts : [
+        { userId: 'USR-001', username: 'admin', password: 'admin0000', fullName: 'ผู้ดูแลระบบส่วนกลาง (Admin)', teamRole: 'ADMIN' },
+        { userId: 'USR-002', username: 'sale.lead', password: 'sale1234', fullName: 'สมชาย มุ่งมั่น (หัวหน้าทีมขาย A)', teamRole: 'TEAM_A_LEAD' },
+        { userId: 'USR-003', username: 'acad.lead', password: 'acad1234', fullName: 'ณัฐพล วิชาการ (หัวหน้าฝ่ายวิชาการ B)', teamRole: 'TEAM_B_LEAD' },
+        { userId: 'USR-004', username: 'exec.lead', password: 'exec1234', fullName: 'ผศ.อินทิรา บุนนาค (กรรมการผู้จัดการ)', teamRole: 'EXEC' }
+      ];
+
+      tbody.innerHTML = accs.map(a => `
+        <tr class="hover:bg-slate-50 transition text-xs">
+          <td class="p-2.5 font-mono font-bold text-slate-700 text-center">${a.userId}</td>
+          <td class="p-2.5 font-bold text-slate-900">${a.username}</td>
+          <td class="p-2.5 text-slate-700">${a.fullName}</td>
+          <td class="p-2.5 text-center"><span class="px-2 py-0.5 rounded-full text-[10px] font-bold ${a.teamRole.includes('EXEC') ? 'bg-blue-100 text-blue-800' : (a.teamRole.includes('TEAM_B') ? 'bg-purple-100 text-purple-800' : (a.teamRole.includes('ADMIN') ? 'bg-rose-100 text-rose-800' : 'bg-emerald-100 text-emerald-800'))}">${a.teamRole}</span></td>
+          <td class="p-2.5 font-mono text-slate-500 text-center">••••••</td>
+        </tr>
+      `).join('');
+    }
+
 
     // Team Directory in Admin Setting
     function filterTeamDirectory(team) {
@@ -14127,7 +14515,7 @@ function renderA4EvalReportHtmlClient(d) {
           <div>
             <div class="flex items-center space-x-2">
               <h3 class="font-bold text-slate-900 text-lg">ประวัติและการปรับปรุงระบบเวอร์ชัน (Release Notes)</h3>
-              <span class="bg-blue-100 text-[#08539E] text-xs font-bold font-mono px-2 py-0.5 rounded-full">v1.22.0 Current</span>
+              <span class="bg-blue-100 text-[#08539E] text-xs font-bold font-mono px-2 py-0.5 rounded-full">v1.22.1 Current</span>
             </div>
             <p class="text-xs text-slate-500">บันทึกประวัติการปรับปรุงสถาปัตยกรรมและฟังก์ชันการทำงานอย่างละเอียด</p>
           </div>
@@ -14140,7 +14528,25 @@ function renderA4EvalReportHtmlClient(d) {
       <!-- Release Timeline List -->
       <div class="space-y-4">
         
-        <!-- v1.22.0 (Current Major Milestone) -->
+        <!-- v1.22.1 (Current Major Release) -->
+        <div class="p-5 bg-gradient-to-br from-emerald-50 via-white to-teal-50/70 border-2 border-emerald-400 rounded-3xl space-y-3 shadow-sm">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-1">
+            <div class="flex items-center space-x-2">
+              <span class="bg-emerald-600 text-white text-xs font-black px-2.5 py-0.5 rounded-lg font-mono">v1.22.1</span>
+              <span class="font-bold text-slate-900 text-sm">Landing Page Login Gate, Release Notes Popup & Attendee Individual Edit/Delete</span>
+            </div>
+            <span class="text-[11px] text-emerald-700 font-bold font-mono">2026-11-14 &bull; Current Release</span>
+          </div>
+          <ul class="text-xs text-slate-700 space-y-2 list-disc list-inside leading-relaxed">
+            <li><strong>Mandatory Landing Page Login Gate:</strong> ตรวจสอบสิทธิ์การเข้าใช้งานตั้งแต่หน้าแรก กำหนดให้ต้องระบุ Username & Password หรือเลือกบทบาทประจำทีมก่อนเข้าถึงระบบบริหารงาน</li>
+            <li><strong>Release Notes & What's New Popup:</strong> หน้าต่างแจ้งเตือนการอัปเดตระบบอัตโนมัติ สรุปฟังก์ชันใหม่ทั้งหมดอย่างครบถ้วน พร้อมปุ่มกดยืนยันรับทราบ</li>
+            <li><strong>Individual Attendee Edit & Delete:</strong> เพิ่มปุ่ม [ ✏️ ] แก้ไขชื่อ-ตำแหน่ง และ [ 🗑️ ] ลบรายชื่อผู้เข้าร่วมอบรมรายบุคคล ทั้งบนคอมพิวเตอร์และมือถือเช็คชื่อ</li>
+            <li><strong>Strict Post-Approval Freeze & Executive Unlock Queue:</strong> ล็อกงบประมาณและข้อมูลหลังอนุมัติอย่างสมบูรณ์ พร้อมระบบส่งคำขอปลดล็อกเข้าคิวพิจารณาของผู้บริหาร</li>
+            <li><strong>Team A Request Tracking & Team B 6-Pillar Checklist:</strong> ตารางติดตามคำขอฝ่ายขาย และชุดตรวจความพร้อม 6 ด้านพร้อม Incident Log บันทึกปัญหาหน้างาน</li>
+          </ul>
+        </div>
+
+        <!-- v1.22.0 (Major Milestone) -->
         <div class="p-5 bg-gradient-to-br from-blue-50 via-white to-indigo-50/70 border-2 border-blue-300 rounded-3xl space-y-3 shadow-xs">
           <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-1">
             <div class="flex items-center space-x-2">
@@ -14359,22 +14765,22 @@ function renderA4EvalReportHtmlClient(d) {
 
 
 
-  <!-- Modal: What's New Release Notes (v1.22.0) -->
-  <div id="whatsNewModal" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 animate-fadeIn">
+  <!-- Modal: What's New Release Notes (v1.22.1) -->
+  <div id="whatsNewModal" class="hidden fixed inset-0 z-[9999] flex items-center justify-center bg-black/75 backdrop-blur-md p-4 animate-fadeIn">
     <div class="bg-white rounded-3xl max-w-2xl w-full max-h-[90vh] flex flex-col shadow-2xl border border-slate-200 overflow-hidden">
       
       <!-- Header -->
       <div class="bg-gradient-to-r from-slate-900 via-indigo-950 to-[#08539E] text-white p-5 sm:p-6 shrink-0 flex items-center justify-between">
         <div class="flex items-center space-x-3.5">
-          <div class="w-12 h-12 rounded-2xl bg-amber-400/20 text-amber-300 flex items-center justify-center font-bold text-xl shadow-inner border border-amber-400/30">
+          <div class="w-12 h-12 rounded-2xl bg-amber-400/25 text-amber-300 flex items-center justify-center font-bold text-xl shadow-inner border border-amber-400/40">
             <i class="fa-solid fa-bullhorn animate-bounce"></i>
           </div>
           <div>
             <div class="flex items-center space-x-2">
               <span class="text-xs bg-emerald-500/30 text-emerald-300 border border-emerald-400/40 px-2 py-0.5 rounded-full font-mono font-bold">Release Note</span>
-              <span class="text-xs text-slate-300">อัปเดตระบบเวอร์ชัน 1.22.0</span>
+              <span class="text-xs text-slate-300">อัปเดตระบบเวอร์ชัน 1.22.1</span>
             </div>
-            <h2 class="text-lg sm:text-xl font-black text-white mt-1">ประกาศอัปเดตระบบ Training Center TWP v1.22.0</h2>
+            <h2 class="text-lg sm:text-xl font-black text-white mt-1">ประกาศอัปเดตระบบ Training Center TWP v1.22.1</h2>
           </div>
         </div>
         <button type="button" onclick="closeWhatsNewModal()" class="text-white/70 hover:text-white text-xl p-1 cursor-pointer">
@@ -14385,71 +14791,82 @@ function renderA4EvalReportHtmlClient(d) {
       <!-- Body / Release Items -->
       <div class="p-6 overflow-y-auto custom-scrollbar space-y-3.5 text-xs">
         <p class="text-slate-600 font-medium leading-relaxed">
-          ระบบได้รับการยกระดับสู่ <strong>Enterprise Operations & Audit Governance Edition</strong> เพื่อให้ทุกทีม (ฝ่ายขาย, วิชาการ, ผู้บริหาร) ทำงานประสานกันได้อย่างราบรื่นและมีธรรมาภิบาลข้อมูลสูงสุด:
+          สรุปการอัปเดตระบบสู่ <strong>Enterprise Governance & Role Security Edition (v1.22.1)</strong> เพื่อให้ทุกทีมทำงานประสานกันอย่างมีประสิทธิภาพและมีธรรมาภิบาลข้อมูลสูงสุด:
         </p>
 
         <!-- Feature 1 -->
-        <div class="p-3 bg-slate-50 border border-slate-200 rounded-2xl flex items-start space-x-3">
-          <div class="w-8 h-8 rounded-xl bg-twp-100 text-twp-700 flex items-center justify-center font-bold text-sm shrink-0 mt-0.5">
-            <i class="fa-solid fa-bell"></i>
+        <div class="p-3.5 bg-slate-50 border border-slate-200 rounded-2xl flex items-start space-x-3 hover:bg-slate-100/70 transition">
+          <div class="w-9 h-9 rounded-xl bg-blue-100 text-[#08539E] flex items-center justify-center font-bold text-base shrink-0 mt-0.5">
+            <i class="fa-solid fa-key"></i>
           </div>
           <div class="space-y-0.5 flex-1">
-            <h4 class="font-bold text-slate-900 text-xs sm:text-sm">1. กล่องเตือนงานค้างสำหรับทุกทีม (Role-Based Action Inbox)</h4>
-            <p class="text-slate-600 leading-relaxed">สรุปจำนวนงานค้างของฝ่ายขาย (รอส่งต่อ), วิชาการ (รอจัดวิทยากร/หน้างาน) และผู้บริหาร (รออนุมัติงบ) ไว้บนแถบด้านบนสุด เข้าสู่ระบบแล้วเห็นทันทีแม้เปิดปิดระบบไม่พร้อมกัน</p>
+            <h4 class="font-bold text-slate-900 text-xs sm:text-sm">1. ระบบยืนยันตัวตนด้วย Username & Password ประจำทีม & QR Onboarding</h4>
+            <p class="text-slate-600 leading-relaxed">แยกบัญชีและรหัสผ่านเฉพาะทีม (ฝ่ายขาย A, วิชาการ B, ผู้บริหาร, แอดมิน) มีระบบ Landing Page Login Gate ตรวจสอบก่อนเริ่มทำงาน พร้อมปุ่ม Quick Role Selector สลับบทบาททดสอบได้ทันที และซิงค์กับ Google Sheet <code>Team_Accounts</code></p>
           </div>
         </div>
 
         <!-- Feature 2 -->
-        <div class="p-3 bg-slate-50 border border-slate-200 rounded-2xl flex items-start space-x-3">
-          <div class="w-8 h-8 rounded-xl bg-emerald-100 text-emerald-700 flex items-center justify-center font-bold text-sm shrink-0 mt-0.5">
-            <i class="fa-solid fa-pen-to-square"></i>
+        <div class="p-3.5 bg-slate-50 border border-slate-200 rounded-2xl flex items-start space-x-3 hover:bg-slate-100/70 transition">
+          <div class="w-9 h-9 rounded-xl bg-amber-100 text-amber-700 flex items-center justify-center font-bold text-base shrink-0 mt-0.5">
+            <i class="fa-solid fa-lock"></i>
           </div>
           <div class="space-y-0.5 flex-1">
-            <h4 class="font-bold text-slate-900 text-xs sm:text-sm">2. ฝ่ายขาย (ทีม A): ตารางติดตามงาน & แก้ไขคำขอก่อนทีม B รับงาน</h4>
-            <p class="text-slate-600 leading-relaxed">มีตาราง "ทะเบียนคำขอที่บันทึกแล้ว" ด้านล่างฟอร์มทีม A แสดงสถานะ Real-time พร้อมปุ่ม <code>[ ✏️ แก้ไขคำขอ ]</code> ที่เปิดให้ฝ่ายขายปรับแก้รายละเอียดได้ตราบใดที่ทีม B ยังไม่ได้รับงาน</p>
+            <h4 class="font-bold text-slate-900 text-xs sm:text-sm">2. มาตรการล็อกงบประมาณหลังอนุมัติ (Anti-Fraud Post-Approval Freeze)</h4>
+            <p class="text-slate-600 leading-relaxed">เมื่อผู้บริหารอนุมัติโครงการแล้ว ระบบจะล็อกฟอร์มและงบประมาณอย่างสมบูรณ์ ไม่อนุญาตให้ทีม A หรือ B แก้ไขโดยพลการ เพื่อป้องกันข้อผิดพลาดทางการเงินและทุจริต</p>
           </div>
         </div>
 
         <!-- Feature 3 -->
-        <div class="p-3 bg-slate-50 border border-slate-200 rounded-2xl flex items-start space-x-3">
-          <div class="w-8 h-8 rounded-xl bg-amber-100 text-amber-700 flex items-center justify-center font-bold text-sm shrink-0 mt-0.5">
-            <i class="fa-solid fa-lock"></i>
+        <div class="p-3.5 bg-slate-50 border border-slate-200 rounded-2xl flex items-start space-x-3 hover:bg-slate-100/70 transition">
+          <div class="w-9 h-9 rounded-xl bg-indigo-100 text-indigo-700 flex items-center justify-center font-bold text-base shrink-0 mt-0.5">
+            <i class="fa-solid fa-unlock-keyhole"></i>
           </div>
           <div class="space-y-0.5 flex-1">
-            <h4 class="font-bold text-slate-900 text-xs sm:text-sm">3. มาตรการล็อกงบประมาณและบันทึกประวัติ (Post-Approval Freeze & Audit Log)</h4>
-            <p class="text-slate-600 leading-relaxed">เมื่อผู้บริหารอนุมัติโครงการแล้ว งบประมาณและหัวข้อจะถูกล็อกถาวร ห้ามแก้ไขโดยพลการ หากจำเป็นต้องปรับแก้จะต้องกดปุ่ม <code>[ 📝 ขอปรับแก้ ]</code> เพื่อบันทึกเหตุผลเข้าตาราง Audit Log ใน Google Sheets</p>
+            <h4 class="font-bold text-slate-900 text-xs sm:text-sm">3. ระบบขอปลดล็อกและคิวคำขอแก้ไขสำหรับผู้บริหาร (Executive Revision & Unlock Queue)</h4>
+            <p class="text-slate-600 leading-relaxed">หากมีความจำเป็นต้องปรับปรุงโครงการที่อนุมัติแล้ว ทีม A หรือ B สามารถกดปุ่ม <code>[ ⚠️ ขอปลดล็อกเพื่อแก้ไข ]</code> พร้อมระบุเหตุผล ส่งตรงเข้าคิวพิจารณาของผู้บริหารในแท็บผู้บริหาร เพื่อให้ผู้บริหารกด "อนุมัติปลดล็อก" หรือ "ไม่อนุมัติ"</p>
           </div>
         </div>
 
         <!-- Feature 4 -->
-        <div class="p-3 bg-slate-50 border border-slate-200 rounded-2xl flex items-start space-x-3">
-          <div class="w-8 h-8 rounded-xl bg-purple-100 text-purple-700 flex items-center justify-center font-bold text-sm shrink-0 mt-0.5">
-            <i class="fa-solid fa-list-check"></i>
+        <div class="p-3.5 bg-slate-50 border border-slate-200 rounded-2xl flex items-start space-x-3 hover:bg-slate-100/70 transition">
+          <div class="w-9 h-9 rounded-xl bg-emerald-100 text-emerald-700 flex items-center justify-center font-bold text-base shrink-0 mt-0.5">
+            <i class="fa-solid fa-user-pen"></i>
           </div>
           <div class="space-y-0.5 flex-1">
-            <h4 class="font-bold text-slate-900 text-xs sm:text-sm">4. ฝ่ายวิชาการ (ทีม B): แท่นตรวจความพร้อม 6 เสาหลัก (Checklist)</h4>
-            <p class="text-slate-600 leading-relaxed">เพิ่ม Checklist ตรวจความพร้อมหน้างาน 6 ด้าน (สถานที่, เอกสาร, บูธ, วิทยากร, อาหาร, เช็คชื่อ QR) พร้อมแถบวัด % ความพร้อมและบันทึกซิงค์กับฐานข้อมูลส่วนกลาง</p>
+            <h4 class="font-bold text-slate-900 text-xs sm:text-sm">4. ยกเลิกและแก้ไขรายชื่อผู้เข้าร่วมอบรมรายบุคคล ([ ✏️ ] และ [ 🗑️ ])</h4>
+            <p class="text-slate-600 leading-relaxed">เพิ่มปุ่มแก้ไข <code>[ ✏️ ]</code> และปุ่มลบ <code>[ 🗑️ ]</code> ท้ายรายชื่อผู้เข้าร่วมอบรมทุกบรรทัด สามารถแก้ไขชื่อ ตำแหน่ง หรือลบรายชื่อที่ทดสอบ/ขอยกเลิกได้เป็นรายคน ไม่ต้องลบทั้งโครงการ ทั้งบนหน้าจอหลักและมือถือเช็คชื่อ</p>
           </div>
         </div>
 
         <!-- Feature 5 -->
-        <div class="p-3 bg-slate-50 border border-slate-200 rounded-2xl flex items-start space-x-3">
-          <div class="w-8 h-8 rounded-xl bg-rose-100 text-rose-700 flex items-center justify-center font-bold text-sm shrink-0 mt-0.5">
-            <i class="fa-solid fa-triangle-exclamation"></i>
+        <div class="p-3.5 bg-slate-50 border border-slate-200 rounded-2xl flex items-start space-x-3 hover:bg-slate-100/70 transition">
+          <div class="w-9 h-9 rounded-xl bg-teal-100 text-teal-700 flex items-center justify-center font-bold text-base shrink-0 mt-0.5">
+            <i class="fa-solid fa-list-check"></i>
           </div>
           <div class="space-y-0.5 flex-1">
-            <h4 class="font-bold text-slate-900 text-xs sm:text-sm">5. สมุดบันทึกอุปสรรคและบทเรียนหน้างาน (On-Site Incident Ledger)</h4>
-            <p class="text-slate-600 leading-relaxed">ทีมวิชาการบันทึกปัญหาเฉพาะหน้าและแนวทางแก้ไข ส่งตรงสู่ "สมุดบันทึกอุปสรรคประจำปี 2569" บนหน้าจอผู้บริหาร เพื่อใช้ประเมินความสามารถและป้องกันข้อผิดพลาดซ้ำ</p>
+            <h4 class="font-bold text-slate-900 text-xs sm:text-sm">5. ฝ่ายขาย (ทีม A): ตารางติดตามงาน & แก้ไขคำขอก่อนทีม B รับงาน</h4>
+            <p class="text-slate-600 leading-relaxed">มีตาราง "ทะเบียนคำขอที่บันทึกแล้ว" ด้านล่างฟอร์มทีม A แสดงสถานะ Real-time พร้อมปุ่ม <code>[ ✏️ แก้ไขคำขอ ]</code> ที่เปิดให้ฝ่ายขายปรับแก้รายละเอียดได้ตราบใดที่ทีม B ยังไม่ได้รับงาน</p>
           </div>
         </div>
 
         <!-- Feature 6 -->
-        <div class="p-3 bg-slate-50 border border-slate-200 rounded-2xl flex items-start space-x-3">
-          <div class="w-8 h-8 rounded-xl bg-sky-100 text-sky-700 flex items-center justify-center font-bold text-sm shrink-0 mt-0.5">
+        <div class="p-3.5 bg-slate-50 border border-slate-200 rounded-2xl flex items-start space-x-3 hover:bg-slate-100/70 transition">
+          <div class="w-9 h-9 rounded-xl bg-purple-100 text-purple-700 flex items-center justify-center font-bold text-base shrink-0 mt-0.5">
+            <i class="fa-solid fa-clipboard-check"></i>
+          </div>
+          <div class="space-y-0.5 flex-1">
+            <h4 class="font-bold text-slate-900 text-xs sm:text-sm">6. ฝ่ายวิชาการ (ทีม B): ตรวจความพร้อม 6 เสาหลัก & สมุดบันทึกอุปสรรคหน้างาน</h4>
+            <p class="text-slate-600 leading-relaxed">ตรวจความพร้อม 6 ด้าน (สถานที่, เอกสาร, บูธ, วิทยากร, อาหาร, เช็คชื่อ QR) พร้อมแถบวัด % ความพร้อม และ Incident Log บันทึกปัญหาเฉพาะหน้าส่งตรงสู่หน้าจอผู้บริหาร</p>
+          </div>
+        </div>
+
+        <!-- Feature 7 -->
+        <div class="p-3.5 bg-slate-50 border border-slate-200 rounded-2xl flex items-start space-x-3 hover:bg-slate-100/70 transition">
+          <div class="w-9 h-9 rounded-xl bg-sky-100 text-sky-700 flex items-center justify-center font-bold text-base shrink-0 mt-0.5">
             <i class="fa-solid fa-qrcode"></i>
           </div>
           <div class="space-y-0.5 flex-1">
-            <h4 class="font-bold text-slate-900 text-xs sm:text-sm">6. ปรับปรุง QR เช็คชื่อหน้างาน & ปุ่มถอนการเช็คชื่อ</h4>
+            <h4 class="font-bold text-slate-900 text-xs sm:text-sm">7. QR Code เช็คชื่อ คมชัด สแกนเร็ว & ปุ่มถอนการเช็คชื่อ</h4>
             <p class="text-slate-600 leading-relaxed">QR Code โมดูลใหญ่ คมชัด สแกนเร็ว รองรับทั้งชื่อไทยและอังกฤษ และสามารถกดยกเลิกการเช็คชื่อผิดคนได้ใน 1 คลิก</p>
           </div>
         </div>
@@ -14458,8 +14875,8 @@ function renderA4EvalReportHtmlClient(d) {
       <!-- Footer -->
       <div class="p-4 sm:p-5 bg-slate-50 border-t border-slate-200 flex flex-col sm:flex-row items-center justify-between gap-3 shrink-0 text-xs">
         <span class="text-slate-500 italic">* ท่านสามารถกดดูประกาศนี้ซ้ำได้ตลอดเวลาที่ปุ่ม "📢 ข้อมูลอัปเดต" บนแถบด้านบน</span>
-        <button type="button" onclick="acknowledgeAndCloseWhatsNewModal()" class="w-full sm:w-auto px-6 py-2.5 bg-[#08539E] hover:bg-[#07488a] text-white rounded-xl font-bold shadow-md hover:shadow-lg transition cursor-pointer flex items-center justify-center space-x-2">
-          <span>รับทราบและเข้าสู่ระบบ</span>
+        <button type="button" onclick="acknowledgeAndCloseWhatsNewModal()" class="w-full sm:w-auto px-7 py-3 bg-gradient-to-r from-emerald-600 to-[#08539E] hover:from-emerald-500 hover:to-[#07488a] text-white rounded-xl font-black shadow-lg hover:shadow-xl transition cursor-pointer flex items-center justify-center space-x-2 text-sm btn-tactile">
+          <span>รับทราบการอัปเดต v1.22.1 และเข้าสู่ระบบ</span>
           <i class="fa-solid fa-arrow-right"></i>
         </button>
       </div>
