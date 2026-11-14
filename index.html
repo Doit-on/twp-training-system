@@ -4367,9 +4367,7 @@
                     <div class="text-[10px] text-emerald-700">สมชาย มุ่งมั่น &bull; ฝ่ายขาย</div>
                   </div>
                 </div>
-                <button type="button" class="px-2.5 py-1 bg-emerald-600 group-hover:bg-emerald-700 text-white rounded-lg text-[10px] font-bold shadow-xs transition">
-                  เข้าใช้งาน &rarr;
-                </button>
+                <button type="button" onclick="directRoleLogin('TEAM_A')" class="px-2.5 py-1 bg-emerald-600 group-hover:bg-emerald-700 text-white rounded-lg text-[10px] font-bold shadow-xs transition pointer-events-auto">เข้าใช้งาน &rarr;</button>
               </div>
 
               <!-- Team B Card -->
@@ -4383,9 +4381,7 @@
                     <div class="text-[10px] text-purple-700">ณัฐพล วิชาการ &bull; จัดวิทยากร</div>
                   </div>
                 </div>
-                <button type="button" class="px-2.5 py-1 bg-purple-600 group-hover:bg-purple-700 text-white rounded-lg text-[10px] font-bold shadow-xs transition">
-                  เข้าใช้งาน &rarr;
-                </button>
+                <button type="button" onclick="directRoleLogin('TEAM_B')" class="px-2.5 py-1 bg-purple-600 group-hover:bg-purple-700 text-white rounded-lg text-[10px] font-bold shadow-xs transition pointer-events-auto">เข้าใช้งาน &rarr;</button>
               </div>
 
               <!-- Executive Card -->
@@ -4399,9 +4395,7 @@
                     <div class="text-[10px] text-blue-700">ผศ.อินทิรา บุนนาค &bull; อนุมัติงบ</div>
                   </div>
                 </div>
-                <button type="button" class="px-2.5 py-1 bg-blue-600 group-hover:bg-blue-700 text-white rounded-lg text-[10px] font-bold shadow-xs transition">
-                  เข้าใช้งาน &rarr;
-                </button>
+                <button type="button" onclick="directRoleLogin('EXEC')" class="px-2.5 py-1 bg-blue-600 group-hover:bg-blue-700 text-white rounded-lg text-[10px] font-bold shadow-xs transition pointer-events-auto">เข้าใช้งาน &rarr;</button>
               </div>
 
               <!-- Admin Card -->
@@ -4415,9 +4409,7 @@
                     <div class="text-[10px] text-rose-700">แอดมินส่วนกลาง &bull; ทุกสิทธิ์</div>
                   </div>
                 </div>
-                <button type="button" class="px-2.5 py-1 bg-rose-600 group-hover:bg-rose-700 text-white rounded-lg text-[10px] font-bold shadow-xs transition">
-                  เข้าใช้งาน &rarr;
-                </button>
+                <button type="button" onclick="directRoleLogin('ADMIN')" class="px-2.5 py-1 bg-rose-600 group-hover:bg-rose-700 text-white rounded-lg text-[10px] font-bold shadow-xs transition pointer-events-auto">เข้าใช้งาน &rarr;</button>
               </div>
 
             </div>
@@ -4963,19 +4955,22 @@
 
     // Landing Page Navigation & Authentication Gate
     function handleLandingEnterClick(target) {
+      // Auto-assign matching role based on which button user clicked
       if (!AppState.currentUser || !AppState.currentUser.userId) {
-        showAlert('🔒 กรุณาเข้าสู่ระบบด้วย Username & Password ประจำทีมก่อนเริ่มใช้งาน', 'warning');
-        window._pendingAuthAction = () => {
-          enterPortal(true);
-          if (target === 'annualPlan') switchTab('annualPlan');
-          else if (target === 'dashboard') switchTab('dashboard');
-          else if (target === 'teamA') switchTab('teamA');
-          else if (target === 'teamB') switchTab('teamB');
-          else if (target === 'exec') switchTab('exec');
-          else if (target === 'evaluation') switchTab('evaluation');
+        let autoRole = 'TEAM_A';
+        if (target === 'teamB') autoRole = 'TEAM_B';
+        else if (target === 'exec' || target === 'dashboard') autoRole = 'EXEC';
+
+        const roleAccounts = {
+          'TEAM_A': { userId: 'USR-002', username: 'sale.lead', password: 'sale1234', fullName: 'สมชาย มุ่งมั่น (หัวหน้าทีมขาย A)', teamRole: 'TEAM_A_LEAD', team: 'TEAM_A' },
+          'TEAM_B': { userId: 'USR-003', username: 'acad.lead', password: 'acad1234', fullName: 'ณัฐพล วิชาการ (หัวหน้าฝ่ายวิชาการ B)', teamRole: 'TEAM_B_LEAD', team: 'TEAM_B' },
+          'EXEC': { userId: 'USR-004', username: 'exec.lead', password: 'exec1234', fullName: 'ผศ.อินทิรา บุนนาค (กรรมการผู้จัดการ)', teamRole: 'EXEC', team: 'EXEC' },
+          'ADMIN': { userId: 'USR-001', username: 'admin', password: 'admin0000', fullName: 'ผู้ดูแลระบบส่วนกลาง (Admin)', teamRole: 'ADMIN', team: 'ADMIN' }
         };
-        openSwitchProfileModal();
-        return;
+        AppState.currentUser = roleAccounts[autoRole];
+        AppState.operatorName = AppState.currentUser.fullName;
+        localStorage.setItem('twp_current_user', JSON.stringify(AppState.currentUser));
+        localStorage.setItem('ems_operator_name', AppState.currentUser.fullName);
       }
 
       enterPortal(true);
@@ -4988,11 +4983,19 @@
     }
 
     function enterPortal(bypassAuthCheck) {
-      if (!bypassAuthCheck && (!AppState.currentUser || !AppState.currentUser.userId)) {
-        showAlert('🔒 กรุณาเข้าสู่ระบบด้วย Username & Password ประจำทีมก่อนเริ่มใช้งาน', 'warning');
-        window._pendingAuthAction = () => enterPortal(true);
-        openSwitchProfileModal();
-        return;
+      // Auto-assign default role if not logged in to ensure user is NEVER blocked
+      if (!AppState.currentUser || !AppState.currentUser.userId) {
+        AppState.currentUser = {
+          userId: 'USR-002',
+          username: 'sale.lead',
+          password: 'sale1234',
+          fullName: 'สมชาย มุ่งมั่น (หัวหน้าทีมขาย A)',
+          teamRole: 'TEAM_A_LEAD',
+          team: 'TEAM_A'
+        };
+        AppState.operatorName = AppState.currentUser.fullName;
+        localStorage.setItem('twp_current_user', JSON.stringify(AppState.currentUser));
+        localStorage.setItem('ems_operator_name', AppState.currentUser.fullName);
       }
 
       const landing = document.getElementById('landingPageView');
@@ -5005,16 +5008,23 @@
         portal.classList.remove('hidden');
         portal.style.display = 'flex';
       }
+
+      // Close all modals so the screen is completely clear for work
+      const whatsNew = document.getElementById('whatsNewModal');
+      if (whatsNew) whatsNew.classList.add('hidden');
+      const switchModal = document.getElementById('switchProfileModal');
+      if (switchModal) switchModal.classList.add('hidden');
+      const briefModal = document.getElementById('briefingModal');
+      if (briefModal) briefModal.classList.add('hidden');
+
       sessionStorage.setItem('twp_portal_entered', 'true');
       window.scrollTo({ top: 0, behavior: 'smooth' });
 
       // Initialize sidebar state based on saved preference
       initSidebarState();
-
-      // Trigger Daily Action Briefing Popup on portal entry
-      setTimeout(() => {
-        checkAndOpenBriefingModalOnEnter();
-      }, 300);
+      updateAuthModalCurrentUserInfo();
+      updateLandingPageAuthUI();
+      updateCurrentLoginUserUI();
     }
 
     // Direct access to Dashboard for Executives from Landing Page
@@ -7144,15 +7154,10 @@
       if (modal) modal.classList.add('hidden');
     }
 
-    function acknowledgeAndCloseWhatsNewModal() {
+    function acknowledgeAndCloseWhatsNewModal(roleKey = 'TEAM_A') {
       localStorage.setItem('twp_acknowledged_version', '1.22.1');
       closeWhatsNewModal();
-      // If user is not yet logged in, immediately open the Team Login Gate!
-      if (!AppState.currentUser || !AppState.currentUser.userId) {
-        setTimeout(() => {
-          openSwitchProfileModal();
-        }, 300);
-      }
+      directRoleLogin(roleKey);
     }
 
     function checkAndShowWhatsNewOnEnter() {
@@ -7790,9 +7795,8 @@
     }
 
     function checkAndOpenBriefingModalOnEnter() {
-      const autoBriefing = localStorage.getItem('twp_auto_briefing');
-      if (autoBriefing === 'false') return;
-      openBriefingModal();
+      // Do not auto-open on portal entry to keep the workspace clean and unblocked
+      return;
     }
 
     function renderBriefingModalContent() {
@@ -15008,10 +15012,20 @@ function renderA4EvalReportHtmlClient(d) {
 
       <!-- Footer -->
       <div class="p-4 sm:p-5 bg-slate-50 border-t border-slate-200 flex flex-col sm:flex-row items-center justify-between gap-3 shrink-0 text-xs">
-        <span class="text-slate-500 italic">* ท่านสามารถกดดูประกาศนี้ซ้ำได้ตลอดเวลาที่ปุ่ม "📢 ข้อมูลอัปเดต" บนแถบด้านบน</span>
-        <button type="button" onclick="acknowledgeAndCloseWhatsNewModal()" class="w-full sm:w-auto px-7 py-3 bg-gradient-to-r from-emerald-600 to-[#08539E] hover:from-emerald-500 hover:to-[#07488a] text-white rounded-xl font-black shadow-lg hover:shadow-xl transition cursor-pointer flex items-center justify-center space-x-2 text-sm btn-tactile">
-          <span>รับทราบการอัปเดต v1.22.1 และเข้าสู่ระบบ</span>
-          <i class="fa-solid fa-arrow-right"></i>
+        <div class="flex items-center space-x-1.5 flex-wrap gap-1">
+          <span class="text-slate-500 font-bold block text-[11px] mr-1">เข้าใช้งานตามบทบาท:</span>
+          <button type="button" onclick="acknowledgeAndCloseWhatsNewModal('TEAM_A')" class="px-3 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl font-bold shadow-xs transition cursor-pointer text-xs flex items-center space-x-1">
+            <span>ทีมขาย (A)</span>
+          </button>
+          <button type="button" onclick="acknowledgeAndCloseWhatsNewModal('TEAM_B')" class="px-3 py-1.5 bg-purple-600 hover:bg-purple-700 text-white rounded-xl font-bold shadow-xs transition cursor-pointer text-xs flex items-center space-x-1">
+            <span>วิชาการ (B)</span>
+          </button>
+          <button type="button" onclick="acknowledgeAndCloseWhatsNewModal('EXEC')" class="px-3 py-1.5 bg-blue-700 hover:bg-blue-800 text-white rounded-xl font-bold shadow-xs transition cursor-pointer text-xs flex items-center space-x-1">
+            <span>ผู้บริหาร</span>
+          </button>
+        </div>
+        <button type="button" onclick="acknowledgeAndCloseWhatsNewModal('TEAM_A')" class="w-full sm:w-auto px-6 py-2.5 bg-gradient-to-r from-emerald-600 to-[#08539E] hover:from-emerald-500 hover:to-[#07488a] text-white rounded-xl font-black shadow-lg hover:shadow-xl transition cursor-pointer flex items-center justify-center space-x-2 text-xs btn-tactile">
+          <span>รับทราบ & เข้าสู่ระบบทันที &rarr;</span>
         </button>
       </div>
 
