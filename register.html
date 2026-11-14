@@ -50,7 +50,7 @@
         <button type="button" onclick="loadAttendees(true)" class="p-1 bg-white/10 hover:bg-white/20 active:bg-white/30 rounded-lg text-white text-xs transition" title="รีเฟรชข้อมูลล่าสุด">
           <i id="btnRefreshIcon" class="fa-solid fa-arrows-rotate"></i>
         </button>
-        <span class="text-[10px] bg-white/20 text-blue-100 font-mono font-bold px-2 py-0.5 rounded-full border border-emerald-300/40 bg-emerald-500 text-white font-black px-2.5 py-0.5 shadow-sm">v1.21.0 (ล่าสุด)</span>
+        <span class="text-[10px] bg-white/20 text-blue-100 font-mono font-bold px-2 py-0.5 rounded-full border border-emerald-300/40 bg-emerald-500 text-white font-black px-2.5 py-0.5 shadow-sm">v1.22.1 (ล่าสุด)</span>
       </div>
     </div>
   </header>
@@ -317,7 +317,7 @@
   <!-- FOOTER -->
   <footer class="bg-white border-t border-slate-200 py-3 text-center text-slate-400 text-xs">
     <p>สำนักพิมพ์ไทยวัฒนาพานิช จำกัด • Thai Watana Panich Publishing House</p>
-    <p class="text-[10px] text-slate-400 mt-0.5">ระบบเช็กชื่อผู้เข้าอบรมมาตรฐานสากล (TWP Enterprise Onsite Check-in v1.21.0)</p>
+    <p class="text-[10px] text-slate-400 mt-0.5">ระบบเช็กชื่อผู้เข้าอบรมมาตรฐานสากล (TWP Enterprise Onsite Check-in v1.22.1)</p>
   </footer>
 
   <!-- SCRIPT LOGIC -->
@@ -635,6 +635,16 @@
               </div>
             </div>
 
+            <!-- Edit / Delete Tools -->
+            <div class="flex flex-col items-center justify-center gap-1 shrink-0 pl-1 border-l border-slate-100">
+              <button type="button" onclick="openEditAttendeeModal('${att.regId}')" class="p-1.5 text-slate-400 hover:text-blue-700 hover:bg-blue-50 rounded-lg transition" title="แก้ไขข้อมูลผู้เข้าอบรม">
+                <i class="fa-solid fa-pen text-xs"></i>
+              </button>
+              <button type="button" onclick="deleteAttendee('${att.regId}')" class="p-1.5 text-slate-400 hover:text-rose-700 hover:bg-rose-50 rounded-lg transition" title="ลบรายชื่อผู้เข้าร่วมคนนี้">
+                <i class="fa-solid fa-trash text-xs"></i>
+              </button>
+            </div>
+
             <!-- Action Column -->
             <div class="shrink-0 text-right space-y-1">
               ${isChecked ? `
@@ -900,6 +910,159 @@
         btn.innerHTML = '<i class="fa-solid fa-check"></i><span>ยืนยันลงทะเบียน & เช็กชื่อ</span>';
       }
     }
-  </script>
+  
+    // --- V1.22.1: Individual Attendee Edit & Delete Functions ---
+    function openEditAttendeeModal(regId) {
+      const att = (attendeesList || []).find(a => a.regId === regId);
+      if (!att) {
+        alert('ไม่พบข้อมูลผู้เข้าอบรมรหัส ' + regId);
+        return;
+      }
+      const modal = document.getElementById('editAttendeeModal');
+      if (!modal) return;
+
+      document.getElementById('editAttRegId').value = regId;
+      document.getElementById('editAttNameTh').value = att.nameTh || '';
+      document.getElementById('editAttNameEn').value = att.nameEn || '';
+      document.getElementById('editAttSchool').value = att.school || '';
+      document.getElementById('editAttEmail').value = att.email || '';
+      document.getElementById('editAttPhone').value = att.phone || '';
+
+      modal.classList.remove('hidden');
+    }
+
+    function closeEditAttendeeModal() {
+      const modal = document.getElementById('editAttendeeModal');
+      if (modal) modal.classList.add('hidden');
+    }
+
+    function saveEditAttendee() {
+      const regId = document.getElementById('editAttRegId').value;
+      const nameTh = document.getElementById('editAttNameTh').value.trim();
+      const nameEn = document.getElementById('editAttNameEn').value.trim();
+      const school = document.getElementById('editAttSchool').value.trim();
+      const email = document.getElementById('editAttEmail').value.trim();
+      const phone = document.getElementById('editAttPhone').value.trim();
+
+      if (!nameTh && !nameEn) {
+        alert('กรุณาระบุชื่อ-นามสกุล');
+        return;
+      }
+
+      const att = (attendeesList || []).find(a => a.regId === regId);
+      if (att) {
+        att.nameTh = nameTh;
+        att.nameEn = nameEn;
+        att.school = school;
+        att.email = email;
+        att.phone = phone;
+      }
+
+      if (DEFAULT_GAS_ENDPOINT) {
+        fetch(DEFAULT_GAS_ENDPOINT, {
+          method: 'POST',
+          headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+          body: JSON.stringify({
+            action: 'UPDATE_REGISTRATION',
+            payload: {
+              regId: regId,
+              nameTh: nameTh,
+              nameEn: nameEn,
+              school: school,
+              email: email,
+              phone: phone
+            }
+          })
+        }).catch(e => console.warn('Update attendee error:', e));
+      }
+
+      alert('บันทึกการแก้ไขข้อมูลคุณ ' + (nameTh || nameEn) + ' เรียบร้อยแล้ว');
+      closeEditAttendeeModal();
+      renderAttendeesList(attendeesList);
+    }
+
+    function deleteAttendee(regId) {
+      const att = (attendeesList || []).find(a => a.regId === regId);
+      const name = att ? (att.nameTh || att.nameEn || regId) : regId;
+
+      if (!confirm('ยืนยันลบรายชื่อคุณ "' + name + '" ออกจากโครงการนี้หรือไม่?\n(ข้อมูลจะถูกลบออกจากฐานข้อมูล)')) {
+        return;
+      }
+
+      attendeesList = (attendeesList || []).filter(a => a.regId !== regId);
+
+      if (DEFAULT_GAS_ENDPOINT) {
+        fetch(DEFAULT_GAS_ENDPOINT, {
+          method: 'POST',
+          headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+          body: JSON.stringify({
+            action: 'DELETE_REGISTRATION',
+            payload: { regId: regId }
+          })
+        }).catch(e => console.warn('Delete attendee error:', e));
+      }
+
+      alert('ลบรายชื่อคุณ ' + name + ' ออกจากระบบเรียบร้อยแล้ว');
+      updateHeaderStats();
+      renderAttendeesList(attendeesList);
+    }
+
+</script>
+
+
+  <!-- Modal: Edit Individual Attendee (v1.22.1) -->
+  <div id="editAttendeeModal" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 animate-fadeIn">
+    <div class="bg-white rounded-3xl max-w-md w-full p-6 shadow-2xl border border-slate-200 space-y-4">
+      <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+        <div class="flex items-center space-x-2.5">
+          <div class="w-9 h-9 rounded-xl bg-blue-100 text-blue-700 flex items-center justify-center font-bold text-base">
+            <i class="fa-solid fa-user-pen"></i>
+          </div>
+          <div>
+            <h3 class="text-base font-black text-slate-900">แก้ไขข้อมูลผู้เข้าอบรม</h3>
+            <p class="text-xs text-slate-400">แก้ไขข้อมูลรายบุคคลเพื่อความถูกต้องของ e-Certificate</p>
+          </div>
+        </div>
+        <button type="button" onclick="closeEditAttendeeModal()" class="text-slate-400 hover:text-slate-600 text-lg cursor-pointer">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+
+      <input type="hidden" id="editAttRegId" />
+      <div class="space-y-3 text-xs">
+        <div>
+          <label class="block font-bold text-slate-700 mb-1">ชื่อ-นามสกุล (ภาษาไทย) *</label>
+          <input type="text" id="editAttNameTh" class="w-full p-2.5 border border-slate-300 rounded-xl focus:ring-2 focus:ring-blue-500 font-medium" placeholder="เช่น นายสมชาย ตัวอย่าง" />
+        </div>
+        <div>
+          <label class="block font-bold text-slate-700 mb-1">ชื่อ-นามสกุล (ภาษาอังกฤษ สำหรับ e-Certificate)</label>
+          <input type="text" id="editAttNameEn" class="w-full p-2.5 border border-slate-300 rounded-xl focus:ring-2 focus:ring-blue-500 font-serif italic" placeholder="เช่น Mr. Somchai Tuayang" />
+        </div>
+        <div>
+          <label class="block font-bold text-slate-700 mb-1">โรงเรียน / สังกัด</label>
+          <input type="text" id="editAttSchool" class="w-full p-2.5 border border-slate-300 rounded-xl focus:ring-2 focus:ring-blue-500" placeholder="ระบุชื่อโรงเรียนหรือสังกัด" />
+        </div>
+        <div class="grid grid-cols-2 gap-2">
+          <div>
+            <label class="block font-bold text-slate-700 mb-1">เบอร์โทรศัพท์</label>
+            <input type="text" id="editAttPhone" class="w-full p-2.5 border border-slate-300 rounded-xl focus:ring-2 focus:ring-blue-500 font-mono" placeholder="08xxxxxxxx" />
+          </div>
+          <div>
+            <label class="block font-bold text-slate-700 mb-1">อีเมล</label>
+            <input type="email" id="editAttEmail" class="w-full p-2.5 border border-slate-300 rounded-xl focus:ring-2 focus:ring-blue-500" placeholder="teacher@school.ac.th" />
+          </div>
+        </div>
+      </div>
+
+      <div class="flex items-center justify-end space-x-2 pt-2 border-t border-slate-100">
+        <button type="button" onclick="closeEditAttendeeModal()" class="px-4 py-2 border border-slate-200 text-slate-600 rounded-xl hover:bg-slate-50 transition text-xs font-bold cursor-pointer">ยกเลิก</button>
+        <button type="button" onclick="saveEditAttendee()" class="px-5 py-2 bg-[#08539E] hover:bg-[#07488a] text-white rounded-xl transition text-xs font-bold shadow-md flex items-center space-x-1.5 cursor-pointer btn-tactile">
+          <i class="fa-solid fa-floppy-disk"></i>
+          <span>บันทึกการแก้ไข</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
 </body>
 </html>

@@ -4348,68 +4348,87 @@
         <!-- TAB 1: USERNAME & PASSWORD LOGIN FORM -->
         <div id="authSectionLogin" class="space-y-4">
 
-          <!-- 1-Click Fast Team Login Cards (Top Priority) -->
+          <!-- Role Governance Header Notice -->
+          <div class="p-3 bg-blue-50/80 border border-blue-200 rounded-2xl text-slate-700 space-y-1">
+            <div class="font-bold text-[#08539E] text-xs flex items-center gap-1.5">
+              <i class="fa-solid fa-shield-halved"></i>
+              <span>ระบบตรวจสอบสิทธิ์และป้องกันการก้าวก่ายหน้าที่ (Role Governance)</span>
+            </div>
+            <p class="text-[11px] text-slate-600 leading-relaxed">
+              ผู้ใช้งานต้องระบุ Username & Password ประจำทีมของตนเอง เพื่อให้ระบบควบคุมการเข้าถึงข้อมูลและแยกความรับผิดชอบอย่างถูกต้องตามหลักธรรมาภิบาล
+            </p>
+          </div>
+
+          <!-- Official Team Accounts Quick Selector Card -->
           <div class="space-y-2">
-            <span class="text-[11px] text-slate-700 font-black uppercase tracking-wider flex items-center gap-1.5">
-              <i class="fa-solid fa-users text-[#08539E]"></i>
-              <span>เลือกทีมประจำตำแหน่งของท่าน (เข้าสู่ระบบทันทีใน 1 คลิก):</span>
-            </span>
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+            <div class="flex items-center justify-between">
+              <span class="text-[11px] text-slate-700 font-bold uppercase tracking-wider flex items-center gap-1">
+                <i class="fa-solid fa-users text-[#08539E]"></i>
+                <span>บัญชีประจำทีมอย่างเป็นทางการ (Official Team Accounts):</span>
+              </span>
+              <span class="text-[10px] text-slate-400">คลิกปุ่มเพื่อเลือกสิทธิ์</span>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
               
-              <!-- Team A Card -->
-              <div onclick="directRoleLogin('TEAM_A')" class="p-3 bg-emerald-50 hover:bg-emerald-100/90 border-2 border-emerald-300 rounded-2xl transition flex items-center justify-between cursor-pointer group shadow-2xs hover:shadow-md">
-                <div class="flex items-center space-x-2.5">
-                  <div class="w-9 h-9 rounded-xl bg-emerald-500 text-white flex items-center justify-center font-bold text-sm shrink-0 shadow-xs">
-                    <i class="fa-solid fa-paper-plane"></i>
+              <!-- Account 1: Team A -->
+              <div class="p-2.5 bg-emerald-50/80 border border-emerald-300 rounded-xl flex items-center justify-between hover:bg-emerald-100 transition">
+                <div class="space-y-0.5">
+                  <div class="font-bold text-emerald-950 flex items-center gap-1 text-[11px]">
+                    <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+                    <span>1. ฝ่ายขาย (ทีม A)</span>
                   </div>
-                  <div>
-                    <div class="font-black text-emerald-950 text-xs">ทีมขาย (Team A)</div>
-                    <div class="text-[10px] text-emerald-700">สมชาย มุ่งมั่น &bull; ฝ่ายขาย</div>
-                  </div>
+                  <div class="text-[10px] text-slate-600 font-mono">User: <strong>sale.lead</strong> | Pass: <strong>sale1234</strong></div>
+                  <div class="text-[9px] text-emerald-700">สมชาย มุ่งมั่น (บันทึก/แก้ไขคำขอ)</div>
                 </div>
-                <button type="button" onclick="directRoleLogin('TEAM_A')" class="px-2.5 py-1 bg-emerald-600 group-hover:bg-emerald-700 text-white rounded-lg text-[10px] font-bold shadow-xs transition pointer-events-auto">เข้าใช้งาน &rarr;</button>
+                <button type="button" onclick="selectTeamLoginAccount('sale.lead', 'sale1234')" class="px-2 py-1 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg text-[10px] font-bold shadow-xs cursor-pointer transition">
+                  เลือกทีมนี้ &rarr;
+                </button>
               </div>
 
-              <!-- Team B Card -->
-              <div onclick="directRoleLogin('TEAM_B')" class="p-3 bg-purple-50 hover:bg-purple-100/90 border-2 border-purple-300 rounded-2xl transition flex items-center justify-between cursor-pointer group shadow-2xs hover:shadow-md">
-                <div class="flex items-center space-x-2.5">
-                  <div class="w-9 h-9 rounded-xl bg-purple-600 text-white flex items-center justify-center font-bold text-sm shrink-0 shadow-xs">
-                    <i class="fa-solid fa-clipboard-check"></i>
+              <!-- Account 2: Team B -->
+              <div class="p-2.5 bg-purple-50/80 border border-purple-300 rounded-xl flex items-center justify-between hover:bg-purple-100 transition">
+                <div class="space-y-0.5">
+                  <div class="font-bold text-purple-950 flex items-center gap-1 text-[11px]">
+                    <span class="w-2 h-2 rounded-full bg-purple-500"></span>
+                    <span>2. ทีมวิชาการ (ทีม B)</span>
                   </div>
-                  <div>
-                    <div class="font-black text-purple-950 text-xs">ทีมวิชาการ (Team B)</div>
-                    <div class="text-[10px] text-purple-700">ณัฐพล วิชาการ &bull; จัดวิทยากร</div>
-                  </div>
+                  <div class="text-[10px] text-slate-600 font-mono">User: <strong>acad.lead</strong> | Pass: <strong>acad1234</strong></div>
+                  <div class="text-[9px] text-purple-700">ณัฐพล วิชาการ (จัดวิทยากร/Checklist)</div>
                 </div>
-                <button type="button" onclick="directRoleLogin('TEAM_B')" class="px-2.5 py-1 bg-purple-600 group-hover:bg-purple-700 text-white rounded-lg text-[10px] font-bold shadow-xs transition pointer-events-auto">เข้าใช้งาน &rarr;</button>
+                <button type="button" onclick="selectTeamLoginAccount('acad.lead', 'acad1234')" class="px-2 py-1 bg-purple-600 hover:bg-purple-700 text-white rounded-lg text-[10px] font-bold shadow-xs cursor-pointer transition">
+                  เลือกทีมนี้ &rarr;
+                </button>
               </div>
 
-              <!-- Executive Card -->
-              <div onclick="directRoleLogin('EXEC')" class="p-3 bg-blue-50 hover:bg-blue-100/90 border-2 border-blue-300 rounded-2xl transition flex items-center justify-between cursor-pointer group shadow-2xs hover:shadow-md">
-                <div class="flex items-center space-x-2.5">
-                  <div class="w-9 h-9 rounded-xl bg-blue-600 text-white flex items-center justify-center font-bold text-sm shrink-0 shadow-xs">
-                    <i class="fa-solid fa-stamp"></i>
+              <!-- Account 3: Executive -->
+              <div class="p-2.5 bg-blue-50/80 border border-blue-300 rounded-xl flex items-center justify-between hover:bg-blue-100 transition">
+                <div class="space-y-0.5">
+                  <div class="font-bold text-blue-950 flex items-center gap-1 text-[11px]">
+                    <span class="w-2 h-2 rounded-full bg-blue-600"></span>
+                    <span>3. ฝ่ายบริหาร (Executive)</span>
                   </div>
-                  <div>
-                    <div class="font-black text-blue-950 text-xs">ฝ่ายบริหาร (Executive)</div>
-                    <div class="text-[10px] text-blue-700">ผศ.อินทิรา บุนนาค &bull; อนุมัติงบ</div>
-                  </div>
+                  <div class="text-[10px] text-slate-600 font-mono">User: <strong>exec.lead</strong> | Pass: <strong>exec1234</strong></div>
+                  <div class="text-[9px] text-blue-700">ผศ.อินทิรา บุนนาค (อนุมัติงบ/ปลดล็อก)</div>
                 </div>
-                <button type="button" onclick="directRoleLogin('EXEC')" class="px-2.5 py-1 bg-blue-600 group-hover:bg-blue-700 text-white rounded-lg text-[10px] font-bold shadow-xs transition pointer-events-auto">เข้าใช้งาน &rarr;</button>
+                <button type="button" onclick="selectTeamLoginAccount('exec.lead', 'exec1234')" class="px-2 py-1 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-[10px] font-bold shadow-xs cursor-pointer transition">
+                  เลือกทีมนี้ &rarr;
+                </button>
               </div>
 
-              <!-- Admin Card -->
-              <div onclick="directRoleLogin('ADMIN')" class="p-3 bg-rose-50 hover:bg-rose-100/90 border-2 border-rose-300 rounded-2xl transition flex items-center justify-between cursor-pointer group shadow-2xs hover:shadow-md">
-                <div class="flex items-center space-x-2.5">
-                  <div class="w-9 h-9 rounded-xl bg-rose-600 text-white flex items-center justify-center font-bold text-sm shrink-0 shadow-xs">
-                    <i class="fa-solid fa-screwdriver-wrench"></i>
+              <!-- Account 4: Admin -->
+              <div class="p-2.5 bg-rose-50/80 border border-rose-300 rounded-xl flex items-center justify-between hover:bg-rose-100 transition">
+                <div class="space-y-0.5">
+                  <div class="font-bold text-rose-950 flex items-center gap-1 text-[11px]">
+                    <span class="w-2 h-2 rounded-full bg-rose-600"></span>
+                    <span>4. ผู้ดูแลระบบ (Admin)</span>
                   </div>
-                  <div>
-                    <div class="font-black text-rose-950 text-xs">ผู้ดูแลระบบ (Admin)</div>
-                    <div class="text-[10px] text-rose-700">แอดมินส่วนกลาง &bull; ทุกสิทธิ์</div>
-                  </div>
+                  <div class="text-[10px] text-slate-600 font-mono">User: <strong>admin</strong> | Pass: <strong>admin0000</strong></div>
+                  <div class="text-[9px] text-rose-700">ผู้ดูแลระบบส่วนกลาง (ควบคุมทุกระบบ)</div>
                 </div>
-                <button type="button" onclick="directRoleLogin('ADMIN')" class="px-2.5 py-1 bg-rose-600 group-hover:bg-rose-700 text-white rounded-lg text-[10px] font-bold shadow-xs transition pointer-events-auto">เข้าใช้งาน &rarr;</button>
+                <button type="button" onclick="selectTeamLoginAccount('admin', 'admin0000')" class="px-2 py-1 bg-rose-600 hover:bg-rose-700 text-white rounded-lg text-[10px] font-bold shadow-xs cursor-pointer transition">
+                  เลือกทีมนี้ &rarr;
+                </button>
               </div>
 
             </div>
@@ -4418,40 +4437,40 @@
           <!-- Divider -->
           <div class="relative flex py-1 items-center">
             <div class="flex-grow border-t border-slate-200"></div>
-            <span class="flex-shrink mx-3 text-slate-400 text-[10px] uppercase font-bold tracking-wider">หรือ ระบุ Username & Password</span>
+            <span class="flex-shrink mx-3 text-slate-400 text-[10px] uppercase font-bold tracking-wider">ฟอร์มเข้าสู่ระบบ (Sign-In Form)</span>
             <div class="flex-grow border-t border-slate-200"></div>
           </div>
 
           <!-- Inline Error Box -->
-          <div id="authModalInlineError" class="hidden p-3 bg-rose-50 border border-rose-300 rounded-xl text-rose-700 font-bold text-xs flex items-center space-x-2 animate-fadeIn">
-            <i class="fa-solid fa-circle-exclamation text-rose-500 text-sm"></i>
+          <div id="authModalInlineError" class="hidden p-3.5 bg-rose-50 border-2 border-rose-300 rounded-2xl text-rose-700 font-bold text-xs flex items-center space-x-2.5 animate-fadeIn shadow-xs">
+            <i class="fa-solid fa-triangle-exclamation text-rose-600 text-base shrink-0"></i>
             <span id="authModalInlineErrorText">Username หรือ Password ไม่ถูกต้อง</span>
           </div>
 
-          <!-- Username & Password Form -->
-          <form onsubmit="handleAuthLoginSubmit(event)" class="space-y-3">
+          <!-- Form Fields -->
+          <form onsubmit="event.preventDefault(); handleAuthLoginSubmit(event); return false;" class="space-y-3">
             <div>
-              <label class="block font-bold text-slate-700 mb-1">ชื่อผู้ใช้งาน (Username)</label>
+              <label class="block font-bold text-slate-700 mb-1 text-xs">ชื่อผู้ใช้งาน (Username) *</label>
               <div class="relative">
                 <i class="fa-solid fa-user absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"></i>
-                <input type="text" id="authUsernameInput" value="sale.lead" class="w-full pl-9 pr-3 py-2.5 bg-white border border-slate-300 rounded-xl focus:ring-2 focus:ring-blue-500 font-medium text-xs" placeholder="เช่น sale.lead, acad.lead, exec.lead, admin" />
+                <input type="text" id="authUsernameInput" class="w-full pl-9 pr-3 py-2.5 bg-white border border-slate-300 rounded-xl focus:ring-2 focus:ring-blue-500 font-medium text-xs font-mono" placeholder="เช่น sale.lead, acad.lead, exec.lead, admin" />
               </div>
             </div>
 
             <div>
-              <label class="block font-bold text-slate-700 mb-1">รหัสผ่าน (Password)</label>
+              <label class="block font-bold text-slate-700 mb-1 text-xs">รหัสผ่าน (Password) *</label>
               <div class="relative">
                 <i class="fa-solid fa-lock absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"></i>
-                <input type="password" id="authPasswordInput" value="sale1234" class="w-full pl-9 pr-10 py-2.5 bg-white border border-slate-300 rounded-xl focus:ring-2 focus:ring-blue-500 font-medium text-xs font-mono" placeholder="รหัสผ่านเข้าสู่ระบบ" />
-                <button type="button" onclick="togglePasswordVisibility('authPasswordInput')" class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 text-xs">
+                <input type="password" id="authPasswordInput" class="w-full pl-9 pr-10 py-2.5 bg-white border border-slate-300 rounded-xl focus:ring-2 focus:ring-blue-500 font-medium text-xs font-mono" placeholder="รหัสผ่านประจำทีม" />
+                <button type="button" onclick="togglePasswordVisibility('authPasswordInput')" class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 text-xs cursor-pointer">
                   <i class="fa-solid fa-eye"></i>
                 </button>
               </div>
             </div>
 
-            <button type="submit" onclick="handleAuthLoginSubmit(event)" class="w-full py-3 bg-[#08539E] hover:bg-[#07488a] text-white rounded-xl font-black shadow-md hover:shadow-lg transition text-xs cursor-pointer btn-tactile flex items-center justify-center space-x-2">
-              <i class="fa-solid fa-arrow-right-to-bracket text-sm"></i>
-              <span>เข้าสู่ระบบ (Sign In)</span>
+            <button type="button" id="btnSubmitAuthLogin" onclick="handleAuthLoginSubmit(event)" class="w-full py-3.5 bg-gradient-to-r from-blue-700 via-indigo-700 to-[#08539E] hover:from-blue-600 hover:to-[#07488a] text-white rounded-2xl font-black text-sm shadow-md hover:shadow-lg transition cursor-pointer btn-tactile flex items-center justify-center space-x-2">
+              <i class="fa-solid fa-lock-open text-base"></i>
+              <span>ตรวจสอบสิทธิ์และเข้าสู่ระบบ (Sign In)</span>
             </button>
           </form>
 
@@ -4955,22 +4974,10 @@
 
     // Landing Page Navigation & Authentication Gate
     function handleLandingEnterClick(target) {
-      // Auto-assign matching role based on which button user clicked
       if (!AppState.currentUser || !AppState.currentUser.userId) {
-        let autoRole = 'TEAM_A';
-        if (target === 'teamB') autoRole = 'TEAM_B';
-        else if (target === 'exec' || target === 'dashboard') autoRole = 'EXEC';
-
-        const roleAccounts = {
-          'TEAM_A': { userId: 'USR-002', username: 'sale.lead', password: 'sale1234', fullName: 'สมชาย มุ่งมั่น (หัวหน้าทีมขาย A)', teamRole: 'TEAM_A_LEAD', team: 'TEAM_A' },
-          'TEAM_B': { userId: 'USR-003', username: 'acad.lead', password: 'acad1234', fullName: 'ณัฐพล วิชาการ (หัวหน้าฝ่ายวิชาการ B)', teamRole: 'TEAM_B_LEAD', team: 'TEAM_B' },
-          'EXEC': { userId: 'USR-004', username: 'exec.lead', password: 'exec1234', fullName: 'ผศ.อินทิรา บุนนาค (กรรมการผู้จัดการ)', teamRole: 'EXEC', team: 'EXEC' },
-          'ADMIN': { userId: 'USR-001', username: 'admin', password: 'admin0000', fullName: 'ผู้ดูแลระบบส่วนกลาง (Admin)', teamRole: 'ADMIN', team: 'ADMIN' }
-        };
-        AppState.currentUser = roleAccounts[autoRole];
-        AppState.operatorName = AppState.currentUser.fullName;
-        localStorage.setItem('twp_current_user', JSON.stringify(AppState.currentUser));
-        localStorage.setItem('ems_operator_name', AppState.currentUser.fullName);
+        showAlert('🔒 กรุณาเข้าสู่ระบบด้วย Username & Password ประจำทีมของท่านก่อนเริ่มใช้งาน', 'warning');
+        openSwitchProfileModal();
+        return;
       }
 
       enterPortal(true);
@@ -4983,19 +4990,11 @@
     }
 
     function enterPortal(bypassAuthCheck) {
-      // Auto-assign default role if not logged in to ensure user is NEVER blocked
-      if (!AppState.currentUser || !AppState.currentUser.userId) {
-        AppState.currentUser = {
-          userId: 'USR-002',
-          username: 'sale.lead',
-          password: 'sale1234',
-          fullName: 'สมชาย มุ่งมั่น (หัวหน้าทีมขาย A)',
-          teamRole: 'TEAM_A_LEAD',
-          team: 'TEAM_A'
-        };
-        AppState.operatorName = AppState.currentUser.fullName;
-        localStorage.setItem('twp_current_user', JSON.stringify(AppState.currentUser));
-        localStorage.setItem('ems_operator_name', AppState.currentUser.fullName);
+      // Mandatory authentication gate: Must have authenticated user session
+      if (!bypassAuthCheck && (!AppState.currentUser || !AppState.currentUser.userId)) {
+        showAlert('🔒 กรุณาเข้าสู่ระบบด้วย Username & Password ประจำทีมก่อนเข้าใช้งาน', 'warning');
+        openSwitchProfileModal();
+        return;
       }
 
       const landing = document.getElementById('landingPageView');
@@ -5009,18 +5008,15 @@
         portal.style.display = 'flex';
       }
 
-      // Close all modals so the screen is completely clear for work
+      // Close background modals
       const whatsNew = document.getElementById('whatsNewModal');
       if (whatsNew) whatsNew.classList.add('hidden');
       const switchModal = document.getElementById('switchProfileModal');
       if (switchModal) switchModal.classList.add('hidden');
-      const briefModal = document.getElementById('briefingModal');
-      if (briefModal) briefModal.classList.add('hidden');
 
       sessionStorage.setItem('twp_portal_entered', 'true');
       window.scrollTo({ top: 0, behavior: 'smooth' });
 
-      // Initialize sidebar state based on saved preference
       initSidebarState();
       updateAuthModalCurrentUserInfo();
       updateLandingPageAuthUI();
@@ -7154,10 +7150,18 @@
       if (modal) modal.classList.add('hidden');
     }
 
-    function acknowledgeAndCloseWhatsNewModal(roleKey = 'TEAM_A') {
+    function acknowledgeAndOpenLoginGate() {
       localStorage.setItem('twp_acknowledged_version', '1.22.1');
       closeWhatsNewModal();
-      directRoleLogin(roleKey);
+      if (!AppState.currentUser || !AppState.currentUser.userId) {
+        setTimeout(() => {
+          openSwitchProfileModal();
+        }, 200);
+      }
+    }
+
+    function acknowledgeAndCloseWhatsNewModal() {
+      acknowledgeAndOpenLoginGate();
     }
 
     function checkAndShowWhatsNewOnEnter() {
@@ -7585,6 +7589,25 @@
     }
 
     function switchTab(tabId) {
+      // Strict Role-Based Access Control (RBAC) Enforcement
+      if (AppState.currentUser) {
+        const userTeam = AppState.currentUser.team;
+        const userRole = AppState.currentUser.teamRole;
+
+        // Executive tab: Strictly restricted to Executive (EXEC) and Admin (ADMIN)
+        if (tabId === 'exec') {
+          if (userTeam !== 'EXEC' && userRole !== 'EXEC' && userRole !== 'ADMIN') {
+            showAlert('⛔ สิทธิ์เฉพาะฝ่ายบริหาร (Executive): เฉพาะกรรมการผู้จัดการเท่านั้นที่มีสิทธิ์ตรวจสอบและอนุมัติงบประมาณ', 'error');
+            return;
+          }
+        }
+
+        // Team B tab warning for Sales Team A
+        if (tabId === 'teamB' && userTeam === 'TEAM_A') {
+          showAlert('ℹ️ ฝ่ายขาย (ทีม A) เข้าดูข้อมูลวิชาการในโหมดอ่านอย่างเดียว (Read-Only)', 'info');
+        }
+      }
+
       AppState.activeTab = tabId;
       
       // Update horizontal tabs if present
@@ -11043,7 +11066,13 @@
     }
 
     function handleExecDecision(eventId, decision, signatureDataUrl = null, approverInfo = null) {
-      const effectiveApprover = approverInfo ? approverInfo.name : 'ผศ.อินทิรา บุนนาค';
+      // Strict Signing Authority Enforcement
+      if (!AppState.currentUser || (AppState.currentUser.team !== 'EXEC' && AppState.currentUser.teamRole !== 'ADMIN')) {
+        showAlert('⛔ ปฏิเสธการลงนาม: เฉพาะฝ่ายบริหาร (Executive: กรรมการผู้จัดการ) เท่านั้นที่มีอำนาจอนุมัติงบประมาณและโครงการ', 'error');
+        return;
+      }
+
+      const effectiveApprover = approverInfo ? approverInfo.name : (AppState.currentUser.fullName || 'ผศ.อินทิรา บุนนาค');
       const effectiveRole = approverInfo ? approverInfo.role : 'กรรมการผู้จัดการ';
 
       // 1. OPTIMISTIC INSTANT UPDATE (Zero Lag - Immediate UI Reaction)
@@ -12647,53 +12676,59 @@ function renderA4EvalReportHtmlClient(d) {
       localStorage.setItem('twp_operator_profile', JSON.stringify(currentProfile));
     }
 
-    function directRoleLogin(roleKey) {
-      const roleAccounts = {
-        'TEAM_A': { userId: 'USR-002', username: 'sale.lead', password: 'sale1234', fullName: 'สมชาย มุ่งมั่น (หัวหน้าทีมขาย A)', teamRole: 'TEAM_A_LEAD', team: 'TEAM_A' },
-        'TEAM_B': { userId: 'USR-003', username: 'acad.lead', password: 'acad1234', fullName: 'ณัฐพล วิชาการ (หัวหน้าฝ่ายวิชาการ B)', teamRole: 'TEAM_B_LEAD', team: 'TEAM_B' },
-        'EXEC': { userId: 'USR-004', username: 'exec.lead', password: 'exec1234', fullName: 'ผศ.อินทิรา บุนนาค (กรรมการผู้จัดการ)', teamRole: 'EXEC', team: 'EXEC' },
-        'ADMIN': { userId: 'USR-001', username: 'admin', password: 'admin0000', fullName: 'ผู้ดูแลระบบส่วนกลาง (Admin)', teamRole: 'ADMIN', team: 'ADMIN' }
-      };
+    function selectTeamLoginAccount(u, p) {
+      const uIn = document.getElementById('authUsernameInput');
+      const pIn = document.getElementById('authPasswordInput');
+      if (uIn) uIn.value = u;
+      if (pIn) pIn.value = p;
+      const errBox = document.getElementById('authModalInlineError');
+      if (errBox) errBox.classList.add('hidden');
+      
+      // Auto-submit login with the chosen verified team account
+      handleAuthLoginSubmit();
+    }
 
-      const matched = roleAccounts[roleKey] || roleAccounts['TEAM_A'];
-      AppState.currentUser = {
+    function verifyTeamCredentials(u, p) {
+      if (!u || !p) return null;
+      const cleanU = String(u).trim().toLowerCase();
+      const cleanP = String(p).trim();
+
+      const defaultAccounts = [
+        { userId: 'USR-001', username: 'admin', password: 'admin0000', fullName: 'ผู้ดูแลระบบส่วนกลาง (Admin)', teamRole: 'ADMIN', team: 'ADMIN' },
+        { userId: 'USR-002', username: 'sale.lead', password: 'sale1234', fullName: 'สมชาย มุ่งมั่น (หัวหน้าทีมขาย A)', teamRole: 'TEAM_A_LEAD', team: 'TEAM_A' },
+        { userId: 'USR-003', username: 'sale.member', password: 'sale1234', fullName: 'สุรศักดิ์ จันทรศิลปิน (ฝ่ายขาย)', teamRole: 'TEAM_A_MEMBER', team: 'TEAM_A' },
+        { userId: 'USR-004', username: 'acad.lead', password: 'acad1234', fullName: 'ณัฐพล วิชาการ (หัวหน้าฝ่ายวิชาการ B)', teamRole: 'TEAM_B_LEAD', team: 'TEAM_B' },
+        { userId: 'USR-005', username: 'acad.member', password: 'acad1234', fullName: 'กานดา ปฏิบัติการ (เจ้าหน้าที่วิชาการ)', teamRole: 'TEAM_B_MEMBER', team: 'TEAM_B' },
+        { userId: 'USR-006', username: 'exec.lead', password: 'exec1234', fullName: 'ผศ.อินทิรา บุนนาค (กรรมการผู้จัดการ)', teamRole: 'EXEC', team: 'EXEC' }
+      ];
+
+      const cloudAccounts = (AppState.teamAccounts && AppState.teamAccounts.length > 0) ? AppState.teamAccounts : [];
+      const pool = [...cloudAccounts, ...defaultAccounts];
+
+      const matched = pool.find(a => 
+        String(a.username).trim().toLowerCase() === cleanU && 
+        String(a.password).trim() === cleanP
+      );
+
+      if (!matched) return null;
+
+      let roleTeam = 'TEAM_A';
+      if (matched.teamRole === 'ADMIN') roleTeam = 'ADMIN';
+      else if (matched.teamRole === 'EXEC') roleTeam = 'EXEC';
+      else if (matched.teamRole.startsWith('TEAM_B')) roleTeam = 'TEAM_B';
+
+      return {
         userId: matched.userId,
         username: matched.username,
         fullName: matched.fullName,
         teamRole: matched.teamRole,
-        team: matched.team
+        team: roleTeam
       };
-      AppState.operatorName = matched.fullName;
-      localStorage.setItem('twp_current_user', JSON.stringify(AppState.currentUser));
-      localStorage.setItem('ems_operator_name', matched.fullName);
-
-      updateAuthModalCurrentUserInfo();
-      updateLandingPageAuthUI();
-      updateCurrentLoginUserUI();
-      showAlert('เข้าสู่ระบบสำเร็จในฐานะ ' + matched.fullName, 'success');
-      closeSwitchProfileModal();
-
-      if (window._pendingAuthAction) {
-        const action = window._pendingAuthAction;
-        window._pendingAuthAction = null;
-        action();
-      } else {
-        enterPortal(true);
-        if (matched.team === 'TEAM_A') switchTab('teamA');
-        else if (matched.team === 'TEAM_B') switchTab('teamB');
-        else if (matched.team === 'EXEC') switchTab('exec');
-      }
     }
 
     function openSwitchProfileModal() {
       const modal = document.getElementById('switchProfileModal');
       if (!modal) return;
-      
-      // Pre-fill default account if inputs are empty
-      const uIn = document.getElementById('authUsernameInput');
-      const pIn = document.getElementById('authPasswordInput');
-      if (uIn && !uIn.value) uIn.value = 'sale.lead';
-      if (pIn && !pIn.value) pIn.value = 'sale1234';
 
       const errBox = document.getElementById('authModalInlineError');
       if (errBox) errBox.classList.add('hidden');
@@ -12788,63 +12823,55 @@ function renderA4EvalReportHtmlClient(d) {
 
     function handleAuthLoginSubmit(e) {
       if (e && e.preventDefault) e.preventDefault();
-      let u = document.getElementById('authUsernameInput')?.value?.trim();
-      let p = document.getElementById('authPasswordInput')?.value?.trim();
+      const u = document.getElementById('authUsernameInput')?.value?.trim();
+      const p = document.getElementById('authPasswordInput')?.value?.trim();
       const errBox = document.getElementById('authModalInlineError');
       const errText = document.getElementById('authModalInlineErrorText');
 
-      // If inputs are empty, default to sale.lead so the user is never blocked
-      if (!u && !p) {
-        u = 'sale.lead';
-        p = 'sale1234';
-        if (document.getElementById('authUsernameInput')) document.getElementById('authUsernameInput').value = u;
-        if (document.getElementById('authPasswordInput')) document.getElementById('authPasswordInput').value = p;
+      if (!u || !p) {
+        if (errBox && errText) {
+          errText.innerText = 'กรุณาระบุ Username และ Password ประจำทีมของท่าน หรือกดปุ่ม "เลือกทีมนี้" ด้านบน';
+          errBox.classList.remove('hidden');
+        }
+        showAlert('กรุณากรอก Username และ Password ประจำทีม', 'warning');
+        return;
       }
 
-      const accs = (AppState.teamAccounts && AppState.teamAccounts.length > 0) ? AppState.teamAccounts : [
-        { userId: 'USR-001', username: 'admin', password: 'admin0000', fullName: 'ผู้ดูแลระบบส่วนกลาง (Admin)', teamRole: 'ADMIN' },
-        { userId: 'USR-002', username: 'sale.lead', password: 'sale1234', fullName: 'สมชาย มุ่งมั่น (หัวหน้าทีมขาย A)', teamRole: 'TEAM_A_LEAD' },
-        { userId: 'USR-003', username: 'acad.lead', password: 'acad1234', fullName: 'ณัฐพล วิชาการ (หัวหน้าฝ่ายวิชาการ B)', teamRole: 'TEAM_B_LEAD' },
-        { userId: 'USR-004', username: 'exec.lead', password: 'exec1234', fullName: 'ผศ.อินทิรา บุนนาค (กรรมการผู้จัดการ)', teamRole: 'EXEC' }
-      ];
+      const verifiedUser = verifyTeamCredentials(u, p);
 
-      const matched = accs.find(a => a.username.toLowerCase() === (u || '').toLowerCase() && a.password === p);
-
-      if (matched) {
+      if (verifiedUser) {
         if (errBox) errBox.classList.add('hidden');
-        AppState.currentUser = {
-          userId: matched.userId,
-          username: matched.username,
-          fullName: matched.fullName,
-          teamRole: matched.teamRole,
-          team: matched.teamRole.startsWith('TEAM_A') ? 'TEAM_A' : (matched.teamRole.startsWith('TEAM_B') ? 'TEAM_B' : (matched.teamRole === 'EXEC' ? 'EXEC' : 'ADMIN'))
-        };
-        AppState.operatorName = matched.fullName;
+        AppState.currentUser = verifiedUser;
+        AppState.operatorName = verifiedUser.fullName;
         localStorage.setItem('twp_current_user', JSON.stringify(AppState.currentUser));
-        localStorage.setItem('ems_operator_name', matched.fullName);
+        localStorage.setItem('ems_operator_name', verifiedUser.fullName);
 
         updateAuthModalCurrentUserInfo();
         updateLandingPageAuthUI();
         updateCurrentLoginUserUI();
-        showAlert('เข้าสู่ระบบสำเร็จในฐานะ ' + matched.fullName, 'success');
+        showAlert('เข้าสู่ระบบสำเร็จในฐานะ ' + verifiedUser.fullName + ' (' + verifiedUser.teamRole + ')', 'success');
         closeSwitchProfileModal();
 
-        if (window._pendingAuthAction) {
-          const action = window._pendingAuthAction;
-          window._pendingAuthAction = null;
-          action();
-        } else {
-          enterPortal(true);
-          if (AppState.currentUser.team === 'TEAM_A') switchTab('teamA');
-          else if (AppState.currentUser.team === 'TEAM_B') switchTab('teamB');
-          else if (AppState.currentUser.team === 'EXEC') switchTab('exec');
-        }
+        // Enforce entry into portal
+        enterPortal(true);
+
+        // Switch to the user's authorized home tab
+        if (verifiedUser.team === 'TEAM_A') switchTab('teamA');
+        else if (verifiedUser.team === 'TEAM_B') switchTab('teamB');
+        else if (verifiedUser.team === 'EXEC') switchTab('exec');
+        else switchTab('dashboard');
+
+        // Display personalized Daily Action Briefing for their team
+        setTimeout(() => {
+          openBriefingModal();
+        }, 500);
+
       } else {
         if (errBox && errText) {
-          errText.innerText = 'Username หรือ Password ไม่ถูกต้อง (ท่านสามารถคลิกเลือกบทบาทประจำทีมด้านบนเพื่อเข้าสู่ระบบทันที)';
+          errText.innerText = 'Username หรือ Password ไม่ถูกต้อง กรุณาตรวจสอบหรือกดปุ่ม "เลือกทีมนี้" ในตารางบัญชีด้านบน';
           errBox.classList.remove('hidden');
         }
-        showAlert('Username หรือ Password ไม่ถูกต้อง ท่านสามารถคลิกเลือกบทบาทประจำทีมด้านบนเพื่อเข้าใช้งานได้ทันที', 'error');
+        showAlert('Username หรือ Password ไม่ถูกต้อง กรุณาตรวจสอบอีกครั้ง', 'error');
       }
     }
 
@@ -15012,20 +15039,10 @@ function renderA4EvalReportHtmlClient(d) {
 
       <!-- Footer -->
       <div class="p-4 sm:p-5 bg-slate-50 border-t border-slate-200 flex flex-col sm:flex-row items-center justify-between gap-3 shrink-0 text-xs">
-        <div class="flex items-center space-x-1.5 flex-wrap gap-1">
-          <span class="text-slate-500 font-bold block text-[11px] mr-1">เข้าใช้งานตามบทบาท:</span>
-          <button type="button" onclick="acknowledgeAndCloseWhatsNewModal('TEAM_A')" class="px-3 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl font-bold shadow-xs transition cursor-pointer text-xs flex items-center space-x-1">
-            <span>ทีมขาย (A)</span>
-          </button>
-          <button type="button" onclick="acknowledgeAndCloseWhatsNewModal('TEAM_B')" class="px-3 py-1.5 bg-purple-600 hover:bg-purple-700 text-white rounded-xl font-bold shadow-xs transition cursor-pointer text-xs flex items-center space-x-1">
-            <span>วิชาการ (B)</span>
-          </button>
-          <button type="button" onclick="acknowledgeAndCloseWhatsNewModal('EXEC')" class="px-3 py-1.5 bg-blue-700 hover:bg-blue-800 text-white rounded-xl font-bold shadow-xs transition cursor-pointer text-xs flex items-center space-x-1">
-            <span>ผู้บริหาร</span>
-          </button>
-        </div>
-        <button type="button" onclick="acknowledgeAndCloseWhatsNewModal('TEAM_A')" class="w-full sm:w-auto px-6 py-2.5 bg-gradient-to-r from-emerald-600 to-[#08539E] hover:from-emerald-500 hover:to-[#07488a] text-white rounded-xl font-black shadow-lg hover:shadow-xl transition cursor-pointer flex items-center justify-center space-x-2 text-xs btn-tactile">
-          <span>รับทราบ & เข้าสู่ระบบทันที &rarr;</span>
+        <span class="text-slate-500 italic">* ท่านสามารถกดดูประกาศนี้ซ้ำได้ตลอดเวลาที่ปุ่ม "📢 ข้อมูลอัปเดต" บนแถบด้านบน</span>
+        <button type="button" onclick="acknowledgeAndOpenLoginGate()" class="w-full sm:w-auto px-7 py-3 bg-gradient-to-r from-emerald-600 to-[#08539E] hover:from-emerald-500 hover:to-[#07488a] text-white rounded-xl font-black shadow-lg hover:shadow-xl transition cursor-pointer flex items-center justify-center space-x-2 text-sm btn-tactile">
+          <span>รับทราบข้อกำหนด & เข้าสู่หน้าต่างระบุสิทธิ์ (Sign In)</span>
+          <i class="fa-solid fa-arrow-right"></i>
         </button>
       </div>
 

@@ -1,14 +1,14 @@
 /**
  * ============================================================================
  * EMS Enterprise - Training Center TWP
- * Version: 1.21.0
+ * Version: 1.22.1
  * Architecture: Google Apps Script Backend (Serverless) + Google Sheets Database
  * Security: Zero-Trust Data Isolation + Multi-Operator Stamping + Concurrency Lock
  * Features: Multi-Device Sync + Team QR Pairing + PPC Standard A4 Report Engine (PDF & Word .docx)
  * ============================================================================
  */
 
-const SYSTEM_VERSION = '1.21.0';
+const SYSTEM_VERSION = '1.22.1';
 const DEFAULT_ADMIN_PASS = 'admin0000';
 // =============================================================================
 // MULTI-ACCOUNT GOOGLE SHEETS CONNECTIVITY (Cross-Account Shared Editor Access)
@@ -149,6 +149,211 @@ function handleUpdateOperationChecklist(payload) {
   return { success: true };
 }
 
+
+// -----------------------------------------------------------------------------
+// V1.21.0: TEAM ACCOUNTS & EXECUTIVE UNLOCK HANDLERS
+// -----------------------------------------------------------------------------
+function handleGetTeamAccounts() {
+  const ss = getSpreadsheet();
+  ensureRequiredSheets(ss);
+  const accSheet = ss.getSheetByName('Team_Accounts');
+  const rows = accSheet ? accSheet.getDataRange().getValues() : [];
+  const accounts = [];
+  for (let i = 1; i < rows.length; i++) {
+    const r = rows[i];
+    if (r[0] && r[1]) {
+      accounts.push({
+        userId: String(r[0]),
+        username: String(r[1]),
+        password: String(r[2]),
+        fullName: String(r[3]),
+        teamRole: String(r[4]),
+        assignedZone: String(r[5] || 'ALL'),
+        status: String(r[6] || 'ACTIVE')
+      });
+    }
+  }
+  return accounts;
+}
+
+function handleSaveTeamAccount(payload) {
+  const { userId, username, password, fullName, teamRole, assignedZone, status } = payload || {};
+  if (!username) throw new Error('กรุณาระบุ Username');
+  const ss = getSpreadsheet();
+  ensureRequiredSheets(ss);
+  const accSheet = ss.getSheetByName('Team_Accounts');
+  const data = accSheet.getDataRange().getValues();
+  let existingRow = -1;
+
+  for (let r = 1; r < data.length; r++) {
+    if (String(data[r][1]).trim().toLowerCase() === String(username).trim().toLowerCase() ||
+        (userId && String(data[r][0]).trim() === String(userId).trim())) {
+      existingRow = r + 1;
+      break;
+    }
+  }
+
+  if (existingRow > -1) {
+    if (password) accSheet.getRange(existingRow, 3).setValue(password);
+    if (fullName) accSheet.getRange(existingRow, 4).setValue(fullName);
+    if (teamRole) accSheet.getRange(existingRow, 5).setValue(teamRole);
+    if (assignedZone) accSheet.getRange(existingRow, 6).setValue(assignedZone);
+    if (status) accSheet.getRange(existingRow, 7).setValue(status);
+    return { success: true, message: 'อัปเดตบัญชีผู้ใช้ ' + username + ' เรียบร้อยแล้ว' };
+  } else {
+    const newId = 'USR-' + Math.floor(100 + Math.random() * 900);
+    accSheet.appendRow([
+      newId,
+      username,
+      password || '1234',
+      fullName || username,
+      teamRole || 'TEAM_A_MEMBER',
+      assignedZone || 'ALL',
+      status || 'ACTIVE',
+      new Date().toISOString(),
+      ''
+    ]);
+    return { success: true, message: 'สร้างบัญชีผู้ใช้ ' + username + ' เรียบร้อยแล้ว', userId: newId };
+  }
+}
+
+function handleApproveRevisionUnlock(payload) {
+  const { eventId, operatorName, reason } = payload || {};
+  if (!eventId) throw new Error('Missing eventId');
+  const ss = getSpreadsheet();
+  ensureRequiredSheets(ss);
+  const sheet = ss.getSheetByName('Event_Requests');
+  const data = sheet.getDataRange().getValues();
+  let targetRow = -1;
+
+  for (let r = 1; r < data.length; r++) {
+    if (String(data[r][0]).trim() === String(eventId).trim()) {
+      targetRow = r + 1;
+      break;
+    }
+  }
+
+  if (targetRow > -1) {
+    // Set status to UNLOCKED_FOR_EDIT
+    sheet.getRange(targetRow, 3).setValue('UNLOCKED_FOR_EDIT');
+    sheet.getRange(targetRow, 23).setValue(operatorName || 'Executive'); // Last_Modified_By
+
+    handleLogAuditTrail({
+      eventId: eventId,
+      operatorName: operatorName || 'Executive',
+      actionType: 'APPROVE_UNLOCK',
+      details: 'ผู้บริหารอนุมัติให้ปลดล็อกโครงการเพื่อปรับแก้ข้อมูล: ' + (reason || '')
+    });
+
+    return { success: true, eventId: eventId, status: 'UNLOCKED_FOR_EDIT' };
+  }
+  throw new Error('ไม่พบรหัสโครงการ ' + eventId);
+}
+
+function handleRejectRevision(payload) {
+  const { eventId, operatorName, reason } = payload || {};
+  if (!eventId) throw new Error('Missing eventId');
+  const ss = getSpreadsheet();
+  ensureRequiredSheets(ss);
+  const sheet = ss.getSheetByName('Event_Requests');
+  const data = sheet.getDataRange().getValues();
+  let targetRow = -1;
+
+  for (let r = 1; r < data.length; r++) {
+    if (String(data[r][0]).trim() === String(eventId).trim()) {
+      targetRow = r + 1;
+      break;
+    }
+  }
+
+  if (targetRow > -1) {
+    // Revert status to APPROVED
+    sheet.getRange(targetRow, 3).setValue('APPROVED');
+    sheet.getRange(targetRow, 23).setValue(operatorName || 'Executive');
+
+    handleLogAuditTrail({
+      eventId: eventId,
+      operatorName: operatorName || 'Executive',
+      actionType: 'REJECT_REVISION',
+      details: 'ผู้บริหารไม่อนุมัติการขอปรับแก้โครงการ (คงงบเดิม): ' + (reason || '')
+    });
+
+    return { success: true, eventId: eventId, status: 'APPROVED' };
+  }
+  throw new Error('ไม่พบรหัสโครงการ ' + eventId);
+}
+
+
+// -----------------------------------------------------------------------------
+// V1.22.0: ATTENDEE INDIVIDUAL EDIT & DELETE HANDLERS
+// -----------------------------------------------------------------------------
+function handleDeleteRegistration(payload) {
+  const regId = payload ? payload.regId : '';
+  if (!regId) throw new Error('กรุณาระบุ regId ที่ต้องการลบ');
+
+  const ss = getSpreadsheet();
+  ensureRequiredSheets(ss);
+  const sheet = ss.getSheetByName('Onsite_Registrations');
+  if (!sheet) throw new Error('ไม่พบชีต Onsite_Registrations');
+
+  const data = sheet.getDataRange().getValues();
+  let deletedName = '';
+  let eventId = '';
+
+  for (let r = 1; r < data.length; r++) {
+    if (String(data[r][0]).trim() === String(regId).trim()) {
+      deletedName = String(data[r][3] || data[r][4] || regId);
+      eventId = String(data[r][1] || '');
+      sheet.deleteRow(r + 1);
+
+      handleLogAuditTrail({
+        eventId: eventId,
+        operatorName: payload.operatorName || 'System',
+        actionType: 'DELETE_ATTENDEE',
+        details: 'ลบรายชื่อผู้เข้าร่วม: ' + deletedName + ' (' + regId + ')'
+      });
+
+      return { success: true, regId: regId, message: 'ลบรายชื่อผู้เข้าร่วม ' + deletedName + ' เรียบร้อยแล้ว' };
+    }
+  }
+
+  return { success: false, message: 'ไม่พบรหัสผู้ลงทะเบียน: ' + regId };
+}
+
+function handleUpdateRegistration(payload) {
+  const { regId, nameTh, nameEn, school, email, phone } = payload || {};
+  if (!regId) throw new Error('กรุณาระบุ regId ที่ต้องการแก้ไข');
+
+  const ss = getSpreadsheet();
+  ensureRequiredSheets(ss);
+  const sheet = ss.getSheetByName('Onsite_Registrations');
+  if (!sheet) throw new Error('ไม่พบชีต Onsite_Registrations');
+
+  const data = sheet.getDataRange().getValues();
+
+  for (let r = 1; r < data.length; r++) {
+    if (String(data[r][0]).trim() === String(regId).trim()) {
+      const rowIdx = r + 1;
+      if (nameTh !== undefined) sheet.getRange(rowIdx, 4).setValue(nameTh);
+      if (nameEn !== undefined) sheet.getRange(rowIdx, 5).setValue(nameEn);
+      if (school !== undefined) sheet.getRange(rowIdx, 6).setValue(school);
+      if (email !== undefined) sheet.getRange(rowIdx, 7).setValue(email);
+      if (phone !== undefined) sheet.getRange(rowIdx, 8).setValue(phone);
+
+      handleLogAuditTrail({
+        eventId: String(data[r][1] || ''),
+        operatorName: payload.operatorName || 'System',
+        actionType: 'UPDATE_ATTENDEE',
+        details: 'แก้ไขข้อมูลผู้เข้าร่วม: ' + (nameTh || '') + ' (' + regId + ')'
+      });
+
+      return { success: true, regId: regId, message: 'อัปเดตข้อมูลผู้เข้าร่วมเรียบร้อยแล้ว' };
+    }
+  }
+
+  return { success: false, message: 'ไม่พบรหัสผู้ลงทะเบียน: ' + regId };
+}
+
 function doPost(e) {
   const lock = LockService.getScriptLock();
   try {
@@ -224,11 +429,29 @@ function doPost(e) {
       case 'CHECKIN_PARTICIPANT':
         result = handleCheckinParticipant(payload);
         break;
+      case 'GET_TEAM_ACCOUNTS':
+        result = handleGetTeamAccounts();
+        break;
+      case 'SAVE_TEAM_ACCOUNT':
+        result = handleSaveTeamAccount(payload);
+        break;
+      case 'APPROVE_REVISION_UNLOCK':
+        result = handleApproveRevisionUnlock(payload);
+        break;
+      case 'REJECT_REVISION':
+        result = handleRejectRevision(payload);
+        break;
       case 'UPDATE_OPERATION_CHECKLIST':
-        data = handleUpdateOperationChecklist(payload);
+        result = handleUpdateOperationChecklist(payload);
         break;
       case 'LOG_AUDIT_TRAIL':
-        data = handleLogAuditTrail(payload);
+        result = handleLogAuditTrail(payload);
+        break;
+      case 'DELETE_REGISTRATION':
+        result = handleDeleteRegistration(payload);
+        break;
+      case 'UPDATE_REGISTRATION':
+        result = handleUpdateRegistration(payload);
         break;
       case 'CANCEL_CHECKIN':
       case 'UNDO_CHECKIN':
@@ -538,7 +761,28 @@ function getInitialData() {
     autoOptions: autoOptions,
     systemVersion: SYSTEM_VERSION,
     incidentLogs: incidentLogs,
-    auditLogs: auditLogs
+    auditLogs: auditLogs,
+    teamAccounts: (function() {
+      const accSheet = ss.getSheetByName('Team_Accounts');
+      if (!accSheet) return [];
+      const rows = accSheet.getDataRange().getValues();
+      const accounts = [];
+      for (let i = 1; i < rows.length; i++) {
+        const r = rows[i];
+        if (r[0] && r[1]) {
+          accounts.push({
+            userId: String(r[0]),
+            username: String(r[1]),
+            password: String(r[2]),
+            fullName: String(r[3]),
+            teamRole: String(r[4]),
+            assignedZone: String(r[5] || 'ALL'),
+            status: String(r[6] || 'ACTIVE')
+          });
+        }
+      }
+      return accounts;
+    })()
   };
 }
 
@@ -1225,6 +1469,18 @@ function ensureRequiredSheets(ss) {
     {
       name: 'System_Settings',
       headers: ['Setting_Key', 'Setting_Value', 'Description', 'Updated_At']
+    },
+    {
+      name: 'Audit_Logs',
+      headers: ['Log_ID', 'Event_ID', 'Timestamp', 'Operator_Name', 'Action_Type', 'Details', 'Old_Data', 'New_Data']
+    },
+    {
+      name: 'Incident_Logs',
+      headers: ['Incident_ID', 'Event_ID', 'Timestamp', 'Category', 'Severity', 'Details', 'Resolution', 'Operator_Name']
+    },
+    {
+      name: 'Team_Accounts',
+      headers: ['User_ID', 'Username', 'Password', 'Full_Name', 'Team_Role', 'Assigned_Zone', 'Status', 'Created_At', 'Last_Login']
     }
   ];
 
@@ -1253,6 +1509,20 @@ function ensureRequiredSheets(ss) {
   });
 
   // ตรวจสอบและสร้างชีตสรุปภาพรวม KPI ของ PPC
+  // Seed default team accounts if Team_Accounts sheet is newly created
+  const teamAccSheet = ss.getSheetByName('Team_Accounts');
+  if (teamAccSheet && teamAccSheet.getLastRow() <= 1) {
+    const defaultAccounts = [
+      ['USR-001', 'admin', 'admin0000', 'ผู้ดูแลระบบส่วนกลาง (Admin)', 'ADMIN', 'ALL', 'ACTIVE', new Date().toISOString(), ''],
+      ['USR-002', 'sale.lead', 'sale1234', 'สมชาย มุ่งมั่น (หัวหน้าทีมขาย A)', 'TEAM_A_LEAD', 'กรุงเทพฯ และปริมณฑล', 'ACTIVE', new Date().toISOString(), ''],
+      ['USR-003', 'sale.member', 'sale1234', 'สุรศักดิ์ จันทรศิลปิน (ฝ่ายขาย)', 'TEAM_A_MEMBER', 'ภาคเหนือ', 'ACTIVE', new Date().toISOString(), ''],
+      ['USR-004', 'acad.lead', 'acad1234', 'ณัฐพล วิชาการ (หัวหน้าฝ่ายวิชาการ B)', 'TEAM_B_LEAD', 'ส่วนกลาง', 'ACTIVE', new Date().toISOString(), ''],
+      ['USR-005', 'acad.member', 'acad1234', 'กานดา ปฏิบัติการ (เจ้าหน้าที่วิชาการ)', 'TEAM_B_MEMBER', 'ส่วนกลาง', 'ACTIVE', new Date().toISOString(), ''],
+      ['USR-006', 'exec.lead', 'exec1234', 'ผศ.อินทิรา บุนนาค (กรรมการผู้จัดการ)', 'EXEC', 'ALL', 'ACTIVE', new Date().toISOString(), '']
+    ];
+    defaultAccounts.forEach(acc => teamAccSheet.appendRow(acc));
+  }
+
   if (typeof createPpcSummarySheet === 'function') {
     createPpcSummarySheet(ss, '#08539E', '#FFFFFF');
   }
