@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-  <title>Training Center TWP - ระบบบริหารคำขอจัดอบรมและประเมินผล v1.22.9</title>
+  <title>Training Center TWP - ระบบบริหารคำขอจัดอบรมและประเมินผล v1.22.10</title>
   <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
   <!-- Google Fonts: Sarabun -->
@@ -313,10 +313,10 @@
       </div>
       <div class="flex items-center space-x-2 sm:space-x-3 text-xs">
         <!-- Release Notes Button on Landing -->
-        <button type="button" onclick="openWhatsNewModal()" class="bg-amber-400/20 hover:bg-amber-400/30 text-amber-200 px-3 py-1.5 rounded-full border border-amber-300/40 backdrop-blur-sm font-bold flex items-center space-x-1.5 transition cursor-pointer" title="ดูรายละเอียดการอัปเดตระบบ v1.22.9">
+        <button type="button" onclick="openWhatsNewModal()" class="bg-amber-400/20 hover:bg-amber-400/30 text-amber-200 px-3 py-1.5 rounded-full border border-amber-300/40 backdrop-blur-sm font-bold flex items-center space-x-1.5 transition cursor-pointer" title="ดูรายละเอียดการอัปเดตระบบ v1.22.10">
           <i class="fa-solid fa-bullhorn text-amber-300 animate-pulse"></i>
           <span class="hidden sm:inline">อัปเดต</span>
-          <span class="bg-emerald-500 text-white font-mono font-black text-[10px] px-1.5 py-0.2 rounded-full">v1.22.9</span>
+          <span class="bg-emerald-500 text-white font-mono font-black text-[10px] px-1.5 py-0.2 rounded-full">v1.22.10</span>
         </button>
         <!-- Team Login Gate Button / User Badge -->
         <button id="landingLoginBtn" type="button" onclick="openSwitchProfileModal()" class="bg-gradient-to-r from-amber-400 to-amber-500 hover:from-amber-300 hover:to-amber-400 text-slate-950 font-black px-3.5 py-1.5 rounded-xl shadow-md transition cursor-pointer flex items-center space-x-1.5">
@@ -470,7 +470,7 @@
     <!-- Bottom Footer on Landing Page -->
     <div class="max-w-7xl mx-auto w-full px-6 py-4 flex flex-col sm:flex-row items-center justify-between text-xs text-blue-200 border-t border-white/10 relative z-10 gap-2">
       <div>&copy; 2026 Training Center TWP - บริษัท ไทยวัฒนาพานิช จำกัด. All rights reserved.</div>
-      <div class="font-mono text-[11px] bg-white/10 px-3 py-1 rounded-full border border-white/15">EMS Enterprise Platform v1.22.9 (Live Apps Script Engine)</div>
+      <div class="font-mono text-[11px] bg-white/10 px-3 py-1 rounded-full border border-white/15">EMS Enterprise Platform v1.22.10 (Live Apps Script Engine)</div>
     </div>
 
   </div>
@@ -495,7 +495,7 @@
           <div class="sidebar-brand-text truncate">
             <div class="flex items-center space-x-1.5">
               <span class="font-extrabold text-sm tracking-wide text-white">TWP</span>
-              <span onclick="openVersionReleaseModal()" class="bg-blue-400/20 hover:bg-blue-400/30 text-blue-200 text-[9px] font-mono px-1.5 py-0.5 rounded-full border border-blue-300/30 cursor-pointer transition flex items-center gap-1" title="คลิกดูรายละเอียดเวอร์ชัน v1.22.9"><i class="fa-solid fa-sparkles text-amber-300 text-[8px]"></i><span class="bg-emerald-500 text-white font-black px-2 py-0.5 rounded-full">v1.22.9</span></span>
+              <span onclick="openVersionReleaseModal()" class="bg-blue-400/20 hover:bg-blue-400/30 text-blue-200 text-[9px] font-mono px-1.5 py-0.5 rounded-full border border-blue-300/30 cursor-pointer transition flex items-center gap-1" title="คลิกดูรายละเอียดเวอร์ชัน v1.22.10"><i class="fa-solid fa-sparkles text-amber-300 text-[8px]"></i><span class="bg-emerald-500 text-white font-black px-2 py-0.5 rounded-full">v1.22.10</span></span>
             </div>
             <p class="text-[10px] text-blue-200 truncate">ระบบบริหารงานฝึกอบรม</p>
           </div>
@@ -1318,6 +1318,10 @@
         </div>
 
         <div class="flex flex-wrap items-center gap-2 self-start md:self-auto">
+          <button type="button" onclick="syncAnnualPlansFromCloud(true)" class="px-3.5 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded-xl text-xs shadow-md transition flex items-center space-x-1.5 cursor-pointer btn-tactile">
+            <i class="fa-solid fa-cloud-arrow-down text-cyan-200" id="annualPlanSyncBtnIcon"></i>
+            <span>ซิงค์แผนจากคลาวด์</span>
+          </button>
           <button type="button" onclick="openAddAnnualPlanModal()" class="px-4 py-2.5 bg-gradient-to-r from-emerald-500 to-emerald-600 hover:from-emerald-600 hover:to-emerald-700 text-white font-bold rounded-xl text-xs shadow-md transition flex items-center space-x-1.5 btn-tactile cursor-pointer">
             <i class="fa-solid fa-circle-plus text-amber-200"></i>
             <span>+ เพิ่มโครงการอนุมัติหลักการ</span>
@@ -3432,7 +3436,7 @@
               <i class="fa-solid fa-code-compare text-amber-300"></i>
               <span class="text-xs font-bold uppercase tracking-wider">รายละเอียดการปรับปรุงเวอร์ชัน (Version Release Notes)</span>
             </div>
-            <span class="text-[10px] bg-amber-400 text-slate-950 font-black px-2 py-0.5 rounded-full">v1.22.9 Live</span>
+            <span class="text-[10px] bg-amber-400 text-slate-950 font-black px-2 py-0.5 rounded-full">v1.22.10 Live</span>
           </div>
           <p class="text-xs text-blue-100 leading-relaxed">
             <strong>v1.22.0 (Enterprise Compact QR & Drive Standard):</strong> ปรับขนาดหน้าต่างแท่นแสดงผล QR Code ให้กะทัดรัด (Compact Responsive) รองรับโน้ตบุ๊กทุกขนาดหน้าจอ, เพิ่มปุ่มปิดหน้าต่างทั้งบน ล่าง และกด Esc/คลิกนอกกรอบเพื่อปิดได้ทันที, พร้อมกำหนด Google Drive โฟลเดอร์กลางสำหรับเก็บเอกสารโครงการ
@@ -4437,7 +4441,7 @@
           <div>
             <div class="flex items-center space-x-2">
               <span class="text-xs bg-emerald-500/30 text-emerald-300 border border-emerald-400/40 px-2 py-0.5 rounded-full font-mono font-bold">Authentication Gate</span>
-              <span class="text-xs text-slate-300">v1.22.9</span>
+              <span class="text-xs text-slate-300">v1.22.10</span>
             </div>
             <h3 class="font-black text-white text-base sm:text-lg mt-0.5">เข้าสู่ระบบประจำทีม (Team Sign-In)</h3>
           </div>
@@ -4846,20 +4850,100 @@
       return [];
     }
 
+    function getInitialSampleAnnualPlans() {
+      return [
+        {
+          planId: 'PLAN-2569-01',
+          seqNo: 1,
+          title: 'อบรมใหญ่ประจำปี 2569',
+          targetAudience: 'ผู้บริหารสถานศึกษาและครูแกนนำทั่วประเทศ',
+          principleBudget: 250000,
+          targetSales: 150000000,
+          quarterOrDate: 'มี.ค. - เม.ย. 2569',
+          approverName: 'ผศ.อินทิรา บุนนาค',
+          approverRole: 'กรรมการผู้จัดการ',
+          status: 'APPROVED_PRINCIPLE',
+          notes: 'โครงการอบรมสัมมนาวิชาการระดับชาติ ประจำปี 2569'
+        },
+        {
+          planId: 'PLAN-2569-02',
+          seqNo: 2,
+          title: 'อบรมย่อย มีโรงเรียนเป็น hosting',
+          targetAudience: 'ส่งเสริมการขาย',
+          principleBudget: 105000,
+          targetSales: 85934933,
+          quarterOrDate: 'ม.ค. - พ.ค.70',
+          approverName: 'ผศ.อินทิรา บุนนาค',
+          approverRole: 'กรรมการผู้จัดการ',
+          status: 'APPROVED_PRINCIPLE',
+          notes: 'จัดหัวข้ออบรมที่น่าสนใจนำเสนอให้โรงเรียนเลือกตามหัวข้อที่กำหนด'
+        },
+        {
+          planId: 'PLAN-2569-03',
+          seqNo: 3,
+          title: 'Workshop ครู/นักเรียน',
+          targetAudience: 'ส่งเสริมการขายและบริการหลังการขาย',
+          principleBudget: 160000,
+          targetSales: 85934933,
+          quarterOrDate: 'ม.ค. - พ.ค.70',
+          approverName: 'ผศ.อินทิรา บุนนาค',
+          approverRole: 'กรรมการผู้จัดการ',
+          status: 'APPROVED_PRINCIPLE',
+          notes: 'เป็นการจัดกิจกรรมในโรงเรียน ก่อนและหลังการขาย'
+        }
+      ];
+    }
+
     function getPersistedAnnualPlans() {
       const stored = localStorage.getItem('twp_annual_principle_plans');
       if (stored !== null) {
         try {
           const parsed = JSON.parse(stored);
-          if (Array.isArray(parsed)) return parsed;
+          if (Array.isArray(parsed) && parsed.length > 0) return parsed;
         } catch(e) {}
       }
-      return [];
+      return getInitialSampleAnnualPlans();
+    }
+
+    function syncAnnualPlansFromCloud(showToast = false) {
+      if (!AppState.gasEndpoint) {
+        if (showToast) showAlert('ระบบอยู่ในโหมด Local (ไม่ได้เชื่อมต่อ Google Sheets)', 'info');
+        return Promise.resolve(AppState.annualPlans || []);
+      }
+      const syncBtnIcon = document.getElementById('annualPlanSyncBtnIcon');
+      if (syncBtnIcon) syncBtnIcon.classList.add('fa-spin');
+      if (showToast) showAlert('🔄 กำลังเชื่อมต่อดึงข้อมูลโครงการอนุมัติหลักการจาก Google Sheets...', 'info');
+
+      return postToBackend('GET_ANNUAL_PLANS', {})
+        .then(res => {
+          if (syncBtnIcon) syncBtnIcon.classList.remove('fa-spin');
+          if (res && res.status === 'SUCCESS' && res.data && Array.isArray(res.data.plans)) {
+            if (res.data.plans.length > 0) {
+              AppState.annualPlans = res.data.plans;
+              try {
+                localStorage.setItem('twp_annual_principle_plans', JSON.stringify(AppState.annualPlans));
+              } catch(e) {}
+              renderAnnualPlanView();
+              renderAnnualPlanSelectOptions();
+              if (showToast) showAlert(`✅ ซิงค์โครงการอนุมัติหลักการจากคลาวด์สำเร็จแล้ว (${res.data.plans.length} โครงการ)`, 'success');
+            } else {
+              if (showToast) showAlert('ℹ️ ตาราง Annual_Plans บน Google Sheets ยังไม่มีข้อมูล', 'info');
+            }
+            return res.data.plans;
+          }
+          return [];
+        })
+        .catch(err => {
+          if (syncBtnIcon) syncBtnIcon.classList.remove('fa-spin');
+          console.warn('Sync annual plans error:', err);
+          if (showToast) showAlert('⚠️ ไม่สามารถเชื่อมต่อคลาวด์เพื่อดึงโครงการหลักการได้', 'warning');
+          return [];
+        });
     }
 
     // System Global State (Synchronously initialized with complete Master Data)
     const AppState = {
-      version: '1.22.9',
+      version: '1.22.10',
       clientId: 'DEV-' + Math.random().toString(36).substring(2, 7).toUpperCase(),
       activeTab: 'dashboard',
       activeDevices: {},
@@ -6104,6 +6188,10 @@
     function fetchInitialData(silent = false) {
       if (AppState.gasEndpoint) {
         if (!silent) updateSyncStatusUI('syncing');
+        
+        // Fetch Annual Plans from Google Sheets in parallel
+        syncAnnualPlansFromCloud(false);
+
         postToBackend('GET_INITIAL_DATA', {})
           .then(res => {
             if (res.status === 'SUCCESS' && res.data) {
@@ -6115,6 +6203,13 @@
               }
               AppState.masterData.provinces = ALL_PROVINCES;
               AppState.masterData.sales = getPersistedSales();
+
+              if (Array.isArray(res.data.annualPlans) && res.data.annualPlans.length > 0) {
+                AppState.annualPlans = res.data.annualPlans;
+                try {
+                  localStorage.setItem('twp_annual_principle_plans', JSON.stringify(AppState.annualPlans));
+                } catch(e) {}
+              }
 
               if (Array.isArray(res.data.requests) && res.data.requests.length > 0) {
                 AppState.requests = mergeCloudRequestsWithLocal(res.data.requests);
@@ -7526,7 +7621,7 @@
     }
 
     function acknowledgeAndOpenLoginGate() {
-      localStorage.setItem('twp_acknowledged_version', '1.22.9');
+      localStorage.setItem('twp_acknowledged_version', '1.22.10');
       closeWhatsNewModal();
       if (!AppState.currentUser || !AppState.currentUser.userId) {
         setTimeout(() => {
@@ -7541,7 +7636,7 @@
 
     function checkAndShowWhatsNewOnEnter() {
       const ackVer = localStorage.getItem('twp_acknowledged_version');
-      if (ackVer !== '1.22.9') {
+      if (ackVer !== '1.22.10') {
         setTimeout(() => {
           openWhatsNewModal();
         }, 500);
@@ -8023,8 +8118,12 @@
       updateQueueBadges();
       if (tabId === 'annualPlan') {
         renderAnnualPlanView();
+        syncAnnualPlansFromCloud(false);
       } else if (tabId === 'teamA') {
         renderAnnualPlanSelectOptions();
+        if (!AppState.annualPlans || AppState.annualPlans.length === 0) {
+          syncAnnualPlansFromCloud(false);
+        }
         renderTeamAMyRequests();
         const saleInput = document.getElementById('saleInput');
         if (saleInput && AppState.currentUser && (AppState.currentUser.team === 'TEAM_A' || (AppState.currentUser.teamRole && AppState.currentUser.teamRole.startsWith('TEAM_A')))) {
@@ -12875,7 +12974,7 @@ function renderA4EvalReportHtmlClient(d) {
           </table>
 
           <div style="margin-top:14px; padding-top:4px; border-top:1px solid #e2e8f0; font-size:8.5pt; color:#94a3b8; text-align:center;">
-            เอกสารฉบับนี้สร้างโดยระบบ Training Center TWP (EMS Enterprise Platform v1.22.9) • ใช้สำหรับติดตามและควบคุมผลการปฏิบัติงานภายใน (PPC Standard)
+            เอกสารฉบับนี้สร้างโดยระบบ Training Center TWP (EMS Enterprise Platform v1.22.10) • ใช้สำหรับติดตามและควบคุมผลการปฏิบัติงานภายใน (PPC Standard)
           </div>
         </div>
       `;
@@ -15155,7 +15254,7 @@ function renderA4EvalReportHtmlClient(d) {
           <div>
             <div class="flex items-center space-x-2">
               <h3 class="font-bold text-slate-900 text-lg">ประวัติและการปรับปรุงระบบเวอร์ชัน (Release Notes)</h3>
-              <span class="bg-blue-100 text-[#08539E] text-xs font-bold font-mono px-2 py-0.5 rounded-full">v1.22.9 Current</span>
+              <span class="bg-blue-100 text-[#08539E] text-xs font-bold font-mono px-2 py-0.5 rounded-full">v1.22.10 Current</span>
             </div>
             <p class="text-xs text-slate-500">บันทึกประวัติการปรับปรุงสถาปัตยกรรมและฟังก์ชันการทำงานอย่างละเอียด</p>
           </div>
@@ -15168,14 +15267,31 @@ function renderA4EvalReportHtmlClient(d) {
       <!-- Release Timeline List -->
       <div class="space-y-4">
         
-        <!-- v1.22.9 (Current Major Release) -->
+        <!-- v1.22.10 (Current Major Release) -->
         <div class="p-5 bg-gradient-to-br from-emerald-50 via-white to-teal-50/70 border-2 border-emerald-400 rounded-3xl space-y-3 shadow-sm">
           <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-1">
             <div class="flex items-center space-x-2">
-              <span class="bg-emerald-600 text-white text-xs font-black px-2.5 py-0.5 rounded-lg font-mono">v1.22.9</span>
+              <span class="bg-emerald-600 text-white text-xs font-black px-2.5 py-0.5 rounded-lg font-mono">v1.22.10</span>
+              <span class="font-bold text-slate-900 text-sm">Annual Principle Plans Cloud Sync & Top Team A Ledger</span>
+            </div>
+            <span class="text-[11px] text-emerald-700 font-bold font-mono">2026-11-16 &bull; Current Release</span>
+          </div>
+          <ul class="text-xs text-slate-700 space-y-2 list-disc list-inside leading-relaxed">
+            <li><strong>Annual Principle Plans Cloud Synchronization:</strong> เชื่อมต่อระบบดึงข้อมูลโครงการอนุมัติหลักการประจำปีจากตาราง Annual_Plans บน Google Sheets อัตโนมัติ แสดงผลบนหน้าโครงการอนุมัติหลักการ (view-annualPlan) และตัวเลือกแบบฟอร์มทีม A ทันที</li>
+            <li><strong>Manual Cloud Sync Button:</strong> เพิ่มปุ่ม [ 🔄 ซิงค์แผนจากคลาวด์ ] ในหน้าโครงการอนุมัติหลักการประจำปี เพื่อให้ทีม A และ Admin สามารถกดดึงข้อมูลแผนแม่บทล่าสุดได้ทันที</li>
+            <li><strong>Team A Top Requests Ledger:</strong> ยกตารางประวัติคำขอของฝ่ายขาย (ทีม A) ขึ้นด้านบนสุดของหน้าแบบฟอร์ม พร้อมตัวนับสถานะเรียลไทม์ (ทั้งหมด / รอทีม B / รอผู้บริหาร / อนุมัติแล้ว)</li>
+            <li><strong>Resilient Offline-Online Caching:</strong> ผสานข้อมูลแผนงานหลักและการจัดการข้อมูลแบบแคช ป้องกันหน้าจอว่างเปล่าเมื่อสลับผู้ใช้หรือเปิดจากเครื่องใหม่</li>
+          </ul>
+        </div>
+
+        <!-- v1.22.9 -->
+        <div class="p-5 bg-gradient-to-br from-slate-50 via-white to-slate-100/70 border border-slate-200 rounded-3xl space-y-3 shadow-xs">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-1">
+            <div class="flex items-center space-x-2">
+              <span class="bg-slate-700 text-white text-xs font-black px-2.5 py-0.5 rounded-lg font-mono">v1.22.9</span>
               <span class="font-bold text-slate-900 text-sm">Landing Page Login Gate, Release Notes Popup & Attendee Individual Edit/Delete</span>
             </div>
-            <span class="text-[11px] text-emerald-700 font-bold font-mono">2026-11-14 &bull; Current Release</span>
+            <span class="text-[11px] text-slate-500 font-bold font-mono">2026-11-14</span>
           </div>
           <ul class="text-xs text-slate-700 space-y-2 list-disc list-inside leading-relaxed">
             <li><strong>Mandatory Landing Page Login Gate:</strong> ตรวจสอบสิทธิ์การเข้าใช้งานตั้งแต่หน้าแรก กำหนดให้ต้องระบุ Username & Password หรือเลือกบทบาทประจำทีมก่อนเข้าถึงระบบบริหารงาน</li>
@@ -15418,9 +15534,9 @@ function renderA4EvalReportHtmlClient(d) {
           <div>
             <div class="flex items-center space-x-2">
               <span class="text-xs bg-emerald-500/30 text-emerald-300 border border-emerald-400/40 px-2 py-0.5 rounded-full font-mono font-bold">Release Note</span>
-              <span class="text-xs text-slate-300">อัปเดตระบบเวอร์ชัน 1.22.9</span>
+              <span class="text-xs text-slate-300">อัปเดตระบบเวอร์ชัน 1.22.10</span>
             </div>
-            <h2 class="text-lg sm:text-xl font-black text-white mt-1">ประกาศอัปเดตระบบ Training Center TWP v1.22.9</h2>
+            <h2 class="text-lg sm:text-xl font-black text-white mt-1">ประกาศอัปเดตระบบ Training Center TWP v1.22.10</h2>
           </div>
         </div>
         <button type="button" onclick="closeWhatsNewModal()" class="text-white/70 hover:text-white text-xl p-1 cursor-pointer">
@@ -15430,19 +15546,19 @@ function renderA4EvalReportHtmlClient(d) {
 
       <!-- Body / Release Items -->
       <div class="p-6 overflow-y-auto custom-scrollbar space-y-3.5 text-xs">
-        <div class="p-3.5 bg-gradient-to-r from-blue-50 to-indigo-50 border-2 border-blue-300 rounded-2xl space-y-2 mb-3 shadow-xs">
+        <div class="p-3.5 bg-gradient-to-r from-emerald-50 to-teal-50 border-2 border-emerald-400 rounded-2xl space-y-2 mb-3 shadow-xs">
           <div class="flex items-center space-x-2">
-            <span class="px-2 py-0.5 rounded-full text-[10px] font-black bg-[#08539E] text-white">ไฮไลต์ v1.22.9</span>
-            <span class="font-bold text-slate-900 text-xs sm:text-sm">ศูนย์มอนิเตอร์ใบงานทีม A บน Dashboard ของ Admin & ตารางติดตามงานสดแบบ Real-time</span>
+            <span class="px-2 py-0.5 rounded-full text-[10px] font-black bg-emerald-700 text-white">ไฮไลต์ v1.22.10</span>
+            <span class="font-bold text-slate-900 text-xs sm:text-sm">ซิงค์โครงการอนุมัติหลักการประจำปี (Annual Plans) ตรงจาก Google Sheets เข้าสู่ระบบแบบอัตโนมัติ</span>
           </div>
           <p class="text-slate-700 leading-relaxed font-medium">
-            1) <strong>ลบข้อความตกค้างมุมขวาบน (Clean Interface):</strong> กำจัดอักขระแปลกปลอม (\n\n) ที่มุมบนขวาของหน้าจอออกเรียบร้อยแล้ว หน้าต่างแสดงผลสะอาดสมบูรณ์ตามมาตรฐาน Enterprise UI<br>
-            2) <strong>เพิ่มปุ่มลบคำขอสำหรับทีม A [ 🗑️ ลบ ]:</strong> ในตาราง "ทะเบียนคำขอที่บันทึกแล้ว" ของทีม A เพิ่มปุ่ม <code>[ 🗑️ ลบ ]</code> ท้ายทุกรายการที่รอทีม B ตรวจสอบ (WAITING_B) หรือถูกส่งกลับแก้ไข (REJECTED) ให้ทีม A หรือ Admin สามารถกดยกเลิกหรือลบคำขอที่บันทึกผิดพลาด/ซ้ำซ้อนได้ทันที พร้อมซิงค์ลบจากฐานข้อมูล Google Sheets อัตโนมัติ<br>
-            3) <strong>ตารางมอนิเตอร์ใบงานทีม A บนหน้า Dashboard ส่วนกลาง (Admin Live Pipeline Monitor):</strong> เพิ่มตารางสรุปงานคำขอของทีม A ไว้ด้านบนสุดของหน้าแดชบอร์ด Admin สามารถมองเห็นทุกใบงานที่ทีม A บันทึกไว้ได้ทันทีแบบแยกแท็บ (ทั้งหมด, รอทีม B ตรวจ, รอผู้บริหารอนุมัติ, อนุมัติแล้ว) พร้อมปุ่มเปิดดู A4, ปุ่มแก้ไข และปุ่มลบ ครบวงจร 100%
+            1) <strong>เชื่อมต่อแผนหลักการจากคลาวด์สด:</strong> ระบบเชื่อมต่อตาราง <code>Annual_Plans</code> ใน Google Sheets ดึงข้อมูลโครงการอนุมัติหลักการประจำปี 2569 มาแสดงผลบนหน้าจอ "โครงการอนุมัติหลักการประจำปี" (view-annualPlan) และบรรจุลงตัวเลือกแบบฟอร์มทีม A อัตโนมัติ โดยไม่ต้องพึ่งพาข้อมูลค้างใน LocalStorage เพียงอย่างเดียว<br>
+            2) <strong>เพิ่มปุ่ม [ 🔄 ซิงค์แผนจากคลาวด์ ]:</strong> บนหน้าจอโครงการอนุมัติหลักการ มีปุ่มกดซิงค์ข้อมูลตรงจาก Google Sheets ได้ทันทีทุกเมื่อ พร้อมสถานะแจ้งเตือนจำนวนโครงการที่ซิงค์สำเร็จ<br>
+            3) <strong>จัดวางตารางประวัติคำขอทีม A ไว้บนสุด:</strong> เพิ่มความสะดวกให้ฝ่ายขายและ Admin ตรวจสอบงานที่สร้างไว้ได้ทันทีก่อนกรอกคำขอใหม่ พร้อมตัวชี้วัดแบบเรียลไทม์
           </p>
         </div>
         <p class="text-slate-600 font-medium leading-relaxed">
-          สรุปรายละเอียดการพัฒนาต่อเนื่องของระบบ <strong>Enterprise Governance & Cross-Team Real-time Sync Edition (v1.22.9)</strong>:
+          สรุปรายละเอียดการพัฒนาต่อเนื่องของระบบ <strong>Enterprise Governance & Cross-Team Real-time Sync Edition (v1.22.10)</strong>:
         </p>
 
         <!-- Feature 1 -->
