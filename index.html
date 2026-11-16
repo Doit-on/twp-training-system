@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-  <title>Training Center TWP - ระบบบริหารคำขอจัดอบรมและประเมินผล v1.22.2</title>
+  <title>Training Center TWP - ระบบบริหารคำขอจัดอบรมและประเมินผล v1.22.3</title>
   <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
   <!-- Google Fonts: Sarabun -->
@@ -313,10 +313,10 @@
       </div>
       <div class="flex items-center space-x-2 sm:space-x-3 text-xs">
         <!-- Release Notes Button on Landing -->
-        <button type="button" onclick="openWhatsNewModal()" class="bg-amber-400/20 hover:bg-amber-400/30 text-amber-200 px-3 py-1.5 rounded-full border border-amber-300/40 backdrop-blur-sm font-bold flex items-center space-x-1.5 transition cursor-pointer" title="ดูรายละเอียดการอัปเดตระบบ v1.22.2">
+        <button type="button" onclick="openWhatsNewModal()" class="bg-amber-400/20 hover:bg-amber-400/30 text-amber-200 px-3 py-1.5 rounded-full border border-amber-300/40 backdrop-blur-sm font-bold flex items-center space-x-1.5 transition cursor-pointer" title="ดูรายละเอียดการอัปเดตระบบ v1.22.3">
           <i class="fa-solid fa-bullhorn text-amber-300 animate-pulse"></i>
           <span class="hidden sm:inline">อัปเดต</span>
-          <span class="bg-emerald-500 text-white font-mono font-black text-[10px] px-1.5 py-0.2 rounded-full">v1.22.2</span>
+          <span class="bg-emerald-500 text-white font-mono font-black text-[10px] px-1.5 py-0.2 rounded-full">v1.22.3</span>
         </button>
         <!-- Team Login Gate Button / User Badge -->
         <button id="landingLoginBtn" type="button" onclick="openSwitchProfileModal()" class="bg-gradient-to-r from-amber-400 to-amber-500 hover:from-amber-300 hover:to-amber-400 text-slate-950 font-black px-3.5 py-1.5 rounded-xl shadow-md transition cursor-pointer flex items-center space-x-1.5">
@@ -359,7 +359,7 @@
       </div>
 
       <!-- Mandatory Login Gate Alert Card on Landing Page (if not logged in) -->
-      <!-- Comprehensive Enterprise Team Sign-In Card (v1.22.2) -->
+      <!-- Comprehensive Enterprise Team Sign-In Card (v1.22.3) -->
       <!-- Enterprise Sign-In Card (Standard Secure Authentication) -->
       <div id="landingLoginSection" class="max-w-md mx-auto w-full bg-white text-slate-800 rounded-3xl p-6 sm:p-8 shadow-2xl border border-slate-200/80 space-y-5 text-left relative z-20 animate-fadeIn">
         
@@ -470,7 +470,7 @@
     <!-- Bottom Footer on Landing Page -->
     <div class="max-w-7xl mx-auto w-full px-6 py-4 flex flex-col sm:flex-row items-center justify-between text-xs text-blue-200 border-t border-white/10 relative z-10 gap-2">
       <div>&copy; 2026 Training Center TWP - บริษัท ไทยวัฒนาพานิช จำกัด. All rights reserved.</div>
-      <div class="font-mono text-[11px] bg-white/10 px-3 py-1 rounded-full border border-white/15">EMS Enterprise Platform v1.22.2 (Live Apps Script Engine)</div>
+      <div class="font-mono text-[11px] bg-white/10 px-3 py-1 rounded-full border border-white/15">EMS Enterprise Platform v1.22.3 (Live Apps Script Engine)</div>
     </div>
 
   </div>
@@ -495,7 +495,7 @@
           <div class="sidebar-brand-text truncate">
             <div class="flex items-center space-x-1.5">
               <span class="font-extrabold text-sm tracking-wide text-white">TWP</span>
-              <span onclick="openVersionReleaseModal()" class="bg-blue-400/20 hover:bg-blue-400/30 text-blue-200 text-[9px] font-mono px-1.5 py-0.5 rounded-full border border-blue-300/30 cursor-pointer transition flex items-center gap-1" title="คลิกดูรายละเอียดเวอร์ชัน v1.22.2"><i class="fa-solid fa-sparkles text-amber-300 text-[8px]"></i><span class="bg-emerald-500 text-white font-black px-2 py-0.5 rounded-full">v1.22.2</span></span>
+              <span onclick="openVersionReleaseModal()" class="bg-blue-400/20 hover:bg-blue-400/30 text-blue-200 text-[9px] font-mono px-1.5 py-0.5 rounded-full border border-blue-300/30 cursor-pointer transition flex items-center gap-1" title="คลิกดูรายละเอียดเวอร์ชัน v1.22.3"><i class="fa-solid fa-sparkles text-amber-300 text-[8px]"></i><span class="bg-emerald-500 text-white font-black px-2 py-0.5 rounded-full">v1.22.3</span></span>
             </div>
             <p class="text-[10px] text-blue-200 truncate">ระบบบริหารงานฝึกอบรม</p>
           </div>
@@ -3338,7 +3338,7 @@
               <i class="fa-solid fa-code-compare text-amber-300"></i>
               <span class="text-xs font-bold uppercase tracking-wider">รายละเอียดการปรับปรุงเวอร์ชัน (Version Release Notes)</span>
             </div>
-            <span class="text-[10px] bg-amber-400 text-slate-950 font-black px-2 py-0.5 rounded-full">v1.22.2 Live</span>
+            <span class="text-[10px] bg-amber-400 text-slate-950 font-black px-2 py-0.5 rounded-full">v1.22.3 Live</span>
           </div>
           <p class="text-xs text-blue-100 leading-relaxed">
             <strong>v1.22.0 (Enterprise Compact QR & Drive Standard):</strong> ปรับขนาดหน้าต่างแท่นแสดงผล QR Code ให้กะทัดรัด (Compact Responsive) รองรับโน้ตบุ๊กทุกขนาดหน้าจอ, เพิ่มปุ่มปิดหน้าต่างทั้งบน ล่าง และกด Esc/คลิกนอกกรอบเพื่อปิดได้ทันที, พร้อมกำหนด Google Drive โฟลเดอร์กลางสำหรับเก็บเอกสารโครงการ
@@ -4343,7 +4343,7 @@
           <div>
             <div class="flex items-center space-x-2">
               <span class="text-xs bg-emerald-500/30 text-emerald-300 border border-emerald-400/40 px-2 py-0.5 rounded-full font-mono font-bold">Authentication Gate</span>
-              <span class="text-xs text-slate-300">v1.22.2</span>
+              <span class="text-xs text-slate-300">v1.22.3</span>
             </div>
             <h3 class="font-black text-white text-base sm:text-lg mt-0.5">เข้าสู่ระบบประจำทีม (Team Sign-In)</h3>
           </div>
@@ -4903,7 +4903,7 @@
 
     // System Global State (Synchronously initialized with complete Master Data)
     const AppState = {
-      version: '1.22.2',
+      version: '1.22.3',
       clientId: 'DEV-' + Math.random().toString(36).substring(2, 7).toUpperCase(),
       activeTab: 'dashboard',
       activeDevices: {},
@@ -4923,7 +4923,7 @@
       incidentLogs: JSON.parse(localStorage.getItem('twp_incident_logs') || '[]'),
       auditLogs: JSON.parse(localStorage.getItem('twp_audit_logs') || '[]'),
       editingEventId: null,
-      currentUser: null,
+      currentUser: (function() { try { const u = localStorage.getItem('twp_current_user'); return u ? JSON.parse(u) : null; } catch(e) { return null; } })(),
       teamAccounts: JSON.parse(localStorage.getItem('twp_team_accounts') || '[]'),
       fy2569Projects: getPersistedFy2569Projects(),
       fy2569TuLedger: getPersistedFy2569TuLedger(),
@@ -4942,7 +4942,7 @@
 
     // Landing Page Navigation & Authentication Gate
     
-    // ------------------- ENTERPRISE TEAM AUTHENTICATION HANDLERS (v1.22.2) -------------------
+    // ------------------- ENTERPRISE TEAM AUTHENTICATION HANDLERS (v1.22.3) -------------------
     
     
 
@@ -5051,9 +5051,20 @@
     function handleLogoutUser() {
       AppState.currentUser = null;
       localStorage.removeItem('twp_current_user');
+      localStorage.removeItem('ems_operator_name');
+      currentProfile = {
+        name: 'ไม่ได้ระบุตัวตน',
+        team: 'รอเข้าสู่ระบบ',
+        position: 'โปรดระบุผู้ใช้',
+        company: 'บริษัท ไทยวัฒนาพานิช จำกัด'
+      };
+      try {
+        localStorage.setItem('twp_operator_profile', JSON.stringify(currentProfile));
+      } catch(e) {}
       showLandingPage();
       updateLandingPageAuthUI();
       updateCurrentLoginUserUI();
+      updateOperatorProfileUI();
       showAlert('ออกจากระบบเรียบร้อยแล้ว กรุณาระบุรหัสผ่านเพื่อเข้าใช้งานใหม่', 'info');
     }
 
@@ -5307,6 +5318,20 @@
           const syncData = JSON.parse(e.newValue);
           handleIncomingSyncUpdate(syncData);
         } catch (err) {}
+      } else if (e.key === 'twp_requests_store' && e.newValue) {
+        try {
+          AppState.requests = JSON.parse(e.newValue);
+          renderAll();
+          renderTeamAMyRequests();
+          renderTeamBQueue();
+          renderTeamBExecutionQueue();
+        } catch (err) {}
+      } else if (e.key === 'twp_current_user' && e.newValue) {
+        try {
+          AppState.currentUser = JSON.parse(e.newValue);
+          updateCurrentLoginUserUI();
+          updateOperatorProfileUI();
+        } catch (err) {}
       }
     });
 
@@ -5397,8 +5422,8 @@
         }
 
         return {
-          ...cReq,
           ...lReq,
+          ...cReq,
           status: status,
           actualExpenses: actualExpenses,
           actualExpensesTotal: actualExpensesTotal,
@@ -5420,7 +5445,7 @@
             if (res.status === 'SUCCESS' && res.data) {
               const mergedRequests = mergeCloudRequestsWithLocal(res.data.requests);
               const newSig = generateDataSignature(mergedRequests);
-              if (AppState.dataSignature && newSig !== AppState.dataSignature) {
+              if (!AppState.dataSignature || newSig !== AppState.dataSignature) {
                 AppState.requests = mergedRequests;
                 try {
                   localStorage.setItem('twp_requests_store', JSON.stringify(AppState.requests));
@@ -5966,7 +5991,7 @@
         if (epInput) epInput.value = AppState.gasEndpoint;
       }
 
-      // 1.1 Check Release Notes Popup (v1.22.2) and Mandatory Login Gate on System Enter
+      // 1.1 Check Release Notes Popup (v1.22.3) and Mandatory Login Gate on System Enter
       checkAndShowWhatsNewOnEnter();
       
       // 2. Fetch latest cloud updates asynchronously in background without blocking UI
@@ -6839,6 +6864,7 @@
       if (typeof updateLandingRegCard === 'function') updateLandingRegCard();
       renderAnnualPlanView();
       renderAnnualPlanSelectOptions();
+      renderTeamAMyRequests();
       renderTeamBQueue();
       renderTeamBExecutionQueue();
       renderExecQueue();
@@ -7242,7 +7268,7 @@
     }
 
     function acknowledgeAndOpenLoginGate() {
-      localStorage.setItem('twp_acknowledged_version', '1.22.2');
+      localStorage.setItem('twp_acknowledged_version', '1.22.3');
       closeWhatsNewModal();
       if (!AppState.currentUser || !AppState.currentUser.userId) {
         setTimeout(() => {
@@ -7257,7 +7283,7 @@
 
     function checkAndShowWhatsNewOnEnter() {
       const ackVer = localStorage.getItem('twp_acknowledged_version');
-      if (ackVer !== '1.22.1') {
+      if (ackVer !== '1.22.3') {
         setTimeout(() => {
           openWhatsNewModal();
         }, 500);
@@ -7286,6 +7312,9 @@
 
     function updateCurrentLoginUserUI() {
       const user = AppState.currentUser || {};
+      syncOperatorProfileWithCurrentUser();
+      updateOperatorProfileUI();
+
       const spanName = document.getElementById('currentLoggedUserName');
       const spanRole = document.getElementById('currentLoggedUserRole');
       const headerUserDisplay = document.getElementById('topBarUserDisplay');
@@ -7736,6 +7765,12 @@
       } else if (tabId === 'teamA') {
         renderAnnualPlanSelectOptions();
         renderTeamAMyRequests();
+        const saleInput = document.getElementById('saleInput');
+        if (saleInput && AppState.currentUser && (AppState.currentUser.team === 'TEAM_A' || (AppState.currentUser.teamRole && AppState.currentUser.teamRole.startsWith('TEAM_A')))) {
+          if (!saleInput.value || saleInput.value === 'สมชาย มุ่งมั่น') {
+            saleInput.value = AppState.currentUser.fullName;
+          }
+        }
       } else if (tabId === 'teamB') {
         renderTeamBQueue();
         renderTeamBExecutionQueue();
@@ -10484,22 +10519,37 @@
           .then(res => {
             btn.disabled = false;
             btn.innerHTML = '<i class="fa-solid fa-paper-plane mr-2"></i> ส่งคำขอให้ฝ่ายวิชาการ (ทีม B) ตรวจสอบ';
-            const savedEventId = res.data?.eventId || AppState.editingEventId || '';
+            const savedEventId = res.data?.eventId || AppState.editingEventId || ('EVT-' + Date.now());
+            let targetReq = null;
             if (AppState.editingEventId) {
               showAlert('✅ บันทึกการแก้ไขคำขอ ' + savedEventId + ' เรียบร้อยแล้ว (อัปเดตและซิงค์ตรงไปยังทีม B แล้ว)', 'success');
-              // Update local request object
               const exIdx = (AppState.requests || []).findIndex(r => r.eventId === savedEventId);
               if (exIdx > -1) {
-                Object.assign(AppState.requests[exIdx], payload);
+                AppState.requests[exIdx] = {
+                  ...AppState.requests[exIdx],
+                  ...payload,
+                  status: 'WAITING_B',
+                  lastModifiedBy: AppState.operatorName,
+                  updatedAt: new Date().toISOString()
+                };
+                targetReq = AppState.requests[exIdx];
               }
             } else {
               showAlert('✅ ส่งคำขอสำเร็จ! ระบบได้ส่งต่องานไปยังคิวของฝ่ายวิชาการ (Team B) เรียบร้อยแล้ว (รหัส: ' + savedEventId + ')', 'success');
+              targetReq = {
+                eventId: savedEventId,
+                createdAt: new Date().toISOString(),
+                status: 'WAITING_B',
+                ...payload,
+                createdBy: AppState.operatorName,
+                submittedToBAt: new Date().toISOString()
+              };
+              AppState.requests.unshift(targetReq);
             }
             AppState.editingEventId = null;
             const editBanner = document.getElementById('teamAEditBanner');
             if (editBanner) editBanner.classList.add('hidden');
-            renderTeamAMyRequests();
-            renderActionInbox();
+
             document.getElementById('teamAForm').reset();
             document.getElementById('needAccommodation').checked = false;
             toggleAccommodationFields(false);
@@ -10515,56 +10565,70 @@
             if (document.getElementById('outOfPlanReason')) document.getElementById('outOfPlanReason').value = '';
             if (document.getElementById('outOfPlanReasonBox')) document.getElementById('outOfPlanReasonBox').classList.add('hidden');
             if (document.getElementById('annualPlanSelectedNotice')) document.getElementById('annualPlanSelectedNotice').classList.add('hidden');
-            if (document.getElementById('resourceLink')) document.getElementById('resourceLink').value = '';
-            if (document.getElementById('annualPlanSelect')) document.getElementById('annualPlanSelect').value = '';
-            if (document.getElementById('outOfPlanReason')) document.getElementById('outOfPlanReason').value = '';
-            if (document.getElementById('outOfPlanReasonBox')) document.getElementById('outOfPlanReasonBox').classList.add('hidden');
-            if (document.getElementById('annualPlanSelectedNotice')) document.getElementById('annualPlanSelectedNotice').classList.add('hidden');
-            const createdId = res.data?.eventId || ('EVT-' + Date.now());
-            const newReqObj = {
-              eventId: createdId,
-              createdAt: new Date().toISOString(),
-              status: 'WAITING_B',
-              ...payload,
-              createdBy: AppState.operatorName,
-              submittedToBAt: new Date().toISOString()
-            };
-            // Add immediately to local requests array so it shows up with 0ms delay
-            AppState.requests.unshift(newReqObj);
+
             localStorage.setItem('twp_requests_store', JSON.stringify(AppState.requests));
             renderAll();
+            renderTeamAMyRequests();
+            renderTeamBQueue();
+            renderTeamBExecutionQueue();
+            renderActionInbox();
             notifyDataUpdated('CREATE_REQUEST_A');
             fetchInitialData(true);
-            switchTab('dashboard');
-            // Trigger 1-Click Handoff Dialog (LINE, Copy, Email)
-            showHandoffModal('TEAM_A_TO_B', newReqObj, false);
+            // Remain on teamA tab so user sees their submitted request in "My Requests"
+            if (targetReq && !AppState.editingEventId) {
+              showHandoffModal('TEAM_A_TO_B', targetReq, false);
+            }
           })
           .catch(err => {
             console.warn('postToBackend CREATE_REQUEST_A failed, falling back to local creation:', err);
             btn.disabled = false;
             btn.innerHTML = '<i class="fa-solid fa-paper-plane mr-2"></i> ส่งคำขอให้ฝ่ายวิชาการ (ทีม B) ตรวจสอบ';
             const newId = 'EVT-2026-000' + (AppState.requests.length + 1);
-            const newReqObj = {
-              eventId: newId,
-              createdAt: new Date().toISOString(),
-              status: 'WAITING_B',
-              ...payload,
-              createdBy: AppState.operatorName,
-              submittedToBAt: new Date().toISOString()
-            };
-            AppState.requests.unshift(newReqObj);
+            let targetReq = null;
+            if (AppState.editingEventId) {
+              const exIdx = (AppState.requests || []).findIndex(r => r.eventId === AppState.editingEventId);
+              if (exIdx > -1) {
+                AppState.requests[exIdx] = {
+                  ...AppState.requests[exIdx],
+                  ...payload,
+                  status: 'WAITING_B',
+                  lastModifiedBy: AppState.operatorName,
+                  updatedAt: new Date().toISOString()
+                };
+                targetReq = AppState.requests[exIdx];
+              }
+              showAlert(`✅ บันทึกการแก้ไขคำขอ ${AppState.editingEventId} เรียบร้อยแล้ว (บันทึกในเครื่องและส่งต่อให้ทีม B แล้ว)`, 'success');
+            } else {
+              targetReq = {
+                eventId: newId,
+                createdAt: new Date().toISOString(),
+                status: 'WAITING_B',
+                ...payload,
+                createdBy: AppState.operatorName,
+                submittedToBAt: new Date().toISOString()
+              };
+              AppState.requests.unshift(targetReq);
+              showAlert(`✅ สร้างคำขอจัดอบรม ${newId} เรียบร้อยแล้ว (บันทึกในเครื่องและส่งต่อให้ทีม B ตรวจสอบแล้ว)`, 'success');
+            }
+            AppState.editingEventId = null;
+            const editBanner = document.getElementById('teamAEditBanner');
+            if (editBanner) editBanner.classList.add('hidden');
             localStorage.setItem('twp_requests_store', JSON.stringify(AppState.requests));
             renderAll();
-            showAlert(`✅ สร้างคำขอจัดอบรม ${newId} เรียบร้อยแล้ว (บันทึกในเครื่อง: Google Apps Script ยังไม่พร้อมเชื่อมต่อ)`, 'success');
+            renderTeamAMyRequests();
+            renderTeamBQueue();
+            renderTeamBExecutionQueue();
+            renderActionInbox();
             document.getElementById('teamAForm').reset();
             document.getElementById('needAccommodation').checked = false;
             toggleAccommodationFields(false);
             document.getElementById('needTransportation').checked = false;
             toggleTransportFields(false);
             notifyDataUpdated('CREATE_REQUEST_A');
-            switchTab('dashboard');
-            // Trigger 1-Click Handoff Dialog even in fallback
-            showHandoffModal('TEAM_A_TO_B', newReqObj, true);
+            // Remain on teamA tab
+            if (targetReq) {
+              showHandoffModal('TEAM_A_TO_B', targetReq, true);
+            }
           });
       } else {
         // Local Mock Creation
@@ -10572,7 +10636,7 @@
           btn.disabled = false;
           btn.innerHTML = '<i class="fa-solid fa-paper-plane mr-2"></i> ส่งคำขอให้ฝ่ายวิชาการ (ทีม B) ตรวจสอบ';
           const newId = 'EVT-2026-000' + (AppState.requests.length + 1);
-          AppState.requests.unshift({
+          const targetReq = {
             eventId: newId,
             createdAt: new Date().toISOString(),
             status: 'WAITING_B',
@@ -10582,16 +10646,21 @@
             actualBudget: 0,
             evalCount: 0,
             evalAvg: 0
-          });
+          };
+          AppState.requests.unshift(targetReq);
           showAlert(`[Local Mock] สร้างคำขอ ${newId} สำเร็จ ส่งต่อให้ทีม B ตรวจสอบแล้ว`, 'success');
           document.getElementById('teamAForm').reset();
           document.getElementById('needAccommodation').checked = false;
           toggleAccommodationFields(false);
           document.getElementById('needTransportation').checked = false;
           toggleTransportFields(false);
+          localStorage.setItem('twp_requests_store', JSON.stringify(AppState.requests));
           notifyDataUpdated('CREATE_REQUEST_A');
           renderAll();
-          switchTab('dashboard');
+          renderTeamAMyRequests();
+          renderTeamBQueue();
+          renderTeamBExecutionQueue();
+          // Remain on teamA tab
         }, 300);
       }
     }
@@ -12506,7 +12575,7 @@ function renderA4EvalReportHtmlClient(d) {
           </table>
 
           <div style="margin-top:14px; padding-top:4px; border-top:1px solid #e2e8f0; font-size:8.5pt; color:#94a3b8; text-align:center;">
-            เอกสารฉบับนี้สร้างโดยระบบ Training Center TWP (EMS Enterprise Platform v1.22.2) • ใช้สำหรับติดตามและควบคุมผลการปฏิบัติงานภายใน (PPC Standard)
+            เอกสารฉบับนี้สร้างโดยระบบ Training Center TWP (EMS Enterprise Platform v1.22.3) • ใช้สำหรับติดตามและควบคุมผลการปฏิบัติงานภายใน (PPC Standard)
           </div>
         </div>
       `;
@@ -12732,7 +12801,45 @@ function renderA4EvalReportHtmlClient(d) {
     let teamMembers = getPersistedTeamMembers();
     let currentProfile = getCurrentOperatorProfile();
 
+    function syncOperatorProfileWithCurrentUser() {
+      const user = AppState.currentUser || (function() {
+        try { return JSON.parse(localStorage.getItem('twp_current_user')); } catch(e) { return null; }
+      })();
+
+      if (user && user.fullName) {
+        let teamLabel = 'ทีม A (ฝ่ายขาย)';
+        let posLabel = 'ผู้แทนขาย';
+        if (user.teamRole === 'ADMIN') {
+          teamLabel = 'ผู้ดูแลระบบ (Admin)';
+          posLabel = 'ผู้ดูแลระบบส่วนกลาง';
+        } else if (user.teamRole === 'EXEC') {
+          teamLabel = 'ฝ่ายบริหาร (Executive)';
+          posLabel = 'กรรมการผู้จัดการ';
+        } else if (user.team === 'TEAM_B' || (user.teamRole && user.teamRole.startsWith('TEAM_B'))) {
+          teamLabel = 'ฝ่ายวิชาการ (ทีม B)';
+          posLabel = user.teamRole === 'TEAM_B_LEAD' ? 'หัวหน้าฝ่ายวิชาการ' : 'เจ้าหน้าที่วิชาการ';
+        } else {
+          teamLabel = 'ฝ่ายขายและพัฒนาธุรกิจ (ทีม A)';
+          posLabel = user.teamRole === 'TEAM_A_LEAD' ? 'หัวหน้าฝ่ายขาย' : 'ผู้แทนฝ่ายขาย';
+        }
+
+        currentProfile = {
+          name: user.fullName,
+          team: teamLabel,
+          position: posLabel,
+          company: 'บริษัท ไทยวัฒนาพานิช จำกัด'
+        };
+        AppState.operatorName = user.fullName;
+        try {
+          localStorage.setItem('twp_operator_profile', JSON.stringify(currentProfile));
+          localStorage.setItem('ems_operator_name', user.fullName);
+        } catch(e) {}
+      }
+    }
+
     function updateOperatorProfileUI() {
+      syncOperatorProfileWithCurrentUser();
+
       const nameElem = document.getElementById('headerOperatorName');
       const teamBadge = document.getElementById('headerOperatorTeamBadge');
       const metaElem = document.getElementById('headerOperatorMeta');
@@ -12740,16 +12847,17 @@ function renderA4EvalReportHtmlClient(d) {
 
       if (nameElem) nameElem.innerText = currentProfile.name;
       if (teamBadge) {
-        teamBadge.innerText = currentProfile.team.includes('ทีม A') ? 'ทีม A' :
-                              currentProfile.team.includes('ทีม B') ? 'ทีม B' :
-                              currentProfile.team.includes('ผู้บริหาร') ? 'ผู้บริหาร' : 'ส่วนกลาง';
+        teamBadge.innerText = currentProfile.team.includes('ทีม A') || currentProfile.team.includes('ฝ่ายขาย') ? 'ทีม A' :
+                              currentProfile.team.includes('ทีม B') || currentProfile.team.includes('วิชาการ') ? 'ทีม B' :
+                              currentProfile.team.includes('ผู้บริหาร') || currentProfile.team.includes('Executive') ? 'ผู้บริหาร' :
+                              currentProfile.team.includes('Admin') || currentProfile.team.includes('ผู้ดูแลระบบ') ? 'ผู้ดูแลระบบ' : 'ส่วนกลาง';
       }
       if (metaElem) {
         metaElem.innerText = `${currentProfile.position} • ${currentProfile.company}`;
       }
       if (opInput) opInput.value = currentProfile.name;
 
-      // Update Sidebar Profile (v1.17.0)
+      // Update Sidebar Profile (v1.17.0 / v1.22.3)
       const sideName = document.getElementById('sideUserName');
       const sideRole = document.getElementById('sideUserRole');
       const sideAvatar = document.getElementById('sideUserAvatar');
@@ -12760,12 +12868,16 @@ function renderA4EvalReportHtmlClient(d) {
         sideAvatar.innerText = initials;
       }
 
-      AppState.operatorName = `${currentProfile.name} (${currentProfile.team})`;
-      localStorage.setItem('ems_operator_name', currentProfile.name);
-      localStorage.setItem('twp_operator_profile', JSON.stringify(currentProfile));
-    }
+      // Auto-populate saleInput in Team A Form if current user is Team A
+      const saleInput = document.getElementById('saleInput');
+      if (saleInput && AppState.currentUser && (AppState.currentUser.team === 'TEAM_A' || (AppState.currentUser.teamRole && AppState.currentUser.teamRole.startsWith('TEAM_A')))) {
+        if (!saleInput.value || saleInput.value === 'สมชาย มุ่งมั่น') {
+          saleInput.value = AppState.currentUser.fullName;
+        }
+      }
 
-    
+      AppState.operatorName = `${currentProfile.name} (${currentProfile.team})`;
+    }
 
     function verifyTeamCredentials(u, p) {
       if (!u || !p) return null;
@@ -14750,7 +14862,7 @@ function renderA4EvalReportHtmlClient(d) {
           <div>
             <div class="flex items-center space-x-2">
               <h3 class="font-bold text-slate-900 text-lg">ประวัติและการปรับปรุงระบบเวอร์ชัน (Release Notes)</h3>
-              <span class="bg-blue-100 text-[#08539E] text-xs font-bold font-mono px-2 py-0.5 rounded-full">v1.22.2 Current</span>
+              <span class="bg-blue-100 text-[#08539E] text-xs font-bold font-mono px-2 py-0.5 rounded-full">v1.22.3 Current</span>
             </div>
             <p class="text-xs text-slate-500">บันทึกประวัติการปรับปรุงสถาปัตยกรรมและฟังก์ชันการทำงานอย่างละเอียด</p>
           </div>
@@ -14763,11 +14875,11 @@ function renderA4EvalReportHtmlClient(d) {
       <!-- Release Timeline List -->
       <div class="space-y-4">
         
-        <!-- v1.22.2 (Current Major Release) -->
+        <!-- v1.22.3 (Current Major Release) -->
         <div class="p-5 bg-gradient-to-br from-emerald-50 via-white to-teal-50/70 border-2 border-emerald-400 rounded-3xl space-y-3 shadow-sm">
           <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-1">
             <div class="flex items-center space-x-2">
-              <span class="bg-emerald-600 text-white text-xs font-black px-2.5 py-0.5 rounded-lg font-mono">v1.22.2</span>
+              <span class="bg-emerald-600 text-white text-xs font-black px-2.5 py-0.5 rounded-lg font-mono">v1.22.3</span>
               <span class="font-bold text-slate-900 text-sm">Landing Page Login Gate, Release Notes Popup & Attendee Individual Edit/Delete</span>
             </div>
             <span class="text-[11px] text-emerald-700 font-bold font-mono">2026-11-14 &bull; Current Release</span>
@@ -15000,7 +15112,7 @@ function renderA4EvalReportHtmlClient(d) {
 
 
 
-  <!-- Modal: What's New Release Notes (v1.22.2) -->
+  <!-- Modal: What's New Release Notes (v1.22.3) -->
   <div id="whatsNewModal" class="hidden fixed inset-0 z-[9999] flex items-center justify-center bg-black/75 backdrop-blur-md p-4 animate-fadeIn">
     <div class="bg-white rounded-3xl max-w-2xl w-full max-h-[90vh] flex flex-col shadow-2xl border border-slate-200 overflow-hidden">
       
@@ -15013,9 +15125,9 @@ function renderA4EvalReportHtmlClient(d) {
           <div>
             <div class="flex items-center space-x-2">
               <span class="text-xs bg-emerald-500/30 text-emerald-300 border border-emerald-400/40 px-2 py-0.5 rounded-full font-mono font-bold">Release Note</span>
-              <span class="text-xs text-slate-300">อัปเดตระบบเวอร์ชัน 1.22.2</span>
+              <span class="text-xs text-slate-300">อัปเดตระบบเวอร์ชัน 1.22.3</span>
             </div>
-            <h2 class="text-lg sm:text-xl font-black text-white mt-1">ประกาศอัปเดตระบบ Training Center TWP v1.22.2</h2>
+            <h2 class="text-lg sm:text-xl font-black text-white mt-1">ประกาศอัปเดตระบบ Training Center TWP v1.22.3</h2>
           </div>
         </div>
         <button type="button" onclick="closeWhatsNewModal()" class="text-white/70 hover:text-white text-xl p-1 cursor-pointer">
@@ -15025,8 +15137,18 @@ function renderA4EvalReportHtmlClient(d) {
 
       <!-- Body / Release Items -->
       <div class="p-6 overflow-y-auto custom-scrollbar space-y-3.5 text-xs">
+        <div class="p-3.5 bg-gradient-to-r from-emerald-50 to-teal-50 border-2 border-emerald-300 rounded-2xl space-y-2 mb-3 shadow-xs">
+          <div class="flex items-center space-x-2">
+            <span class="px-2 py-0.5 rounded-full text-[10px] font-black bg-emerald-600 text-white">ไฮไลต์ v1.22.3</span>
+            <span class="font-bold text-emerald-950 text-xs sm:text-sm">ซิงค์ชื่อผู้ใช้งานตามสิทธิ์ & ส่งต่อคำขอ A ➔ B ทันที</span>
+          </div>
+          <p class="text-slate-700 leading-relaxed font-medium">
+            1) <strong>ระบบระบุตัวตนและโปรไฟล์ผู้ใช้:</strong> เมื่อเข้าสู่ระบบในฐานะทีมใด (ฝ่ายขาย A, วิชาการ B, ผู้บริหาร, แอดมิน) ชื่อและสังกัดจะแสดงผลใน Header, Sidebar และเติมชื่อผู้แทนขายในฟอร์ม (saleInput) ทันที<br>
+            2) <strong>ส่งต่องานข้ามทีม (Team A ➔ Team B):</strong> เมื่อฝ่ายขายบันทึกคำขอ งานจะถูกส่งตรงเข้าคิวตรวจสอบของฝ่ายวิชาการ (Team B) ทันทีทั้งระบบ Real-time Cloud Sync และ Local Storage พร้อมแสดงสถานะ "รอฝ่ายวิชาการตรวจสอบ (WAITING_B)"
+          </p>
+        </div>
         <p class="text-slate-600 font-medium leading-relaxed">
-          สรุปการอัปเดตระบบสู่ <strong>Enterprise Governance & Role Security Edition (v1.22.2)</strong> เพื่อให้ทุกทีมทำงานประสานกันอย่างมีประสิทธิภาพและมีธรรมาภิบาลข้อมูลสูงสุด:
+          สรุปรายละเอียดการพัฒนาต่อเนื่องของระบบ <strong>Enterprise Governance & Cross-Team Real-time Sync Edition (v1.22.3)</strong>:
         </p>
 
         <!-- Feature 1 -->
