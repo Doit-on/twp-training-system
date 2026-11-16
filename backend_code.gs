@@ -8,7 +8,7 @@
  * ============================================================================
  */
 
-const SYSTEM_VERSION = '1.22.3';
+const SYSTEM_VERSION = '1.22.4';
 const DEFAULT_ADMIN_PASS = 'admin0000';
 // =============================================================================
 // MULTI-ACCOUNT GOOGLE SHEETS CONNECTIVITY (Cross-Account Shared Editor Access)
@@ -471,6 +471,9 @@ function doPost(e) {
         break;
       case 'DELETE_ANNUAL_PLAN':
         result = handleDeleteAnnualPlan(payload);
+        break;
+      case 'DELETE_EVENT_REQUEST':
+        result = handleDeleteEventRequest(payload);
         break;
       case 'UPDATE_TEAM_B_ATTENDEES':
         result = handleUpdateTeamBAttendees(payload);
@@ -2106,6 +2109,26 @@ function handleSaveAnnualPlans(payload) {
   }
 
   return { success: true, savedCount: rows.length };
+}
+
+function handleDeleteEventRequest(payload) {
+  const eventId = payload ? payload.eventId : '';
+  if (!eventId) throw new Error('กรุณาระบุ eventId ที่ต้องการลบ');
+
+  const ss = getSpreadsheet();
+  ensureRequiredSheets(ss);
+  const sheet = ss.getSheetByName('Event_Requests');
+  if (!sheet) return { success: true };
+
+  const rows = sheet.getDataRange().getValues();
+  for (let i = 1; i < rows.length; i++) {
+    if (String(rows[i][0]).trim() === String(eventId).trim()) {
+      sheet.deleteRow(i + 1);
+      return { success: true, deletedEventId: eventId };
+    }
+  }
+
+  return { success: false, message: 'ไม่พบรหัสคำขอ: ' + eventId };
 }
 
 function handleDeleteAnnualPlan(payload) {

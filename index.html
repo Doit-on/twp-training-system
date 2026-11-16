@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-  <title>Training Center TWP - ระบบบริหารคำขอจัดอบรมและประเมินผล v1.22.3</title>
+  <title>Training Center TWP - ระบบบริหารคำขอจัดอบรมและประเมินผล v1.22.4</title>
   <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
   <!-- Google Fonts: Sarabun -->
@@ -313,10 +313,10 @@
       </div>
       <div class="flex items-center space-x-2 sm:space-x-3 text-xs">
         <!-- Release Notes Button on Landing -->
-        <button type="button" onclick="openWhatsNewModal()" class="bg-amber-400/20 hover:bg-amber-400/30 text-amber-200 px-3 py-1.5 rounded-full border border-amber-300/40 backdrop-blur-sm font-bold flex items-center space-x-1.5 transition cursor-pointer" title="ดูรายละเอียดการอัปเดตระบบ v1.22.3">
+        <button type="button" onclick="openWhatsNewModal()" class="bg-amber-400/20 hover:bg-amber-400/30 text-amber-200 px-3 py-1.5 rounded-full border border-amber-300/40 backdrop-blur-sm font-bold flex items-center space-x-1.5 transition cursor-pointer" title="ดูรายละเอียดการอัปเดตระบบ v1.22.4">
           <i class="fa-solid fa-bullhorn text-amber-300 animate-pulse"></i>
           <span class="hidden sm:inline">อัปเดต</span>
-          <span class="bg-emerald-500 text-white font-mono font-black text-[10px] px-1.5 py-0.2 rounded-full">v1.22.3</span>
+          <span class="bg-emerald-500 text-white font-mono font-black text-[10px] px-1.5 py-0.2 rounded-full">v1.22.4</span>
         </button>
         <!-- Team Login Gate Button / User Badge -->
         <button id="landingLoginBtn" type="button" onclick="openSwitchProfileModal()" class="bg-gradient-to-r from-amber-400 to-amber-500 hover:from-amber-300 hover:to-amber-400 text-slate-950 font-black px-3.5 py-1.5 rounded-xl shadow-md transition cursor-pointer flex items-center space-x-1.5">
@@ -359,7 +359,7 @@
       </div>
 
       <!-- Mandatory Login Gate Alert Card on Landing Page (if not logged in) -->
-      <!-- Comprehensive Enterprise Team Sign-In Card (v1.22.3) -->
+      <!-- Comprehensive Enterprise Team Sign-In Card (v1.22.4) -->
       <!-- Enterprise Sign-In Card (Standard Secure Authentication) -->
       <div id="landingLoginSection" class="max-w-md mx-auto w-full bg-white text-slate-800 rounded-3xl p-6 sm:p-8 shadow-2xl border border-slate-200/80 space-y-5 text-left relative z-20 animate-fadeIn">
         
@@ -470,7 +470,7 @@
     <!-- Bottom Footer on Landing Page -->
     <div class="max-w-7xl mx-auto w-full px-6 py-4 flex flex-col sm:flex-row items-center justify-between text-xs text-blue-200 border-t border-white/10 relative z-10 gap-2">
       <div>&copy; 2026 Training Center TWP - บริษัท ไทยวัฒนาพานิช จำกัด. All rights reserved.</div>
-      <div class="font-mono text-[11px] bg-white/10 px-3 py-1 rounded-full border border-white/15">EMS Enterprise Platform v1.22.3 (Live Apps Script Engine)</div>
+      <div class="font-mono text-[11px] bg-white/10 px-3 py-1 rounded-full border border-white/15">EMS Enterprise Platform v1.22.4 (Live Apps Script Engine)</div>
     </div>
 
   </div>
@@ -495,7 +495,7 @@
           <div class="sidebar-brand-text truncate">
             <div class="flex items-center space-x-1.5">
               <span class="font-extrabold text-sm tracking-wide text-white">TWP</span>
-              <span onclick="openVersionReleaseModal()" class="bg-blue-400/20 hover:bg-blue-400/30 text-blue-200 text-[9px] font-mono px-1.5 py-0.5 rounded-full border border-blue-300/30 cursor-pointer transition flex items-center gap-1" title="คลิกดูรายละเอียดเวอร์ชัน v1.22.3"><i class="fa-solid fa-sparkles text-amber-300 text-[8px]"></i><span class="bg-emerald-500 text-white font-black px-2 py-0.5 rounded-full">v1.22.3</span></span>
+              <span onclick="openVersionReleaseModal()" class="bg-blue-400/20 hover:bg-blue-400/30 text-blue-200 text-[9px] font-mono px-1.5 py-0.5 rounded-full border border-blue-300/30 cursor-pointer transition flex items-center gap-1" title="คลิกดูรายละเอียดเวอร์ชัน v1.22.4"><i class="fa-solid fa-sparkles text-amber-300 text-[8px]"></i><span class="bg-emerald-500 text-white font-black px-2 py-0.5 rounded-full">v1.22.4</span></span>
             </div>
             <p class="text-[10px] text-blue-200 truncate">ระบบบริหารงานฝึกอบรม</p>
           </div>
@@ -3338,7 +3338,7 @@
               <i class="fa-solid fa-code-compare text-amber-300"></i>
               <span class="text-xs font-bold uppercase tracking-wider">รายละเอียดการปรับปรุงเวอร์ชัน (Version Release Notes)</span>
             </div>
-            <span class="text-[10px] bg-amber-400 text-slate-950 font-black px-2 py-0.5 rounded-full">v1.22.3 Live</span>
+            <span class="text-[10px] bg-amber-400 text-slate-950 font-black px-2 py-0.5 rounded-full">v1.22.4 Live</span>
           </div>
           <p class="text-xs text-blue-100 leading-relaxed">
             <strong>v1.22.0 (Enterprise Compact QR & Drive Standard):</strong> ปรับขนาดหน้าต่างแท่นแสดงผล QR Code ให้กะทัดรัด (Compact Responsive) รองรับโน้ตบุ๊กทุกขนาดหน้าจอ, เพิ่มปุ่มปิดหน้าต่างทั้งบน ล่าง และกด Esc/คลิกนอกกรอบเพื่อปิดได้ทันที, พร้อมกำหนด Google Drive โฟลเดอร์กลางสำหรับเก็บเอกสารโครงการ
@@ -4343,7 +4343,7 @@
           <div>
             <div class="flex items-center space-x-2">
               <span class="text-xs bg-emerald-500/30 text-emerald-300 border border-emerald-400/40 px-2 py-0.5 rounded-full font-mono font-bold">Authentication Gate</span>
-              <span class="text-xs text-slate-300">v1.22.3</span>
+              <span class="text-xs text-slate-300">v1.22.4</span>
             </div>
             <h3 class="font-black text-white text-base sm:text-lg mt-0.5">เข้าสู่ระบบประจำทีม (Team Sign-In)</h3>
           </div>
@@ -4706,204 +4706,40 @@
 
     function getPersistedFy2569Projects() {
       const stored = localStorage.getItem('twp_fy2569_projects');
-      if (stored) {
+      if (stored !== null) {
         try {
           const parsed = JSON.parse(stored);
-          if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+          if (Array.isArray(parsed)) return parsed;
         } catch(e) {}
       }
-      return [
-        {
-          id: 'EVT-2569-0001',
-          schoolCode: 'SCH-1001',
-          schoolName: 'โรงเรียน สวนกุหลาบวิทยาลัย',
-          province: 'กรุงเทพมหานคร',
-          salesRep: 'สุรศักดิ์ จันทรศิลปิน',
-          topic: 'Active Learning สู่สมรรถนะผู้เรียนด้วยสื่อนวัตกรรมดิจิทัล',
-          eventDate: '2026-05-18',
-          budget: 15000,
-          targetSales: 150000,
-          remarks: 'เป้าหมายจัดซื้อชุดแบบฝึก Active Learning ม.1-3 และแบบวัดผลครบสาระ',
-          createdAt: '2026-01-15T09:00:00Z'
-        },
-        {
-          id: 'EVT-2569-0002',
-          schoolCode: 'SCH-1016',
-          schoolName: 'โรงเรียน สตรีวิทยา',
-          province: 'กรุงเทพมหานคร',
-          salesRep: 'กิตติศักดิ์ สุขุมินทนันท์',
-          topic: 'STEM & AI เพื่อยกระดับห้องเรียนอัจฉริยะ',
-          eventDate: '2026-06-10',
-          budget: 12000,
-          targetSales: 120000,
-          remarks: 'อบรมกลุ่มสาระวิทยาศาสตร์และเทคโนโลยี ขยายผลคู่มือการสอน',
-          createdAt: '2026-01-20T10:30:00Z'
-        },
-        {
-          id: 'EVT-2569-0003',
-          schoolCode: 'SCH-1085',
-          schoolName: 'โรงเรียน บดินทรเดชา (สิงห์ สิงหเสนี)',
-          province: 'กรุงเทพมหานคร',
-          salesRep: 'ควรชิด จัตตุพร',
-          topic: 'Coding & Hands-on Robotics สำหรับมัธยมศึกษา',
-          eventDate: '2026-06-25',
-          budget: 18000,
-          targetSales: 200000,
-          remarks: 'โครงการนำร่องชุดกิจกรรม Coding และเตรียมสั่งซื้อห้องปฏิบัติการ',
-          createdAt: '2026-02-01T11:15:00Z'
-        },
-        {
-          id: 'EVT-2569-0004',
-          schoolCode: 'SCH-1440',
-          schoolName: 'โรงเรียน ยุพราชวิทยาลัย',
-          province: 'เชียงใหม่',
-          salesRep: 'ธงชัย มงคลกาญจน์',
-          topic: 'เทคนิคการวัดและประเมินผลตามเกณฑ์ ว PA',
-          eventDate: '2026-07-08',
-          budget: 20000,
-          targetSales: 180000,
-          remarks: 'จัดร่วมกับเครือข่ายครูวิชาการประจำโซนภาคเหนือ',
-          createdAt: '2026-02-10T14:00:00Z'
-        },
-        {
-          id: 'EVT-2569-0005',
-          schoolCode: 'SCH-2201',
-          schoolName: 'โรงเรียน ขอนแก่นวิทยายน',
-          province: 'ขอนแก่น',
-          salesRep: 'สมศักดิ์ ปิยะโสภณ',
-          topic: 'การจัดการเรียนรู้บูรณาการ Active Learning สพม.',
-          eventDate: '2026-07-22',
-          budget: 16000,
-          targetSales: 160000,
-          remarks: 'เป้าหมายจัดซื้อสื่อประกอบแผนการสอนระดับมัธยมปลาย',
-          createdAt: '2026-02-15T08:45:00Z'
-        }
-      ];
+      return [];
     }
 
     function getPersistedFy2569TuLedger() {
       const stored = localStorage.getItem('twp_fy2569_tu_ledger');
-      if (stored) {
+      if (stored !== null) {
         try {
           const parsed = JSON.parse(stored);
-          if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+          if (Array.isArray(parsed)) return parsed;
         } catch(e) {}
       }
-      return [
-        {
-          projectId: 'EVT-2569-0001',
-          tuInvoiceNo: 'INV-69-0891',
-          tuInvoiceDate: '2026-06-05',
-          tuActualSales: 168000,
-          tuStatus: 'PAID',
-          tuItems: 'ชุดแบบฝึกหัด Active Learning และคู่มือครูครบสาระ'
-        },
-        {
-          projectId: 'EVT-2569-0002',
-          tuInvoiceNo: 'INV-69-1044',
-          tuInvoiceDate: '2026-06-28',
-          tuActualSales: 115000,
-          tuStatus: 'INVOICED',
-          tuItems: 'สื่อการเรียนรู้สะเต็มศึกษาและดิจิทัลแพลตฟอร์ม'
-        },
-        {
-          projectId: 'EVT-2569-0003',
-          tuInvoiceNo: 'INV-69-1205',
-          tuInvoiceDate: '2026-07-15',
-          tuActualSales: 218000,
-          tuStatus: 'PAID',
-          tuItems: 'ชุดอุปกรณ์บอร์ดสมองกล Coding และสื่อประกอบการเรียน'
-        },
-        {
-          projectId: 'EVT-2569-0004',
-          tuInvoiceNo: 'INV-69-1420',
-          tuInvoiceDate: '2026-08-02',
-          tuActualSales: 185000,
-          tuStatus: 'INVOICED',
-          tuItems: 'คู่มือและแบบวัดผลประเมินผลสมรรถนะผู้เรียน'
-        },
-        {
-          projectId: 'EVT-2569-0005',
-          tuInvoiceNo: '',
-          tuInvoiceDate: '',
-          tuActualSales: 0,
-          tuStatus: 'PENDING',
-          tuItems: 'อยู่ระหว่างรอการประชุมสรุปยอดจัดซื้อประจำปีของโรงเรียน'
-        }
-      ];
-    }
-
-    function getInitialSampleAnnualPlans() {
-      return [
-        {
-          seqNo: 1,
-          planId: 'PLAN-2569-01',
-          title: 'งานอบรมใหญ่ Active Learning สู่สมรรถนะผู้เรียนระดับชาติ',
-          targetAudience: 'ครูผู้สอนระดับมัธยมศึกษา 500 คน ทั่วประเทศ',
-          principleBudget: 150000,
-          targetSales: 1500000,
-          quarterOrDate: 'พฤศจิกายน 2569 (ไตรมาส 1)',
-          approverName: 'ผศ.อินทิรา บุนนาค',
-          approverRole: 'กรรมการผู้จัดการ',
-          status: 'APPROVED_PRINCIPLE',
-          notes: 'โครงการยุทธศาสตร์หลักประจำปี เน้นสื่อและแบบฝึก Active Learning'
-        },
-        {
-          seqNo: 2,
-          planId: 'PLAN-2569-02',
-          title: 'โครงการสัมมนาเชิงปฏิบัติการ STEM & Coding สู่ห้องเรียนนวัตกรรม',
-          targetAudience: 'ครูกลุ่มสาระวิทยาศาสตร์และเทคโนโลยี 200 โรงเรียน',
-          principleBudget: 80000,
-          targetSales: 850000,
-          quarterOrDate: 'ธันวาคม 2569 (ไตรมาส 1)',
-          approverName: 'ผศ.อินทิรา บุนนาค',
-          approverRole: 'กรรมการผู้จัดการ',
-          status: 'APPROVED_PRINCIPLE',
-          notes: 'ขยายฐานโรงเรียน Tier A และจัดจำหน่ายชุดบอร์ด Coding'
-        },
-        {
-          seqNo: 3,
-          planId: 'PLAN-2569-03',
-          title: 'อบรมเชิงลึกการวัดและประเมินผลตามแนวทาง PISA และ O-NET',
-          targetAudience: 'ผู้บริหารและครูวิชาการเขตพื้นที่การศึกษา',
-          principleBudget: 60000,
-          targetSales: 650000,
-          quarterOrDate: 'มกราคม 2570 (ไตรมาส 2)',
-          approverName: 'ผศ.อินทิรา บุนนาค',
-          approverRole: 'กรรมการผู้จัดการ',
-          status: 'APPROVED_PRINCIPLE',
-          notes: 'มุ่งเน้นการใช้คลังข้อสอบและเครื่องมือวัดผลมาตรฐาน TWP'
-        },
-        {
-          seqNo: 4,
-          planId: 'PLAN-2569-04',
-          title: 'เวิร์กช็อปพัฒนาศักยภาพผู้บริหารสถานศึกษา ยุค AI & Digital Transformation',
-          targetAudience: 'ผู้อำนวยการและรองผู้อำนวยการสถานศึกษา 100 ท่าน',
-          principleBudget: 100000,
-          targetSales: 1200000,
-          quarterOrDate: 'กุมภาพันธ์ 2570 (ไตรมาส 2)',
-          approverName: 'ผศ.อินทิรา บุนนาค',
-          approverRole: 'กรรมการผู้จัดการ',
-          status: 'APPROVED_PRINCIPLE',
-          notes: 'สัมมนาผู้บริหารระดับสูง สร้างเครือข่ายความร่วมมือการใช้สื่อดิจิทัล'
-        }
-      ];
+      return [];
     }
 
     function getPersistedAnnualPlans() {
       const stored = localStorage.getItem('twp_annual_principle_plans');
-      if (stored) {
+      if (stored !== null) {
         try {
           const parsed = JSON.parse(stored);
-          if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+          if (Array.isArray(parsed)) return parsed;
         } catch(e) {}
       }
-      return getInitialSampleAnnualPlans();
+      return [];
     }
 
     // System Global State (Synchronously initialized with complete Master Data)
     const AppState = {
-      version: '1.22.3',
+      version: '1.22.4',
       clientId: 'DEV-' + Math.random().toString(36).substring(2, 7).toUpperCase(),
       activeTab: 'dashboard',
       activeDevices: {},
@@ -4942,7 +4778,7 @@
 
     // Landing Page Navigation & Authentication Gate
     
-    // ------------------- ENTERPRISE TEAM AUTHENTICATION HANDLERS (v1.22.3) -------------------
+    // ------------------- ENTERPRISE TEAM AUTHENTICATION HANDLERS (v1.22.4) -------------------
     
     
 
@@ -5397,25 +5233,23 @@
     // ------------------- ENTERPRISE SMART MERGE (ZERO DATA LOSS) -------------------
     function mergeCloudRequestsWithLocal(cloudRequests) {
       if (!Array.isArray(cloudRequests)) return AppState.requests || [];
-      const cloudIds = new Set(cloudRequests.map(r => r.eventId));
+      const deletedIds = new Set(getDeletedRequestIds());
 
-      const merged = cloudRequests.map(cReq => {
+      // Strictly filter out any deleted IDs and demo cases
+      const validCloud = cloudRequests.filter(r => !deletedIds.has(r.eventId) && r.eventId !== 'EVT-DEMO-2026' && !r.isDemoCase);
+      const cloudIds = new Set(validCloud.map(r => r.eventId));
+
+      const merged = validCloud.map(cReq => {
         const lReq = (AppState.requests || []).find(r => r.eventId === cReq.eventId);
         if (!lReq) return cReq;
 
-        // Retain 7 categories of actual expenses if local has them
         const actualExpenses = cReq.actualExpenses || lReq.actualExpenses || null;
         const actualExpensesTotal = cReq.actualExpensesTotal || lReq.actualExpensesTotal || (actualExpenses ? ((Number(actualExpenses.expSpeaker)||0) + (Number(actualExpenses.expTravel)||0) + (Number(actualExpenses.expAccom)||0) + (Number(actualExpenses.expFood)||0) + (Number(actualExpenses.expDocKit)||0) + (Number(actualExpenses.expVenue)||0) + (Number(actualExpenses.expMisc)||0)) : (cReq.actualBudget || lReq.actualBudget || 0));
-
-        // Retain signature from local if cloud hasn't received base64 yet
-        const approverSignature = lReq.approverSignature || cReq.approverSignature || null;
-
-        // Retain Zero-Trust QR token
+        const approverSignature = cReq.approverSignature || lReq.approverSignature || null;
         const token = cReq.token || lReq.token || '';
 
-        // Retain status: If locally APPROVED or COMPLETED, do not regress to earlier status
         let status = cReq.status;
-        if (lReq.status === 'COMPLETED') {
+        if (lReq.status === 'COMPLETED' && cReq.status !== 'COMPLETED') {
           status = 'COMPLETED';
         } else if (lReq.status === 'APPROVED' && (cReq.status === 'WAITING_EXEC' || cReq.status === 'WAITING_B')) {
           status = 'APPROVED';
@@ -5433,8 +5267,7 @@
         };
       });
 
-      // Retain local-only requests that have not been uploaded to cloud yet
-      const localOnly = (AppState.requests || []).filter(r => !cloudIds.has(r.eventId));
+      const localOnly = (AppState.requests || []).filter(r => !cloudIds.has(r.eventId) && !deletedIds.has(r.eventId) && r.eventId !== 'EVT-DEMO-2026' && !r.isDemoCase);
       return [...merged, ...localOnly];
     }
 
@@ -5991,7 +5824,7 @@
         if (epInput) epInput.value = AppState.gasEndpoint;
       }
 
-      // 1.1 Check Release Notes Popup (v1.22.3) and Mandatory Login Gate on System Enter
+      // 1.1 Check Release Notes Popup (v1.22.4) and Mandatory Login Gate on System Enter
       checkAndShowWhatsNewOnEnter();
       
       // 2. Fetch latest cloud updates asynchronously in background without blocking UI
@@ -6974,74 +6807,109 @@
     }
 
     function editTeamARequest(eventId) {
-      const req = (AppState.requests || []).find(r => r.eventId === eventId);
-      if (!req) {
-        showAlert('ไม่พบข้อมูลคำขอ ' + eventId, 'error');
-        return;
+      try {
+        const req = (AppState.requests || []).find(r => r.eventId === eventId);
+        if (!req) {
+          showAlert('ไม่พบข้อมูลคำขอ ' + eventId, 'error');
+          return;
+        }
+
+        if (req.status !== 'WAITING_B' && req.status !== 'REJECTED') {
+          showAlert('คำขอนี้อยู่ในสถานะ [' + req.status + '] ไม่สามารถแก้ไขโดยตรงได้ เพื่อป้องกันข้อผิดพลาดทางงบประมาณ', 'warning');
+          return;
+        }
+
+        AppState.editingEventId = eventId;
+        const banner = document.getElementById('teamAEditBanner');
+        const span = document.getElementById('editingEventIdSpan');
+        if (banner) banner.classList.remove('hidden');
+        if (span) span.innerText = eventId;
+
+        // 1. Populate Annual Plan & Out of Plan Reason
+        const annualSelect = document.getElementById('annualPlanSelect');
+        if (annualSelect) {
+          annualSelect.value = req.annualPlanId || (req.isOutOfPlan === 'YES' ? 'OUT_OF_PLAN' : '');
+        }
+        const outBox = document.getElementById('outOfPlanReasonBox');
+        const outInput = document.getElementById('outOfPlanReason');
+        if (req.isOutOfPlan === 'YES' || req.annualPlanId === 'OUT_OF_PLAN' || req.outOfPlanReason) {
+          if (outBox) outBox.classList.remove('hidden');
+          if (outInput) outInput.value = req.outOfPlanReason || '';
+        } else {
+          if (outBox) outBox.classList.add('hidden');
+          if (outInput) outInput.value = '';
+        }
+
+        // 2. Populate Activity & Topics
+        if (document.getElementById('activityType')) document.getElementById('activityType').value = req.activityType || '';
+        if (document.getElementById('courseTopic')) document.getElementById('courseTopic').value = req.courseTopic || '';
+        if (document.getElementById('customTopic')) document.getElementById('customTopic').value = req.customTopic || '';
+
+        // 3. Populate Date & Province (using correct onProvinceChange)
+        if (document.getElementById('eventDate')) document.getElementById('eventDate').value = req.eventDate || '';
+        if (document.getElementById('provSelect')) {
+          document.getElementById('provSelect').value = req.province || '';
+          if (typeof onProvinceChange === 'function') {
+            onProvinceChange(req.province || '');
+          }
+        }
+
+        // 4. Populate School & Sales
+        if (document.getElementById('schoolInput')) document.getElementById('schoolInput').value = req.schoolName || '';
+        if (document.getElementById('schoolSelect')) document.getElementById('schoolSelect').value = req.schoolName || '';
+        if (document.getElementById('selectedSchoolId')) document.getElementById('selectedSchoolId').value = req.schoolId || '';
+        if (document.getElementById('selectedSchoolTier')) document.getElementById('selectedSchoolTier').value = req.schoolTier || '';
+        if (document.getElementById('saleInput')) document.getElementById('saleInput').value = req.saleName || '';
+
+        // 5. Populate Details & Numbers
+        if (document.getElementById('speakerType')) document.getElementById('speakerType').value = req.speakerType || '';
+        if (document.getElementById('venueType')) document.getElementById('venueType').value = req.venueType || '';
+        if (document.getElementById('objective')) document.getElementById('objective').value = req.objective || '';
+        if (document.getElementById('expectedTrainees')) document.getElementById('expectedTrainees').value = req.expectedTrainees || 50;
+        if (document.getElementById('estBudget')) document.getElementById('estBudget').value = req.estBudget || 0;
+        if (document.getElementById('targetSales')) document.getElementById('targetSales').value = req.targetSales || 0;
+        if (document.getElementById('resourceLink')) document.getElementById('resourceLink').value = req.resourceLink || '';
+
+        // 6. Populate Logistics
+        const needAccom = req.needAccommodation === 'YES';
+        if (document.getElementById('needAccommodation')) {
+          document.getElementById('needAccommodation').checked = needAccom;
+          toggleAccommodationFields(needAccom);
+        }
+        if (document.getElementById('roomCount')) document.getElementById('roomCount').value = req.roomCount || 1;
+
+        const needTrans = req.needTransportation === 'YES';
+        if (document.getElementById('needTransportation')) {
+          document.getElementById('needTransportation').checked = needTrans;
+          toggleTransportFields(needTrans);
+        }
+        if (document.getElementById('transportDetails')) document.getElementById('transportDetails').value = req.transportDetails || '';
+
+        if (document.getElementById('needCatering')) document.getElementById('needCatering').checked = (req.needCatering === 'YES');
+        if (document.getElementById('needProductMedia')) document.getElementById('needProductMedia').checked = (req.needProductMedia === 'YES');
+        
+        const otherSupp = !!(req.otherSupportDetails || req.needOtherSupport === 'YES');
+        if (document.getElementById('needOtherSupport')) {
+          document.getElementById('needOtherSupport').checked = otherSupp;
+          toggleOtherSupportFields(otherSupp);
+        }
+        if (document.getElementById('otherSupportDetails')) document.getElementById('otherSupportDetails').value = req.otherSupportDetails || '';
+
+        if (typeof checkCourseTopicAgainstPlan === 'function') {
+          checkCourseTopicAgainstPlan();
+        }
+
+        const btn = document.getElementById('teamASubmitBtn');
+        if (btn) btn.innerHTML = '<i class="fa-solid fa-floppy-disk mr-2"></i> บันทึกการแก้ไขคำขอ (ซิงค์ทีม B)';
+
+        const formEl = document.getElementById('teamAForm');
+        if (formEl) formEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+        showAlert('✅ โหลดข้อมูลคำขอ ' + eventId + ' เข้าสู่แบบฟอร์มเรียบร้อยแล้ว ท่านสามารถปรับแก้ข้อมูลและกดบันทึกได้ทันที', 'info');
+      } catch (err) {
+        console.error('Error in editTeamARequest:', err);
+        showAlert('เกิดข้อผิดพลาดในการโหลดข้อมูลเข้าฟอร์ม: ' + err.message, 'error');
       }
-
-      if (req.status !== 'WAITING_B' && req.status !== 'REJECTED') {
-        showAlert('คำขอนี้อยู่ในสถานะ [' + req.status + '] ไม่สามารถแก้ไขโดยตรงได้ เพื่อป้องกันข้อผิดพลาดทางงบประมาณ', 'warning');
-        return;
-      }
-
-      AppState.editingEventId = eventId;
-      const banner = document.getElementById('teamAEditBanner');
-      const span = document.getElementById('editingEventIdSpan');
-      if (banner) banner.classList.remove('hidden');
-      if (span) span.innerText = eventId;
-
-      // Populate form
-      if (document.getElementById('activityType')) document.getElementById('activityType').value = req.activityType || '';
-      if (document.getElementById('courseTopic')) document.getElementById('courseTopic').value = req.courseTopic || '';
-      if (document.getElementById('customTopic')) document.getElementById('customTopic').value = req.customTopic || '';
-      if (document.getElementById('eventDate')) document.getElementById('eventDate').value = req.eventDate || '';
-      if (document.getElementById('provSelect')) {
-        document.getElementById('provSelect').value = req.province || '';
-        filterSchoolsByProvince(req.province || '');
-      }
-      if (document.getElementById('schoolInput')) document.getElementById('schoolInput').value = req.schoolName || '';
-      if (document.getElementById('schoolSelect')) document.getElementById('schoolSelect').value = req.schoolName || '';
-      if (document.getElementById('saleInput')) document.getElementById('saleInput').value = req.saleName || '';
-      if (document.getElementById('speakerType')) document.getElementById('speakerType').value = req.speakerType || '';
-      if (document.getElementById('venueType')) document.getElementById('venueType').value = req.venueType || '';
-      if (document.getElementById('objective')) document.getElementById('objective').value = req.objective || '';
-      if (document.getElementById('expectedTrainees')) document.getElementById('expectedTrainees').value = req.expectedTrainees || 50;
-      if (document.getElementById('estBudget')) document.getElementById('estBudget').value = req.estBudget || 0;
-      if (document.getElementById('targetSales')) document.getElementById('targetSales').value = req.targetSales || 0;
-
-      const needAccom = req.needAccommodation === 'YES';
-      if (document.getElementById('needAccommodation')) {
-        document.getElementById('needAccommodation').checked = needAccom;
-        toggleAccommodationFields(needAccom);
-      }
-      if (document.getElementById('roomCount')) document.getElementById('roomCount').value = req.roomCount || 1;
-
-      const needTrans = req.needTransportation === 'YES';
-      if (document.getElementById('needTransportation')) {
-        document.getElementById('needTransportation').checked = needTrans;
-        toggleTransportFields(needTrans);
-      }
-      if (document.getElementById('transportDetails')) document.getElementById('transportDetails').value = req.transportDetails || '';
-
-      if (document.getElementById('needCatering')) document.getElementById('needCatering').checked = (req.needCatering === 'YES');
-      if (document.getElementById('needProductMedia')) document.getElementById('needProductMedia').checked = (req.needProductMedia === 'YES');
-      
-      const otherSupp = !!req.otherSupportDetails;
-      if (document.getElementById('needOtherSupport')) {
-        document.getElementById('needOtherSupport').checked = otherSupp;
-        toggleOtherSupportFields(otherSupp);
-      }
-      if (document.getElementById('otherSupportDetails')) document.getElementById('otherSupportDetails').value = req.otherSupportDetails || '';
-
-      const btn = document.getElementById('teamASubmitBtn');
-      if (btn) btn.innerHTML = '<i class="fa-solid fa-floppy-disk mr-2"></i> บันทึกการแก้ไขคำขอ (ซิงค์ทีม B)';
-
-      // Smooth scroll to form
-      const formEl = document.getElementById('teamAForm');
-      if (formEl) formEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
-
-      showAlert('โหลดข้อมูลคำขอ ' + eventId + ' เข้าสู่แบบฟอร์มแล้ว สามารถแก้ไขและบันทึกได้ทันที', 'info');
     }
 
     function cancelTeamAEdit() {
@@ -7053,12 +6921,17 @@
       toggleAccommodationFields(false);
       toggleTransportFields(false);
       toggleOtherSupportFields(false);
+      const outBox = document.getElementById('outOfPlanReasonBox');
+      if (outBox) outBox.classList.add('hidden');
+      if (AppState.currentUser && (AppState.currentUser.team === 'TEAM_A' || (AppState.currentUser.teamRole && AppState.currentUser.teamRole.startsWith('TEAM_A')))) {
+        const saleIn = document.getElementById('saleInput');
+        if (saleIn) saleIn.value = AppState.currentUser.fullName;
+      }
       const btn = document.getElementById('teamASubmitBtn');
       if (btn) btn.innerHTML = '<i class="fa-solid fa-paper-plane mr-2"></i> ส่งคำขอให้ฝ่ายวิชาการ (ทีม B) ตรวจสอบ';
-      showAlert('ยกเลิกโหมดแก้ไขคำขอแล้ว', 'info');
+      showAlert('ยกเลิกการแก้ไขคำขอแล้ว ฟอร์มกลับสู่สถานะสร้างคำขอใหม่', 'info');
     }
 
-    // --- 3. Audit Revision Modal (Strict Post-Approval Freeze) ---
     function openAuditRevisionModal(eventId) {
       const modal = document.getElementById('auditRevisionModal');
       const idInput = document.getElementById('auditModalEventId');
@@ -7268,7 +7141,7 @@
     }
 
     function acknowledgeAndOpenLoginGate() {
-      localStorage.setItem('twp_acknowledged_version', '1.22.3');
+      localStorage.setItem('twp_acknowledged_version', '1.22.4');
       closeWhatsNewModal();
       if (!AppState.currentUser || !AppState.currentUser.userId) {
         setTimeout(() => {
@@ -7283,7 +7156,7 @@
 
     function checkAndShowWhatsNewOnEnter() {
       const ackVer = localStorage.getItem('twp_acknowledged_version');
-      if (ackVer !== '1.22.3') {
+      if (ackVer !== '1.22.4') {
         setTimeout(() => {
           openWhatsNewModal();
         }, 500);
@@ -9663,12 +9536,28 @@
 
     
     // ------------------- SAMPLE RECORD IDENTIFIER -------------------
+    function getDeletedRequestIds() {
+      try {
+        return JSON.parse(localStorage.getItem('twp_deleted_request_ids') || '[]');
+      } catch(e) { return []; }
+    }
+
+    function addDeletedRequestId(id) {
+      if (!id) return;
+      const list = getDeletedRequestIds();
+      if (!list.includes(id)) {
+        list.push(id);
+        try {
+          localStorage.setItem('twp_deleted_request_ids', JSON.stringify(list));
+        } catch(e) {}
+      }
+    }
+
     function isSampleRecord(item) {
       if (!item) return false;
-      if (item.isDemoCase || item.isSample) return true;
+      if (item.isDemoCase === true || item.isSample === true) return true;
       const id = String(item.eventId || item.planId || item.id || item.projectId || '');
-      if (id === 'EVT-DEMO-2026' || id === 'EVT-2026-0001' || id === 'EVT-20261111-7914') return true;
-      if (id.startsWith('PLAN-2569-') || id.startsWith('EVT-2569-') || id.startsWith('EVT-DEMO-')) return true;
+      if (id === 'EVT-DEMO-2026' || id.startsWith('EVT-DEMO-')) return true;
       return false;
     }
 
@@ -9678,13 +9567,28 @@
     }
 
     function deleteRequestItem(eventId) {
-      if (!confirm('ต้องการลบคำขอ ' + eventId + ' ใช่หรือไม่?')) return;
+      if (!eventId) return;
+      if (!confirm('ยืนยันการลบคำขอ ' + eventId + ' หรือไม่?\n(คำขอนี้จะถูกลบถาวรและจะไม่ถูกนำกลับมาแสดงอีก)')) return;
+
+      addDeletedRequestId(eventId);
       AppState.requests = (AppState.requests || []).filter(r => r.eventId !== eventId);
-      localStorage.setItem('twp_requests_store', JSON.stringify(AppState.requests));
-      showAlert('ลบคำขอ ' + eventId + ' เรียบร้อยแล้ว', 'info');
+      try {
+        localStorage.setItem('twp_requests_store', JSON.stringify(AppState.requests));
+      } catch(e) {}
+
+      // Delete from backend Google Apps Script if connected
+      if (AppState.gasEndpoint) {
+        postToBackend('DELETE_EVENT_REQUEST', { eventId: eventId })
+          .then(res => console.log('Backend request deleted:', res))
+          .catch(err => console.warn('Offline deletion recorded locally:', err));
+      }
+
+      showAlert('🗑️ ลบคำขอ ' + eventId + ' เรียบร้อยแล้ว (ลบถาวรและจะไม่นำกลับมาแสดงอีก)', 'success');
       renderAll();
+      renderTeamAMyRequests();
+      renderTeamBQueue();
     }
-  
+
     // ------------------- RENDER VIEWS -------------------
 
     function renderDashboard() {
@@ -12575,7 +12479,7 @@ function renderA4EvalReportHtmlClient(d) {
           </table>
 
           <div style="margin-top:14px; padding-top:4px; border-top:1px solid #e2e8f0; font-size:8.5pt; color:#94a3b8; text-align:center;">
-            เอกสารฉบับนี้สร้างโดยระบบ Training Center TWP (EMS Enterprise Platform v1.22.3) • ใช้สำหรับติดตามและควบคุมผลการปฏิบัติงานภายใน (PPC Standard)
+            เอกสารฉบับนี้สร้างโดยระบบ Training Center TWP (EMS Enterprise Platform v1.22.4) • ใช้สำหรับติดตามและควบคุมผลการปฏิบัติงานภายใน (PPC Standard)
           </div>
         </div>
       `;
@@ -12857,7 +12761,7 @@ function renderA4EvalReportHtmlClient(d) {
       }
       if (opInput) opInput.value = currentProfile.name;
 
-      // Update Sidebar Profile (v1.17.0 / v1.22.3)
+      // Update Sidebar Profile (v1.17.0 / v1.22.4)
       const sideName = document.getElementById('sideUserName');
       const sideRole = document.getElementById('sideUserRole');
       const sideAvatar = document.getElementById('sideUserAvatar');
@@ -14862,7 +14766,7 @@ function renderA4EvalReportHtmlClient(d) {
           <div>
             <div class="flex items-center space-x-2">
               <h3 class="font-bold text-slate-900 text-lg">ประวัติและการปรับปรุงระบบเวอร์ชัน (Release Notes)</h3>
-              <span class="bg-blue-100 text-[#08539E] text-xs font-bold font-mono px-2 py-0.5 rounded-full">v1.22.3 Current</span>
+              <span class="bg-blue-100 text-[#08539E] text-xs font-bold font-mono px-2 py-0.5 rounded-full">v1.22.4 Current</span>
             </div>
             <p class="text-xs text-slate-500">บันทึกประวัติการปรับปรุงสถาปัตยกรรมและฟังก์ชันการทำงานอย่างละเอียด</p>
           </div>
@@ -14875,11 +14779,11 @@ function renderA4EvalReportHtmlClient(d) {
       <!-- Release Timeline List -->
       <div class="space-y-4">
         
-        <!-- v1.22.3 (Current Major Release) -->
+        <!-- v1.22.4 (Current Major Release) -->
         <div class="p-5 bg-gradient-to-br from-emerald-50 via-white to-teal-50/70 border-2 border-emerald-400 rounded-3xl space-y-3 shadow-sm">
           <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-1">
             <div class="flex items-center space-x-2">
-              <span class="bg-emerald-600 text-white text-xs font-black px-2.5 py-0.5 rounded-lg font-mono">v1.22.3</span>
+              <span class="bg-emerald-600 text-white text-xs font-black px-2.5 py-0.5 rounded-lg font-mono">v1.22.4</span>
               <span class="font-bold text-slate-900 text-sm">Landing Page Login Gate, Release Notes Popup & Attendee Individual Edit/Delete</span>
             </div>
             <span class="text-[11px] text-emerald-700 font-bold font-mono">2026-11-14 &bull; Current Release</span>
@@ -15112,7 +15016,7 @@ function renderA4EvalReportHtmlClient(d) {
 
 
 
-  <!-- Modal: What's New Release Notes (v1.22.3) -->
+  <!-- Modal: What's New Release Notes (v1.22.4) -->
   <div id="whatsNewModal" class="hidden fixed inset-0 z-[9999] flex items-center justify-center bg-black/75 backdrop-blur-md p-4 animate-fadeIn">
     <div class="bg-white rounded-3xl max-w-2xl w-full max-h-[90vh] flex flex-col shadow-2xl border border-slate-200 overflow-hidden">
       
@@ -15125,9 +15029,9 @@ function renderA4EvalReportHtmlClient(d) {
           <div>
             <div class="flex items-center space-x-2">
               <span class="text-xs bg-emerald-500/30 text-emerald-300 border border-emerald-400/40 px-2 py-0.5 rounded-full font-mono font-bold">Release Note</span>
-              <span class="text-xs text-slate-300">อัปเดตระบบเวอร์ชัน 1.22.3</span>
+              <span class="text-xs text-slate-300">อัปเดตระบบเวอร์ชัน 1.22.4</span>
             </div>
-            <h2 class="text-lg sm:text-xl font-black text-white mt-1">ประกาศอัปเดตระบบ Training Center TWP v1.22.3</h2>
+            <h2 class="text-lg sm:text-xl font-black text-white mt-1">ประกาศอัปเดตระบบ Training Center TWP v1.22.4</h2>
           </div>
         </div>
         <button type="button" onclick="closeWhatsNewModal()" class="text-white/70 hover:text-white text-xl p-1 cursor-pointer">
@@ -15139,16 +15043,16 @@ function renderA4EvalReportHtmlClient(d) {
       <div class="p-6 overflow-y-auto custom-scrollbar space-y-3.5 text-xs">
         <div class="p-3.5 bg-gradient-to-r from-emerald-50 to-teal-50 border-2 border-emerald-300 rounded-2xl space-y-2 mb-3 shadow-xs">
           <div class="flex items-center space-x-2">
-            <span class="px-2 py-0.5 rounded-full text-[10px] font-black bg-emerald-600 text-white">ไฮไลต์ v1.22.3</span>
-            <span class="font-bold text-emerald-950 text-xs sm:text-sm">ซิงค์ชื่อผู้ใช้งานตามสิทธิ์ & ส่งต่อคำขอ A ➔ B ทันที</span>
+            <span class="px-2 py-0.5 rounded-full text-[10px] font-black bg-emerald-600 text-white">ไฮไลต์ v1.22.4</span>
+            <span class="font-bold text-emerald-950 text-xs sm:text-sm">แก้ไขระบบโหลดฟอร์มแก้ไขคำขอทีม A & ระบบลบข้อมูลตัวอย่างถาวร</span>
           </div>
           <p class="text-slate-700 leading-relaxed font-medium">
-            1) <strong>ระบบระบุตัวตนและโปรไฟล์ผู้ใช้:</strong> เมื่อเข้าสู่ระบบในฐานะทีมใด (ฝ่ายขาย A, วิชาการ B, ผู้บริหาร, แอดมิน) ชื่อและสังกัดจะแสดงผลใน Header, Sidebar และเติมชื่อผู้แทนขายในฟอร์ม (saleInput) ทันที<br>
-            2) <strong>ส่งต่องานข้ามทีม (Team A ➔ Team B):</strong> เมื่อฝ่ายขายบันทึกคำขอ งานจะถูกส่งตรงเข้าคิวตรวจสอบของฝ่ายวิชาการ (Team B) ทันทีทั้งระบบ Real-time Cloud Sync และ Local Storage พร้อมแสดงสถานะ "รอฝ่ายวิชาการตรวจสอบ (WAITING_B)"
+            1) <strong>แก้ไขระบบโหลดข้อมูลฟอร์มแก้ไขคำขอ (ทีม A):</strong> แก้ไขข้อผิดพลาดของฟังก์ชันดึงข้อมูลโรงเรียน ทำให้เมื่อกด "แก้ไขคำขอ" ข้อมูลเดิมทั้งหมด (โครงการตามแผน/นอกแผน, เหตุผล, วันที่, โรงเรียน, ผู้แทนขาย, วิทยากร, สถานที่, งบประมาณ, ที่พัก และการเดินทาง) จะถูกโหลดกลับมาแสดงในแบบฟอร์มอย่างสมบูรณ์ 100% ทันที<br>
+            2) <strong>ระบบลบข้อมูลตัวอย่างถาวร (Permanent Purge):</strong> ปิดกั้นการคืนชีพของข้อมูลตัวอย่าง/โครงการจำลองอย่างถาวร ข้อมูลที่ถูกลบจะไม่ถูกนำกลับมาแสดงใหม่เมื่อรีเฟรชหน้าเว็บหรืออัปเดตเวอร์ชันอีกต่อไป
           </p>
         </div>
         <p class="text-slate-600 font-medium leading-relaxed">
-          สรุปรายละเอียดการพัฒนาต่อเนื่องของระบบ <strong>Enterprise Governance & Cross-Team Real-time Sync Edition (v1.22.3)</strong>:
+          สรุปรายละเอียดการพัฒนาต่อเนื่องของระบบ <strong>Enterprise Governance & Cross-Team Real-time Sync Edition (v1.22.4)</strong>:
         </p>
 
         <!-- Feature 1 -->
