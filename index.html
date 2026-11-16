@@ -5428,11 +5428,18 @@
     // ------------------- ENTERPRISE SMART MERGE (ZERO DATA LOSS) -------------------
     function mergeCloudRequestsWithLocal(cloudRequests) {
       if (!Array.isArray(cloudRequests)) return AppState.requests || [];
-      const deletedIds = new Set(getDeletedRequestIds());
 
-      // Strictly filter out any deleted IDs and demo cases
-      const validCloud = cloudRequests.filter(r => !deletedIds.has(r.eventId) && r.eventId !== 'EVT-DEMO-2026' && !r.isDemoCase);
+      // Live cloud records from Google Sheets are the ultimate source of truth
+      const validCloud = cloudRequests.filter(r => r && r.eventId && r.eventId !== 'EVT-DEMO-2026' && !r.isDemoCase);
       const cloudIds = new Set(validCloud.map(r => r.eventId));
+
+      // Clean up deletedIds: if a cloud request exists, it's alive in Google Sheets!
+      try {
+        const delList = getDeletedRequestIds().filter(id => !cloudIds.has(id));
+        localStorage.setItem('twp_deleted_request_ids', JSON.stringify(delList));
+      } catch(e) {}
+
+      const deletedIds = new Set(getDeletedRequestIds());
 
       const merged = validCloud.map(cReq => {
         const lReq = (AppState.requests || []).find(r => r.eventId === cReq.eventId);
