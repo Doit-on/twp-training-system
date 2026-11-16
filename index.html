@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-  <title>Training Center TWP - ระบบบริหารคำขอจัดอบรมและประเมินผล v1.22.4</title>
+  <title>Training Center TWP - ระบบบริหารคำขอจัดอบรมและประเมินผล v1.22.5</title>
   <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
   <!-- Google Fonts: Sarabun -->
@@ -313,10 +313,10 @@
       </div>
       <div class="flex items-center space-x-2 sm:space-x-3 text-xs">
         <!-- Release Notes Button on Landing -->
-        <button type="button" onclick="openWhatsNewModal()" class="bg-amber-400/20 hover:bg-amber-400/30 text-amber-200 px-3 py-1.5 rounded-full border border-amber-300/40 backdrop-blur-sm font-bold flex items-center space-x-1.5 transition cursor-pointer" title="ดูรายละเอียดการอัปเดตระบบ v1.22.4">
+        <button type="button" onclick="openWhatsNewModal()" class="bg-amber-400/20 hover:bg-amber-400/30 text-amber-200 px-3 py-1.5 rounded-full border border-amber-300/40 backdrop-blur-sm font-bold flex items-center space-x-1.5 transition cursor-pointer" title="ดูรายละเอียดการอัปเดตระบบ v1.22.5">
           <i class="fa-solid fa-bullhorn text-amber-300 animate-pulse"></i>
           <span class="hidden sm:inline">อัปเดต</span>
-          <span class="bg-emerald-500 text-white font-mono font-black text-[10px] px-1.5 py-0.2 rounded-full">v1.22.4</span>
+          <span class="bg-emerald-500 text-white font-mono font-black text-[10px] px-1.5 py-0.2 rounded-full">v1.22.5</span>
         </button>
         <!-- Team Login Gate Button / User Badge -->
         <button id="landingLoginBtn" type="button" onclick="openSwitchProfileModal()" class="bg-gradient-to-r from-amber-400 to-amber-500 hover:from-amber-300 hover:to-amber-400 text-slate-950 font-black px-3.5 py-1.5 rounded-xl shadow-md transition cursor-pointer flex items-center space-x-1.5">
@@ -359,7 +359,7 @@
       </div>
 
       <!-- Mandatory Login Gate Alert Card on Landing Page (if not logged in) -->
-      <!-- Comprehensive Enterprise Team Sign-In Card (v1.22.4) -->
+      <!-- Comprehensive Enterprise Team Sign-In Card (v1.22.5) -->
       <!-- Enterprise Sign-In Card (Standard Secure Authentication) -->
       <div id="landingLoginSection" class="max-w-md mx-auto w-full bg-white text-slate-800 rounded-3xl p-6 sm:p-8 shadow-2xl border border-slate-200/80 space-y-5 text-left relative z-20 animate-fadeIn">
         
@@ -470,7 +470,7 @@
     <!-- Bottom Footer on Landing Page -->
     <div class="max-w-7xl mx-auto w-full px-6 py-4 flex flex-col sm:flex-row items-center justify-between text-xs text-blue-200 border-t border-white/10 relative z-10 gap-2">
       <div>&copy; 2026 Training Center TWP - บริษัท ไทยวัฒนาพานิช จำกัด. All rights reserved.</div>
-      <div class="font-mono text-[11px] bg-white/10 px-3 py-1 rounded-full border border-white/15">EMS Enterprise Platform v1.22.4 (Live Apps Script Engine)</div>
+      <div class="font-mono text-[11px] bg-white/10 px-3 py-1 rounded-full border border-white/15">EMS Enterprise Platform v1.22.5 (Live Apps Script Engine)</div>
     </div>
 
   </div>
@@ -495,7 +495,7 @@
           <div class="sidebar-brand-text truncate">
             <div class="flex items-center space-x-1.5">
               <span class="font-extrabold text-sm tracking-wide text-white">TWP</span>
-              <span onclick="openVersionReleaseModal()" class="bg-blue-400/20 hover:bg-blue-400/30 text-blue-200 text-[9px] font-mono px-1.5 py-0.5 rounded-full border border-blue-300/30 cursor-pointer transition flex items-center gap-1" title="คลิกดูรายละเอียดเวอร์ชัน v1.22.4"><i class="fa-solid fa-sparkles text-amber-300 text-[8px]"></i><span class="bg-emerald-500 text-white font-black px-2 py-0.5 rounded-full">v1.22.4</span></span>
+              <span onclick="openVersionReleaseModal()" class="bg-blue-400/20 hover:bg-blue-400/30 text-blue-200 text-[9px] font-mono px-1.5 py-0.5 rounded-full border border-blue-300/30 cursor-pointer transition flex items-center gap-1" title="คลิกดูรายละเอียดเวอร์ชัน v1.22.5"><i class="fa-solid fa-sparkles text-amber-300 text-[8px]"></i><span class="bg-emerald-500 text-white font-black px-2 py-0.5 rounded-full">v1.22.5</span></span>
             </div>
             <p class="text-[10px] text-blue-200 truncate">ระบบบริหารงานฝึกอบรม</p>
           </div>
@@ -3338,7 +3338,7 @@
               <i class="fa-solid fa-code-compare text-amber-300"></i>
               <span class="text-xs font-bold uppercase tracking-wider">รายละเอียดการปรับปรุงเวอร์ชัน (Version Release Notes)</span>
             </div>
-            <span class="text-[10px] bg-amber-400 text-slate-950 font-black px-2 py-0.5 rounded-full">v1.22.4 Live</span>
+            <span class="text-[10px] bg-amber-400 text-slate-950 font-black px-2 py-0.5 rounded-full">v1.22.5 Live</span>
           </div>
           <p class="text-xs text-blue-100 leading-relaxed">
             <strong>v1.22.0 (Enterprise Compact QR & Drive Standard):</strong> ปรับขนาดหน้าต่างแท่นแสดงผล QR Code ให้กะทัดรัด (Compact Responsive) รองรับโน้ตบุ๊กทุกขนาดหน้าจอ, เพิ่มปุ่มปิดหน้าต่างทั้งบน ล่าง และกด Esc/คลิกนอกกรอบเพื่อปิดได้ทันที, พร้อมกำหนด Google Drive โฟลเดอร์กลางสำหรับเก็บเอกสารโครงการ
@@ -4343,7 +4343,7 @@
           <div>
             <div class="flex items-center space-x-2">
               <span class="text-xs bg-emerald-500/30 text-emerald-300 border border-emerald-400/40 px-2 py-0.5 rounded-full font-mono font-bold">Authentication Gate</span>
-              <span class="text-xs text-slate-300">v1.22.4</span>
+              <span class="text-xs text-slate-300">v1.22.5</span>
             </div>
             <h3 class="font-black text-white text-base sm:text-lg mt-0.5">เข้าสู่ระบบประจำทีม (Team Sign-In)</h3>
           </div>
@@ -4739,7 +4739,7 @@
 
     // System Global State (Synchronously initialized with complete Master Data)
     const AppState = {
-      version: '1.22.4',
+      version: '1.22.5',
       clientId: 'DEV-' + Math.random().toString(36).substring(2, 7).toUpperCase(),
       activeTab: 'dashboard',
       activeDevices: {},
@@ -4778,7 +4778,7 @@
 
     // Landing Page Navigation & Authentication Gate
     
-    // ------------------- ENTERPRISE TEAM AUTHENTICATION HANDLERS (v1.22.4) -------------------
+    // ------------------- ENTERPRISE TEAM AUTHENTICATION HANDLERS (v1.22.5) -------------------
     
     
 
@@ -4876,18 +4876,42 @@
       } else {
         if (loginSection) loginSection.classList.remove('hidden');
         if (loggedInSection) loggedInSection.classList.add('hidden');
+        if (activeNameEl) activeNameEl.innerText = '';
+        if (activeRoleEl) activeRoleEl.innerText = '';
         if (loginBtn) loginBtn.classList.remove('hidden');
         if (userBadge) {
           userBadge.classList.add('hidden');
           userBadge.classList.remove('flex');
         }
+        if (userNameEl) userNameEl.innerText = 'เข้าสู่ระบบ';
+        if (userRoleEl) userRoleEl.innerText = '';
       }
     }
 
-    function handleLogoutUser() {
+    function executeCompleteLogout() {
+      // 1. Broadcast logout to other tabs
+      if (typeof appBroadcastChannel !== 'undefined' && appBroadcastChannel) {
+        try {
+          appBroadcastChannel.postMessage({
+            type: 'USER_LOGOUT',
+            clientId: AppState.clientId
+          });
+        } catch(e) {}
+      }
+
+      if (AppState.activeDevices && AppState.clientId) {
+        delete AppState.activeDevices[AppState.clientId];
+        updateActiveDevicesUI();
+      }
+
+      // 2. Wipe authentication & session state completely
       AppState.currentUser = null;
+      AppState.operatorName = '';
       localStorage.removeItem('twp_current_user');
       localStorage.removeItem('ems_operator_name');
+      sessionStorage.removeItem('twp_portal_entered');
+
+      // 3. Reset profile state
       currentProfile = {
         name: 'ไม่ได้ระบุตัวตน',
         team: 'รอเข้าสู่ระบบ',
@@ -4897,11 +4921,52 @@
       try {
         localStorage.setItem('twp_operator_profile', JSON.stringify(currentProfile));
       } catch(e) {}
+
+      // 4. Reset Landing Page inputs and ensure Sign-In card is shown
+      const uIn = document.getElementById('landingUsernameInput');
+      const pIn = document.getElementById('landingPasswordInput');
+      if (uIn) uIn.value = '';
+      if (pIn) pIn.value = '';
+      const errBox = document.getElementById('landingLoginErrorBox');
+      if (errBox) errBox.classList.add('hidden');
+      const saleIn = document.getElementById('saleInput');
+      if (saleIn) saleIn.value = '';
+
+      // 5. Hide workspace / portal and display Landing Page
       showLandingPage();
+
+      // 6. Update all UI elements across Landing, Header, Sidebar, and Modals
       updateLandingPageAuthUI();
       updateCurrentLoginUserUI();
       updateOperatorProfileUI();
-      showAlert('ออกจากระบบเรียบร้อยแล้ว กรุณาระบุรหัสผ่านเพื่อเข้าใช้งานใหม่', 'info');
+      updateAuthModalCurrentUserInfo();
+
+      // 7. Close any open modals
+      const logoutModal = document.getElementById('logoutModal');
+      if (logoutModal) {
+        logoutModal.classList.add('hidden');
+        logoutModal.style.display = 'none';
+      }
+      const switchModal = document.getElementById('switchProfileModal');
+      if (switchModal) {
+        switchModal.classList.add('hidden');
+        switchModal.style.display = 'none';
+      }
+
+      // 8. Focus on username input for convenient next login
+      setTimeout(() => {
+        const loginSection = document.getElementById('landingLoginSection');
+        if (loginSection) {
+          loginSection.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+        if (uIn) uIn.focus();
+      }, 300);
+
+      showAlert('🔒 ออกจากระบบเรียบร้อยแล้ว กรุณาระบุ Username & Password เพื่อเข้าใช้งานใหม่', 'info');
+    }
+
+    function handleLogoutUser() {
+      executeCompleteLogout();
     }
 
     function handleLandingEnterClick(target) {
@@ -5824,7 +5889,7 @@
         if (epInput) epInput.value = AppState.gasEndpoint;
       }
 
-      // 1.1 Check Release Notes Popup (v1.22.4) and Mandatory Login Gate on System Enter
+      // 1.1 Check Release Notes Popup (v1.22.5) and Mandatory Login Gate on System Enter
       checkAndShowWhatsNewOnEnter();
       
       // 2. Fetch latest cloud updates asynchronously in background without blocking UI
@@ -7141,7 +7206,7 @@
     }
 
     function acknowledgeAndOpenLoginGate() {
-      localStorage.setItem('twp_acknowledged_version', '1.22.4');
+      localStorage.setItem('twp_acknowledged_version', '1.22.5');
       closeWhatsNewModal();
       if (!AppState.currentUser || !AppState.currentUser.userId) {
         setTimeout(() => {
@@ -7156,7 +7221,7 @@
 
     function checkAndShowWhatsNewOnEnter() {
       const ackVer = localStorage.getItem('twp_acknowledged_version');
-      if (ackVer !== '1.22.4') {
+      if (ackVer !== '1.22.5') {
         setTimeout(() => {
           openWhatsNewModal();
         }, 500);
@@ -12479,7 +12544,7 @@ function renderA4EvalReportHtmlClient(d) {
           </table>
 
           <div style="margin-top:14px; padding-top:4px; border-top:1px solid #e2e8f0; font-size:8.5pt; color:#94a3b8; text-align:center;">
-            เอกสารฉบับนี้สร้างโดยระบบ Training Center TWP (EMS Enterprise Platform v1.22.4) • ใช้สำหรับติดตามและควบคุมผลการปฏิบัติงานภายใน (PPC Standard)
+            เอกสารฉบับนี้สร้างโดยระบบ Training Center TWP (EMS Enterprise Platform v1.22.5) • ใช้สำหรับติดตามและควบคุมผลการปฏิบัติงานภายใน (PPC Standard)
           </div>
         </div>
       `;
@@ -12761,7 +12826,7 @@ function renderA4EvalReportHtmlClient(d) {
       }
       if (opInput) opInput.value = currentProfile.name;
 
-      // Update Sidebar Profile (v1.17.0 / v1.22.4)
+      // Update Sidebar Profile (v1.17.0 / v1.22.5)
       const sideName = document.getElementById('sideUserName');
       const sideRole = document.getElementById('sideUserRole');
       const sideAvatar = document.getElementById('sideUserAvatar');
@@ -13302,45 +13367,22 @@ function renderA4EvalReportHtmlClient(d) {
     // ------------------- LOGOUT & SYNC NOTIFICATION FLOW -------------------
 
     function handleLogout() {
-      // 1. Release self device from presence and locks
-      if (typeof appBroadcastChannel !== 'undefined' && appBroadcastChannel) {
-        try {
-          appBroadcastChannel.postMessage({
-            type: 'USER_LOGOUT',
-            clientId: AppState.clientId
-          });
-        } catch(e) {}
-      }
-
-      if (AppState.activeDevices && AppState.clientId) {
-        delete AppState.activeDevices[AppState.clientId];
-        updateActiveDevicesUI();
-      }
-
-      // 2. Show Logout Modal with sync status
+      // Show clean logout feedback modal briefly then complete logout
       const modal = document.getElementById('logoutModal');
       if (modal) {
         modal.classList.remove('hidden');
         modal.style.display = 'flex';
       }
-
-      // 3. Transition to landing page after 1.5 seconds
       setTimeout(() => {
-        confirmLogoutRedirect();
-      }, 1500);
+        executeCompleteLogout();
+      }, 700);
     }
 
     function confirmLogoutRedirect() {
-      const modal = document.getElementById('logoutModal');
-      if (modal) {
-        modal.classList.add('hidden');
-        modal.style.display = 'none';
-      }
-      showLandingPage();
-      showAlert('ออกจากระบบและบันทึกข้อมูลเรียบร้อยแล้ว', 'info');
+      executeCompleteLogout();
     }
 
-        // ------------------- ADMIN CARD EDIT & DELETE FUNCTIONS -------------------
+    // ------------------- ADMIN CARD EDIT & DELETE FUNCTIONS -------------------
 
 
     function openAdminEditRequestModal(eventId) {
@@ -14766,7 +14808,7 @@ function renderA4EvalReportHtmlClient(d) {
           <div>
             <div class="flex items-center space-x-2">
               <h3 class="font-bold text-slate-900 text-lg">ประวัติและการปรับปรุงระบบเวอร์ชัน (Release Notes)</h3>
-              <span class="bg-blue-100 text-[#08539E] text-xs font-bold font-mono px-2 py-0.5 rounded-full">v1.22.4 Current</span>
+              <span class="bg-blue-100 text-[#08539E] text-xs font-bold font-mono px-2 py-0.5 rounded-full">v1.22.5 Current</span>
             </div>
             <p class="text-xs text-slate-500">บันทึกประวัติการปรับปรุงสถาปัตยกรรมและฟังก์ชันการทำงานอย่างละเอียด</p>
           </div>
@@ -14779,11 +14821,11 @@ function renderA4EvalReportHtmlClient(d) {
       <!-- Release Timeline List -->
       <div class="space-y-4">
         
-        <!-- v1.22.4 (Current Major Release) -->
+        <!-- v1.22.5 (Current Major Release) -->
         <div class="p-5 bg-gradient-to-br from-emerald-50 via-white to-teal-50/70 border-2 border-emerald-400 rounded-3xl space-y-3 shadow-sm">
           <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-1">
             <div class="flex items-center space-x-2">
-              <span class="bg-emerald-600 text-white text-xs font-black px-2.5 py-0.5 rounded-lg font-mono">v1.22.4</span>
+              <span class="bg-emerald-600 text-white text-xs font-black px-2.5 py-0.5 rounded-lg font-mono">v1.22.5</span>
               <span class="font-bold text-slate-900 text-sm">Landing Page Login Gate, Release Notes Popup & Attendee Individual Edit/Delete</span>
             </div>
             <span class="text-[11px] text-emerald-700 font-bold font-mono">2026-11-14 &bull; Current Release</span>
@@ -15016,7 +15058,7 @@ function renderA4EvalReportHtmlClient(d) {
 
 
 
-  <!-- Modal: What's New Release Notes (v1.22.4) -->
+  <!-- Modal: What's New Release Notes (v1.22.5) -->
   <div id="whatsNewModal" class="hidden fixed inset-0 z-[9999] flex items-center justify-center bg-black/75 backdrop-blur-md p-4 animate-fadeIn">
     <div class="bg-white rounded-3xl max-w-2xl w-full max-h-[90vh] flex flex-col shadow-2xl border border-slate-200 overflow-hidden">
       
@@ -15029,9 +15071,9 @@ function renderA4EvalReportHtmlClient(d) {
           <div>
             <div class="flex items-center space-x-2">
               <span class="text-xs bg-emerald-500/30 text-emerald-300 border border-emerald-400/40 px-2 py-0.5 rounded-full font-mono font-bold">Release Note</span>
-              <span class="text-xs text-slate-300">อัปเดตระบบเวอร์ชัน 1.22.4</span>
+              <span class="text-xs text-slate-300">อัปเดตระบบเวอร์ชัน 1.22.5</span>
             </div>
-            <h2 class="text-lg sm:text-xl font-black text-white mt-1">ประกาศอัปเดตระบบ Training Center TWP v1.22.4</h2>
+            <h2 class="text-lg sm:text-xl font-black text-white mt-1">ประกาศอัปเดตระบบ Training Center TWP v1.22.5</h2>
           </div>
         </div>
         <button type="button" onclick="closeWhatsNewModal()" class="text-white/70 hover:text-white text-xl p-1 cursor-pointer">
@@ -15043,16 +15085,16 @@ function renderA4EvalReportHtmlClient(d) {
       <div class="p-6 overflow-y-auto custom-scrollbar space-y-3.5 text-xs">
         <div class="p-3.5 bg-gradient-to-r from-emerald-50 to-teal-50 border-2 border-emerald-300 rounded-2xl space-y-2 mb-3 shadow-xs">
           <div class="flex items-center space-x-2">
-            <span class="px-2 py-0.5 rounded-full text-[10px] font-black bg-emerald-600 text-white">ไฮไลต์ v1.22.4</span>
-            <span class="font-bold text-emerald-950 text-xs sm:text-sm">แก้ไขระบบโหลดฟอร์มแก้ไขคำขอทีม A & ระบบลบข้อมูลตัวอย่างถาวร</span>
+            <span class="px-2 py-0.5 rounded-full text-[10px] font-black bg-emerald-600 text-white">ไฮไลต์ v1.22.5</span>
+            <span class="font-bold text-emerald-950 text-xs sm:text-sm">ระบบออกจากระบบสมบูรณ์แบบ (Complete Session Termination & Zero Retention)</span>
           </div>
           <p class="text-slate-700 leading-relaxed font-medium">
-            1) <strong>แก้ไขระบบโหลดข้อมูลฟอร์มแก้ไขคำขอ (ทีม A):</strong> แก้ไขข้อผิดพลาดของฟังก์ชันดึงข้อมูลโรงเรียน ทำให้เมื่อกด "แก้ไขคำขอ" ข้อมูลเดิมทั้งหมด (โครงการตามแผน/นอกแผน, เหตุผล, วันที่, โรงเรียน, ผู้แทนขาย, วิทยากร, สถานที่, งบประมาณ, ที่พัก และการเดินทาง) จะถูกโหลดกลับมาแสดงในแบบฟอร์มอย่างสมบูรณ์ 100% ทันที<br>
-            2) <strong>ระบบลบข้อมูลตัวอย่างถาวร (Permanent Purge):</strong> ปิดกั้นการคืนชีพของข้อมูลตัวอย่าง/โครงการจำลองอย่างถาวร ข้อมูลที่ถูกลบจะไม่ถูกนำกลับมาแสดงใหม่เมื่อรีเฟรชหน้าเว็บหรืออัปเดตเวอร์ชันอีกต่อไป
+            1) <strong>เคลียร์ชื่อและสิทธิ์ผู้ใช้ออกจากหน้าจอ 100%:</strong> เมื่อกด "ออกจากระบบ" (ไม่ว่าจะจากเมนูด้านข้าง Sidebar, หน้าแรก Landing หรือหน้าต่างสลับสิทธิ์) ระบบจะทำการตัดการเชื่อมต่อ ล้างข้อมูลเซสชัน ชื่อผู้ใช้ สังกัด และประวัติการล็อกอินออกจากหน้าจอทันที ไม่ค้างชื่อหรือเปิดให้เข้าทำงานซ้ำโดยไม่ผ่านการยืนยันตัวตน<br>
+            2) <strong>บังคับแสดงฟอร์ม Sign-In พร้อมล้างช่องรหัสผ่าน:</strong> หน้าแรกจะสลับกลับมาแสดงการ์ดกรอก Username & Password เพื่อบังคับให้ต้องระบุข้อมูลประจำทีมใหม่อีกครั้งเสมอ ป้องกันข้อผิดพลาดจากการเข้าใจผิดว่ายังอยู่ในระบบ
           </p>
         </div>
         <p class="text-slate-600 font-medium leading-relaxed">
-          สรุปรายละเอียดการพัฒนาต่อเนื่องของระบบ <strong>Enterprise Governance & Cross-Team Real-time Sync Edition (v1.22.4)</strong>:
+          สรุปรายละเอียดการพัฒนาต่อเนื่องของระบบ <strong>Enterprise Governance & Cross-Team Real-time Sync Edition (v1.22.5)</strong>:
         </p>
 
         <!-- Feature 1 -->
