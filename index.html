@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-  <title>Training Center TWP - ระบบบริหารคำขอจัดอบรมและประเมินผล v1.22.8</title>
+  <title>Training Center TWP - ระบบบริหารคำขอจัดอบรมและประเมินผล v1.22.9</title>
   <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
   <!-- Google Fonts: Sarabun -->
@@ -313,10 +313,10 @@
       </div>
       <div class="flex items-center space-x-2 sm:space-x-3 text-xs">
         <!-- Release Notes Button on Landing -->
-        <button type="button" onclick="openWhatsNewModal()" class="bg-amber-400/20 hover:bg-amber-400/30 text-amber-200 px-3 py-1.5 rounded-full border border-amber-300/40 backdrop-blur-sm font-bold flex items-center space-x-1.5 transition cursor-pointer" title="ดูรายละเอียดการอัปเดตระบบ v1.22.8">
+        <button type="button" onclick="openWhatsNewModal()" class="bg-amber-400/20 hover:bg-amber-400/30 text-amber-200 px-3 py-1.5 rounded-full border border-amber-300/40 backdrop-blur-sm font-bold flex items-center space-x-1.5 transition cursor-pointer" title="ดูรายละเอียดการอัปเดตระบบ v1.22.9">
           <i class="fa-solid fa-bullhorn text-amber-300 animate-pulse"></i>
           <span class="hidden sm:inline">อัปเดต</span>
-          <span class="bg-emerald-500 text-white font-mono font-black text-[10px] px-1.5 py-0.2 rounded-full">v1.22.8</span>
+          <span class="bg-emerald-500 text-white font-mono font-black text-[10px] px-1.5 py-0.2 rounded-full">v1.22.9</span>
         </button>
         <!-- Team Login Gate Button / User Badge -->
         <button id="landingLoginBtn" type="button" onclick="openSwitchProfileModal()" class="bg-gradient-to-r from-amber-400 to-amber-500 hover:from-amber-300 hover:to-amber-400 text-slate-950 font-black px-3.5 py-1.5 rounded-xl shadow-md transition cursor-pointer flex items-center space-x-1.5">
@@ -359,7 +359,7 @@
       </div>
 
       <!-- Mandatory Login Gate Alert Card on Landing Page (if not logged in) -->
-      <!-- Comprehensive Enterprise Team Sign-In Card (v1.22.8) -->
+      <!-- Comprehensive Enterprise Team Sign-In Card (v1.22.9) -->
       <!-- Enterprise Sign-In Card (Standard Secure Authentication) -->
       <div id="landingLoginSection" class="max-w-md mx-auto w-full bg-white text-slate-800 rounded-3xl p-6 sm:p-8 shadow-2xl border border-slate-200/80 space-y-5 text-left relative z-20 animate-fadeIn">
         
@@ -470,7 +470,7 @@
     <!-- Bottom Footer on Landing Page -->
     <div class="max-w-7xl mx-auto w-full px-6 py-4 flex flex-col sm:flex-row items-center justify-between text-xs text-blue-200 border-t border-white/10 relative z-10 gap-2">
       <div>&copy; 2026 Training Center TWP - บริษัท ไทยวัฒนาพานิช จำกัด. All rights reserved.</div>
-      <div class="font-mono text-[11px] bg-white/10 px-3 py-1 rounded-full border border-white/15">EMS Enterprise Platform v1.22.8 (Live Apps Script Engine)</div>
+      <div class="font-mono text-[11px] bg-white/10 px-3 py-1 rounded-full border border-white/15">EMS Enterprise Platform v1.22.9 (Live Apps Script Engine)</div>
     </div>
 
   </div>
@@ -495,7 +495,7 @@
           <div class="sidebar-brand-text truncate">
             <div class="flex items-center space-x-1.5">
               <span class="font-extrabold text-sm tracking-wide text-white">TWP</span>
-              <span onclick="openVersionReleaseModal()" class="bg-blue-400/20 hover:bg-blue-400/30 text-blue-200 text-[9px] font-mono px-1.5 py-0.5 rounded-full border border-blue-300/30 cursor-pointer transition flex items-center gap-1" title="คลิกดูรายละเอียดเวอร์ชัน v1.22.8"><i class="fa-solid fa-sparkles text-amber-300 text-[8px]"></i><span class="bg-emerald-500 text-white font-black px-2 py-0.5 rounded-full">v1.22.8</span></span>
+              <span onclick="openVersionReleaseModal()" class="bg-blue-400/20 hover:bg-blue-400/30 text-blue-200 text-[9px] font-mono px-1.5 py-0.5 rounded-full border border-blue-300/30 cursor-pointer transition flex items-center gap-1" title="คลิกดูรายละเอียดเวอร์ชัน v1.22.9"><i class="fa-solid fa-sparkles text-amber-300 text-[8px]"></i><span class="bg-emerald-500 text-white font-black px-2 py-0.5 rounded-full">v1.22.9</span></span>
             </div>
             <p class="text-[10px] text-blue-200 truncate">ระบบบริหารงานฝึกอบรม</p>
           </div>
@@ -542,9 +542,12 @@
         <div class="space-y-1">
           <div class="px-2 pb-1 text-[11px] font-bold uppercase tracking-wider text-blue-300/70 sidebar-group-title">ขั้นตอนปฏิบัติงาน</div>
           
-          <button onclick="switchTab('teamA')" id="sideBtn-teamA" class="sidebar-nav-btn w-full flex items-center px-3 py-2.5 rounded-xl text-xs font-medium text-blue-100 cursor-pointer" title="1. ทีม A: บันทึกขอจัดอบรม (Sales)">
-            <i class="fa-solid fa-file-circle-plus sidebar-icon text-emerald-400 w-5 text-center mr-3 text-sm"></i>
-            <span class="sidebar-text truncate">1. ทีม A: ขอจัดอบรม</span>
+          <button onclick="switchTab('teamA')" id="sideBtn-teamA" class="sidebar-nav-btn w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-xs font-medium text-blue-100 cursor-pointer" title="1. ทีม A: บันทึกขอจัดอบรม (Sales)">
+            <div class="flex items-center min-w-0">
+              <i class="fa-solid fa-file-circle-plus sidebar-icon text-emerald-400 w-5 text-center mr-3 text-sm"></i>
+              <span class="sidebar-text truncate">1. ทีม A: ขอจัดอบรม</span>
+            </div>
+            <span id="sideBadgeTeamA" class="sidebar-badge-full bg-emerald-500/40 text-emerald-200 text-[10px] font-bold px-1.5 py-0.5 rounded-full shrink-0" title="คำขอค้างรอส่งต่อ/ตรวจ">0</span>
           </button>
 
           <button onclick="switchTab('teamB')" id="sideBtn-teamB" class="sidebar-nav-btn w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-xs font-medium text-blue-100 cursor-pointer" title="2. ทีม B: ตรวจวิชาการ & จัดงานจริง">
@@ -830,7 +833,7 @@
     <!-- ========================================== -->
     <section id="view-dashboard" class="space-y-6">
 
-      <!-- Admin Central Live Pipeline & Team A Requests Monitor (v1.22.8) -->
+      <!-- Admin Central Live Pipeline & Team A Requests Monitor (v1.22.9) -->
       <div id="adminTeamALiveMonitorCard" class="bg-white rounded-3xl border-2 border-emerald-400/80 shadow-md p-5 sm:p-6 space-y-4 animate-fadeIn">
         <div class="flex flex-col sm:flex-row sm:items-center justify-between pb-3 border-b border-slate-100 gap-3">
           <div class="flex items-center space-x-3">
@@ -1418,7 +1421,69 @@
         </button>
       </div>
 
-      <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-6 max-w-4xl mx-auto">
+      <!-- Team A Submitted Requests Tracking Table (v1.22.9 - Top Priority View) -->
+      <div id="teamAMyRequestsCard" class="bg-white rounded-2xl border-2 border-emerald-500/40 shadow-md p-5 space-y-4 max-w-4xl mx-auto">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between pb-3 border-b border-slate-100 gap-3">
+          <div class="flex items-center space-x-3">
+            <div class="w-10 h-10 rounded-xl bg-emerald-600 text-white flex items-center justify-center font-bold text-base shadow-sm">
+              <i class="fa-solid fa-list-check"></i>
+            </div>
+            <div>
+              <div class="flex items-center gap-2">
+                <h3 class="text-base font-black text-slate-900">ทะเบียนคำขอจัดอบรมที่ทีม A บันทึกไว้ & สถานะการส่งต่องาน</h3>
+                <span class="text-[10px] bg-emerald-100 text-emerald-800 font-bold px-2 py-0.5 rounded-full border border-emerald-200">Team A Pipeline</span>
+              </div>
+              <p class="text-xs text-slate-500">ตรวจสอบสถานะ ติดตามงานที่ส่งให้ทีม B / ผู้บริหาร หรือแก้ไขและลบคำขอได้ทันที</p>
+            </div>
+          </div>
+          <div class="flex items-center gap-2">
+            <button type="button" onclick="scrollToTeamAForm()" class="text-xs bg-emerald-600 hover:bg-emerald-700 text-white font-bold px-3.5 py-2 rounded-xl shadow-xs transition flex items-center space-x-1.5 cursor-pointer">
+              <i class="fa-solid fa-plus"></i>
+              <span>สร้างคำขอใหม่</span>
+            </button>
+            <button type="button" onclick="fetchInitialData(false)" class="text-xs text-slate-600 hover:text-emerald-700 font-bold px-2.5 py-2 rounded-xl border border-slate-200 hover:border-emerald-300 transition flex items-center space-x-1 cursor-pointer bg-slate-50" title="ซิงค์ข้อมูลล่าสุดจาก Google Sheets">
+              <i class="fa-solid fa-arrows-rotate"></i>
+              <span>รีเฟรช</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Real-time Filter & Counters Bar -->
+        <div class="flex flex-wrap items-center justify-between gap-2 p-2.5 bg-slate-50 rounded-xl border border-slate-200/80 text-xs">
+          <div class="flex items-center space-x-2">
+            <span class="text-slate-500 font-medium">สรุปคำขอ:</span>
+            <span id="teamAMonCountAll" class="bg-slate-200 text-slate-800 font-bold px-2 py-0.5 rounded-full">0 ทั้งหมด</span>
+            <span id="teamAMonCountWaitB" class="bg-purple-100 text-purple-800 font-bold px-2 py-0.5 rounded-full">0 รอทีม B</span>
+            <span id="teamAMonCountWaitExec" class="bg-amber-100 text-amber-800 font-bold px-2 py-0.5 rounded-full">0 รอผู้บริหาร</span>
+            <span id="teamAMonCountApproved" class="bg-emerald-100 text-emerald-800 font-bold px-2 py-0.5 rounded-full">0 อนุมัติแล้ว</span>
+          </div>
+          <div class="text-[11px] text-slate-400">
+            * คลิก <strong class="text-slate-600">"ดู A4"</strong> เพื่อเปิดเอกสารแบบฟอร์มเต็มฉบับ
+          </div>
+        </div>
+
+        <!-- Table -->
+        <div class="overflow-x-auto border border-slate-200 rounded-xl">
+          <table class="w-full text-left text-xs border-collapse">
+            <thead>
+              <tr class="bg-slate-100 text-slate-700 font-bold border-b border-slate-200 text-[11px]">
+                <th class="p-3 text-center w-28">รหัสคำขอ</th>
+                <th class="p-3">โรงเรียน / ผู้แทนขาย</th>
+                <th class="p-3">หัวข้ออบรม</th>
+                <th class="p-3 text-center">วันที่จัด</th>
+                <th class="p-3 text-right">งบเสนอ</th>
+                <th class="p-3 text-center">สถานะ</th>
+                <th class="p-3 text-center w-36">การจัดการ</th>
+              </tr>
+            </thead>
+            <tbody id="teamAMyRequestsTableBody" class="divide-y divide-slate-100 bg-white">
+              <!-- Dynamically populated -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div id="teamAFormContainer" class="bg-white rounded-2xl border border-slate-200 shadow-sm p-6 max-w-4xl mx-auto">
         <div class="border-b border-slate-100 pb-4 mb-6">
           <div class="flex items-center space-x-3">
             <div class="w-9 h-9 rounded-xl bg-emerald-100 text-emerald-700 flex items-center justify-center">
@@ -1734,45 +1799,6 @@
           </div>
 
         </form>
-      </div>
-
-      <!-- Team A Submitted Requests Tracking Table (v1.22.0) -->
-      <div id="teamAMyRequestsCard" class="bg-white rounded-2xl border border-slate-200 shadow-sm p-5 space-y-4 max-w-4xl mx-auto">
-        <div class="flex flex-col sm:flex-row sm:items-center justify-between pb-3 border-b border-slate-100 gap-2">
-          <div class="flex items-center space-x-2.5">
-            <div class="w-8 h-8 rounded-lg bg-emerald-100 text-emerald-700 flex items-center justify-center font-bold text-xs">
-              <i class="fa-solid fa-clock-rotate-left"></i>
-            </div>
-            <div>
-              <h3 class="text-sm font-bold text-slate-900">ทะเบียนคำขอที่บันทึกแล้ว & สถานะการส่งต่องาน (My Requests & Handover Status)</h3>
-              <p class="text-[11px] text-slate-400">ตรวจสอบสถานะการรับงานของทีม B และแก้ไขรายละเอียดคำขอได้ตราบใดที่ทีม B ยังไม่ได้รับงาน</p>
-            </div>
-          </div>
-          <button type="button" onclick="renderTeamAMyRequests()" class="text-xs text-slate-500 hover:text-emerald-700 font-semibold px-2.5 py-1 rounded-lg border border-slate-200 hover:border-emerald-300 transition flex items-center space-x-1 cursor-pointer">
-            <i class="fa-solid fa-arrows-rotate"></i>
-            <span>รีเฟรชตาราง</span>
-          </button>
-        </div>
-
-        <!-- Table -->
-        <div class="overflow-x-auto border border-slate-200 rounded-xl">
-          <table class="w-full text-left text-xs border-collapse">
-            <thead>
-              <tr class="bg-slate-50 text-slate-700 font-bold border-b border-slate-200 text-[11px]">
-                <th class="p-3 text-center w-28">รหัสคำขอ</th>
-                <th class="p-3">โรงเรียน / จังหวัด</th>
-                <th class="p-3">หัวข้ออบรม</th>
-                <th class="p-3 text-center">วันที่จัด</th>
-                <th class="p-3 text-right">งบเสนอ</th>
-                <th class="p-3 text-center">สถานะการส่งต่องาน</th>
-                <th class="p-3 text-center w-36">สิทธิ์การจัดการ</th>
-              </tr>
-            </thead>
-            <tbody id="teamAMyRequestsTableBody" class="divide-y divide-slate-100 bg-white">
-              <!-- Dynamically populated -->
-            </tbody>
-          </table>
-        </div>
       </div>
 
     </section>
@@ -3406,7 +3432,7 @@
               <i class="fa-solid fa-code-compare text-amber-300"></i>
               <span class="text-xs font-bold uppercase tracking-wider">รายละเอียดการปรับปรุงเวอร์ชัน (Version Release Notes)</span>
             </div>
-            <span class="text-[10px] bg-amber-400 text-slate-950 font-black px-2 py-0.5 rounded-full">v1.22.8 Live</span>
+            <span class="text-[10px] bg-amber-400 text-slate-950 font-black px-2 py-0.5 rounded-full">v1.22.9 Live</span>
           </div>
           <p class="text-xs text-blue-100 leading-relaxed">
             <strong>v1.22.0 (Enterprise Compact QR & Drive Standard):</strong> ปรับขนาดหน้าต่างแท่นแสดงผล QR Code ให้กะทัดรัด (Compact Responsive) รองรับโน้ตบุ๊กทุกขนาดหน้าจอ, เพิ่มปุ่มปิดหน้าต่างทั้งบน ล่าง และกด Esc/คลิกนอกกรอบเพื่อปิดได้ทันที, พร้อมกำหนด Google Drive โฟลเดอร์กลางสำหรับเก็บเอกสารโครงการ
@@ -4411,7 +4437,7 @@
           <div>
             <div class="flex items-center space-x-2">
               <span class="text-xs bg-emerald-500/30 text-emerald-300 border border-emerald-400/40 px-2 py-0.5 rounded-full font-mono font-bold">Authentication Gate</span>
-              <span class="text-xs text-slate-300">v1.22.8</span>
+              <span class="text-xs text-slate-300">v1.22.9</span>
             </div>
             <h3 class="font-black text-white text-base sm:text-lg mt-0.5">เข้าสู่ระบบประจำทีม (Team Sign-In)</h3>
           </div>
@@ -4833,7 +4859,7 @@
 
     // System Global State (Synchronously initialized with complete Master Data)
     const AppState = {
-      version: '1.22.8',
+      version: '1.22.9',
       clientId: 'DEV-' + Math.random().toString(36).substring(2, 7).toUpperCase(),
       activeTab: 'dashboard',
       activeDevices: {},
@@ -4879,7 +4905,7 @@
 
     // Landing Page Navigation & Authentication Gate
     
-    // ------------------- ENTERPRISE TEAM AUTHENTICATION HANDLERS (v1.22.8) -------------------
+    // ------------------- ENTERPRISE TEAM AUTHENTICATION HANDLERS (v1.22.9) -------------------
     
     
 
@@ -5993,7 +6019,7 @@
         if (epInput) epInput.value = AppState.gasEndpoint;
       }
 
-      // 1.1 Check Release Notes Popup (v1.22.8) and Mandatory Login Gate on System Enter
+      // 1.1 Check Release Notes Popup (v1.22.9) and Mandatory Login Gate on System Enter
       checkAndShowWhatsNewOnEnter();
       
       // 2. Fetch latest cloud updates asynchronously in background without blocking UI
@@ -6974,6 +7000,7 @@
       renderEvaluationCenter();
       renderDashboardArchives();
       updateQueueBadges();
+      renderActionInbox();
       if (AppState.activeTab === 'fy2569Tu') {
         renderFy2569TuView();
       }
@@ -7049,99 +7076,107 @@
       notifyDataUpdated('DELETE_REQUEST');
     }
 
+    function scrollToTeamAForm() {
+      const formEl = document.getElementById('teamAFormContainer');
+      if (formEl) {
+        formEl.scrollIntoView({ behavior: 'smooth' });
+        const firstInput = document.getElementById('annualPlanSelect') || document.getElementById('schoolInput');
+        if (firstInput) setTimeout(() => firstInput.focus(), 400);
+      }
+    }
+
     function renderTeamAMyRequests() {
       const tbody = document.getElementById('teamAMyRequestsTableBody');
       if (!tbody) return;
       const reqs = AppState.requests || [];
 
+      // Update counters in Team A card header
+      const monAll = document.getElementById('teamAMonCountAll');
+      const monWaitB = document.getElementById('teamAMonCountWaitB');
+      const monWaitExec = document.getElementById('teamAMonCountWaitExec');
+      const monApp = document.getElementById('teamAMonCountApproved');
+      if (monAll) monAll.innerText = reqs.length + ' ทั้งหมด';
+      if (monWaitB) monWaitB.innerText = reqs.filter(r => r.status === 'WAITING_B').length + ' รอทีม B';
+      if (monWaitExec) monWaitExec.innerText = reqs.filter(r => r.status === 'WAITING_EXEC').length + ' รอผู้บริหาร';
+      if (monApp) monApp.innerText = reqs.filter(r => r.status === 'APPROVED' || r.status === 'COMPLETED').length + ' อนุมัติแล้ว';
+
       if (reqs.length === 0) {
-        tbody.innerHTML = '<tr><td colspan="7" class="p-6 text-center text-slate-400">ยังไม่มีรายการคำขอจัดอบรมที่บันทึก</td></tr>';
+        tbody.innerHTML = `
+          <tr>
+            <td colspan="7" class="p-8 text-center text-slate-400">
+              <i class="fa-solid fa-folder-open text-3xl mb-2 text-slate-300 block"></i>
+              <p class="font-medium text-slate-600 mb-2">ยังไม่พบรายการคำขอจัดอบรมในระบบ (หรือกำลังโหลดข้อมูลจากคลาวด์)</p>
+              <button type="button" onclick="fetchInitialData(false)" class="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-bold transition shadow-sm cursor-pointer">
+                <i class="fa-solid fa-arrows-rotate mr-1.5"></i>ดึงข้อมูลจาก Google Sheets ทันที
+              </button>
+            </td>
+          </tr>
+        `;
         return;
       }
+
+      const isAdmin = (AppState.currentUser && (AppState.currentUser.teamRole === 'ADMIN' || AppState.currentUser.team === 'ADMIN')) || AppState.adminUnlocked;
 
       tbody.innerHTML = reqs.map(req => {
         let statusBadge = '';
         let actionBtn = '';
 
-        const canDelete = req.status === 'WAITING_B' || req.status === 'REJECTED' || req.status === 'UNLOCKED_FOR_EDIT' || (AppState.currentUser && (AppState.currentUser.teamRole === 'ADMIN' || AppState.currentUser.team === 'ADMIN'));
+        const canDelete = req.status === 'WAITING_B' || req.status === 'REJECTED' || req.status === 'UNLOCKED_FOR_EDIT' || isAdmin;
+        const canEdit = req.status === 'WAITING_B' || req.status === 'REJECTED' || req.status === 'UNLOCKED_FOR_EDIT' || isAdmin;
 
         if (req.status === 'WAITING_B') {
           statusBadge = '<span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold bg-amber-50 text-amber-700 border border-amber-200"><i class="fa-solid fa-hourglass-start mr-1"></i>รอทีม B ตรวจสอบ</span>';
-          actionBtn = `
-            <div class="flex items-center justify-center space-x-1.5">
-              <button type="button" onclick="editTeamARequest('${req.eventId}')" class="px-2.5 py-1 bg-amber-500 hover:bg-amber-600 text-white rounded-lg text-xs font-bold transition flex items-center space-x-1 shadow-xs btn-tactile cursor-pointer" title="แก้ไขคำขอ">
-                <i class="fa-solid fa-pen text-[10px]"></i><span>แก้ไข</span>
-              </button>
-              <button type="button" onclick="deleteTeamARequest('${req.eventId}')" class="px-2 py-1 bg-rose-50 hover:bg-rose-100 text-rose-600 border border-rose-200 rounded-lg text-xs font-bold transition flex items-center space-x-1 shadow-xs cursor-pointer" title="ลบคำขอนี้">
-                <i class="fa-solid fa-trash-can text-[10px]"></i><span>ลบ</span>
-              </button>
-            </div>
-          `;
         } else if (req.status === 'WAITING_EXEC') {
           statusBadge = '<span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold bg-indigo-50 text-indigo-700 border border-indigo-200"><i class="fa-solid fa-stamp mr-1"></i>รอผู้บริหารอนุมัติ</span>';
-          actionBtn = `
-            <div class="flex items-center justify-center space-x-1.5">
-              <span class="inline-flex items-center text-[10px] text-slate-500 bg-slate-100 px-2 py-1 rounded font-bold"><i class="fa-solid fa-lock text-slate-400 mr-1"></i>ล็อกระหว่างพิจารณา</span>
-              ${canDelete ? `<button type="button" onclick="deleteTeamARequest('${req.eventId}')" class="px-1.5 py-1 text-rose-500 hover:bg-rose-50 rounded" title="ลบคำขอโดย Admin"><i class="fa-solid fa-trash-can text-[10px]"></i></button>` : ''}
-            </div>
-          `;
         } else if (req.status === 'REVISION_REQUESTED') {
-          statusBadge = '<span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold bg-amber-100 text-amber-900 border border-amber-300 animate-pulse"><i class="fa-solid fa-hourglass-half mr-1"></i>รอผู้บริหารปลดล็อก</span>';
-          actionBtn = '<span class="inline-flex items-center text-[10px] text-amber-800 bg-amber-50 px-2 py-1 rounded font-bold border border-amber-200">ยื่นขอปรับแก้แล้ว</span>';
+          statusBadge = '<span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold bg-amber-100 text-amber-900 border border-amber-300 animate-pulse"><i class="fa-solid fa-hourglass-half mr-1"></i>รอปลดล็อกแก้ไข</span>';
         } else if (req.status === 'UNLOCKED_FOR_EDIT') {
           statusBadge = '<span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-100 text-emerald-900 border border-emerald-300 animate-bounce"><i class="fa-solid fa-lock-open mr-1"></i>ปลดล็อกให้แก้ไข</span>';
-          actionBtn = `
-            <div class="flex items-center justify-center space-x-1.5">
-              <button type="button" onclick="editTeamARequest('${req.eventId}')" class="px-2.5 py-1 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg text-xs font-bold transition flex items-center space-x-1 shadow-xs btn-tactile cursor-pointer" title="แก้ไขข้อมูลใหม่">
-                <i class="fa-solid fa-pen text-[10px]"></i><span>แก้ไข</span>
-              </button>
-              <button type="button" onclick="deleteTeamARequest('${req.eventId}')" class="px-2 py-1 bg-rose-50 hover:bg-rose-100 text-rose-600 border border-rose-200 rounded-lg text-xs font-bold transition flex items-center space-x-1 shadow-xs cursor-pointer" title="ลบคำขอนี้">
-                <i class="fa-solid fa-trash-can text-[10px]"></i><span>ลบ</span>
-              </button>
-            </div>
-          `;
         } else if (req.status === 'APPROVED') {
           statusBadge = '<span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-50 text-emerald-700 border border-emerald-200"><i class="fa-solid fa-circle-check mr-1"></i>อนุมัติงบแล้ว</span>';
-          actionBtn = `
-            <div class="flex items-center justify-center space-x-1">
-              <span class="inline-flex items-center text-[10px] text-emerald-800 bg-emerald-100/60 px-1.5 py-0.5 rounded font-bold"><i class="fa-solid fa-lock mr-1"></i>ล็อกงบ</span>
-              <button type="button" onclick="openAuditRevisionModal('${req.eventId}')" class="px-2 py-0.5 bg-slate-100 hover:bg-amber-100 text-slate-700 hover:text-amber-800 border border-slate-300 rounded text-[10px] font-bold transition cursor-pointer"><i class="fa-solid fa-shield-halved text-amber-600 mr-0.5"></i>ขอปรับแก้</button>
-              ${(AppState.currentUser && (AppState.currentUser.teamRole === 'ADMIN' || AppState.currentUser.team === 'ADMIN')) ? `<button type="button" onclick="deleteTeamARequest('${req.eventId}')" class="p-1 text-rose-500 hover:bg-rose-50 rounded" title="ลบโดย Admin"><i class="fa-solid fa-trash-can text-[10px]"></i></button>` : ''}
-            </div>
-          `;
         } else if (req.status === 'COMPLETED') {
           statusBadge = '<span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold bg-blue-50 text-blue-700 border border-blue-200"><i class="fa-solid fa-trophy mr-1"></i>จัดเสร็จสิ้น</span>';
-          actionBtn = '<span class="inline-flex items-center text-[10px] text-slate-500 bg-slate-100 px-2 py-1 rounded font-bold"><i class="fa-solid fa-lock text-slate-400 mr-1"></i>ปิดโครงการแล้ว</span>';
         } else if (req.status === 'REJECTED') {
           statusBadge = '<span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold bg-rose-50 text-rose-700 border border-rose-200"><i class="fa-solid fa-ban mr-1"></i>ส่งกลับแก้ไข</span>';
-          actionBtn = `
-            <div class="flex items-center justify-center space-x-1.5">
-              <button type="button" onclick="editTeamARequest('${req.eventId}')" class="px-2.5 py-1 bg-rose-600 hover:bg-rose-700 text-white rounded-lg text-xs font-bold transition flex items-center space-x-1 shadow-xs btn-tactile cursor-pointer" title="แก้ไขใหม่">
-                <i class="fa-solid fa-wrench text-[10px]"></i><span>แก้</span>
-              </button>
-              <button type="button" onclick="deleteTeamARequest('${req.eventId}')" class="px-2 py-1 bg-rose-50 hover:bg-rose-100 text-rose-600 border border-rose-200 rounded-lg text-xs font-bold transition flex items-center space-x-1 shadow-xs cursor-pointer" title="ลบคำขอนี้">
-                <i class="fa-solid fa-trash-can text-[10px]"></i><span>ลบ</span>
-              </button>
-            </div>
-          `;
         } else {
           statusBadge = '<span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold bg-slate-100 text-slate-700">' + (req.status || 'DRAFT') + '</span>';
-          actionBtn = canDelete ? `<button type="button" onclick="deleteTeamARequest('${req.eventId}')" class="px-2 py-1 text-rose-600 hover:bg-rose-50 border border-rose-200 rounded text-xs">ลบ</button>` : '-';
         }
+
+        actionBtn = `
+          <div class="flex items-center justify-center space-x-1">
+            <button type="button" onclick="openPpcReportModal('${req.eventId}')" class="px-2 py-1 bg-amber-50 text-amber-800 hover:bg-amber-100 border border-amber-200 rounded text-xs font-bold transition" title="ดูรายงาน A4">
+              <i class="fa-solid fa-file-invoice text-amber-600"></i>
+            </button>
+            ${canEdit ? `
+              <button type="button" onclick="editTeamARequest('${req.eventId}')" class="px-2 py-1 bg-blue-50 text-blue-700 hover:bg-blue-100 border border-blue-200 rounded text-xs font-bold transition" title="แก้ไขคำขอ">
+                <i class="fa-solid fa-pen text-blue-600"></i>
+              </button>
+            ` : ''}
+            ${canDelete ? `
+              <button type="button" onclick="deleteTeamARequest('${req.eventId}')" class="px-2 py-1 bg-rose-50 text-rose-600 hover:bg-rose-100 border border-rose-200 rounded text-xs font-bold transition" title="ลบคำขอ">
+                <i class="fa-solid fa-trash-can text-rose-600"></i>
+              </button>
+            ` : ''}
+          </div>
+        `;
+
+        const saleDisplay = req.saleName || req.creatorName || '-';
+        const schoolDisplay = req.schoolName || '-';
+        const topicDisplay = req.courseTopic || req.customTopic || '-';
 
         return `
           <tr class="hover:bg-slate-50/80 transition text-xs reading-row">
             <td class="p-3 text-center font-mono font-bold text-twp-700">${req.eventId}</td>
             <td class="p-3">
-              <span class="font-bold text-slate-800 block truncate max-w-xs">${req.schoolName || '-'}</span>
-              <span class="text-[10px] text-slate-400">${req.province || ''} ${req.saleName ? '(' + req.saleName + ')' : ''}</span>
+              <span class="font-bold text-slate-800 block truncate max-w-xs">${schoolDisplay}</span>
+              <span class="text-[10px] text-slate-400">${req.province || ''} ${saleDisplay ? '(' + saleDisplay + ')' : ''}</span>
             </td>
             <td class="p-3">
-              <span class="font-medium text-slate-700 block truncate max-w-sm">${req.courseTopic || req.customTopic || '-'}</span>
+              <span class="font-medium text-slate-700 block truncate max-w-sm">${topicDisplay}</span>
               <span class="text-[10px] text-slate-400">${req.activityType || 'วิชาการ'}</span>
             </td>
             <td class="p-3 text-center text-slate-600 font-mono">${req.eventDate || '-'}</td>
-            <td class="p-3 text-right font-mono font-bold text-slate-800">฿${Number(req.estBudget || 0).toLocaleString()}</td>
+            <td class="p-3 text-right font-mono font-bold text-slate-800">฿${Number(req.estBudget || req.actualBudget || 0).toLocaleString()}</td>
             <td class="p-3 text-center">${statusBadge}</td>
             <td class="p-3 text-center">${actionBtn}</td>
           </tr>
@@ -7484,7 +7519,7 @@
     }
 
     function acknowledgeAndOpenLoginGate() {
-      localStorage.setItem('twp_acknowledged_version', '1.22.8');
+      localStorage.setItem('twp_acknowledged_version', '1.22.9');
       closeWhatsNewModal();
       if (!AppState.currentUser || !AppState.currentUser.userId) {
         setTimeout(() => {
@@ -7499,7 +7534,7 @@
 
     function checkAndShowWhatsNewOnEnter() {
       const ackVer = localStorage.getItem('twp_acknowledged_version');
-      if (ackVer !== '1.22.8') {
+      if (ackVer !== '1.22.9') {
         setTimeout(() => {
           openWhatsNewModal();
         }, 500);
@@ -7977,6 +8012,8 @@
       });
 
       renderAdminTeamALiveMonitor();
+      renderActionInbox();
+      updateQueueBadges();
       if (tabId === 'annualPlan') {
         renderAnnualPlanView();
       } else if (tabId === 'teamA') {
@@ -10660,6 +10697,7 @@
       if (archivesBadge) archivesBadge.innerText = (AppState.requests || []).length;
 
       // Update Sidebar & Top Action Bar Badges (v1.17.0)
+      const sideTeamA = document.getElementById('sideBadgeTeamA');
       const sideB = document.getElementById('sideBadgeWaitingB');
       const sideAppB = document.getElementById('sideBadgeApprovedB');
       const sideExec = document.getElementById('sideBadgeWaitingExec');
@@ -10667,12 +10705,15 @@
       const sideBriefing = document.getElementById('sideBriefingCountBadge');
       const topBriefing = document.getElementById('topBriefingBadge');
 
+      if (sideTeamA) sideTeamA.innerText = waitB;
       if (sideB) sideB.innerText = waitB;
       if (sideAppB) sideAppB.innerText = approvedCount;
       if (sideExec) sideExec.innerText = waitExec;
       if (sideExpenses) sideExpenses.innerText = approvedCount;
       if (sideBriefing) sideBriefing.innerText = totalPending;
       if (topBriefing) topBriefing.innerText = totalPending;
+
+      renderActionInbox();
     }
 
     // ------------------- ACTIONS: TEAM A SUBMISSION -------------------
@@ -12827,7 +12868,7 @@ function renderA4EvalReportHtmlClient(d) {
           </table>
 
           <div style="margin-top:14px; padding-top:4px; border-top:1px solid #e2e8f0; font-size:8.5pt; color:#94a3b8; text-align:center;">
-            เอกสารฉบับนี้สร้างโดยระบบ Training Center TWP (EMS Enterprise Platform v1.22.8) • ใช้สำหรับติดตามและควบคุมผลการปฏิบัติงานภายใน (PPC Standard)
+            เอกสารฉบับนี้สร้างโดยระบบ Training Center TWP (EMS Enterprise Platform v1.22.9) • ใช้สำหรับติดตามและควบคุมผลการปฏิบัติงานภายใน (PPC Standard)
           </div>
         </div>
       `;
@@ -13109,7 +13150,7 @@ function renderA4EvalReportHtmlClient(d) {
       }
       if (opInput) opInput.value = currentProfile.name;
 
-      // Update Sidebar Profile (v1.17.0 / v1.22.8)
+      // Update Sidebar Profile (v1.17.0 / v1.22.9)
       const sideName = document.getElementById('sideUserName');
       const sideRole = document.getElementById('sideUserRole');
       const sideAvatar = document.getElementById('sideUserAvatar');
@@ -15107,7 +15148,7 @@ function renderA4EvalReportHtmlClient(d) {
           <div>
             <div class="flex items-center space-x-2">
               <h3 class="font-bold text-slate-900 text-lg">ประวัติและการปรับปรุงระบบเวอร์ชัน (Release Notes)</h3>
-              <span class="bg-blue-100 text-[#08539E] text-xs font-bold font-mono px-2 py-0.5 rounded-full">v1.22.8 Current</span>
+              <span class="bg-blue-100 text-[#08539E] text-xs font-bold font-mono px-2 py-0.5 rounded-full">v1.22.9 Current</span>
             </div>
             <p class="text-xs text-slate-500">บันทึกประวัติการปรับปรุงสถาปัตยกรรมและฟังก์ชันการทำงานอย่างละเอียด</p>
           </div>
@@ -15120,11 +15161,11 @@ function renderA4EvalReportHtmlClient(d) {
       <!-- Release Timeline List -->
       <div class="space-y-4">
         
-        <!-- v1.22.8 (Current Major Release) -->
+        <!-- v1.22.9 (Current Major Release) -->
         <div class="p-5 bg-gradient-to-br from-emerald-50 via-white to-teal-50/70 border-2 border-emerald-400 rounded-3xl space-y-3 shadow-sm">
           <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-1">
             <div class="flex items-center space-x-2">
-              <span class="bg-emerald-600 text-white text-xs font-black px-2.5 py-0.5 rounded-lg font-mono">v1.22.8</span>
+              <span class="bg-emerald-600 text-white text-xs font-black px-2.5 py-0.5 rounded-lg font-mono">v1.22.9</span>
               <span class="font-bold text-slate-900 text-sm">Landing Page Login Gate, Release Notes Popup & Attendee Individual Edit/Delete</span>
             </div>
             <span class="text-[11px] text-emerald-700 font-bold font-mono">2026-11-14 &bull; Current Release</span>
@@ -15357,7 +15398,7 @@ function renderA4EvalReportHtmlClient(d) {
 
 
 
-  <!-- Modal: What's New Release Notes (v1.22.8) -->
+  <!-- Modal: What's New Release Notes (v1.22.9) -->
   <div id="whatsNewModal" class="hidden fixed inset-0 z-[9999] flex items-center justify-center bg-black/75 backdrop-blur-md p-4 animate-fadeIn">
     <div class="bg-white rounded-3xl max-w-2xl w-full max-h-[90vh] flex flex-col shadow-2xl border border-slate-200 overflow-hidden">
       
@@ -15370,9 +15411,9 @@ function renderA4EvalReportHtmlClient(d) {
           <div>
             <div class="flex items-center space-x-2">
               <span class="text-xs bg-emerald-500/30 text-emerald-300 border border-emerald-400/40 px-2 py-0.5 rounded-full font-mono font-bold">Release Note</span>
-              <span class="text-xs text-slate-300">อัปเดตระบบเวอร์ชัน 1.22.8</span>
+              <span class="text-xs text-slate-300">อัปเดตระบบเวอร์ชัน 1.22.9</span>
             </div>
-            <h2 class="text-lg sm:text-xl font-black text-white mt-1">ประกาศอัปเดตระบบ Training Center TWP v1.22.8</h2>
+            <h2 class="text-lg sm:text-xl font-black text-white mt-1">ประกาศอัปเดตระบบ Training Center TWP v1.22.9</h2>
           </div>
         </div>
         <button type="button" onclick="closeWhatsNewModal()" class="text-white/70 hover:text-white text-xl p-1 cursor-pointer">
@@ -15384,7 +15425,7 @@ function renderA4EvalReportHtmlClient(d) {
       <div class="p-6 overflow-y-auto custom-scrollbar space-y-3.5 text-xs">
         <div class="p-3.5 bg-gradient-to-r from-blue-50 to-indigo-50 border-2 border-blue-300 rounded-2xl space-y-2 mb-3 shadow-xs">
           <div class="flex items-center space-x-2">
-            <span class="px-2 py-0.5 rounded-full text-[10px] font-black bg-[#08539E] text-white">ไฮไลต์ v1.22.8</span>
+            <span class="px-2 py-0.5 rounded-full text-[10px] font-black bg-[#08539E] text-white">ไฮไลต์ v1.22.9</span>
             <span class="font-bold text-slate-900 text-xs sm:text-sm">ศูนย์มอนิเตอร์ใบงานทีม A บน Dashboard ของ Admin & ตารางติดตามงานสดแบบ Real-time</span>
           </div>
           <p class="text-slate-700 leading-relaxed font-medium">
@@ -15394,7 +15435,7 @@ function renderA4EvalReportHtmlClient(d) {
           </p>
         </div>
         <p class="text-slate-600 font-medium leading-relaxed">
-          สรุปรายละเอียดการพัฒนาต่อเนื่องของระบบ <strong>Enterprise Governance & Cross-Team Real-time Sync Edition (v1.22.8)</strong>:
+          สรุปรายละเอียดการพัฒนาต่อเนื่องของระบบ <strong>Enterprise Governance & Cross-Team Real-time Sync Edition (v1.22.9)</strong>:
         </p>
 
         <!-- Feature 1 -->
