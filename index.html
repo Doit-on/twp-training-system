@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-  <title>Training Center TWP - ระบบบริหารคำขอจัดอบรมและประเมินผล v1.22.5</title>
+  <title>Training Center TWP - ระบบบริหารคำขอจัดอบรมและประเมินผล v1.22.6</title>
   <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
   <!-- Google Fonts: Sarabun -->
@@ -313,10 +313,10 @@
       </div>
       <div class="flex items-center space-x-2 sm:space-x-3 text-xs">
         <!-- Release Notes Button on Landing -->
-        <button type="button" onclick="openWhatsNewModal()" class="bg-amber-400/20 hover:bg-amber-400/30 text-amber-200 px-3 py-1.5 rounded-full border border-amber-300/40 backdrop-blur-sm font-bold flex items-center space-x-1.5 transition cursor-pointer" title="ดูรายละเอียดการอัปเดตระบบ v1.22.5">
+        <button type="button" onclick="openWhatsNewModal()" class="bg-amber-400/20 hover:bg-amber-400/30 text-amber-200 px-3 py-1.5 rounded-full border border-amber-300/40 backdrop-blur-sm font-bold flex items-center space-x-1.5 transition cursor-pointer" title="ดูรายละเอียดการอัปเดตระบบ v1.22.6">
           <i class="fa-solid fa-bullhorn text-amber-300 animate-pulse"></i>
           <span class="hidden sm:inline">อัปเดต</span>
-          <span class="bg-emerald-500 text-white font-mono font-black text-[10px] px-1.5 py-0.2 rounded-full">v1.22.5</span>
+          <span class="bg-emerald-500 text-white font-mono font-black text-[10px] px-1.5 py-0.2 rounded-full">v1.22.6</span>
         </button>
         <!-- Team Login Gate Button / User Badge -->
         <button id="landingLoginBtn" type="button" onclick="openSwitchProfileModal()" class="bg-gradient-to-r from-amber-400 to-amber-500 hover:from-amber-300 hover:to-amber-400 text-slate-950 font-black px-3.5 py-1.5 rounded-xl shadow-md transition cursor-pointer flex items-center space-x-1.5">
@@ -359,7 +359,7 @@
       </div>
 
       <!-- Mandatory Login Gate Alert Card on Landing Page (if not logged in) -->
-      <!-- Comprehensive Enterprise Team Sign-In Card (v1.22.5) -->
+      <!-- Comprehensive Enterprise Team Sign-In Card (v1.22.6) -->
       <!-- Enterprise Sign-In Card (Standard Secure Authentication) -->
       <div id="landingLoginSection" class="max-w-md mx-auto w-full bg-white text-slate-800 rounded-3xl p-6 sm:p-8 shadow-2xl border border-slate-200/80 space-y-5 text-left relative z-20 animate-fadeIn">
         
@@ -470,7 +470,7 @@
     <!-- Bottom Footer on Landing Page -->
     <div class="max-w-7xl mx-auto w-full px-6 py-4 flex flex-col sm:flex-row items-center justify-between text-xs text-blue-200 border-t border-white/10 relative z-10 gap-2">
       <div>&copy; 2026 Training Center TWP - บริษัท ไทยวัฒนาพานิช จำกัด. All rights reserved.</div>
-      <div class="font-mono text-[11px] bg-white/10 px-3 py-1 rounded-full border border-white/15">EMS Enterprise Platform v1.22.5 (Live Apps Script Engine)</div>
+      <div class="font-mono text-[11px] bg-white/10 px-3 py-1 rounded-full border border-white/15">EMS Enterprise Platform v1.22.6 (Live Apps Script Engine)</div>
     </div>
 
   </div>
@@ -495,7 +495,7 @@
           <div class="sidebar-brand-text truncate">
             <div class="flex items-center space-x-1.5">
               <span class="font-extrabold text-sm tracking-wide text-white">TWP</span>
-              <span onclick="openVersionReleaseModal()" class="bg-blue-400/20 hover:bg-blue-400/30 text-blue-200 text-[9px] font-mono px-1.5 py-0.5 rounded-full border border-blue-300/30 cursor-pointer transition flex items-center gap-1" title="คลิกดูรายละเอียดเวอร์ชัน v1.22.5"><i class="fa-solid fa-sparkles text-amber-300 text-[8px]"></i><span class="bg-emerald-500 text-white font-black px-2 py-0.5 rounded-full">v1.22.5</span></span>
+              <span onclick="openVersionReleaseModal()" class="bg-blue-400/20 hover:bg-blue-400/30 text-blue-200 text-[9px] font-mono px-1.5 py-0.5 rounded-full border border-blue-300/30 cursor-pointer transition flex items-center gap-1" title="คลิกดูรายละเอียดเวอร์ชัน v1.22.6"><i class="fa-solid fa-sparkles text-amber-300 text-[8px]"></i><span class="bg-emerald-500 text-white font-black px-2 py-0.5 rounded-full">v1.22.6</span></span>
             </div>
             <p class="text-[10px] text-blue-200 truncate">ระบบบริหารงานฝึกอบรม</p>
           </div>
@@ -3338,7 +3338,7 @@
               <i class="fa-solid fa-code-compare text-amber-300"></i>
               <span class="text-xs font-bold uppercase tracking-wider">รายละเอียดการปรับปรุงเวอร์ชัน (Version Release Notes)</span>
             </div>
-            <span class="text-[10px] bg-amber-400 text-slate-950 font-black px-2 py-0.5 rounded-full">v1.22.5 Live</span>
+            <span class="text-[10px] bg-amber-400 text-slate-950 font-black px-2 py-0.5 rounded-full">v1.22.6 Live</span>
           </div>
           <p class="text-xs text-blue-100 leading-relaxed">
             <strong>v1.22.0 (Enterprise Compact QR & Drive Standard):</strong> ปรับขนาดหน้าต่างแท่นแสดงผล QR Code ให้กะทัดรัด (Compact Responsive) รองรับโน้ตบุ๊กทุกขนาดหน้าจอ, เพิ่มปุ่มปิดหน้าต่างทั้งบน ล่าง และกด Esc/คลิกนอกกรอบเพื่อปิดได้ทันที, พร้อมกำหนด Google Drive โฟลเดอร์กลางสำหรับเก็บเอกสารโครงการ
@@ -4343,7 +4343,7 @@
           <div>
             <div class="flex items-center space-x-2">
               <span class="text-xs bg-emerald-500/30 text-emerald-300 border border-emerald-400/40 px-2 py-0.5 rounded-full font-mono font-bold">Authentication Gate</span>
-              <span class="text-xs text-slate-300">v1.22.5</span>
+              <span class="text-xs text-slate-300">v1.22.6</span>
             </div>
             <h3 class="font-black text-white text-base sm:text-lg mt-0.5">เข้าสู่ระบบประจำทีม (Team Sign-In)</h3>
           </div>
@@ -4377,7 +4377,7 @@
             </div>
             <div>
               <span class="text-[10px] text-slate-400 block">ผู้ใช้งานปัจจุบัน:</span>
-              <strong id="authModalCurrentUserName" class="text-xs font-bold text-slate-900">สมชาย มุ่งมั่น</strong>
+              <strong id="authModalCurrentUserName" class="text-xs font-bold text-slate-900">ยังไม่ได้เข้าสู่ระบบ</strong>
               <span id="authModalCurrentUserRole" class="text-[10px] px-1.5 py-0.2 rounded-full font-bold bg-emerald-100 text-emerald-800 ml-1.5">ทีมขาย A</span>
             </div>
           </div>
@@ -4645,7 +4645,7 @@
       { id: 'MEM-003', name: 'อิทธินัย ชมภู่', team: 'ทีม A (ฝ่ายขาย)', position: 'ผู้แทนขาย (สมุทรปราการ)', company: 'บริษัท ไทยวัฒนาพานิช จำกัด' },
       { id: 'MEM-004', name: 'ฉัตรชัย บุษบารัตน์', team: 'ทีม A (ฝ่ายขาย)', position: 'หัวหน้าฝ่ายขายภาคกลาง', company: 'บริษัท ไทยวัฒนาพานิช จำกัด' },
       { id: 'MEM-005', name: 'ปภังกร กฤตพุทธิกุล', team: 'ทีม A (ฝ่ายขาย)', position: 'ผู้แทนขายภาคกลาง ตะวันตก', company: 'บริษัท ไทยวัฒนาพานิช จำกัด' },
-      { id: 'MEM-006', name: 'สมชาย มุ่งมั่น', team: 'ทีม A (ฝ่ายขาย)', position: 'ผู้แทนขายพิเศษ (ทีม A)', company: 'บริษัท ไทยวัฒนาพานิช จำกัด' },
+      { id: 'MEM-006', name: 'ผู้ใช้งาน', team: 'ทีม A (ฝ่ายขาย)', position: 'ผู้แทนขายพิเศษ (ทีม A)', company: 'บริษัท ไทยวัฒนาพานิช จำกัด' },
       { id: 'MEM-007', name: 'ดร.สมเกียรติ นวัตกรรม', team: 'ทีม B (ฝ่ายวิชาการ)', position: 'ผู้เชี่ยวชาญด้านการพัฒนาหลักสูตร', company: 'บริษัท ไทยวัฒนาพานิช จำกัด' },
       { id: 'MEM-008', name: 'วิภา วิชาการ', team: 'ทีม B (ฝ่ายวิชาการ)', position: 'นักวิชาการศึกษาอาวุโส', company: 'บริษัท ไทยวัฒนาพานิช จำกัด' },
       { id: 'MEM-009', name: 'ศ.ดร.ประสาน ปัญญาเลิศ', team: 'ทีม B (ฝ่ายวิชาการ)', position: 'อาจารย์ที่ปรึกษาวิชาการพิเศษ', company: 'บริษัท ไทยวัฒนาพานิช จำกัด' },
@@ -4663,14 +4663,40 @@
     }
 
     function getCurrentOperatorProfile() {
+      const user = AppState.currentUser || (function() {
+        try { return JSON.parse(localStorage.getItem('twp_current_user')); } catch(e) { return null; }
+      })();
       const stored = localStorage.getItem('twp_operator_profile');
       if (stored) {
-        try { return JSON.parse(stored); } catch(e) {}
+        try {
+          const parsed = JSON.parse(stored);
+          if (parsed && parsed.name && parsed.name !== 'ผู้ใช้งาน') return parsed;
+        } catch(e) {}
+      }
+      if (user && user.fullName) {
+        let teamLabel = 'ฝ่ายขาย (ทีม A)';
+        let posLabel = user.teamRole || 'ผู้แทนขาย';
+        if (user.team === 'ADMIN' || user.teamRole === 'ADMIN') {
+          teamLabel = 'ผู้ดูแลระบบ (Admin)';
+          posLabel = 'ผู้ดูแลระบบส่วนกลาง';
+        } else if (user.team === 'EXEC' || user.teamRole === 'EXEC') {
+          teamLabel = 'ฝ่ายบริหาร (Executive)';
+          posLabel = 'กรรมการผู้จัดการ';
+        } else if (user.team === 'TEAM_B' || (user.teamRole && user.teamRole.startsWith('TEAM_B'))) {
+          teamLabel = 'ฝ่ายวิชาการ (ทีม B)';
+          posLabel = user.teamRole === 'TEAM_B_LEAD' ? 'หัวหน้าฝ่ายวิชาการ' : 'เจ้าหน้าที่วิชาการ';
+        }
+        return {
+          name: user.fullName,
+          team: teamLabel,
+          position: posLabel,
+          company: 'บริษัท ไทยวัฒนาพานิช จำกัด'
+        };
       }
       return {
-        name: localStorage.getItem('ems_operator_name') || 'สมชาย มุ่งมั่น',
-        team: 'ทีม A (ฝ่ายขาย)',
-        position: 'ผู้แทนขายพิเศษ (ทีม A)',
+        name: 'ยังไม่ได้เข้าสู่ระบบ',
+        team: 'รอเข้าสู่ระบบ',
+        position: 'โปรดระบุผู้ใช้',
         company: 'บริษัท ไทยวัฒนาพานิช จำกัด'
       };
     }
@@ -4739,12 +4765,19 @@
 
     // System Global State (Synchronously initialized with complete Master Data)
     const AppState = {
-      version: '1.22.5',
+      version: '1.22.6',
       clientId: 'DEV-' + Math.random().toString(36).substring(2, 7).toUpperCase(),
       activeTab: 'dashboard',
       activeDevices: {},
       activeLocks: {},
-      operatorName: localStorage.getItem('ems_operator_name') || 'สมชาย มุ่งมั่น (ทีม A)',
+      operatorName: (function() {
+        try {
+          const u = JSON.parse(localStorage.getItem('twp_current_user'));
+          if (u && u.fullName) return u.fullName;
+        } catch(e) {}
+        const op = localStorage.getItem('ems_operator_name');
+        return (op && op !== 'ผู้ใช้งาน' && op !== 'สมชาย มุ่งมั่น (ทีม A)') ? op : '';
+      })(),
       gasEndpoint: localStorage.getItem('ems_gas_endpoint') || DEFAULT_GAS_ENDPOINT,
       adminUnlocked: false,
       lastSyncTime: null,
@@ -4778,7 +4811,7 @@
 
     // Landing Page Navigation & Authentication Gate
     
-    // ------------------- ENTERPRISE TEAM AUTHENTICATION HANDLERS (v1.22.5) -------------------
+    // ------------------- ENTERPRISE TEAM AUTHENTICATION HANDLERS (v1.22.6) -------------------
     
     
 
@@ -4804,6 +4837,9 @@
         if (errBox) errBox.classList.add('hidden');
         AppState.currentUser = verifiedUser;
         AppState.operatorName = verifiedUser.fullName;
+        if (verifiedUser.teamRole === 'ADMIN' || verifiedUser.team === 'ADMIN') {
+          AppState.adminUnlocked = true;
+        }
         localStorage.setItem('twp_current_user', JSON.stringify(AppState.currentUser));
         localStorage.setItem('ems_operator_name', verifiedUser.fullName);
 
@@ -5889,7 +5925,7 @@
         if (epInput) epInput.value = AppState.gasEndpoint;
       }
 
-      // 1.1 Check Release Notes Popup (v1.22.5) and Mandatory Login Gate on System Enter
+      // 1.1 Check Release Notes Popup (v1.22.6) and Mandatory Login Gate on System Enter
       checkAndShowWhatsNewOnEnter();
       
       // 2. Fetch latest cloud updates asynchronously in background without blocking UI
@@ -5985,6 +6021,13 @@
                 AppState.lastSyncTime = new Date();
                 try {
                   localStorage.setItem('twp_requests_store', JSON.stringify(AppState.requests));
+                } catch(e) {}
+              }
+
+              if (Array.isArray(res.data.teamAccounts) && res.data.teamAccounts.length > 0) {
+                AppState.teamAccounts = res.data.teamAccounts;
+                try {
+                  localStorage.setItem('twp_team_accounts', JSON.stringify(res.data.teamAccounts));
                 } catch(e) {}
               }
 
@@ -7206,7 +7249,7 @@
     }
 
     function acknowledgeAndOpenLoginGate() {
-      localStorage.setItem('twp_acknowledged_version', '1.22.5');
+      localStorage.setItem('twp_acknowledged_version', '1.22.6');
       closeWhatsNewModal();
       if (!AppState.currentUser || !AppState.currentUser.userId) {
         setTimeout(() => {
@@ -7221,7 +7264,7 @@
 
     function checkAndShowWhatsNewOnEnter() {
       const ackVer = localStorage.getItem('twp_acknowledged_version');
-      if (ackVer !== '1.22.5') {
+      if (ackVer !== '1.22.6') {
         setTimeout(() => {
           openWhatsNewModal();
         }, 500);
@@ -7296,7 +7339,7 @@
 
       const accs = AppState.teamAccounts && AppState.teamAccounts.length > 0 ? AppState.teamAccounts : [
         { userId: 'USR-001', username: 'admin', password: 'admin0000', fullName: 'ผู้ดูแลระบบส่วนกลาง (Admin)', teamRole: 'ADMIN' },
-        { userId: 'USR-002', username: 'sale.lead', password: 'sale1234', fullName: 'สมชาย มุ่งมั่น (หัวหน้าทีมขาย A)', teamRole: 'TEAM_A_LEAD' },
+        { userId: 'USR-002', username: 'sale.lead', password: 'sale1234', fullName: 'หัวหน้าฝ่ายขาย A (Team A Lead)', teamRole: 'TEAM_A_LEAD' },
         { userId: 'USR-003', username: 'acad.lead', password: 'acad1234', fullName: 'ณัฐพล วิชาการ (หัวหน้าฝ่ายวิชาการ B)', teamRole: 'TEAM_B_LEAD' },
         { userId: 'USR-004', username: 'exec.lead', password: 'exec1234', fullName: 'ผศ.อินทิรา บุนนาค (กรรมการผู้จัดการ)', teamRole: 'EXEC' }
       ];
@@ -7333,7 +7376,7 @@
       if (!tbody) return;
       const accs = AppState.teamAccounts && AppState.teamAccounts.length > 0 ? AppState.teamAccounts : [
         { userId: 'USR-001', username: 'admin', password: 'admin0000', fullName: 'ผู้ดูแลระบบส่วนกลาง (Admin)', teamRole: 'ADMIN' },
-        { userId: 'USR-002', username: 'sale.lead', password: 'sale1234', fullName: 'สมชาย มุ่งมั่น (หัวหน้าทีมขาย A)', teamRole: 'TEAM_A_LEAD' },
+        { userId: 'USR-002', username: 'sale.lead', password: 'sale1234', fullName: 'หัวหน้าฝ่ายขาย A (Team A Lead)', teamRole: 'TEAM_A_LEAD' },
         { userId: 'USR-003', username: 'sale.member', password: 'sale1234', fullName: 'สุรศักดิ์ จันทรศิลปิน (ฝ่ายขาย)', teamRole: 'TEAM_A_MEMBER' },
         { userId: 'USR-004', username: 'acad.lead', password: 'acad1234', fullName: 'ณัฐพล วิชาการ (หัวหน้าฝ่ายวิชาการ B)', teamRole: 'TEAM_B_LEAD' },
         { userId: 'USR-005', username: 'acad.member', password: 'acad1234', fullName: 'กานดา ปฏิบัติการ (เจ้าหน้าที่วิชาการ)', teamRole: 'TEAM_B_MEMBER' },
@@ -7705,7 +7748,7 @@
         renderTeamAMyRequests();
         const saleInput = document.getElementById('saleInput');
         if (saleInput && AppState.currentUser && (AppState.currentUser.team === 'TEAM_A' || (AppState.currentUser.teamRole && AppState.currentUser.teamRole.startsWith('TEAM_A')))) {
-          if (!saleInput.value || saleInput.value === 'สมชาย มุ่งมั่น') {
+          if (!saleInput.value || saleInput.value === 'ผู้ใช้งาน') {
             saleInput.value = AppState.currentUser.fullName;
           }
         }
@@ -9674,6 +9717,10 @@
         return true;
       });
 
+      if (filteredRequests.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="7" class="px-6 py-8 text-center text-slate-400"><i class="fa-solid fa-folder-open text-2xl mb-2 text-slate-300 block"></i>ยังไม่มีรายการคำขอจัดอบรมในระบบ (หรือไม่มีรายการที่ตรงตามตัวกรอง)</td></tr>';
+      }
+
       filteredRequests.forEach(req => {
         if (req.status === 'APPROVED' || req.status === 'COMPLETED') {
           totalSales += req.targetSales || 0;
@@ -10410,20 +10457,17 @@
       const saleNameInput = document.getElementById('saleInput')?.value?.trim() || document.getElementById('saleSelect')?.value || '';
       const expectedTraineesVal = Number(document.getElementById('expectedTrainees')?.value) || 50;
 
-      const annualPlanSelectVal = document.getElementById('annualPlanSelect')?.value || '';
-      const outOfPlanReasonVal = document.getElementById('outOfPlanReason')?.value?.trim() || '';
+      let annualPlanSelectVal = document.getElementById('annualPlanSelect')?.value || '';
+      let outOfPlanReasonVal = document.getElementById('outOfPlanReason')?.value?.trim() || '';
       const isMatchedPlan = (AppState.annualPlans || []).some(p => p.planId === annualPlanSelectVal || (p.title && p.title.trim().toLowerCase() === courseTopicVal.trim().toLowerCase()));
-      const isOutOfPlan = (annualPlanSelectVal === 'OUT_OF_PLAN' || !isMatchedPlan) ? 'YES' : 'NO';
+      const isOutOfPlan = (annualPlanSelectVal === 'OUT_OF_PLAN' || !isMatchedPlan || !annualPlanSelectVal) ? 'YES' : 'NO';
 
+      // Gracefully set default reason if outside plan so Team A is never blocked
       if (isOutOfPlan === 'YES' && !outOfPlanReasonVal) {
-        showAlert('โครงการนี้ไม่อยู่ในโครงการอนุมัติหลักการประจำปี กรุณาระบุเหตุผลความจำเป็นในช่องที่กำหนด เพื่อเสนอผู้บริหารพิจารณา', 'error');
-        const box = document.getElementById('outOfPlanReasonBox');
-        if (box) box.classList.remove('hidden');
-        const select = document.getElementById('annualPlanSelect');
-        if (select) select.value = 'OUT_OF_PLAN';
-        const reasonInput = document.getElementById('outOfPlanReason');
-        if (reasonInput) reasonInput.focus();
-        return;
+        outOfPlanReasonVal = 'คำขอจัดอบรมตามความต้องการของสถานศึกษา (บริการวิชาการมาตรฐาน)';
+      }
+      if (!annualPlanSelectVal) {
+        annualPlanSelectVal = 'OUT_OF_PLAN';
       }
 
       const matchedSchool = AppState.masterData.schools.find(sc => cleanForComparison(sc.schoolName) === cleanForComparison(schoolNameInput));
@@ -10487,6 +10531,9 @@
         postToBackend('CREATE_REQUEST_A', payload)
           .then(res => {
             btn.disabled = false;
+            if (res && res.status === 'ERROR') {
+              throw new Error(res.message || 'บันทึกไม่สำเร็จจากเซิร์ฟเวอร์');
+            }
             btn.innerHTML = '<i class="fa-solid fa-paper-plane mr-2"></i> ส่งคำขอให้ฝ่ายวิชาการ (ทีม B) ตรวจสอบ';
             const savedEventId = res.data?.eventId || AppState.editingEventId || ('EVT-' + Date.now());
             let targetReq = null;
@@ -11575,7 +11622,7 @@
         activityType: req.activityType || 'อบรมวิชาการ',
         courseTopic: req.courseTopic || 'Active Learning ยกระดับสมรรถนะผู้เรียน',
         province: req.province || 'กรุงเทพมหานคร',
-        saleName: req.saleName || 'สมชาย มุ่งมั่น',
+        saleName: req.saleName || 'ผู้ใช้งาน',
         saleCompany: 'บริษัท ไทยวัฒนาพานิช จำกัด',
         schoolId: req.schoolId || 'SCH-1001',
         schoolName: req.schoolName || 'โรงเรียนสวนกุหลาบวิทยาลัย',
@@ -12544,7 +12591,7 @@ function renderA4EvalReportHtmlClient(d) {
           </table>
 
           <div style="margin-top:14px; padding-top:4px; border-top:1px solid #e2e8f0; font-size:8.5pt; color:#94a3b8; text-align:center;">
-            เอกสารฉบับนี้สร้างโดยระบบ Training Center TWP (EMS Enterprise Platform v1.22.5) • ใช้สำหรับติดตามและควบคุมผลการปฏิบัติงานภายใน (PPC Standard)
+            เอกสารฉบับนี้สร้างโดยระบบ Training Center TWP (EMS Enterprise Platform v1.22.6) • ใช้สำหรับติดตามและควบคุมผลการปฏิบัติงานภายใน (PPC Standard)
           </div>
         </div>
       `;
@@ -12757,7 +12804,7 @@ function renderA4EvalReportHtmlClient(d) {
           .catch(err => content.innerText = 'เกิดข้อผิดพลาด: ' + err.message);
       } else {
         content.innerText = JSON.stringify([
-          { logId: 'LOG-001', eventId: 'EVT-2026-0001', action: 'TEAM_A_CREATE', actionBy: 'สมชาย มุ่งมั่น', timestamp: new Date().toISOString() },
+          { logId: 'LOG-001', eventId: 'EVT-2026-0001', action: 'TEAM_A_CREATE', actionBy: 'ผู้ใช้งาน', timestamp: new Date().toISOString() },
           { logId: 'LOG-002', eventId: 'EVT-2026-0002', action: 'TEAM_B_CONFIRM', actionBy: 'วิภา วิชาการ', timestamp: new Date().toISOString() },
           { logId: 'LOG-003', eventId: 'EVT-2026-0003', action: 'EXEC_APPROVE', actionBy: 'ดร.นิพนธ์ ประธานบริหาร', timestamp: new Date().toISOString() }
         ], null, 2);
@@ -12826,7 +12873,7 @@ function renderA4EvalReportHtmlClient(d) {
       }
       if (opInput) opInput.value = currentProfile.name;
 
-      // Update Sidebar Profile (v1.17.0 / v1.22.5)
+      // Update Sidebar Profile (v1.17.0 / v1.22.6)
       const sideName = document.getElementById('sideUserName');
       const sideRole = document.getElementById('sideUserRole');
       const sideAvatar = document.getElementById('sideUserAvatar');
@@ -12840,7 +12887,7 @@ function renderA4EvalReportHtmlClient(d) {
       // Auto-populate saleInput in Team A Form if current user is Team A
       const saleInput = document.getElementById('saleInput');
       if (saleInput && AppState.currentUser && (AppState.currentUser.team === 'TEAM_A' || (AppState.currentUser.teamRole && AppState.currentUser.teamRole.startsWith('TEAM_A')))) {
-        if (!saleInput.value || saleInput.value === 'สมชาย มุ่งมั่น') {
+        if (!saleInput.value || saleInput.value === 'ผู้ใช้งาน') {
           saleInput.value = AppState.currentUser.fullName;
         }
       }
@@ -12853,13 +12900,24 @@ function renderA4EvalReportHtmlClient(d) {
       const cleanU = String(u).trim().toLowerCase();
       const cleanP = String(p).trim();
 
+      // Official PPC Sales accounts dynamically recognized
+      const ppcAccounts = (typeof OFFICIAL_PPC_SALES !== 'undefined' ? OFFICIAL_PPC_SALES : []).map(s => ({
+        userId: s.saleId,
+        username: s.saleId.toLowerCase(),
+        password: 'sale1234',
+        fullName: s.saleName + ' (ฝ่ายขาย ' + s.zone + ')',
+        teamRole: 'TEAM_A_MEMBER',
+        team: 'TEAM_A'
+      }));
+
       const defaultAccounts = [
         { userId: 'USR-001', username: 'admin', password: 'admin0000', fullName: 'ผู้ดูแลระบบส่วนกลาง (Admin)', teamRole: 'ADMIN', team: 'ADMIN' },
-        { userId: 'USR-002', username: 'sale.lead', password: 'sale1234', fullName: 'สมชาย มุ่งมั่น (หัวหน้าทีมขาย A)', teamRole: 'TEAM_A_LEAD', team: 'TEAM_A' },
-        { userId: 'USR-003', username: 'sale.member', password: 'sale1234', fullName: 'สุรศักดิ์ จันทรศิลปิน (ฝ่ายขาย)', teamRole: 'TEAM_A_MEMBER', team: 'TEAM_A' },
+        { userId: 'USR-002', username: 'sale.lead', password: 'sale1234', fullName: 'หัวหน้าฝ่ายขาย A (Team A Lead)', teamRole: 'TEAM_A_LEAD', team: 'TEAM_A' },
+        { userId: 'USR-003', username: 'sale.member', password: 'sale1234', fullName: 'ผู้แทนฝ่ายขาย (Sales Representative)', teamRole: 'TEAM_A_MEMBER', team: 'TEAM_A' },
         { userId: 'USR-004', username: 'acad.lead', password: 'acad1234', fullName: 'ณัฐพล วิชาการ (หัวหน้าฝ่ายวิชาการ B)', teamRole: 'TEAM_B_LEAD', team: 'TEAM_B' },
         { userId: 'USR-005', username: 'acad.member', password: 'acad1234', fullName: 'กานดา ปฏิบัติการ (เจ้าหน้าที่วิชาการ)', teamRole: 'TEAM_B_MEMBER', team: 'TEAM_B' },
-        { userId: 'USR-006', username: 'exec.lead', password: 'exec1234', fullName: 'ผศ.อินทิรา บุนนาค (กรรมการผู้จัดการ)', teamRole: 'EXEC', team: 'EXEC' }
+        { userId: 'USR-006', username: 'exec.lead', password: 'exec1234', fullName: 'ผศ.อินทิรา บุนนาค (กรรมการผู้จัดการ)', teamRole: 'EXEC', team: 'EXEC' },
+        ...ppcAccounts
       ];
 
       const cloudAccounts = (AppState.teamAccounts && AppState.teamAccounts.length > 0) ? AppState.teamAccounts : [];
@@ -12884,6 +12942,11 @@ function renderA4EvalReportHtmlClient(d) {
         teamRole: matched.teamRole,
         team: roleTeam
       };
+    }
+
+    
+    function openOperatorModal() {
+      openSwitchProfileModal();
     }
 
     function openSwitchProfileModal() {
@@ -13040,7 +13103,7 @@ function renderA4EvalReportHtmlClient(d) {
       if (!tbody) return;
       const accs = (AppState.teamAccounts && AppState.teamAccounts.length > 0) ? AppState.teamAccounts : [
         { userId: 'USR-001', username: 'admin', password: 'admin0000', fullName: 'ผู้ดูแลระบบส่วนกลาง (Admin)', teamRole: 'ADMIN' },
-        { userId: 'USR-002', username: 'sale.lead', password: 'sale1234', fullName: 'สมชาย มุ่งมั่น (หัวหน้าทีมขาย A)', teamRole: 'TEAM_A_LEAD' },
+        { userId: 'USR-002', username: 'sale.lead', password: 'sale1234', fullName: 'หัวหน้าฝ่ายขาย A (Team A Lead)', teamRole: 'TEAM_A_LEAD' },
         { userId: 'USR-003', username: 'acad.lead', password: 'acad1234', fullName: 'ณัฐพล วิชาการ (หัวหน้าฝ่ายวิชาการ B)', teamRole: 'TEAM_B_LEAD' },
         { userId: 'USR-004', username: 'exec.lead', password: 'exec1234', fullName: 'ผศ.อินทิรา บุนนาค (กรรมการผู้จัดการ)', teamRole: 'EXEC' }
       ];
@@ -14808,7 +14871,7 @@ function renderA4EvalReportHtmlClient(d) {
           <div>
             <div class="flex items-center space-x-2">
               <h3 class="font-bold text-slate-900 text-lg">ประวัติและการปรับปรุงระบบเวอร์ชัน (Release Notes)</h3>
-              <span class="bg-blue-100 text-[#08539E] text-xs font-bold font-mono px-2 py-0.5 rounded-full">v1.22.5 Current</span>
+              <span class="bg-blue-100 text-[#08539E] text-xs font-bold font-mono px-2 py-0.5 rounded-full">v1.22.6 Current</span>
             </div>
             <p class="text-xs text-slate-500">บันทึกประวัติการปรับปรุงสถาปัตยกรรมและฟังก์ชันการทำงานอย่างละเอียด</p>
           </div>
@@ -14821,11 +14884,11 @@ function renderA4EvalReportHtmlClient(d) {
       <!-- Release Timeline List -->
       <div class="space-y-4">
         
-        <!-- v1.22.5 (Current Major Release) -->
+        <!-- v1.22.6 (Current Major Release) -->
         <div class="p-5 bg-gradient-to-br from-emerald-50 via-white to-teal-50/70 border-2 border-emerald-400 rounded-3xl space-y-3 shadow-sm">
           <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-1">
             <div class="flex items-center space-x-2">
-              <span class="bg-emerald-600 text-white text-xs font-black px-2.5 py-0.5 rounded-lg font-mono">v1.22.5</span>
+              <span class="bg-emerald-600 text-white text-xs font-black px-2.5 py-0.5 rounded-lg font-mono">v1.22.6</span>
               <span class="font-bold text-slate-900 text-sm">Landing Page Login Gate, Release Notes Popup & Attendee Individual Edit/Delete</span>
             </div>
             <span class="text-[11px] text-emerald-700 font-bold font-mono">2026-11-14 &bull; Current Release</span>
@@ -15058,7 +15121,7 @@ function renderA4EvalReportHtmlClient(d) {
 
 
 
-  <!-- Modal: What's New Release Notes (v1.22.5) -->
+  <!-- Modal: What's New Release Notes (v1.22.6) -->
   <div id="whatsNewModal" class="hidden fixed inset-0 z-[9999] flex items-center justify-center bg-black/75 backdrop-blur-md p-4 animate-fadeIn">
     <div class="bg-white rounded-3xl max-w-2xl w-full max-h-[90vh] flex flex-col shadow-2xl border border-slate-200 overflow-hidden">
       
@@ -15071,9 +15134,9 @@ function renderA4EvalReportHtmlClient(d) {
           <div>
             <div class="flex items-center space-x-2">
               <span class="text-xs bg-emerald-500/30 text-emerald-300 border border-emerald-400/40 px-2 py-0.5 rounded-full font-mono font-bold">Release Note</span>
-              <span class="text-xs text-slate-300">อัปเดตระบบเวอร์ชัน 1.22.5</span>
+              <span class="text-xs text-slate-300">อัปเดตระบบเวอร์ชัน 1.22.6</span>
             </div>
-            <h2 class="text-lg sm:text-xl font-black text-white mt-1">ประกาศอัปเดตระบบ Training Center TWP v1.22.5</h2>
+            <h2 class="text-lg sm:text-xl font-black text-white mt-1">ประกาศอัปเดตระบบ Training Center TWP v1.22.6</h2>
           </div>
         </div>
         <button type="button" onclick="closeWhatsNewModal()" class="text-white/70 hover:text-white text-xl p-1 cursor-pointer">
@@ -15083,18 +15146,19 @@ function renderA4EvalReportHtmlClient(d) {
 
       <!-- Body / Release Items -->
       <div class="p-6 overflow-y-auto custom-scrollbar space-y-3.5 text-xs">
-        <div class="p-3.5 bg-gradient-to-r from-emerald-50 to-teal-50 border-2 border-emerald-300 rounded-2xl space-y-2 mb-3 shadow-xs">
+        <div class="p-3.5 bg-gradient-to-r from-blue-50 to-indigo-50 border-2 border-blue-300 rounded-2xl space-y-2 mb-3 shadow-xs">
           <div class="flex items-center space-x-2">
-            <span class="px-2 py-0.5 rounded-full text-[10px] font-black bg-emerald-600 text-white">ไฮไลต์ v1.22.5</span>
-            <span class="font-bold text-emerald-950 text-xs sm:text-sm">ระบบออกจากระบบสมบูรณ์แบบ (Complete Session Termination & Zero Retention)</span>
+            <span class="px-2 py-0.5 rounded-full text-[10px] font-black bg-[#08539E] text-white">ไฮไลต์ v1.22.6</span>
+            <span class="font-bold text-slate-900 text-xs sm:text-sm">ระบบผูกตัวตนอัตโนมัติ (Zero Residual Name) & ปลดล็อกการส่งงานทีม A สู่ทีม B และ Admin ทันที</span>
           </div>
           <p class="text-slate-700 leading-relaxed font-medium">
-            1) <strong>เคลียร์ชื่อและสิทธิ์ผู้ใช้ออกจากหน้าจอ 100%:</strong> เมื่อกด "ออกจากระบบ" (ไม่ว่าจะจากเมนูด้านข้าง Sidebar, หน้าแรก Landing หรือหน้าต่างสลับสิทธิ์) ระบบจะทำการตัดการเชื่อมต่อ ล้างข้อมูลเซสชัน ชื่อผู้ใช้ สังกัด และประวัติการล็อกอินออกจากหน้าจอทันที ไม่ค้างชื่อหรือเปิดให้เข้าทำงานซ้ำโดยไม่ผ่านการยืนยันตัวตน<br>
-            2) <strong>บังคับแสดงฟอร์ม Sign-In พร้อมล้างช่องรหัสผ่าน:</strong> หน้าแรกจะสลับกลับมาแสดงการ์ดกรอก Username & Password เพื่อบังคับให้ต้องระบุข้อมูลประจำทีมใหม่อีกครั้งเสมอ ป้องกันข้อผิดพลาดจากการเข้าใจผิดว่ายังอยู่ในระบบ
+            1) <strong>ปลดล็อกชื่อผู้ใช้ตกค้าง & เชื่อมโยงบัญชีจริง:</strong> ลบการฝังชื่อจำลองเก่า ("สมชาย มุ่งมั่น") ออกจากระบบถาวร เมื่อผู้ใช้งานลงชื่อเข้าสู่ระบบในฐานะใด ระบบจะผูกชื่อและสังกัดจริงของผู้ใช้ขึ้นแสดงบน Header, Sidebar และฟอร์มทีม A ทันที พร้อมซิงค์บัญชีและสิทธิ์จาก Google Sheets <code>Team_Accounts</code> และทำเนียบผู้แทนขาย PPC แบบอัตโนมัติ<br>
+            2) <strong>ปลดล็อกคอขวดการสร้างคำขอทีม A (Unblocked Request Creation):</strong> ยกเลิกการบล็อกฟอร์มกรณีไม่เลือกแผนหลักการประจำปี โดยระบบจะบันทึกเป็นโครงการบริการวิชาการให้อัตโนมัติ ส่งต่องานเข้าคิวทีมวิชาการ B (<code>WAITING_B</code>) ได้ทันทีโดยไม่ติดขัด<br>
+            3) <strong>Admin เข้าถึงและเห็นงานทุกทีมทันที (Admin Central Visibility & Auto-Unlock):</strong> เมื่อแอดมิน (Admin) เข้าสู่ระบบ ระบบจะปลดล็อกสิทธิ์ควบคุมส่วนกลางทันที ทำให้ Admin สามารถมองเห็นทุกใบงานของทีม A และทุกขั้นตอนบนแดชบอร์ดส่วนกลางแบบ Real-time พร้อมปรับปรุงโครงสร้างตารางข้อมูล <code>Event_Requests</code> ให้ถูกต้องแม่นยำ 100%
           </p>
         </div>
         <p class="text-slate-600 font-medium leading-relaxed">
-          สรุปรายละเอียดการพัฒนาต่อเนื่องของระบบ <strong>Enterprise Governance & Cross-Team Real-time Sync Edition (v1.22.5)</strong>:
+          สรุปรายละเอียดการพัฒนาต่อเนื่องของระบบ <strong>Enterprise Governance & Cross-Team Real-time Sync Edition (v1.22.6)</strong>:
         </p>
 
         <!-- Feature 1 -->
@@ -15223,7 +15287,7 @@ function renderA4EvalReportHtmlClient(d) {
             </div>
             <div>
               <span class="text-[10px] text-slate-400 block">บัญชีที่กำลังใช้งานในเครื่องนี้:</span>
-              <h4 id="currentLoggedUserName" class="text-sm font-bold text-slate-900">สมชาย มุ่งมั่น (หัวหน้าทีมขาย A)</h4>
+              <h4 id="currentLoggedUserName" class="text-sm font-bold text-slate-900">ยังไม่ได้เข้าสู่ระบบ</h4>
               <span id="currentLoggedUserRole" class="text-[11px] font-bold px-2 py-0.5 rounded-full border bg-emerald-100 text-emerald-800 border-emerald-200 inline-block mt-0.5">ฝ่ายขาย (Team A)</span>
             </div>
           </div>

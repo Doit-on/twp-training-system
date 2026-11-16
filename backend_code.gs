@@ -8,7 +8,7 @@
  * ============================================================================
  */
 
-const SYSTEM_VERSION = '1.22.5';
+const SYSTEM_VERSION = '1.22.6';
 const DEFAULT_ADMIN_PASS = 'admin0000';
 // =============================================================================
 // MULTI-ACCOUNT GOOGLE SHEETS CONNECTIVITY (Cross-Account Shared Editor Access)
@@ -572,9 +572,15 @@ function getInitialData() {
     if (!r[0]) continue;
 
     let actualExp = null;
-    if (r[35]) {
+    if (r[42]) {
       try {
-        actualExp = typeof r[35] === 'string' ? JSON.parse(r[35]) : r[35];
+        actualExp = typeof r[42] === 'string' ? JSON.parse(r[42]) : r[42];
+      } catch (e) {
+        actualExp = null;
+      }
+    } else if (r[35] && typeof r[35] === 'string' && r[35].trim().startsWith('{')) {
+      try {
+        actualExp = JSON.parse(r[35]);
       } catch (e) {
         actualExp = null;
       }
@@ -1022,7 +1028,7 @@ function handleSaveExpenses(payload) {
   
   // บันทึก JSON ค่าใช้จ่ายจริง 7 หมวดลงใน Column 36 (Actual_Expenses_JSON)
   const expensesJson = JSON.stringify(actualExpenses || {});
-  sheet.getRange(targetRow, 36).setValue(expensesJson);
+  sheet.getRange(targetRow, 43).setValue(expensesJson);
 
   logSystemAction(eventId, 'SETTLE_EXPENSES', operator, {
     actualBudget: actualBudget,
@@ -1446,7 +1452,7 @@ function ensureRequiredSheets(ss) {
         'Actual_Budget', 'Created_By', 'Reviewed_By', 'Approved_By', 'Last_Modified_By',
         'Submitted_To_B_At', 'Reviewed_By_B_At', 'Approved_At', 'A4_PDF_Url',
         'Need_Accommodation', 'Room_Count', 'Need_Transportation', 'Transport_Details', 'A4_Docx_Url', 'Is_Out_Of_Plan', 'Out_Of_Plan_Reason', 'Annual_Plan_ID',
-        'Expected_Trainees', 'Actual_Trainees', 'Need_Catering', 'Need_Product_Media', 'Other_Support_Details', 'Speaker_Signature_Data', 'Speakers_JSON'
+        'Expected_Trainees', 'Actual_Trainees', 'Need_Catering', 'Need_Product_Media', 'Other_Support_Details', 'Speaker_Signature_Data', 'Speakers_JSON', 'Actual_Expenses_JSON'
       ]
     },
     {
