@@ -1,14 +1,14 @@
 /**
  * ============================================================================
  * EMS Enterprise - Training Center TWP
- * Version: 1.22.1
+ * Version: 1.22.11
  * Architecture: Google Apps Script Backend (Serverless) + Google Sheets Database
  * Security: Zero-Trust Data Isolation + Multi-Operator Stamping + Concurrency Lock
  * Features: Multi-Device Sync + Team QR Pairing + PPC Standard A4 Report Engine (PDF & Word .docx)
  * ============================================================================
  */
 
-const SYSTEM_VERSION = '1.22.8';
+const SYSTEM_VERSION = '1.22.11';
 const DEFAULT_ADMIN_PASS = 'admin0000';
 // =============================================================================
 // MULTI-ACCOUNT GOOGLE SHEETS CONNECTIVITY (Cross-Account Shared Editor Access)
@@ -791,6 +791,14 @@ function getInitialData() {
         }
       }
       return accounts;
+    })(),
+    annualPlans: (function() {
+      try {
+        const apRes = handleGetAnnualPlans();
+        return (apRes && Array.isArray(apRes.plans)) ? apRes.plans : [];
+      } catch(e) {
+        return [];
+      }
     })()
   };
 }
@@ -950,12 +958,12 @@ function createRequestTeamA(payload) {
 // ------------------- TEAM B: REVIEW & CONFIRM -------------------
 
 function updateReviewTeamB(payload) {
-  const { eventId, decision, teamBSpeaker, teamBNotes, actualBudget, operatorName, actualTrainees, speakerSignature, speakers } = payload;
+  const { eventId, decision, teamBSpeaker, teamBNotes, actualBudget, operatorName, reviewedBy, actualTrainees, speakerSignature, speakers, targetSales } = payload;
   const ss = getSpreadsheet();
   const sheet = ss.getSheetByName('Event_Requests');
   const data = sheet.getDataRange().getValues();
   const now = new Date().toISOString();
-  const operator = operatorName || 'เจ้าหน้าที่วิชาการ (ทีม B)';
+  const operator = reviewedBy || operatorName || 'เจ้าหน้าที่วิชาการ (ทีม B)';
 
   let targetRow = -1;
   for (let i = 1; i < data.length; i++) {
@@ -977,6 +985,11 @@ function updateReviewTeamB(payload) {
   sheet.getRange(targetRow, 23).setValue(operator);
   sheet.getRange(targetRow, 25).setValue(now); // Reviewed_By_B_At
 
+  // Col 15: Target_Sales (หากทีม B ปรับเป้าหมายยอดขายตามพื้นที่จัดอบรมจริง)
+  if (targetSales !== undefined && targetSales !== null && targetSales !== '') {
+    sheet.getRange(targetRow, 15).setValue(Number(targetSales) || 0);
+  }
+
   // Col 37: Actual_Trainees (ทีม B ปรับยอดผู้เข้าร่วมจริง)
   if (actualTrainees !== undefined && actualTrainees !== null && actualTrainees !== '') {
     sheet.getRange(targetRow, 37).setValue(Number(actualTrainees) || 0);
@@ -993,6 +1006,8 @@ function updateReviewTeamB(payload) {
   logSystemAction(eventId, decision === 'RETURN_TO_A' ? 'TEAM_B_RETURN' : 'TEAM_B_CONFIRM', operator, {
     status: nextStatus,
     actualBudget: actualBudget,
+    targetSales: targetSales,
+    actualTrainees: actualTrainees,
     teamBSpeaker: teamBSpeaker
   });
 
@@ -1002,7 +1017,7 @@ function updateReviewTeamB(payload) {
 // ------------------- TEAM B: ACTUAL EXPENSES SETTLEMENT (7 หมวด) -------------------
 
 function handleSaveExpenses(payload) {
-  const { eventId, actualExpenses, actualBudget, operatorName } = payload;
+  const { eventId, actualExpenses, actualBudget, operatorName, actualTrainees } = payload;
   const ss = getSpreadsheet();
   const sheet = ss.getSheetByName('Event_Requests');
   const data = sheet.getDataRange().getValues();
@@ -1026,12 +1041,18 @@ function handleSaveExpenses(payload) {
   }
   sheet.getRange(targetRow, 23).setValue(operator); // Last_Modified_By
   
-  // บันทึก JSON ค่าใช้จ่ายจริง 7 หมวดลงใน Column 36 (Actual_Expenses_JSON)
+  // Col 37: Actual_Trainees (ถ้าส่งยอดผู้เข้าอบรมจริงมาด้วย)
+  if (actualTrainees !== undefined && actualTrainees !== null && actualTrainees !== '') {
+    sheet.getRange(targetRow, 37).setValue(Number(actualTrainees) || 0);
+  }
+
+  // บันทึก JSON ค่าใช้จ่ายจริง 7 หมวดลงใน Column 43 (Actual_Expenses_JSON)
   const expensesJson = JSON.stringify(actualExpenses || {});
   sheet.getRange(targetRow, 43).setValue(expensesJson);
 
   logSystemAction(eventId, 'SETTLE_EXPENSES', operator, {
     actualBudget: actualBudget,
+    actualTrainees: actualTrainees,
     actualExpenses: actualExpenses
   });
 

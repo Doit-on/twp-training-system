@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-  <title>Training Center TWP - ระบบบริหารคำขอจัดอบรมและประเมินผล v1.22.10</title>
+  <title>Training Center TWP - ระบบบริหารคำขอจัดอบรมและประเมินผล v1.22.11</title>
   <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
   <!-- Google Fonts: Sarabun -->
@@ -313,10 +313,10 @@
       </div>
       <div class="flex items-center space-x-2 sm:space-x-3 text-xs">
         <!-- Release Notes Button on Landing -->
-        <button type="button" onclick="openWhatsNewModal()" class="bg-amber-400/20 hover:bg-amber-400/30 text-amber-200 px-3 py-1.5 rounded-full border border-amber-300/40 backdrop-blur-sm font-bold flex items-center space-x-1.5 transition cursor-pointer" title="ดูรายละเอียดการอัปเดตระบบ v1.22.10">
+        <button type="button" onclick="openWhatsNewModal()" class="bg-amber-400/20 hover:bg-amber-400/30 text-amber-200 px-3 py-1.5 rounded-full border border-amber-300/40 backdrop-blur-sm font-bold flex items-center space-x-1.5 transition cursor-pointer" title="ดูรายละเอียดการอัปเดตระบบ v1.22.11">
           <i class="fa-solid fa-bullhorn text-amber-300 animate-pulse"></i>
           <span class="hidden sm:inline">อัปเดต</span>
-          <span class="bg-emerald-500 text-white font-mono font-black text-[10px] px-1.5 py-0.2 rounded-full">v1.22.10</span>
+          <span class="bg-emerald-500 text-white font-mono font-black text-[10px] px-1.5 py-0.2 rounded-full">v1.22.11</span>
         </button>
         <!-- Team Login Gate Button / User Badge -->
         <button id="landingLoginBtn" type="button" onclick="openSwitchProfileModal()" class="bg-gradient-to-r from-amber-400 to-amber-500 hover:from-amber-300 hover:to-amber-400 text-slate-950 font-black px-3.5 py-1.5 rounded-xl shadow-md transition cursor-pointer flex items-center space-x-1.5">
@@ -470,7 +470,7 @@
     <!-- Bottom Footer on Landing Page -->
     <div class="max-w-7xl mx-auto w-full px-6 py-4 flex flex-col sm:flex-row items-center justify-between text-xs text-blue-200 border-t border-white/10 relative z-10 gap-2">
       <div>&copy; 2026 Training Center TWP - บริษัท ไทยวัฒนาพานิช จำกัด. All rights reserved.</div>
-      <div class="font-mono text-[11px] bg-white/10 px-3 py-1 rounded-full border border-white/15">EMS Enterprise Platform v1.22.10 (Live Apps Script Engine)</div>
+      <div class="font-mono text-[11px] bg-white/10 px-3 py-1 rounded-full border border-white/15">EMS Enterprise Platform v1.22.11 (Live Apps Script Engine)</div>
     </div>
 
   </div>
@@ -495,7 +495,7 @@
           <div class="sidebar-brand-text truncate">
             <div class="flex items-center space-x-1.5">
               <span class="font-extrabold text-sm tracking-wide text-white">TWP</span>
-              <span onclick="openVersionReleaseModal()" class="bg-blue-400/20 hover:bg-blue-400/30 text-blue-200 text-[9px] font-mono px-1.5 py-0.5 rounded-full border border-blue-300/30 cursor-pointer transition flex items-center gap-1" title="คลิกดูรายละเอียดเวอร์ชัน v1.22.10"><i class="fa-solid fa-sparkles text-amber-300 text-[8px]"></i><span class="bg-emerald-500 text-white font-black px-2 py-0.5 rounded-full">v1.22.10</span></span>
+              <span onclick="openVersionReleaseModal()" class="bg-blue-400/20 hover:bg-blue-400/30 text-blue-200 text-[9px] font-mono px-1.5 py-0.5 rounded-full border border-blue-300/30 cursor-pointer transition flex items-center gap-1" title="คลิกดูรายละเอียดเวอร์ชัน v1.22.11"><i class="fa-solid fa-sparkles text-amber-300 text-[8px]"></i><span class="bg-emerald-500 text-white font-black px-2 py-0.5 rounded-full">v1.22.11</span></span>
             </div>
             <p class="text-[10px] text-blue-200 truncate">ระบบบริหารงานฝึกอบรม</p>
           </div>
@@ -2380,9 +2380,13 @@
               </select>
             </div>
             <div>
-              <div id="expenseEventInfoBrief" class="text-xs text-slate-600 p-2 bg-white rounded-lg border border-slate-200 flex items-center justify-between">
-                <span>โรงเรียน: <strong id="expenseBriefSchool" class="text-slate-800">-</strong></span>
-                <span>ผู้เข้าอบรม: <strong id="expenseBriefAttendees" class="text-emerald-700">- คน</strong></span>
+              <div id="expenseEventInfoBrief" class="text-xs text-slate-600 p-2 bg-white rounded-lg border border-slate-200 flex flex-wrap items-center justify-between gap-2">
+                <div>โรงเรียน: <strong id="expenseBriefSchool" class="text-slate-800">-</strong></div>
+                <div class="flex items-center space-x-1">
+                  <span>ผู้เข้าอบรมจริง:</span>
+                  <input type="number" id="expenseAttendeesInput" min="1" oninput="calculateRealtimeExpenses()" class="w-16 bg-purple-50 border border-purple-200 rounded px-1.5 py-0.5 text-xs font-mono font-bold text-purple-900 focus:bg-white focus:ring-1 focus:ring-purple-500 text-center" title="ทีม B สามารถแก้ไขจำนวนผู้เข้าอบรมจริงเพื่อคำนวณต้นทุนต่อหัว (Cost per Head)">
+                  <span>คน</span>
+                </div>
               </div>
             </div>
           </div>
@@ -3332,20 +3336,24 @@
         </div>
 
         <!-- Export Buttons (PDF, Word, Print, Close) -->
-        <div class="flex items-center space-x-2">
-          <button onclick="downloadReportPdfAction()" id="btnExportPdf" class="px-3 py-1.5 bg-red-600 hover:bg-red-700 text-white rounded-xl text-xs font-bold transition btn-tactile shadow-sm flex items-center space-x-1.5">
+        <div class="flex items-center space-x-1.5 sm:space-x-2">
+          <button onclick="openFullReportPreview(false)" id="btnPreviewReport" class="px-3 py-1.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-xs font-bold transition btn-tactile shadow-sm flex items-center space-x-1.5 cursor-pointer" title="เปิดหน้าต่างพรีวิวรายงานเต็มหน้าจอก่อนสั่งพิมพ์หรือส่งออก PDF">
+            <i class="fa-solid fa-eye text-cyan-200"></i>
+            <span>พรีวิวเต็มจอ</span>
+          </button>
+          <button onclick="downloadReportPdfAction()" id="btnExportPdf" class="px-3 py-1.5 bg-red-600 hover:bg-red-700 text-white rounded-xl text-xs font-bold transition btn-tactile shadow-sm flex items-center space-x-1.5 cursor-pointer">
             <i class="fa-solid fa-file-pdf"></i>
             <span>Export PDF</span>
           </button>
-          <button onclick="downloadReportDocxAction()" id="btnExportDocx" class="px-3 py-1.5 bg-[#08539E] hover:bg-[#07488a] text-white rounded-xl text-xs font-bold transition btn-tactile shadow-sm flex items-center space-x-1.5">
+          <button onclick="downloadReportDocxAction()" id="btnExportDocx" class="px-3 py-1.5 bg-[#08539E] hover:bg-[#07488a] text-white rounded-xl text-xs font-bold transition btn-tactile shadow-sm flex items-center space-x-1.5 cursor-pointer">
             <i class="fa-solid fa-file-word"></i>
-            <span>Export Word (.docx)</span>
+            <span>Export Word</span>
           </button>
-          <button onclick="printReportContainer()" class="px-3 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl text-xs font-semibold transition btn-tactile flex items-center space-x-1.5" title="สั่งพิมพ์เอกสาร A4">
+          <button onclick="printReportContainer()" class="px-3 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl text-xs font-semibold transition btn-tactile flex items-center space-x-1.5 cursor-pointer" title="สั่งพิมพ์เอกสาร A4">
             <i class="fa-solid fa-print"></i>
             <span class="hidden sm:inline">พิมพ์ A4</span>
           </button>
-          <button onclick="closePpcReportModal()" class="text-slate-400 hover:text-slate-600 p-1.5 rounded-lg hover:bg-slate-100 transition"><i class="fa-solid fa-xmark text-lg"></i></button>
+          <button onclick="closePpcReportModal()" class="text-slate-400 hover:text-slate-600 p-1.5 rounded-lg hover:bg-slate-100 transition cursor-pointer"><i class="fa-solid fa-xmark text-lg"></i></button>
         </div>
       </div>
 
@@ -3436,7 +3444,7 @@
               <i class="fa-solid fa-code-compare text-amber-300"></i>
               <span class="text-xs font-bold uppercase tracking-wider">รายละเอียดการปรับปรุงเวอร์ชัน (Version Release Notes)</span>
             </div>
-            <span class="text-[10px] bg-amber-400 text-slate-950 font-black px-2 py-0.5 rounded-full">v1.22.10 Live</span>
+            <span class="text-[10px] bg-amber-400 text-slate-950 font-black px-2 py-0.5 rounded-full">v1.22.11 Live</span>
           </div>
           <p class="text-xs text-blue-100 leading-relaxed">
             <strong>v1.22.0 (Enterprise Compact QR & Drive Standard):</strong> ปรับขนาดหน้าต่างแท่นแสดงผล QR Code ให้กะทัดรัด (Compact Responsive) รองรับโน้ตบุ๊กทุกขนาดหน้าจอ, เพิ่มปุ่มปิดหน้าต่างทั้งบน ล่าง และกด Esc/คลิกนอกกรอบเพื่อปิดได้ทันที, พร้อมกำหนด Google Drive โฟลเดอร์กลางสำหรับเก็บเอกสารโครงการ
@@ -4441,7 +4449,7 @@
           <div>
             <div class="flex items-center space-x-2">
               <span class="text-xs bg-emerald-500/30 text-emerald-300 border border-emerald-400/40 px-2 py-0.5 rounded-full font-mono font-bold">Authentication Gate</span>
-              <span class="text-xs text-slate-300">v1.22.10</span>
+              <span class="text-xs text-slate-300">v1.22.11</span>
             </div>
             <h3 class="font-black text-white text-base sm:text-lg mt-0.5">เข้าสู่ระบบประจำทีม (Team Sign-In)</h3>
           </div>
@@ -4943,7 +4951,7 @@
 
     // System Global State (Synchronously initialized with complete Master Data)
     const AppState = {
-      version: '1.22.10',
+      version: '1.22.11',
       clientId: 'DEV-' + Math.random().toString(36).substring(2, 7).toUpperCase(),
       activeTab: 'dashboard',
       activeDevices: {},
@@ -6752,7 +6760,7 @@
       container.innerHTML = approved.map(req => {
         const isCompleted = req.status === 'COMPLETED';
         const evalCount = req.evalCount || 0;
-        const targetCount = req.expectedTrainees || 50;
+        const targetCount = req.actualTrainees || req.expectedTrainees || 50;
         const evalPct = Math.min(100, Math.round((evalCount / targetCount) * 100));
         const isOutOfPlan = req.isOutOfPlan === 'YES' || req.outOfPlanReason;
         
@@ -6792,8 +6800,11 @@
                 <span class="font-bold text-slate-800">${req.venueType || 'โรงเรียน'}</span>
               </div>
               <div class="bg-white p-2.5 rounded-xl border border-slate-200/80">
-                <span class="text-slate-400 block text-[10px]">เป้าหมายผู้เข้าอบรม:</span>
-                <span class="font-bold text-indigo-700">${targetCount.toLocaleString()} ท่าน</span>
+                <div class="flex items-center justify-between mb-0.5">
+                  <span class="text-slate-400 block text-[10px]">ผู้เข้าอบรมจริง (ปรับยอด):</span>
+                  <button type="button" onclick="promptEditActualTrainees('${req.eventId}')" class="text-[10px] text-purple-600 hover:text-purple-800 font-bold cursor-pointer" title="คลิกเพื่อแก้ไขจำนวนผู้เข้าอบรมจริง"><i class="fa-solid fa-pen-to-square"></i> แก้</button>
+                </div>
+                <span class="font-bold text-indigo-700 font-mono text-sm block cursor-pointer" onclick="promptEditActualTrainees('${req.eventId}')" title="คลิกเพื่อแก้ไขจำนวนผู้เข้าอบรมจริง">${targetCount.toLocaleString()} ท่าน</span>
               </div>
               <div class="bg-white p-2.5 rounded-xl border border-slate-200/80">
                 <span class="text-slate-400 block text-[10px]">สถานะประเมินสด:</span>
@@ -7621,7 +7632,7 @@
     }
 
     function acknowledgeAndOpenLoginGate() {
-      localStorage.setItem('twp_acknowledged_version', '1.22.10');
+      localStorage.setItem('twp_acknowledged_version', '1.22.11');
       closeWhatsNewModal();
       if (!AppState.currentUser || !AppState.currentUser.userId) {
         setTimeout(() => {
@@ -7636,7 +7647,7 @@
 
     function checkAndShowWhatsNewOnEnter() {
       const ackVer = localStorage.getItem('twp_acknowledged_version');
-      if (ackVer !== '1.22.10') {
+      if (ackVer !== '1.22.11') {
         setTimeout(() => {
           openWhatsNewModal();
         }, 500);
@@ -8132,6 +8143,10 @@
           }
         }
       } else if (tabId === 'teamB') {
+        if (AppState.currentUser && AppState.currentUser.fullName) {
+          AppState.operatorName = AppState.currentUser.fullName;
+          localStorage.setItem('ems_operator_name', AppState.operatorName);
+        }
         renderTeamBQueue();
         renderTeamBExecutionQueue();
       } else if (tabId === 'exec') {
@@ -8140,6 +8155,10 @@
       } else if (tabId === 'evaluation') {
         renderEvaluationCenter();
       } else if (tabId === 'teamBExpenses') {
+        if (AppState.currentUser && AppState.currentUser.fullName) {
+          AppState.operatorName = AppState.currentUser.fullName;
+          localStorage.setItem('ems_operator_name', AppState.operatorName);
+        }
         renderTeamBExpensesView();
       } else if (tabId === 'fy2569Tu') {
         renderFy2569TuView();
@@ -8714,9 +8733,9 @@
       // Brief info
       const schoolEl = document.getElementById('expenseBriefSchool');
       if (schoolEl) schoolEl.innerText = (req.schoolName || '-') + ' (' + (req.province || '-') + ')';
-      const attEl = document.getElementById('expenseBriefAttendees');
-      const evalActual = req.evalCount || req.expectedTrainees || 50;
-      if (attEl) attEl.innerText = evalActual + ' คน';
+      const attInput = document.getElementById('expenseAttendeesInput');
+      const evalActual = Number(req.actualTrainees) || Number(req.onsiteCheckedIn) || Number(req.evalCount) || Number(req.expectedTrainees) || 50;
+      if (attInput) attInput.value = evalActual;
 
       // Load expenses into inputs
       const exp = req.actualExpenses || {};
@@ -8749,7 +8768,8 @@
       const approvedBudget = Number(req.actualBudget) || reqBudget;
       const netSaved = approvedBudget - totalActual;
 
-      const attendees = Number(req.evalCount) || Number(req.expectedTrainees) || 50;
+      const attInput = document.getElementById('expenseAttendeesInput');
+      const attendees = (attInput && Number(attInput.value) > 0) ? Number(attInput.value) : (Number(req.actualTrainees) || Number(req.expectedTrainees) || 50);
       const actualCostPerHead = attendees > 0 ? (totalActual / attendees).toFixed(2) : '0.00';
       const approvedCostPerHead = attendees > 0 ? (approvedBudget / attendees).toFixed(2) : '0.00';
       const diffCostPerHead = (Number(approvedCostPerHead) - Number(actualCostPerHead)).toFixed(2);
@@ -8802,6 +8822,8 @@
       const expMisc = Number(document.getElementById('expMisc').value) || 0;
 
       const totalActual = expSpeaker + expTravel + expAccom + expFood + expDocKit + expVenue + expMisc;
+      const attInput = document.getElementById('expenseAttendeesInput');
+      const attendeesVal = (attInput && Number(attInput.value) > 0) ? Number(attInput.value) : (Number(req.actualTrainees) || Number(req.expectedTrainees) || 50);
 
       req.actualExpenses = {
         expSpeaker,
@@ -8814,6 +8836,7 @@
       };
       req.actualExpensesTotal = totalActual;
       req.actualBudget = totalActual;
+      req.actualTrainees = attendeesVal;
       req.status = 'COMPLETED'; // ปรับสถานะเป็นปิดงานสมบูรณ์ 100%
       req.actualExpensesSettledAt = new Date().toISOString();
       req.actualExpensesSettledBy = AppState.operatorName || 'ฝ่ายพัฒนาวิชาการ (ทีม B)';
@@ -8841,6 +8864,9 @@
           eventId: currentExpenseEventId,
           actualExpenses: req.actualExpenses,
           actualBudget: totalActual,
+          actualTrainees: attendeesVal,
+          operatorName: req.actualExpensesSettledBy
+        }).then(res => {
           operatorName: req.actualExpensesSettledBy
         }).then(res => {
           if (res && res.status === 'SUCCESS') {
@@ -10498,8 +10524,8 @@
               </div>
             </div>
 
-            <!-- Trainees, Financials & Notes -->
-            <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+            <!-- Trainees, Financials, Target Sales & Reviewer -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
               <div>
                 <label class="block text-xs font-semibold text-slate-700 mb-1 flex items-center justify-between">
                   <span>ผู้เข้าอบรมจริง (คน) *</span>
@@ -10508,16 +10534,31 @@
                     <span>ใช้ยอดสแกน (<span id="teamBOnsiteBadge-${req.eventId}">${req.actualTrainees || req.onsiteCheckedIn || req.expectedTrainees || 50}</span>)</span>
                   </button>
                 </label>
-                <input type="number" id="teamBActualTrainees-${req.eventId}" min="1" value="${req.actualTrainees || req.onsiteCheckedIn || req.expectedTrainees || 50}" class="w-full bg-white border border-slate-300 rounded-xl p-2.5 text-xs font-mono font-bold text-purple-900 focus:ring-2 focus:ring-purple-500 focus:outline-none" title="ทีม B สามารถแก้ไขจำนวนผู้เข้าร่วมจริงเพื่อใช้ในการประเมินได้">
+                <input type="number" id="teamBActualTrainees-${req.eventId}" min="1" value="${req.actualTrainees || req.onsiteCheckedIn || req.expectedTrainees || 50}" class="w-full bg-white border border-slate-300 rounded-xl p-2.5 text-xs font-mono font-bold text-purple-900 focus:ring-2 focus:ring-purple-500 focus:outline-none" title="ทีม B สามารถแก้ไขจำนวนผู้เข้าร่วมจริงเพื่อใช้ในการประเมินและวิเคราะห์ค่าใช้จ่ายได้">
               </div>
               <div>
                 <label class="block text-xs font-semibold text-slate-700 mb-1">งบประมาณจริงที่ตัดจ่าย (บาท) *</label>
-                <input type="number" id="actualBudget-${req.eventId}" value="${req.actualBudget || req.estBudget}" class="w-full bg-white border border-slate-300 rounded-xl p-2.5 text-xs font-mono focus:ring-2 focus:ring-purple-500 focus:outline-none">
+                <input type="number" id="actualBudget-${req.eventId}" value="${req.actualBudget || req.estBudget}" oninput="updateTeamBCostRatio('${req.eventId}')" class="w-full bg-white border border-slate-300 rounded-xl p-2.5 text-xs font-mono focus:ring-2 focus:ring-purple-500 focus:outline-none">
               </div>
               <div>
-                <label class="block text-xs font-semibold text-slate-700 mb-1">ข้อเสนอแนะเพิ่มเติมเชิงวิชาการ</label>
-                <textarea id="teamBNotes-${req.eventId}" rows="2" placeholder="ระบุความเห็นด้านหลักสูตร เอกสาร หรือการเตรียมการ..." class="w-full bg-white border border-slate-300 rounded-xl p-2 text-xs focus:ring-2 focus:ring-purple-500 focus:outline-none">${req.teamBNotes || ''}</textarea>
+                <label class="block text-xs font-semibold text-slate-700 mb-1 flex items-center justify-between">
+                  <span>เป้าหมายยอดขายที่กระทบ (บาท) *</span>
+                  <span class="text-[10px] text-emerald-700 font-semibold" id="teamBCostRatio-${req.eventId}">ROI: ${costRatio}</span>
+                </label>
+                <input type="number" id="teamBTargetSales-${req.eventId}" value="${req.targetSales || 0}" min="0" oninput="updateTeamBCostRatio('${req.eventId}')" class="w-full bg-white border border-slate-300 rounded-xl p-2.5 text-xs font-mono font-bold text-emerald-700 focus:ring-2 focus:ring-purple-500 focus:outline-none" title="ทีม B สามารถปรับยอดขายประมาณการตามพื้นที่จัดงานจริงเพื่อประกอบการพิจารณา">
               </div>
+              <div>
+                <label class="block text-xs font-semibold text-slate-700 mb-1">
+                  <i class="fa-solid fa-user-check text-purple-600 mr-1"></i>ผู้ตรวจทานฝ่ายวิชาการ (ทีม B) *
+                </label>
+                <input type="text" id="teamBReviewer-${req.eventId}" value="${req.reviewedBy || AppState.currentUser?.fullName || AppState.operatorName || 'ฝ่ายวิชาการ (ทีม B)'}" placeholder="ระบุชื่อผู้ตรวจทานฝ่ายวิชาการ..." class="w-full bg-white border border-slate-300 rounded-xl p-2.5 text-xs font-bold text-purple-900 focus:ring-2 focus:ring-purple-500 focus:outline-none">
+              </div>
+            </div>
+
+            <!-- Notes Section -->
+            <div>
+              <label class="block text-xs font-semibold text-slate-700 mb-1">ข้อเสนอแนะเพิ่มเติมเชิงวิชาการ</label>
+              <textarea id="teamBNotes-${req.eventId}" rows="2" placeholder="ระบุความเห็นด้านหลักสูตร เอกสาร หรือการเตรียมการ..." class="w-full bg-white border border-slate-300 rounded-xl p-2 text-xs focus:ring-2 focus:ring-purple-500 focus:outline-none">${req.teamBNotes || ''}</textarea>
             </div>
 
             <div class="flex justify-end space-x-2 pt-2 border-t border-purple-200/50">
@@ -10532,6 +10573,37 @@
         </div>
       `;
       }).join('');
+    }
+
+    function updateTeamBCostRatio(eventId) {
+      const budgetEl = document.getElementById('actualBudget-' + eventId);
+      const targetEl = document.getElementById('teamBTargetSales-' + eventId);
+      const ratioEl = document.getElementById('teamBCostRatio-' + eventId);
+      if (!ratioEl) return;
+      const b = Number(budgetEl?.value) || 0;
+      const t = Number(targetEl?.value) || 0;
+      ratioEl.innerText = t > 0 ? 'ROI: ' + ((b / t) * 100).toFixed(1) + '%' : 'ROI: -';
+    }
+
+    function promptEditActualTrainees(eventId) {
+      const req = AppState.requests.find(r => r.eventId === eventId);
+      if (!req) return;
+      const current = req.actualTrainees || req.onsiteCheckedIn || req.expectedTrainees || 50;
+      const next = prompt(`ระบุจำนวนผู้เข้าอบรมจริงสำหรับ ${eventId} (ปัจจุบัน: ${current} คน):`, current);
+      if (next === null) return;
+      const num = parseInt(next, 10);
+      if (isNaN(num) || num <= 0) {
+        showAlert('กรุณาระบุจำนวนผู้เข้าอบรมที่ถูกต้อง', 'error');
+        return;
+      }
+      req.actualTrainees = num;
+      localStorage.setItem('twp_requests_store', JSON.stringify(AppState.requests));
+      if (AppState.gasEndpoint) {
+        postToBackend('UPDATE_TEAM_B_ATTENDEES', { eventId: eventId, actualTrainees: num, operatorName: AppState.operatorName })
+          .catch(e => console.warn('Offline saved attendees'));
+      }
+      showAlert(`อัปเดตยอดผู้เข้าอบรมจริงของ ${eventId} เป็น ${num} คน เรียบร้อยแล้ว`, 'success');
+      renderAll();
     }
 
     function renderExecQueue() {
@@ -11361,6 +11433,14 @@
       const speaker = (req && req.teamBSpeaker) ? req.teamBSpeaker : (document.getElementById('teamBSpeaker-' + eventId)?.value || '');
       const actualBudget = Number(document.getElementById('actualBudget-' + eventId)?.value) || 0;
       const actualTrainees = Number(document.getElementById('teamBActualTrainees-' + eventId)?.value) || Number(req?.actualTrainees) || Number(req?.expectedTrainees) || 50;
+      const targetSalesInput = document.getElementById('teamBTargetSales-' + eventId);
+      const targetSales = targetSalesInput ? (Number(targetSalesInput.value) || 0) : (Number(req?.targetSales) || 0);
+      const reviewerInput = document.getElementById('teamBReviewer-' + eventId);
+      const reviewerName = reviewerInput ? reviewerInput.value.trim() : (AppState.currentUser?.fullName || AppState.operatorName || 'ฝ่ายวิชาการ (ทีม B)');
+      if (reviewerName) {
+        AppState.operatorName = reviewerName;
+        localStorage.setItem('ems_operator_name', reviewerName);
+      }
       const notes = document.getElementById('teamBNotes-' + eventId)?.value || '';
 
       const payload = {
@@ -11371,8 +11451,10 @@
         speakerSignature: speakers[0]?.signature || null,
         actualBudget: actualBudget,
         actualTrainees: actualTrainees,
+        targetSales: targetSales,
         teamBNotes: notes,
-        operatorName: AppState.operatorName
+        reviewedBy: reviewerName,
+        operatorName: reviewerName
       };
 
       if (speaker) {
@@ -11388,8 +11470,9 @@
           if (speakers[0]?.signature) req.speakerSignature = speakers[0].signature;
           req.actualBudget = actualBudget;
           req.actualTrainees = actualTrainees;
+          req.targetSales = targetSales;
           req.teamBNotes = notes;
-          req.reviewedBy = AppState.operatorName;
+          req.reviewedBy = reviewerName;
           req.reviewedByBAt = new Date().toISOString();
           localStorage.setItem('twp_requests_store', JSON.stringify(AppState.requests));
         }
@@ -11956,7 +12039,7 @@
       const actualBudget = Number(req.actualBudget) || estBudget;
       const targetSales = Number(req.targetSales) || 0;
       const costRatio = targetSales > 0 ? ((actualBudget / targetSales) * 100).toFixed(1) : '0.0';
-      const expectedTrainees = Number(req.expectedTrainees) || 50;
+      const expectedTrainees = Number(req.actualTrainees) || Number(req.expectedTrainees) || 50;
       const evalCount = req.evalCount > 0 ? req.evalCount : Math.min(expectedTrainees, Math.max(35, Math.floor(expectedTrainees * 0.96)));
       
       // Attendance & Evaluation Participation Rate (%)
@@ -12974,7 +13057,7 @@ function renderA4EvalReportHtmlClient(d) {
           </table>
 
           <div style="margin-top:14px; padding-top:4px; border-top:1px solid #e2e8f0; font-size:8.5pt; color:#94a3b8; text-align:center;">
-            เอกสารฉบับนี้สร้างโดยระบบ Training Center TWP (EMS Enterprise Platform v1.22.10) • ใช้สำหรับติดตามและควบคุมผลการปฏิบัติงานภายใน (PPC Standard)
+            เอกสารฉบับนี้สร้างโดยระบบ Training Center TWP (EMS Enterprise Platform v1.22.11) • ใช้สำหรับติดตามและควบคุมผลการปฏิบัติงานภายใน (PPC Standard)
           </div>
         </div>
       `;
@@ -12992,16 +13075,19 @@ function renderA4EvalReportHtmlClient(d) {
             if (res.data && res.data.fileUrl) {
               window.open(res.data.fileUrl, '_blank');
               showAlert('สร้างและส่งออกรายงานสรุป PDF A4 เรียบร้อยแล้ว', 'success');
+            } else {
+              showAlert('เปิดหน้าต่างพรีวิวรายงานเพื่อตรวจสอบและบันทึกเป็น PDF (Print to PDF)', 'info');
+              openFullReportPreview(true);
             }
           })
           .catch(err => {
             btn.innerHTML = originalHtml;
-            showAlert('ส่งออก PDF ผ่านเบราว์เซอร์แทน (Print to PDF)', 'info');
-            printReportContainer();
+            showAlert('เปิดหน้าต่างพรีวิวรายงานเพื่อตรวจสอบและบันทึกเป็น PDF (Print to PDF)', 'info');
+            openFullReportPreview(true);
           });
       } else {
-        showAlert('เปิดหน้าต่างสั่งพิมพ์เพื่อบันทึกเป็น PDF (Print to PDF)', 'info');
-        printReportContainer();
+        showAlert('เปิดหน้าต่างพรีวิวรายงานเพื่อตรวจสอบและบันทึกเป็น PDF (Print to PDF)', 'info');
+        openFullReportPreview(true);
       }
     }
 
@@ -13071,51 +13157,153 @@ function renderA4EvalReportHtmlClient(d) {
       showAlert('ดาวน์โหลดไฟล์เอกสาร Microsoft Word (.doc) สำเร็จแล้ว', 'success');
     }
 
-    function printReportContainer() {
+    function openFullReportPreview(triggerPrintAfterLoad = false) {
       const printContents = document.getElementById('ppcReportPaper').innerHTML;
       const isLandscape = (currentReportDocType === 'CERTIFICATE');
       const docTitle = currentReportDocType === 'MEMO' ? 'บันทึกขออนุมัติปฏิบัติงาน A4 - ' + (currentReportEventId || '') :
                        currentReportDocType === 'EVAL_REPORT' ? 'รายงานผลการประเมิน 10 ข้อและต้นทุนต่อหัว A4 - ' + (currentReportEventId || '') :
                        currentReportDocType === 'CERTIFICATE' ? 'แม่แบบวุฒิบัตรกลาง A4 แนวนอน - ' + (currentReportEventId || '') :
                        'รายงานสรุปผลการปฏิบัติงาน PPC - ' + (currentReportEventId || '');
-      const win = window.open('', '', isLandscape ? 'height=750,width=1050' : 'height=850,width=950');
+      const win = window.open('', '_blank', isLandscape ? 'height=850,width=1150' : 'height=950,width=980');
+      if (!win) {
+        showAlert('เบราว์เซอร์บล็อกหน้าต่างใหม่ กรุณากดยินยอมเปิดป๊อปอัปเพื่อดูพรีวิว', 'warning');
+        return;
+      }
       win.document.write(`
         <!DOCTYPE html>
         <html lang="th">
         <head>
           <meta charset="utf-8">
-          <title>${docTitle}</title>
+          <title>${docTitle} - พรีวิวรายงาน A4</title>
           <link rel="preconnect" href="https://fonts.googleapis.com">
           <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
           <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+          <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
           <style>
             @page { 
               size: A4 ${isLandscape ? 'landscape' : 'portrait'}; 
-              margin: ${isLandscape ? '8mm' : '25mm 20mm 25mm 30mm'}; 
+              margin: ${isLandscape ? '8mm' : '20mm 15mm 20mm 20mm'}; 
             }
             body { 
               font-family: 'TH Sarabun New', 'TH Sarabun PSK', 'Sarabun', sans-serif; 
               font-size: 12pt;
               margin: 0; 
               padding: 0; 
+              background-color: #525659;
               color: #0f172a;
               -webkit-print-color-adjust: exact;
               print-color-adjust: exact;
             }
             * { box-sizing: border-box; }
+            .preview-toolbar {
+              position: fixed;
+              top: 0;
+              left: 0;
+              right: 0;
+              height: 54px;
+              background: #2b3035;
+              color: #ffffff;
+              display: flex;
+              align-items: center;
+              justify-content: space-between;
+              padding: 0 18px;
+              box-shadow: 0 2px 10px rgba(0,0,0,0.4);
+              z-index: 99999;
+              font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+              font-size: 13px;
+            }
+            .preview-btn {
+              padding: 7px 14px;
+              border-radius: 8px;
+              font-weight: 700;
+              cursor: pointer;
+              border: none;
+              display: inline-flex;
+              align-items: center;
+              gap: 6px;
+              transition: all 0.15s ease;
+              font-size: 12px;
+            }
+            .btn-print { background: #08539E; color: white; }
+            .btn-print:hover { background: #0b68c4; }
+            .btn-pdf { background: #dc2626; color: white; }
+            .btn-pdf:hover { background: #b91c1c; }
+            .btn-util { background: #4b5563; color: white; }
+            .btn-util:hover { background: #6b7280; }
+            .preview-content-wrapper {
+              margin-top: 72px;
+              margin-bottom: 50px;
+              display: flex;
+              justify-content: center;
+            }
+            .paper-sheet {
+              background: white;
+              width: ${isLandscape ? '297mm' : '210mm'};
+              min-height: ${isLandscape ? '210mm' : '297mm'};
+              padding: ${isLandscape ? '10mm' : '22mm'};
+              box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+              border-radius: 4px;
+              transform-origin: top center;
+              transition: transform 0.2s ease;
+            }
+            @media print {
+              .preview-toolbar { display: none !important; }
+              body { background: white !important; margin: 0 !important; padding: 0 !important; }
+              .preview-content-wrapper { margin: 0 !important; padding: 0 !important; display: block !important; }
+              .paper-sheet {
+                width: 100% !important;
+                min-height: 100% !important;
+                padding: 0 !important;
+                box-shadow: none !important;
+                border-radius: 0 !important;
+                transform: none !important;
+              }
+            }
           </style>
         </head>
         <body>
-          ${printContents}
+          <div class="preview-toolbar">
+            <div style="display:flex; align-items:center; gap:10px;">
+              <i class="fa-solid fa-file-lines" style="color:#38bdf8; font-size:18px;"></i>
+              <div>
+                <strong>${docTitle}</strong>
+                <span style="font-size:11px; color:#cbd5e1; display:block;">พรีวิวเอกสารขนาด A4 • ตรวจทานความถูกต้องก่อนสั่งพิมพ์หรือส่งออก</span>
+              </div>
+            </div>
+            <div style="display:flex; align-items:center; gap:8px;">
+              <button onclick="zoomPaper(1)" class="preview-btn btn-util"><i class="fa-solid fa-magnifying-glass-plus"></i> ขยาย</button>
+              <button onclick="zoomPaper(-1)" class="preview-btn btn-util"><i class="fa-solid fa-magnifying-glass-minus"></i> ย่อ</button>
+              <button onclick="zoomPaper(0)" class="preview-btn btn-util"><i class="fa-solid fa-arrows-rotate"></i> 100%</button>
+              <button onclick="window.print()" class="preview-btn btn-pdf" title="เลือก Destination / เครื่องพิมพ์ เป็น 'Save as PDF' (บันทึกเป็น PDF)"><i class="fa-solid fa-file-pdf"></i> บันทึกเป็น PDF</button>
+              <button onclick="window.print()" class="preview-btn btn-print"><i class="fa-solid fa-print"></i> สั่งพิมพ์ A4</button>
+              <button onclick="window.close()" class="preview-btn btn-util" style="background:#e11d48;"><i class="fa-solid fa-xmark"></i> ปิด</button>
+            </div>
+          </div>
+          <div class="preview-content-wrapper">
+            <div id="paperSheet" class="paper-sheet">
+              ${printContents}
+            </div>
+          </div>
+          <script>
+            let currentScale = 1.0;
+            function zoomPaper(dir) {
+              if (dir === 0) currentScale = 1.0;
+              else currentScale += (dir * 0.1);
+              if (currentScale < 0.5) currentScale = 0.5;
+              if (currentScale > 1.6) currentScale = 1.6;
+              document.getElementById('paperSheet').style.transform = 'scale(' + currentScale + ')';
+            }
+            ${triggerPrintAfterLoad ? `setTimeout(() => { window.print(); }, 500);` : ''}
+          <\/script>
         </body>
         </html>
       `);
       win.document.close();
       win.focus();
-      setTimeout(() => {
-        win.print();
-        win.close();
-      }, 500);
+    }
+
+    function printReportContainer() {
+      openFullReportPreview(true);
     }
 
         function openAdminModal() {
@@ -15254,7 +15442,7 @@ function renderA4EvalReportHtmlClient(d) {
           <div>
             <div class="flex items-center space-x-2">
               <h3 class="font-bold text-slate-900 text-lg">ประวัติและการปรับปรุงระบบเวอร์ชัน (Release Notes)</h3>
-              <span class="bg-blue-100 text-[#08539E] text-xs font-bold font-mono px-2 py-0.5 rounded-full">v1.22.10 Current</span>
+              <span class="bg-blue-100 text-[#08539E] text-xs font-bold font-mono px-2 py-0.5 rounded-full">v1.22.11 Current</span>
             </div>
             <p class="text-xs text-slate-500">บันทึกประวัติการปรับปรุงสถาปัตยกรรมและฟังก์ชันการทำงานอย่างละเอียด</p>
           </div>
@@ -15267,14 +15455,31 @@ function renderA4EvalReportHtmlClient(d) {
       <!-- Release Timeline List -->
       <div class="space-y-4">
         
-        <!-- v1.22.10 (Current Major Release) -->
+        <!-- v1.22.11 (Current Major Release) -->
         <div class="p-5 bg-gradient-to-br from-emerald-50 via-white to-teal-50/70 border-2 border-emerald-400 rounded-3xl space-y-3 shadow-sm">
           <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-1">
             <div class="flex items-center space-x-2">
-              <span class="bg-emerald-600 text-white text-xs font-black px-2.5 py-0.5 rounded-lg font-mono">v1.22.10</span>
-              <span class="font-bold text-slate-900 text-sm">Annual Principle Plans Cloud Sync & Top Team A Ledger</span>
+              <span class="bg-emerald-600 text-white text-xs font-black px-2.5 py-0.5 rounded-lg font-mono">v1.22.11</span>
+              <span class="font-bold text-slate-900 text-sm">Team B Operator Identity, Live Attendees/Sales Edit & Full A4 Report Preview</span>
             </div>
             <span class="text-[11px] text-emerald-700 font-bold font-mono">2026-11-16 &bull; Current Release</span>
+          </div>
+          <ul class="text-xs text-slate-700 space-y-2 list-disc list-inside leading-relaxed">
+            <li><strong>Team B Operator Identity Sync:</strong> ชื่อผู้ตรวจทานฝ่ายวิชาการ (ทีม B) จะดึงจากบัญชีผู้ใช้ที่ล็อกอินจริง (AppState.currentUser) โดยอัตโนมัติ พร้อมกล่องข้อความให้ระบุหรือแก้ไขชื่อจริงได้โดยตรงบนการ์ดตรวจงาน และบันทึกเข้า Google Sheets (Col 21 Reviewed_By & Col 23 Last_Modified_By)</li>
+            <li><strong>Editable Actual Attendees for Accurate Expense Analysis:</strong> เปิดให้ทีม B สามารถแก้ไขจำนวนผู้เข้าอบรมจริงได้ตลอดเวลา ทั้งในขั้นตอนรับงานที่ 1, ขั้นตอนที่ 2 (ปุ่ม [แก้] อัปเดตทันที), และในหน้าวิเคราะห์ค่าใช้จ่าย 7 หมวด เพื่อนำไปคำนวณต้นทุนเฉลี่ยต่อหัว (Actual Cost per Head) ได้อย่างแม่นยำ</li>
+            <li><strong>Impacted Target Sales Adjustment & Realtime ROI:</strong> ทีม B สามารถปรับยอดขายที่คาดว่าจะได้รับผลกระทบจากการจัดอบรมได้โดยตรง พร้อมระบบคำนวณสัดส่วนงบประมาณต่อเป้าหมายยอดขาย (% ROI) แบบเรียลไทม์ และบันทึกลง Google Sheets (Col 15 Target_Sales)</li>
+            <li><strong>Full-Featured Interactive A4 Document Preview:</strong> ยกระดับระบบพรีวิวรายงานเอกสาร A4 เต็มตา (Full-screen Interactive Preview) พร้อมแถบเครื่องมือปรับซูม (Zoom 75%-150%), ปุ่มพิมพ์ A4 และปุ่ม Save PDF โดยหน้าจอพรีวิวไม่ปิดตัวเองลงหลังสั่งพิมพ์</li>
+          </ul>
+        </div>
+
+        <!-- v1.22.10 -->
+        <div class="p-5 bg-gradient-to-br from-slate-50 via-white to-slate-100/70 border border-slate-200 rounded-3xl space-y-3 shadow-xs">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-1">
+            <div class="flex items-center space-x-2">
+              <span class="bg-slate-700 text-white text-xs font-black px-2.5 py-0.5 rounded-lg font-mono">v1.22.10</span>
+              <span class="font-bold text-slate-900 text-sm">Annual Principle Plans Cloud Sync & Top Team A Ledger</span>
+            </div>
+            <span class="text-[11px] text-slate-500 font-bold font-mono">2026-11-16</span>
           </div>
           <ul class="text-xs text-slate-700 space-y-2 list-disc list-inside leading-relaxed">
             <li><strong>Annual Principle Plans Cloud Synchronization:</strong> เชื่อมต่อระบบดึงข้อมูลโครงการอนุมัติหลักการประจำปีจากตาราง Annual_Plans บน Google Sheets อัตโนมัติ แสดงผลบนหน้าโครงการอนุมัติหลักการ (view-annualPlan) และตัวเลือกแบบฟอร์มทีม A ทันที</li>
@@ -15534,9 +15739,9 @@ function renderA4EvalReportHtmlClient(d) {
           <div>
             <div class="flex items-center space-x-2">
               <span class="text-xs bg-emerald-500/30 text-emerald-300 border border-emerald-400/40 px-2 py-0.5 rounded-full font-mono font-bold">Release Note</span>
-              <span class="text-xs text-slate-300">อัปเดตระบบเวอร์ชัน 1.22.10</span>
+              <span class="text-xs text-slate-300">อัปเดตระบบเวอร์ชัน 1.22.11</span>
             </div>
-            <h2 class="text-lg sm:text-xl font-black text-white mt-1">ประกาศอัปเดตระบบ Training Center TWP v1.22.10</h2>
+            <h2 class="text-lg sm:text-xl font-black text-white mt-1">ประกาศอัปเดตระบบ Training Center TWP v1.22.11</h2>
           </div>
         </div>
         <button type="button" onclick="closeWhatsNewModal()" class="text-white/70 hover:text-white text-xl p-1 cursor-pointer">
@@ -15548,17 +15753,18 @@ function renderA4EvalReportHtmlClient(d) {
       <div class="p-6 overflow-y-auto custom-scrollbar space-y-3.5 text-xs">
         <div class="p-3.5 bg-gradient-to-r from-emerald-50 to-teal-50 border-2 border-emerald-400 rounded-2xl space-y-2 mb-3 shadow-xs">
           <div class="flex items-center space-x-2">
-            <span class="px-2 py-0.5 rounded-full text-[10px] font-black bg-emerald-700 text-white">ไฮไลต์ v1.22.10</span>
-            <span class="font-bold text-slate-900 text-xs sm:text-sm">ซิงค์โครงการอนุมัติหลักการประจำปี (Annual Plans) ตรงจาก Google Sheets เข้าสู่ระบบแบบอัตโนมัติ</span>
+            <span class="px-2 py-0.5 rounded-full text-[10px] font-black bg-emerald-700 text-white">ไฮไลต์ v1.22.11</span>
+            <span class="font-bold text-slate-900 text-xs sm:text-sm">ยกระดับทีม B (ระบุตัวตนผู้ตรวจ, แก้ไขยอดผู้เข้าอบรม & เป้าขายจริง) และหน้าต่างพรีวิวรายงานเอกสาร A4 เต็มตา</span>
           </div>
           <p class="text-slate-700 leading-relaxed font-medium">
-            1) <strong>เชื่อมต่อแผนหลักการจากคลาวด์สด:</strong> ระบบเชื่อมต่อตาราง <code>Annual_Plans</code> ใน Google Sheets ดึงข้อมูลโครงการอนุมัติหลักการประจำปี 2569 มาแสดงผลบนหน้าจอ "โครงการอนุมัติหลักการประจำปี" (view-annualPlan) และบรรจุลงตัวเลือกแบบฟอร์มทีม A อัตโนมัติ โดยไม่ต้องพึ่งพาข้อมูลค้างใน LocalStorage เพียงอย่างเดียว<br>
-            2) <strong>เพิ่มปุ่ม [ 🔄 ซิงค์แผนจากคลาวด์ ]:</strong> บนหน้าจอโครงการอนุมัติหลักการ มีปุ่มกดซิงค์ข้อมูลตรงจาก Google Sheets ได้ทันทีทุกเมื่อ พร้อมสถานะแจ้งเตือนจำนวนโครงการที่ซิงค์สำเร็จ<br>
-            3) <strong>จัดวางตารางประวัติคำขอทีม A ไว้บนสุด:</strong> เพิ่มความสะดวกให้ฝ่ายขายและ Admin ตรวจสอบงานที่สร้างไว้ได้ทันทีก่อนกรอกคำขอใหม่ พร้อมตัวชี้วัดแบบเรียลไทม์
+            1) <strong>ชื่อผู้ตรวจทานทีม B ซิงค์ตรงจากบัญชีล็อกอิน:</strong> ดึงชื่อจริงจากบัญชีผู้ใช้ปัจจุบันอัตโนมัติ พร้อมช่องให้พิมพ์ระบุ/แก้ไขชื่อผู้ตรวจทานฝ่ายวิชาการได้ทันทีบนการ์ดงาน และบันทึกประวัติลง Google Sheets<br>
+            2) <strong>แก้ไขจำนวนผู้เข้าอบรมจริง (Actual Attendees):</strong> ทีม B สามารถแก้ไขจำนวนผู้เข้าอบรมจริงได้ตลอดเวลา ทั้งในขั้นตอนรับงานที่ 1, ขั้นตอนที่ 2 (ปุ่ม [แก้]), และในหน้าสรุปเงิน 7 หมวด เพื่อวิเคราะห์ต้นทุนเฉลี่ยต่อหัว (Cost per Head) ตามจริง<br>
+            3) <strong>แก้ไขเป้าหมายยอดขายที่กระทบ (Target Sales):</strong> ทีม B สามารถปรับยอดขายประเมินตามพื้นที่หน้างานจริง พร้อมคำนวณสัดส่วนงบประมาณต่อยอดขาย (% ROI) แบบเรียลไทม์ และบันทึกลง Google Sheets<br>
+            4) <strong>ระบบพรีวิวรายงานเอกสาร A4 เต็มตา (Full A4 Preview):</strong> เพิ่มหน้าจอพรีวิวแบบ Interactive พร้อมเครื่องมือย่อ/ขยาย (Zoom), พิมพ์ A4 และ Save PDF โดยหน้าจอพรีวิวไม่ปิดตัวเองลงหลังสั่งพิมพ์
           </p>
         </div>
         <p class="text-slate-600 font-medium leading-relaxed">
-          สรุปรายละเอียดการพัฒนาต่อเนื่องของระบบ <strong>Enterprise Governance & Cross-Team Real-time Sync Edition (v1.22.10)</strong>:
+          สรุปรายละเอียดการพัฒนาต่อเนื่องของระบบ <strong>Enterprise Governance & Cross-Team Real-time Sync Edition (v1.22.11)</strong>:
         </p>
 
         <!-- Feature 1 -->
