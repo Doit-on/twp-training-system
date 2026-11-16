@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-  <title>Training Center TWP - ระบบบริหารคำขอจัดอบรมและประเมินผล v1.22.6</title>
+  <title>Training Center TWP - ระบบบริหารคำขอจัดอบรมและประเมินผล v1.22.7</title>
   <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
   <!-- Google Fonts: Sarabun -->
@@ -313,10 +313,10 @@
       </div>
       <div class="flex items-center space-x-2 sm:space-x-3 text-xs">
         <!-- Release Notes Button on Landing -->
-        <button type="button" onclick="openWhatsNewModal()" class="bg-amber-400/20 hover:bg-amber-400/30 text-amber-200 px-3 py-1.5 rounded-full border border-amber-300/40 backdrop-blur-sm font-bold flex items-center space-x-1.5 transition cursor-pointer" title="ดูรายละเอียดการอัปเดตระบบ v1.22.6">
+        <button type="button" onclick="openWhatsNewModal()" class="bg-amber-400/20 hover:bg-amber-400/30 text-amber-200 px-3 py-1.5 rounded-full border border-amber-300/40 backdrop-blur-sm font-bold flex items-center space-x-1.5 transition cursor-pointer" title="ดูรายละเอียดการอัปเดตระบบ v1.22.7">
           <i class="fa-solid fa-bullhorn text-amber-300 animate-pulse"></i>
           <span class="hidden sm:inline">อัปเดต</span>
-          <span class="bg-emerald-500 text-white font-mono font-black text-[10px] px-1.5 py-0.2 rounded-full">v1.22.6</span>
+          <span class="bg-emerald-500 text-white font-mono font-black text-[10px] px-1.5 py-0.2 rounded-full">v1.22.7</span>
         </button>
         <!-- Team Login Gate Button / User Badge -->
         <button id="landingLoginBtn" type="button" onclick="openSwitchProfileModal()" class="bg-gradient-to-r from-amber-400 to-amber-500 hover:from-amber-300 hover:to-amber-400 text-slate-950 font-black px-3.5 py-1.5 rounded-xl shadow-md transition cursor-pointer flex items-center space-x-1.5">
@@ -359,7 +359,7 @@
       </div>
 
       <!-- Mandatory Login Gate Alert Card on Landing Page (if not logged in) -->
-      <!-- Comprehensive Enterprise Team Sign-In Card (v1.22.6) -->
+      <!-- Comprehensive Enterprise Team Sign-In Card (v1.22.7) -->
       <!-- Enterprise Sign-In Card (Standard Secure Authentication) -->
       <div id="landingLoginSection" class="max-w-md mx-auto w-full bg-white text-slate-800 rounded-3xl p-6 sm:p-8 shadow-2xl border border-slate-200/80 space-y-5 text-left relative z-20 animate-fadeIn">
         
@@ -470,7 +470,7 @@
     <!-- Bottom Footer on Landing Page -->
     <div class="max-w-7xl mx-auto w-full px-6 py-4 flex flex-col sm:flex-row items-center justify-between text-xs text-blue-200 border-t border-white/10 relative z-10 gap-2">
       <div>&copy; 2026 Training Center TWP - บริษัท ไทยวัฒนาพานิช จำกัด. All rights reserved.</div>
-      <div class="font-mono text-[11px] bg-white/10 px-3 py-1 rounded-full border border-white/15">EMS Enterprise Platform v1.22.6 (Live Apps Script Engine)</div>
+      <div class="font-mono text-[11px] bg-white/10 px-3 py-1 rounded-full border border-white/15">EMS Enterprise Platform v1.22.7 (Live Apps Script Engine)</div>
     </div>
 
   </div>
@@ -495,7 +495,7 @@
           <div class="sidebar-brand-text truncate">
             <div class="flex items-center space-x-1.5">
               <span class="font-extrabold text-sm tracking-wide text-white">TWP</span>
-              <span onclick="openVersionReleaseModal()" class="bg-blue-400/20 hover:bg-blue-400/30 text-blue-200 text-[9px] font-mono px-1.5 py-0.5 rounded-full border border-blue-300/30 cursor-pointer transition flex items-center gap-1" title="คลิกดูรายละเอียดเวอร์ชัน v1.22.6"><i class="fa-solid fa-sparkles text-amber-300 text-[8px]"></i><span class="bg-emerald-500 text-white font-black px-2 py-0.5 rounded-full">v1.22.6</span></span>
+              <span onclick="openVersionReleaseModal()" class="bg-blue-400/20 hover:bg-blue-400/30 text-blue-200 text-[9px] font-mono px-1.5 py-0.5 rounded-full border border-blue-300/30 cursor-pointer transition flex items-center gap-1" title="คลิกดูรายละเอียดเวอร์ชัน v1.22.7"><i class="fa-solid fa-sparkles text-amber-300 text-[8px]"></i><span class="bg-emerald-500 text-white font-black px-2 py-0.5 rounded-full">v1.22.7</span></span>
             </div>
             <p class="text-[10px] text-blue-200 truncate">ระบบบริหารงานฝึกอบรม</p>
           </div>
@@ -3338,7 +3338,7 @@
               <i class="fa-solid fa-code-compare text-amber-300"></i>
               <span class="text-xs font-bold uppercase tracking-wider">รายละเอียดการปรับปรุงเวอร์ชัน (Version Release Notes)</span>
             </div>
-            <span class="text-[10px] bg-amber-400 text-slate-950 font-black px-2 py-0.5 rounded-full">v1.22.6 Live</span>
+            <span class="text-[10px] bg-amber-400 text-slate-950 font-black px-2 py-0.5 rounded-full">v1.22.7 Live</span>
           </div>
           <p class="text-xs text-blue-100 leading-relaxed">
             <strong>v1.22.0 (Enterprise Compact QR & Drive Standard):</strong> ปรับขนาดหน้าต่างแท่นแสดงผล QR Code ให้กะทัดรัด (Compact Responsive) รองรับโน้ตบุ๊กทุกขนาดหน้าจอ, เพิ่มปุ่มปิดหน้าต่างทั้งบน ล่าง และกด Esc/คลิกนอกกรอบเพื่อปิดได้ทันที, พร้อมกำหนด Google Drive โฟลเดอร์กลางสำหรับเก็บเอกสารโครงการ
@@ -4343,7 +4343,7 @@
           <div>
             <div class="flex items-center space-x-2">
               <span class="text-xs bg-emerald-500/30 text-emerald-300 border border-emerald-400/40 px-2 py-0.5 rounded-full font-mono font-bold">Authentication Gate</span>
-              <span class="text-xs text-slate-300">v1.22.6</span>
+              <span class="text-xs text-slate-300">v1.22.7</span>
             </div>
             <h3 class="font-black text-white text-base sm:text-lg mt-0.5">เข้าสู่ระบบประจำทีม (Team Sign-In)</h3>
           </div>
@@ -4506,7 +4506,7 @@
       </div>
 
     </div>
-  </div>\n\n  
+  </div>  
 <!-- ========================================== -->
   <div id="addMemberModal" class="hidden fixed inset-0 z-50 bg-slate-900/70 backdrop-blur-sm flex items-center justify-center p-4">
     <div class="bg-white rounded-3xl max-w-md w-full p-6 space-y-4 shadow-2xl">
@@ -4765,7 +4765,7 @@
 
     // System Global State (Synchronously initialized with complete Master Data)
     const AppState = {
-      version: '1.22.6',
+      version: '1.22.7',
       clientId: 'DEV-' + Math.random().toString(36).substring(2, 7).toUpperCase(),
       activeTab: 'dashboard',
       activeDevices: {},
@@ -4811,7 +4811,7 @@
 
     // Landing Page Navigation & Authentication Gate
     
-    // ------------------- ENTERPRISE TEAM AUTHENTICATION HANDLERS (v1.22.6) -------------------
+    // ------------------- ENTERPRISE TEAM AUTHENTICATION HANDLERS (v1.22.7) -------------------
     
     
 
@@ -5925,7 +5925,7 @@
         if (epInput) epInput.value = AppState.gasEndpoint;
       }
 
-      // 1.1 Check Release Notes Popup (v1.22.6) and Mandatory Login Gate on System Enter
+      // 1.1 Check Release Notes Popup (v1.22.7) and Mandatory Login Gate on System Enter
       checkAndShowWhatsNewOnEnter();
       
       // 2. Fetch latest cloud updates asynchronously in background without blocking UI
@@ -6854,6 +6854,39 @@
     }
 
     // --- 2. Team A My Requests & Handover Tracking ---
+    function deleteTeamARequest(eventId) {
+      if (!eventId) return;
+      if (!confirm('ยืนยันการลบคำขอจัดอบรม ' + eventId + ' หรือไม่?\n(รายการจะถูกลบออกจากระบบและแจ้งยกเลิกไปยังทุกทีม)')) return;
+
+      // 1. Delete locally from AppState.requests
+      AppState.requests = (AppState.requests || []).filter(r => r.eventId !== eventId);
+      addDeletedRequestId(eventId);
+      try {
+        localStorage.setItem('twp_requests_store', JSON.stringify(AppState.requests));
+      } catch(e) {}
+
+      // 2. Synchronize deletion to Google Apps Script
+      if (AppState.gasEndpoint) {
+        postToBackend('DELETE_EVENT_REQUEST', { eventId: eventId })
+          .then(res => {
+            console.log('DELETE_EVENT_REQUEST synced to cloud:', res);
+          })
+          .catch(err => {
+            console.warn('DELETE_EVENT_REQUEST error:', err);
+          });
+      }
+
+      // 3. Immediately update all views
+      renderAll();
+      renderTeamAMyRequests();
+      renderTeamBQueue();
+      renderDashboard();
+      updateQueueBadges();
+      renderActionInbox();
+      showAlert('✅ ลบคำขอ ' + eventId + ' เรียบร้อยแล้ว', 'success');
+      notifyDataUpdated('DELETE_REQUEST');
+    }
+
     function renderTeamAMyRequests() {
       const tbody = document.getElementById('teamAMyRequestsTableBody');
       if (!tbody) return;
@@ -6868,30 +6901,70 @@
         let statusBadge = '';
         let actionBtn = '';
 
+        const canDelete = req.status === 'WAITING_B' || req.status === 'REJECTED' || req.status === 'UNLOCKED_FOR_EDIT' || (AppState.currentUser && (AppState.currentUser.teamRole === 'ADMIN' || AppState.currentUser.team === 'ADMIN'));
+
         if (req.status === 'WAITING_B') {
           statusBadge = '<span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold bg-amber-50 text-amber-700 border border-amber-200"><i class="fa-solid fa-hourglass-start mr-1"></i>รอทีม B ตรวจสอบ</span>';
-          actionBtn = '<button type="button" onclick="editTeamARequest(\'' + req.eventId + '\')" class="px-2.5 py-1 bg-amber-500 hover:bg-amber-600 text-white rounded-lg text-xs font-bold transition flex items-center space-x-1 shadow-sm btn-tactile cursor-pointer mx-auto"><i class="fa-solid fa-pen text-[10px]"></i><span>แก้ไขคำขอ</span></button>';
+          actionBtn = `
+            <div class="flex items-center justify-center space-x-1.5">
+              <button type="button" onclick="editTeamARequest('${req.eventId}')" class="px-2.5 py-1 bg-amber-500 hover:bg-amber-600 text-white rounded-lg text-xs font-bold transition flex items-center space-x-1 shadow-xs btn-tactile cursor-pointer" title="แก้ไขคำขอ">
+                <i class="fa-solid fa-pen text-[10px]"></i><span>แก้ไข</span>
+              </button>
+              <button type="button" onclick="deleteTeamARequest('${req.eventId}')" class="px-2 py-1 bg-rose-50 hover:bg-rose-100 text-rose-600 border border-rose-200 rounded-lg text-xs font-bold transition flex items-center space-x-1 shadow-xs cursor-pointer" title="ลบคำขอนี้">
+                <i class="fa-solid fa-trash-can text-[10px]"></i><span>ลบ</span>
+              </button>
+            </div>
+          `;
         } else if (req.status === 'WAITING_EXEC') {
           statusBadge = '<span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold bg-indigo-50 text-indigo-700 border border-indigo-200"><i class="fa-solid fa-stamp mr-1"></i>รอผู้บริหารอนุมัติ</span>';
-          actionBtn = '<span class="inline-flex items-center text-[10px] text-slate-500 bg-slate-100 px-2 py-1 rounded font-bold"><i class="fa-solid fa-lock text-slate-400 mr-1"></i>ล็อกระหว่างพิจารณา</span>';
+          actionBtn = `
+            <div class="flex items-center justify-center space-x-1.5">
+              <span class="inline-flex items-center text-[10px] text-slate-500 bg-slate-100 px-2 py-1 rounded font-bold"><i class="fa-solid fa-lock text-slate-400 mr-1"></i>ล็อกระหว่างพิจารณา</span>
+              ${canDelete ? `<button type="button" onclick="deleteTeamARequest('${req.eventId}')" class="px-1.5 py-1 text-rose-500 hover:bg-rose-50 rounded" title="ลบคำขอโดย Admin"><i class="fa-solid fa-trash-can text-[10px]"></i></button>` : ''}
+            </div>
+          `;
         } else if (req.status === 'REVISION_REQUESTED') {
           statusBadge = '<span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold bg-amber-100 text-amber-900 border border-amber-300 animate-pulse"><i class="fa-solid fa-hourglass-half mr-1"></i>รอผู้บริหารปลดล็อก</span>';
           actionBtn = '<span class="inline-flex items-center text-[10px] text-amber-800 bg-amber-50 px-2 py-1 rounded font-bold border border-amber-200">ยื่นขอปรับแก้แล้ว</span>';
         } else if (req.status === 'UNLOCKED_FOR_EDIT') {
           statusBadge = '<span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-100 text-emerald-900 border border-emerald-300 animate-bounce"><i class="fa-solid fa-lock-open mr-1"></i>ปลดล็อกให้แก้ไข</span>';
-          actionBtn = '<button type="button" onclick="editTeamARequest(\'' + req.eventId + '\')" class="px-2.5 py-1 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg text-xs font-bold transition flex items-center space-x-1 shadow-sm btn-tactile cursor-pointer mx-auto"><i class="fa-solid fa-pen text-[10px]"></i><span>แก้ไขข้อมูลใหม่</span></button>';
+          actionBtn = `
+            <div class="flex items-center justify-center space-x-1.5">
+              <button type="button" onclick="editTeamARequest('${req.eventId}')" class="px-2.5 py-1 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg text-xs font-bold transition flex items-center space-x-1 shadow-xs btn-tactile cursor-pointer" title="แก้ไขข้อมูลใหม่">
+                <i class="fa-solid fa-pen text-[10px]"></i><span>แก้ไข</span>
+              </button>
+              <button type="button" onclick="deleteTeamARequest('${req.eventId}')" class="px-2 py-1 bg-rose-50 hover:bg-rose-100 text-rose-600 border border-rose-200 rounded-lg text-xs font-bold transition flex items-center space-x-1 shadow-xs cursor-pointer" title="ลบคำขอนี้">
+                <i class="fa-solid fa-trash-can text-[10px]"></i><span>ลบ</span>
+              </button>
+            </div>
+          `;
         } else if (req.status === 'APPROVED') {
           statusBadge = '<span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-50 text-emerald-700 border border-emerald-200"><i class="fa-solid fa-circle-check mr-1"></i>อนุมัติงบแล้ว</span>';
-          actionBtn = '<div class="flex items-center justify-center space-x-1"><span class="inline-flex items-center text-[10px] text-emerald-800 bg-emerald-100/60 px-1.5 py-0.5 rounded font-bold"><i class="fa-solid fa-lock mr-1"></i>ล็อกงบ</span><button type="button" onclick="openAuditRevisionModal(\'' + req.eventId + '\')" class="px-2 py-0.5 bg-slate-100 hover:bg-amber-100 text-slate-700 hover:text-amber-800 border border-slate-300 rounded text-[10px] font-bold transition cursor-pointer"><i class="fa-solid fa-shield-halved text-amber-600 mr-0.5"></i>ขอปรับแก้</button></div>';
+          actionBtn = `
+            <div class="flex items-center justify-center space-x-1">
+              <span class="inline-flex items-center text-[10px] text-emerald-800 bg-emerald-100/60 px-1.5 py-0.5 rounded font-bold"><i class="fa-solid fa-lock mr-1"></i>ล็อกงบ</span>
+              <button type="button" onclick="openAuditRevisionModal('${req.eventId}')" class="px-2 py-0.5 bg-slate-100 hover:bg-amber-100 text-slate-700 hover:text-amber-800 border border-slate-300 rounded text-[10px] font-bold transition cursor-pointer"><i class="fa-solid fa-shield-halved text-amber-600 mr-0.5"></i>ขอปรับแก้</button>
+              ${(AppState.currentUser && (AppState.currentUser.teamRole === 'ADMIN' || AppState.currentUser.team === 'ADMIN')) ? `<button type="button" onclick="deleteTeamARequest('${req.eventId}')" class="p-1 text-rose-500 hover:bg-rose-50 rounded" title="ลบโดย Admin"><i class="fa-solid fa-trash-can text-[10px]"></i></button>` : ''}
+            </div>
+          `;
         } else if (req.status === 'COMPLETED') {
           statusBadge = '<span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold bg-blue-50 text-blue-700 border border-blue-200"><i class="fa-solid fa-trophy mr-1"></i>จัดเสร็จสิ้น</span>';
           actionBtn = '<span class="inline-flex items-center text-[10px] text-slate-500 bg-slate-100 px-2 py-1 rounded font-bold"><i class="fa-solid fa-lock text-slate-400 mr-1"></i>ปิดโครงการแล้ว</span>';
         } else if (req.status === 'REJECTED') {
           statusBadge = '<span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold bg-rose-50 text-rose-700 border border-rose-200"><i class="fa-solid fa-ban mr-1"></i>ส่งกลับแก้ไข</span>';
-          actionBtn = '<button type="button" onclick="editTeamARequest(\'' + req.eventId + '\')" class="px-2.5 py-1 bg-rose-600 hover:bg-rose-700 text-white rounded-lg text-xs font-bold transition flex items-center space-x-1 shadow-sm btn-tactile cursor-pointer mx-auto"><i class="fa-solid fa-wrench text-[10px]"></i><span>แก้ไขใหม่</span></button>';
+          actionBtn = `
+            <div class="flex items-center justify-center space-x-1.5">
+              <button type="button" onclick="editTeamARequest('${req.eventId}')" class="px-2.5 py-1 bg-rose-600 hover:bg-rose-700 text-white rounded-lg text-xs font-bold transition flex items-center space-x-1 shadow-xs btn-tactile cursor-pointer" title="แก้ไขใหม่">
+                <i class="fa-solid fa-wrench text-[10px]"></i><span>แก้</span>
+              </button>
+              <button type="button" onclick="deleteTeamARequest('${req.eventId}')" class="px-2 py-1 bg-rose-50 hover:bg-rose-100 text-rose-600 border border-rose-200 rounded-lg text-xs font-bold transition flex items-center space-x-1 shadow-xs cursor-pointer" title="ลบคำขอนี้">
+                <i class="fa-solid fa-trash-can text-[10px]"></i><span>ลบ</span>
+              </button>
+            </div>
+          `;
         } else {
           statusBadge = '<span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold bg-slate-100 text-slate-700">' + (req.status || 'DRAFT') + '</span>';
-          actionBtn = '-';
+          actionBtn = canDelete ? `<button type="button" onclick="deleteTeamARequest('${req.eventId}')" class="px-2 py-1 text-rose-600 hover:bg-rose-50 border border-rose-200 rounded text-xs">ลบ</button>` : '-';
         }
 
         return `
@@ -7249,7 +7322,7 @@
     }
 
     function acknowledgeAndOpenLoginGate() {
-      localStorage.setItem('twp_acknowledged_version', '1.22.6');
+      localStorage.setItem('twp_acknowledged_version', '1.22.7');
       closeWhatsNewModal();
       if (!AppState.currentUser || !AppState.currentUser.userId) {
         setTimeout(() => {
@@ -7264,7 +7337,7 @@
 
     function checkAndShowWhatsNewOnEnter() {
       const ackVer = localStorage.getItem('twp_acknowledged_version');
-      if (ackVer !== '1.22.6') {
+      if (ackVer !== '1.22.7') {
         setTimeout(() => {
           openWhatsNewModal();
         }, 500);
@@ -12591,7 +12664,7 @@ function renderA4EvalReportHtmlClient(d) {
           </table>
 
           <div style="margin-top:14px; padding-top:4px; border-top:1px solid #e2e8f0; font-size:8.5pt; color:#94a3b8; text-align:center;">
-            เอกสารฉบับนี้สร้างโดยระบบ Training Center TWP (EMS Enterprise Platform v1.22.6) • ใช้สำหรับติดตามและควบคุมผลการปฏิบัติงานภายใน (PPC Standard)
+            เอกสารฉบับนี้สร้างโดยระบบ Training Center TWP (EMS Enterprise Platform v1.22.7) • ใช้สำหรับติดตามและควบคุมผลการปฏิบัติงานภายใน (PPC Standard)
           </div>
         </div>
       `;
@@ -12873,7 +12946,7 @@ function renderA4EvalReportHtmlClient(d) {
       }
       if (opInput) opInput.value = currentProfile.name;
 
-      // Update Sidebar Profile (v1.17.0 / v1.22.6)
+      // Update Sidebar Profile (v1.17.0 / v1.22.7)
       const sideName = document.getElementById('sideUserName');
       const sideRole = document.getElementById('sideUserRole');
       const sideAvatar = document.getElementById('sideUserAvatar');
@@ -14871,7 +14944,7 @@ function renderA4EvalReportHtmlClient(d) {
           <div>
             <div class="flex items-center space-x-2">
               <h3 class="font-bold text-slate-900 text-lg">ประวัติและการปรับปรุงระบบเวอร์ชัน (Release Notes)</h3>
-              <span class="bg-blue-100 text-[#08539E] text-xs font-bold font-mono px-2 py-0.5 rounded-full">v1.22.6 Current</span>
+              <span class="bg-blue-100 text-[#08539E] text-xs font-bold font-mono px-2 py-0.5 rounded-full">v1.22.7 Current</span>
             </div>
             <p class="text-xs text-slate-500">บันทึกประวัติการปรับปรุงสถาปัตยกรรมและฟังก์ชันการทำงานอย่างละเอียด</p>
           </div>
@@ -14884,11 +14957,11 @@ function renderA4EvalReportHtmlClient(d) {
       <!-- Release Timeline List -->
       <div class="space-y-4">
         
-        <!-- v1.22.6 (Current Major Release) -->
+        <!-- v1.22.7 (Current Major Release) -->
         <div class="p-5 bg-gradient-to-br from-emerald-50 via-white to-teal-50/70 border-2 border-emerald-400 rounded-3xl space-y-3 shadow-sm">
           <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-1">
             <div class="flex items-center space-x-2">
-              <span class="bg-emerald-600 text-white text-xs font-black px-2.5 py-0.5 rounded-lg font-mono">v1.22.6</span>
+              <span class="bg-emerald-600 text-white text-xs font-black px-2.5 py-0.5 rounded-lg font-mono">v1.22.7</span>
               <span class="font-bold text-slate-900 text-sm">Landing Page Login Gate, Release Notes Popup & Attendee Individual Edit/Delete</span>
             </div>
             <span class="text-[11px] text-emerald-700 font-bold font-mono">2026-11-14 &bull; Current Release</span>
@@ -15121,7 +15194,7 @@ function renderA4EvalReportHtmlClient(d) {
 
 
 
-  <!-- Modal: What's New Release Notes (v1.22.6) -->
+  <!-- Modal: What's New Release Notes (v1.22.7) -->
   <div id="whatsNewModal" class="hidden fixed inset-0 z-[9999] flex items-center justify-center bg-black/75 backdrop-blur-md p-4 animate-fadeIn">
     <div class="bg-white rounded-3xl max-w-2xl w-full max-h-[90vh] flex flex-col shadow-2xl border border-slate-200 overflow-hidden">
       
@@ -15134,9 +15207,9 @@ function renderA4EvalReportHtmlClient(d) {
           <div>
             <div class="flex items-center space-x-2">
               <span class="text-xs bg-emerald-500/30 text-emerald-300 border border-emerald-400/40 px-2 py-0.5 rounded-full font-mono font-bold">Release Note</span>
-              <span class="text-xs text-slate-300">อัปเดตระบบเวอร์ชัน 1.22.6</span>
+              <span class="text-xs text-slate-300">อัปเดตระบบเวอร์ชัน 1.22.7</span>
             </div>
-            <h2 class="text-lg sm:text-xl font-black text-white mt-1">ประกาศอัปเดตระบบ Training Center TWP v1.22.6</h2>
+            <h2 class="text-lg sm:text-xl font-black text-white mt-1">ประกาศอัปเดตระบบ Training Center TWP v1.22.7</h2>
           </div>
         </div>
         <button type="button" onclick="closeWhatsNewModal()" class="text-white/70 hover:text-white text-xl p-1 cursor-pointer">
@@ -15148,17 +15221,17 @@ function renderA4EvalReportHtmlClient(d) {
       <div class="p-6 overflow-y-auto custom-scrollbar space-y-3.5 text-xs">
         <div class="p-3.5 bg-gradient-to-r from-blue-50 to-indigo-50 border-2 border-blue-300 rounded-2xl space-y-2 mb-3 shadow-xs">
           <div class="flex items-center space-x-2">
-            <span class="px-2 py-0.5 rounded-full text-[10px] font-black bg-[#08539E] text-white">ไฮไลต์ v1.22.6</span>
-            <span class="font-bold text-slate-900 text-xs sm:text-sm">ระบบผูกตัวตนอัตโนมัติ (Zero Residual Name) & ปลดล็อกการส่งงานทีม A สู่ทีม B และ Admin ทันที</span>
+            <span class="px-2 py-0.5 rounded-full text-[10px] font-black bg-[#08539E] text-white">ไฮไลต์ v1.22.7</span>
+            <span class="font-bold text-slate-900 text-xs sm:text-sm">ลบข้อความตกค้างมุมขวาบน, เพิ่มปุ่มลบคำขอสำหรับทีม A & ซิงค์คำขอทีม A สู่ Admin ทันที</span>
           </div>
           <p class="text-slate-700 leading-relaxed font-medium">
-            1) <strong>ปลดล็อกชื่อผู้ใช้ตกค้าง & เชื่อมโยงบัญชีจริง:</strong> ลบการฝังชื่อจำลองเก่า ("สมชาย มุ่งมั่น") ออกจากระบบถาวร เมื่อผู้ใช้งานลงชื่อเข้าสู่ระบบในฐานะใด ระบบจะผูกชื่อและสังกัดจริงของผู้ใช้ขึ้นแสดงบน Header, Sidebar และฟอร์มทีม A ทันที พร้อมซิงค์บัญชีและสิทธิ์จาก Google Sheets <code>Team_Accounts</code> และทำเนียบผู้แทนขาย PPC แบบอัตโนมัติ<br>
-            2) <strong>ปลดล็อกคอขวดการสร้างคำขอทีม A (Unblocked Request Creation):</strong> ยกเลิกการบล็อกฟอร์มกรณีไม่เลือกแผนหลักการประจำปี โดยระบบจะบันทึกเป็นโครงการบริการวิชาการให้อัตโนมัติ ส่งต่องานเข้าคิวทีมวิชาการ B (<code>WAITING_B</code>) ได้ทันทีโดยไม่ติดขัด<br>
-            3) <strong>Admin เข้าถึงและเห็นงานทุกทีมทันที (Admin Central Visibility & Auto-Unlock):</strong> เมื่อแอดมิน (Admin) เข้าสู่ระบบ ระบบจะปลดล็อกสิทธิ์ควบคุมส่วนกลางทันที ทำให้ Admin สามารถมองเห็นทุกใบงานของทีม A และทุกขั้นตอนบนแดชบอร์ดส่วนกลางแบบ Real-time พร้อมปรับปรุงโครงสร้างตารางข้อมูล <code>Event_Requests</code> ให้ถูกต้องแม่นยำ 100%
+            1) <strong>ลบข้อความตกค้างมุมขวาบน (Clean Interface):</strong> กำจัดอักขระแปลกปลอม (\n\n) ที่มุมบนขวาของหน้าจอออกเรียบร้อยแล้ว หน้าต่างแสดงผลสะอาดสมบูรณ์ตามมาตรฐาน Enterprise UI<br>
+            2) <strong>เพิ่มปุ่มลบคำขอสำหรับทีม A [ 🗑️ ลบ ]:</strong> ในตาราง "ทะเบียนคำขอที่บันทึกแล้ว" ของทีม A เพิ่มปุ่ม <code>[ 🗑️ ลบ ]</code> ท้ายทุกรายการที่รอทีม B ตรวจสอบ (WAITING_B) หรือถูกส่งกลับแก้ไข (REJECTED) ให้ทีม A หรือ Admin สามารถกดยกเลิกหรือลบคำขอที่บันทึกผิดพลาด/ซ้ำซ้อนได้ทันที พร้อมซิงค์ลบจากฐานข้อมูล Google Sheets อัตโนมัติ<br>
+            3) <strong>ซิงค์คำขอทีม A เข้าสู่การมองเห็นของ Admin 100%:</strong> คำขอทุกรายการที่ทีม A บันทึกไว้ จะถูกดึงและซิงค์ตรงเข้าสู่ตาราง Dashboard และ Action Inbox ของ Admin แบบ Real-time ทันที ไม่มีตกหล่น
           </p>
         </div>
         <p class="text-slate-600 font-medium leading-relaxed">
-          สรุปรายละเอียดการพัฒนาต่อเนื่องของระบบ <strong>Enterprise Governance & Cross-Team Real-time Sync Edition (v1.22.6)</strong>:
+          สรุปรายละเอียดการพัฒนาต่อเนื่องของระบบ <strong>Enterprise Governance & Cross-Team Real-time Sync Edition (v1.22.7)</strong>:
         </p>
 
         <!-- Feature 1 -->
