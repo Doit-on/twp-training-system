@@ -1564,7 +1564,8 @@ function ensureRequiredSheets(ss) {
       ['USR-003', 'sale.member', 'sale1234', 'สุรศักดิ์ จันทรศิลปิน (ฝ่ายขาย)', 'TEAM_A_MEMBER', 'ภาคเหนือ', 'ACTIVE', new Date().toISOString(), ''],
       ['USR-004', 'acad.lead', 'acad1234', 'ณัฐพล วิชาการ (หัวหน้าฝ่ายวิชาการ B)', 'TEAM_B_LEAD', 'ส่วนกลาง', 'ACTIVE', new Date().toISOString(), ''],
       ['USR-005', 'acad.member', 'acad1234', 'กานดา ปฏิบัติการ (เจ้าหน้าที่วิชาการ)', 'TEAM_B_MEMBER', 'ส่วนกลาง', 'ACTIVE', new Date().toISOString(), ''],
-      ['USR-006', 'exec.lead', 'exec1234', 'ผศ.อินทิรา บุนนาค (กรรมการผู้จัดการ)', 'EXEC', 'ALL', 'ACTIVE', new Date().toISOString(), '']
+      ['USR-004', 'exec.gm', 'exec1234', 'คุณนิพนธ์ ศรแก้ว (ผู้จัดการทั่วไป)', 'EXEC', 'ALL', 'ACTIVE', new Date().toISOString(), ''],
+    ['USR-006', 'exec.lead', 'exec1234', 'คุณอินทิรา บุนนาค (กรรมการผู้จัดการ)', 'EXEC', 'ALL', 'ACTIVE', new Date().toISOString(), '']
     ];
     defaultAccounts.forEach(acc => teamAccSheet.appendRow(acc));
   }
@@ -1582,7 +1583,7 @@ const NOTIFICATION_CONFIG = {
   ENABLE_EMAIL: true,
   // ระบุอีเมลทีมวิชาการ (ทีม B) เพื่อรับแจ้งเตือนเมื่อทีม A สร้างคำขอ
   ACADEMIC_TEAM_EMAIL: '', 
-  // ระบุอีเมลผู้บริหาร (ผศ.อินทิรา บุนนาค / ผู้จัดการทั่วไป) เพื่อรับแจ้งเตือนเมื่อทีม B ตรวจสอบผ่าน
+  // ระบุอีเมลผู้บริหาร (คุณอินทิรา บุนนาค / ผู้จัดการทั่วไป) เพื่อรับแจ้งเตือนเมื่อทีม B ตรวจสอบผ่าน
   EXECUTIVE_EMAIL: '',
   // URL หน้าเว็บระบบ TWP เพื่อสร้างลิงก์ตรงในอีเมล
   WEB_APP_URL: '' 
@@ -1769,10 +1770,10 @@ function handleSendECertificateEmail(payload) {
               '<td style="width: 35%; text-align: center; vertical-align: bottom;">' +
                 '<div style="height: 38px; line-height: 38px;">' +
                   '<span style="font-family: cursive, \'Brush Script MT\', sans-serif; font-size: 20px; color: #08539E; font-weight: bold;">' +
-                    'ผศ.อินทิรา บุนนาค' +
+                    'คุณอินทิรา บุนนาค' +
                   '</span>' +
                 '</div>' +
-                '<div style="font-size: 13px; font-weight: bold; color: #1e293b; margin-top: 4px;">ผศ.อินทิรา บุนนาค</div>' +
+                '<div style="font-size: 13px; font-weight: bold; color: #1e293b; margin-top: 4px;">คุณอินทิรา บุนนาค</div>' +
                 '<div style="font-size: 11px; color: #64748b;">กรรมการผู้จัดการ</div>' +
                 '<div style="font-size: 10px; color: #08539E; font-weight: bold;">บริษัท ไทยวัฒนาพานิช จำกัด</div>' +
               '</td>' +
@@ -2077,7 +2078,7 @@ function handleCancelCheckin(payload) {
 
 
 // ============================================================================
-// ANNUAL MASTER PLANS ENGINE (ผศ.อินทิรา บุนนาค อนุมัติหลักการ)
+// ANNUAL MASTER PLANS ENGINE (คุณอินทิรา บุนนาค อนุมัติหลักการ)
 // ============================================================================
 
 function handleGetAnnualPlans() {
@@ -2100,7 +2101,7 @@ function handleGetAnnualPlans() {
         principleBudget: Number(r[4]) || 0,
         targetSales: Number(r[5]) || 0,
         quarterOrDate: r[6] || '',
-        approverName: r[7] || 'ผศ.อินทิรา บุนนาค',
+        approverName: r[7] || 'คุณอินทิรา บุนนาค',
         approverRole: r[8] || 'กรรมการผู้จัดการ',
         status: r[9] || 'APPROVED_PRINCIPLE',
         notes: r[10] || '',
@@ -2142,7 +2143,7 @@ function handleSaveAnnualPlans(payload) {
     Number(p.principleBudget) || 0,
     Number(p.targetSales) || 0,
     p.quarterOrDate || '',
-    p.approverName || 'ผศ.อินทิรา บุนนาค',
+    p.approverName || 'คุณอินทิรา บุนนาค',
     p.approverRole || 'กรรมการผู้จัดการ',
     p.status || 'APPROVED_PRINCIPLE',
     p.notes || '',
