@@ -1,14 +1,14 @@
 /**
  * ============================================================================
  * EMS Enterprise - Training Center TWP
- * Version: 1.22.14
+ * Version: 1.22.15
  * Architecture: Google Apps Script Backend (Serverless) + Google Sheets Database
  * Security: Zero-Trust Data Isolation + Multi-Operator Stamping + Concurrency Lock
  * Features: Multi-Device Sync + Team QR Pairing + PPC Standard A4 Report Engine (PDF & Word .docx)
  * ============================================================================
  */
 
-const SYSTEM_VERSION = '1.22.14';
+const SYSTEM_VERSION = '1.22.15';
 const DEFAULT_ADMIN_PASS = 'admin0000';
 // =============================================================================
 // MULTI-ACCOUNT GOOGLE SHEETS CONNECTIVITY (Cross-Account Shared Editor Access)
@@ -864,7 +864,9 @@ function createRequestTeamA(payload) {
       sheet.getRange(targetRowIndex, 33).setValue(payload.isOutOfPlan || 'NO');
       sheet.getRange(targetRowIndex, 34).setValue(payload.outOfPlanReason || '');
       sheet.getRange(targetRowIndex, 35).setValue(payload.annualPlanId || '');
-      sheet.getRange(targetRowIndex, 36).setValue(Number(payload.expectedTrainees) || 50);
+      const editTrainees = Number(payload.expectedTrainees) || 50;
+      sheet.getRange(targetRowIndex, 36).setValue(editTrainees);
+      sheet.getRange(targetRowIndex, 37).setValue(editTrainees);
       sheet.getRange(targetRowIndex, 38).setValue(payload.needCatering === 'YES' ? 'YES' : 'NO');
       sheet.getRange(targetRowIndex, 39).setValue(payload.needProductMedia === 'YES' ? 'YES' : 'NO');
       sheet.getRange(targetRowIndex, 40).setValue(payload.otherSupportDetails || '');
@@ -996,7 +998,9 @@ function updateReviewTeamB(payload) {
 
   // Col 37: Actual_Trainees (ทีม B ปรับยอดผู้เข้าร่วมจริง)
   if (actualTrainees !== undefined && actualTrainees !== null && actualTrainees !== '') {
-    sheet.getRange(targetRow, 37).setValue(Number(actualTrainees) || 0);
+    const numTrainees = Number(actualTrainees) || 0;
+    sheet.getRange(targetRow, 37).setValue(numTrainees);
+    sheet.getRange(targetRow, 36).setValue(numTrainees);
   }
   // Col 41: Speaker_Signature_Data
   if (speakerSignature) {
@@ -1047,7 +1051,9 @@ function handleSaveExpenses(payload) {
   
   // Col 37: Actual_Trainees (ถ้าส่งยอดผู้เข้าอบรมจริงมาด้วย)
   if (actualTrainees !== undefined && actualTrainees !== null && actualTrainees !== '') {
-    sheet.getRange(targetRow, 37).setValue(Number(actualTrainees) || 0);
+    const expTrainees = Number(actualTrainees) || 0;
+    sheet.getRange(targetRow, 37).setValue(expTrainees);
+    sheet.getRange(targetRow, 36).setValue(expTrainees);
   }
 
   // บันทึก JSON ค่าใช้จ่ายจริง 7 หมวดลงใน Column 43 (Actual_Expenses_JSON)
@@ -2015,7 +2021,9 @@ function handleUpdateTeamBAttendees(payload) {
 
   for (let i = 1; i < data.length; i++) {
     if (data[i][0] === eventId) {
-      sheet.getRange(i + 1, 37).setValue(Number(actualTrainees) || 0);
+      const upNum = Number(actualTrainees) || 0;
+      sheet.getRange(i + 1, 37).setValue(upNum);
+      sheet.getRange(i + 1, 36).setValue(upNum);
       sheet.getRange(i + 1, 23).setValue(operator);
       return { success: true, eventId: eventId, actualTrainees: actualTrainees };
     }
