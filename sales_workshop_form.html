@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>แบบฟอร์มขอจัดกิจกรรม Workshop (Sales Intake Form) - P-Do-Ed</title>
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Google Fonts: Sarabun -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700;800&family=Prompt:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <!-- FontAwesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    body { font-family: 'Sarabun', sans-serif; background-color: #f1f5f9; }
+    h1, h2, h3, h4, .font-heading { font-family: 'Prompt', sans-serif; }
+  </style>
+</head>
+<body class="p-4 sm:p-8">
+
+  <!-- Staging / Standalone Notice Banner -->
+  <div class="max-w-3xl mx-auto mb-6 bg-gradient-to-r from-amber-500/10 via-amber-500/5 to-white border-2 border-amber-400 rounded-2xl p-4 shadow-sm flex items-start space-x-3 text-xs text-amber-950">
+    <div class="w-8 h-8 rounded-xl bg-amber-500 text-white flex items-center justify-center font-bold text-base shrink-0 mt-0.5">
+      <i class="fa-solid fa-code-fork"></i>
+    </div>
+    <div class="space-y-0.5 flex-1">
+      <h4 class="font-bold text-sm text-slate-900">โหมดพัฒนาแยกส่วน (Standalone Staging Prototype)</h4>
+      <p class="text-slate-600 leading-relaxed">
+        หน้านี้ถูกสร้างแยกออกมาอิสระตามเงื่อนไข <strong>"ยังไม่เชื่อมกับระบบหลัก"</strong> เพื่อให้ท่านทดสอบดูหน้าตาและฟังก์ชันของแบบฟอร์มเซลส์ (P-Do-Ed) ได้อย่างปลอดภัย 100% โดยไม่กระทบกับระบบที่ใช้งานอยู่ในปัจจุบัน
+      </p>
+    </div>
+  </div>
+
+  <!-- Workshop Request Paper Form (P-Do-Ed Standard) -->
+  <div class="max-w-3xl mx-auto bg-white rounded-3xl shadow-xl border border-slate-200 overflow-hidden">
+    
+    <!-- Paper Header -->
+    <div class="bg-gradient-to-r from-slate-900 via-indigo-950 to-[#08539E] text-white p-6 sm:p-8 flex items-center justify-between border-b border-slate-200">
+      <div class="space-y-1">
+        <div class="flex items-center space-x-2">
+          <span class="px-2.5 py-0.5 bg-amber-400 text-slate-950 rounded-lg text-xs font-black tracking-wider uppercase">P-Do-Ed Form</span>
+          <span class="text-xs text-blue-200">ระบบขอสนับสนุนการจัดกิจกรรมอบรม</span>
+        </div>
+        <h1 class="text-xl sm:text-2xl font-black text-white">Workshop Request Form</h1>
+        <p class="text-xs text-slate-300">แบบฟอร์มขอจัดกิจกรรม Workshop &ndash; กรุณากรอกข้อมูลให้ครบถ้วนเพื่อการประสานงานที่รวดเร็วและมีประสิทธิภาพ</p>
+      </div>
+      <div class="w-14 h-14 rounded-2xl bg-white/10 border border-white/20 text-white flex items-center justify-center text-2xl shadow-inner shrink-0">
+        <i class="fa-solid fa-graduation-cap"></i>
+      </div>
+    </div>
+
+    <!-- Form Content -->
+    <form id="salesWorkshopForm" onsubmit="handleSalesFormSubmit(event)" class="p-6 sm:p-8 space-y-6 text-xs text-slate-700">
+
+      <!-- SECTION 1: ข้อมูลผู้รับผิดชอบ & โรงเรียน -->
+      <div class="bg-slate-50 p-5 rounded-2xl border border-slate-200 space-y-4">
+        <h3 class="font-bold text-sm text-slate-900 border-b border-slate-200 pb-2 flex items-center space-x-2">
+          <i class="fa-solid fa-user-tie text-blue-600"></i>
+          <span>1. ข้อมูลผู้รับผิดชอบและสถานศึกษาเป้าหมาย</span>
+        </h3>
+        
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div>
+            <label class="block font-bold text-slate-700 mb-1">ชื่อเซลส์ผู้รับผิดชอบ *</label>
+            <input type="text" id="salesName" required placeholder="เช่น นายสมชาย มุ่งมั่น" class="w-full p-2.5 bg-white border border-slate-300 rounded-xl focus:ring-2 focus:ring-blue-500 font-medium">
+          </div>
+          <div>
+            <label class="block font-bold text-slate-700 mb-1">เบอร์โทรศัพท์เซลส์ *</label>
+            <input type="tel" id="salesPhone" required placeholder="เช่น 081-234-5678" class="w-full p-2.5 bg-white border border-slate-300 rounded-xl focus:ring-2 focus:ring-blue-500 font-mono">
+          </div>
+          <div>
+            <label class="block font-bold text-slate-700 mb-1">ชื่อโรงเรียน / หน่วยงาน *</label>
+            <input type="text" id="schoolName" required placeholder="เช่น โรงเรียนอนุบาลวัดปรินายก" class="w-full p-2.5 bg-white border border-slate-300 rounded-xl focus:ring-2 focus:ring-blue-500 font-medium">
+          </div>
+          <div>
+            <label class="block font-bold text-slate-700 mb-1">จังหวัด *</label>
+            <input type="text" id="province" required placeholder="เช่น กรุงเทพมหานคร, เชียงใหม่" class="w-full p-2.5 bg-white border border-slate-300 rounded-xl focus:ring-2 focus:ring-blue-500 font-medium">
+          </div>
+        </div>
+      </div>
+
+      <!-- SECTION 2: วันและเวลาที่ต้องการจัดงาน -->
+      <div class="bg-slate-50 p-5 rounded-2xl border border-slate-200 space-y-4">
+        <h3 class="font-bold text-sm text-slate-900 border-b border-slate-200 pb-2 flex items-center space-x-2">
+          <i class="fa-solid fa-calendar-days text-indigo-600"></i>
+          <span>2. วันและเวลาที่ต้องการจัดงาน</span>
+        </h3>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <!-- วันจริง -->
+          <div class="space-y-3 bg-white p-3.5 rounded-xl border border-slate-200">
+            <span class="font-bold text-blue-900 block flex items-center">
+              <span class="w-2 h-2 rounded-full bg-blue-600 mr-2"></span>วันที่ต้องการจัดงาน (วันจริง) *
+            </span>
+            <div>
+              <label class="block text-slate-500 mb-1">วันที่จัด:</label>
+              <input type="date" id="eventDate" required class="w-full p-2 border border-slate-300 rounded-lg font-mono">
+            </div>
+            <div>
+              <label class="block text-slate-500 mb-1">เวลา:</label>
+              <input type="text" id="eventTime" placeholder="เช่น 09:00 - 16:00 น." class="w-full p-2 border border-slate-300 rounded-lg">
+            </div>
+          </div>
+
+          <!-- วันสำรอง -->
+          <div class="space-y-3 bg-white p-3.5 rounded-xl border border-slate-200">
+            <span class="font-bold text-slate-700 block flex items-center">
+              <span class="w-2 h-2 rounded-full bg-slate-400 mr-2"></span>วันที่สำรอง (กรณีวันจริงไม่สะดวก)
+            </span>
+            <div>
+              <label class="block text-slate-500 mb-1">วันที่สำรอง:</label>
+              <input type="date" id="backupDate" class="w-full p-2 border border-slate-300 rounded-lg font-mono">
+            </div>
+            <div>
+              <label class="block text-slate-500 mb-1">เวลาสำรอง:</label>
+              <input type="text" id="backupTime" placeholder="เช่น 09:00 - 16:00 น." class="w-full p-2 border border-slate-300 rounded-lg">
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SECTION 3: ข้อมูลผู้ติดต่อ (ครูผู้รับผิดชอบ) -->
+      <div class="bg-slate-50 p-5 rounded-2xl border border-slate-200 space-y-4">
+        <h3 class="font-bold text-sm text-slate-900 border-b border-slate-200 pb-2 flex items-center space-x-2">
+          <i class="fa-solid fa-address-book text-emerald-600"></i>
+          <span>3. ข้อมูลผู้ติดต่อ (ครูผู้รับผิดชอบโครงการ)</span>
+        </h3>
+
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+          <div>
+            <label class="block font-bold text-slate-700 mb-1">ชื่อ-สกุล ครูผู้รับผิดชอบ *</label>
+            <input type="text" id="teacherName" required placeholder="เช่น อ.สมพร ใจดี" class="w-full p-2.5 bg-white border border-slate-300 rounded-xl focus:ring-2 focus:ring-blue-500">
+          </div>
+          <div>
+            <label class="block font-bold text-slate-700 mb-1">เบอร์โทรศัพท์ *</label>
+            <input type="tel" id="teacherPhone" required placeholder="เช่น 089-xxx-xxxx" class="w-full p-2.5 bg-white border border-slate-300 rounded-xl focus:ring-2 focus:ring-blue-500 font-mono">
+          </div>
+          <div>
+            <label class="block font-bold text-slate-700 mb-1">อีเมล (ถ้ามี)</label>
+            <input type="email" id="teacherEmail" placeholder="teacher@school.ac.th" class="w-full p-2.5 bg-white border border-slate-300 rounded-xl focus:ring-2 focus:ring-blue-500">
+          </div>
+        </div>
+      </div>
+
+      <!-- SECTION 4: หัวข้อที่ต้องการ -->
+      <div class="bg-slate-50 p-5 rounded-2xl border border-slate-200 space-y-3">
+        <h3 class="font-bold text-sm text-slate-900 border-b border-slate-200 pb-2 flex items-center space-x-2">
+          <i class="fa-solid fa-book-bookmark text-amber-600"></i>
+          <span>4. หัวข้อหลักสูตรที่ต้องการ (เลือกได้หลายข้อ) *</span>
+        </h3>
+
+        <div class="grid grid-cols-2 sm:grid-cols-3 gap-3 pt-1">
+          <label class="flex items-center space-x-2.5 p-3 bg-white rounded-xl border border-slate-200 hover:bg-blue-50/50 cursor-pointer transition">
+            <input type="checkbox" name="topics" value="Get Involved!" class="w-4 h-4 text-blue-600 rounded">
+            <span class="font-bold text-slate-800">Get Involved!</span>
+          </label>
+          <label class="flex items-center space-x-2.5 p-3 bg-white rounded-xl border border-slate-200 hover:bg-blue-50/50 cursor-pointer transition">
+            <input type="checkbox" name="topics" value="New World" class="w-4 h-4 text-blue-600 rounded">
+            <span class="font-bold text-slate-800">New World</span>
+          </label>
+          <label class="flex items-center space-x-2.5 p-3 bg-white rounded-xl border border-slate-200 hover:bg-blue-50/50 cursor-pointer transition">
+            <input type="checkbox" name="topics" value="New Weaving" class="w-4 h-4 text-blue-600 rounded">
+            <span class="font-bold text-slate-800">New Weaving</span>
+          </label>
+          <label class="flex items-center space-x-2.5 p-3 bg-white rounded-xl border border-slate-200 hover:bg-blue-50/50 cursor-pointer transition">
+            <input type="checkbox" name="topics" value="PeakTWP" class="w-4 h-4 text-blue-600 rounded">
+            <span class="font-bold text-slate-800">PeakTWP</span>
+          </label>
+          <label class="flex items-center space-x-2.5 p-3 bg-white rounded-xl border border-slate-200 hover:bg-blue-50/50 cursor-pointer transition">
+            <input type="checkbox" name="topics" value="CEFR" class="w-4 h-4 text-blue-600 rounded">
+            <span class="font-bold text-slate-800">CEFR</span>
+          </label>
+          <label class="flex items-center space-x-2.5 p-3 bg-white rounded-xl border border-slate-200 hover:bg-blue-50/50 cursor-pointer transition">
+            <input type="checkbox" name="topics" value="อบรมการวิจัยในห้องเรียน" class="w-4 h-4 text-blue-600 rounded">
+            <span class="font-bold text-slate-800">อบรมการวิจัยในห้องเรียน</span>
+          </label>
+        </div>
+
+        <div class="pt-2">
+          <label class="block font-bold text-slate-700 mb-1">อื่นๆ (กรุณาระบุหัวข้อ):</label>
+          <input type="text" id="otherTopic" placeholder="ระบุหัวข้ออื่นที่โรงเรียนสนใจ..." class="w-full p-2.5 bg-white border border-slate-300 rounded-xl focus:ring-2 focus:ring-blue-500">
+        </div>
+      </div>
+
+      <!-- SECTION 5: ประเภทกิจกรรมและผู้เข้าร่วม -->
+      <div class="bg-slate-50 p-5 rounded-2xl border border-slate-200 space-y-4">
+        <h3 class="font-bold text-sm text-slate-900 border-b border-slate-200 pb-2 flex items-center space-x-2">
+          <i class="fa-solid fa-users-rectangle text-purple-600"></i>
+          <span>5. ประเภทกิจกรรมและกลุ่มผู้เข้าร่วม</span>
+        </h3>
+
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+          <label class="flex items-center space-x-2.5 p-3 bg-white rounded-xl border border-slate-200 hover:bg-purple-50/50 cursor-pointer transition">
+            <input type="radio" name="activityCategory" value="Workshop ครู" checked class="w-4 h-4 text-purple-600">
+            <span class="font-bold text-slate-800"><i class="fa-solid fa-chalkboard-user mr-1.5 text-purple-600"></i>Workshop ครู</span>
+          </label>
+          <label class="flex items-center space-x-2.5 p-3 bg-white rounded-xl border border-slate-200 hover:bg-purple-50/50 cursor-pointer transition">
+            <input type="radio" name="activityCategory" value="ครู Workshop นักเรียน" class="w-4 h-4 text-purple-600">
+            <span class="font-bold text-slate-800"><i class="fa-solid fa-user-graduate mr-1.5 text-indigo-600"></i>ครู Workshop นักเรียน</span>
+          </label>
+          <label class="flex items-center space-x-2.5 p-3 bg-white rounded-xl border border-slate-200 hover:bg-purple-50/50 cursor-pointer transition">
+            <input type="radio" name="activityCategory" value="อบรมย่อยครู" class="w-4 h-4 text-purple-600">
+            <span class="font-bold text-slate-800"><i class="fa-solid fa-users text-teal-600 mr-1.5"></i>อบรมย่อยครู</span>
+          </label>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-1">
+          <div>
+            <label class="block font-bold text-slate-700 mb-1">จำนวนผู้เข้าร่วม (คน) *</label>
+            <input type="number" id="attendeesCount" required min="1" placeholder="เช่น 50" class="w-full p-2.5 bg-white border border-slate-300 rounded-xl focus:ring-2 focus:ring-blue-500 font-bold text-indigo-700">
+          </div>
+          <div>
+            <label class="block font-bold text-slate-700 mb-1">ระดับชั้น (สำหรับกรณีมีนักเรียนเข้าร่วม)</label>
+            <input type="text" id="gradeLevel" placeholder="เช่น ม.1 - ม.3 หรือ ประถมปลาย" class="w-full p-2.5 bg-white border border-slate-300 rounded-xl focus:ring-2 focus:ring-blue-500">
+          </div>
+        </div>
+      </div>
+
+      <!-- SECTION 6: ความต้องการเพิ่มเติม -->
+      <div class="bg-slate-50 p-5 rounded-2xl border border-slate-200 space-y-2">
+        <h3 class="font-bold text-sm text-slate-900 border-b border-slate-200 pb-2 flex items-center space-x-2">
+          <i class="fa-solid fa-comment-dots text-teal-600"></i>
+          <span>6. ความต้องการเพิ่มเติม (Special Requirements)</span>
+        </h3>
+        <textarea id="additionalNotes" rows="3" placeholder="ระบุข้อกำหนดเพิ่มเติม เช่น อุปกรณ์ที่โรงเรียนมี หรือต้องการความช่วยเหลือด้านใดเป็นพิเศษ..." class="w-full p-3 bg-white border border-slate-300 rounded-xl focus:ring-2 focus:ring-blue-500"></textarea>
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="pt-4 flex flex-col sm:flex-row items-center justify-between gap-3 border-t border-slate-200">
+        <button type="reset" class="w-full sm:w-auto px-5 py-3 border border-slate-300 text-slate-600 hover:bg-slate-100 rounded-xl font-bold transition">
+          ล้างข้อมูลฟอร์ม
+        </button>
+
+        <div class="flex items-center gap-2 w-full sm:w-auto justify-end">
+          <button type="button" onclick="previewAndCopyToLine()" class="flex-1 sm:flex-none px-5 py-3 bg-[#06c755] hover:bg-[#05b34c] text-white rounded-xl font-bold shadow-md hover:shadow-lg transition flex items-center justify-center space-x-2 cursor-pointer">
+            <i class="fa-brands fa-line text-lg"></i>
+            <span>คัดลอกส่ง LINE (Copy to LINE)</span>
+          </button>
+          
+          <button type="submit" class="flex-1 sm:flex-none px-6 py-3 bg-gradient-to-r from-blue-700 to-indigo-800 hover:from-blue-600 hover:to-indigo-700 text-white rounded-xl font-bold shadow-lg hover:shadow-xl transition flex items-center justify-center space-x-2 cursor-pointer">
+            <i class="fa-solid fa-paper-plane"></i>
+            <span>ส่งคำขอให้ทีม A พิจารณา</span>
+          </button>
+        </div>
+      </div>
+
+    </form>
+  </div>
+
+  <!-- Preview Output / Line Copy Modal -->
+  <div id="linePreviewModal" class="hidden fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="bg-white rounded-3xl max-w-lg w-full p-6 shadow-2xl border border-slate-200 space-y-4">
+      <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+        <div class="flex items-center space-x-2 text-[#06c755]">
+          <i class="fa-brands fa-line text-2xl"></i>
+          <h3 class="font-bold text-slate-900 text-base">ข้อความพร้อมส่งกลุ่ม LINE ฝ่ายขาย</h3>
+        </div>
+        <button onclick="closeLineModal()" class="text-slate-400 hover:text-slate-600"><i class="fa-solid fa-xmark text-lg"></i></button>
+      </div>
+
+      <div class="bg-slate-50 p-4 rounded-2xl border border-slate-200">
+        <pre id="lineMessageText" class="text-xs text-slate-800 font-sans whitespace-pre-wrap leading-relaxed select-all"></pre>
+      </div>
+
+      <div class="flex items-center justify-end space-x-2 pt-2 border-t border-slate-100">
+        <button onclick="closeLineModal()" class="px-4 py-2 border border-slate-200 text-slate-600 rounded-xl hover:bg-slate-50 text-xs font-bold">ปิด</button>
+        <button onclick="copyLineTextToClipboard()" class="px-5 py-2 bg-[#06c755] hover:bg-[#05b34c] text-white rounded-xl text-xs font-bold shadow-md flex items-center space-x-1.5">
+          <i class="fa-solid fa-copy"></i>
+          <span>คัดลอกข้อความ</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function generateLineMessage() {
+      const salesName = document.getElementById('salesName')?.value?.trim() || '-';
+      const salesPhone = document.getElementById('salesPhone')?.value?.trim() || '-';
+      const schoolName = document.getElementById('schoolName')?.value?.trim() || '-';
+      const province = document.getElementById('province')?.value?.trim() || '-';
+      const eventDate = document.getElementById('eventDate')?.value || '-';
+      const eventTime = document.getElementById('eventTime')?.value?.trim() || '-';
+      const backupDate = document.getElementById('backupDate')?.value || '-';
+      const teacherName = document.getElementById('teacherName')?.value?.trim() || '-';
+      const teacherPhone = document.getElementById('teacherPhone')?.value?.trim() || '-';
+      
+      const selectedTopics = Array.from(document.querySelectorAll('input[name="topics"]:checked')).map(cb => cb.value);
+      const otherTopic = document.getElementById('otherTopic')?.value?.trim();
+      if (otherTopic) selectedTopics.push('อื่นๆ: ' + otherTopic);
+      const topicsStr = selectedTopics.length > 0 ? selectedTopics.join(', ') : 'ยังไม่ระบุ';
+
+      const activityCat = document.querySelector('input[name="activityCategory"]:checked')?.value || 'Workshop ครู';
+      const attendees = document.getElementById('attendeesCount')?.value || '50';
+      const notes = document.getElementById('additionalNotes')?.value?.trim();
+
+      return `📌 แจ้งคำขอจัดกิจกรรม Workshop (จากฝ่ายขาย)
+----------------------------------------
+👤 ผู้แทนขาย: ${salesName} (โทร: ${salesPhone})
+🏫 โรงเรียน: ${schoolName} (จ.${province})
+📅 วันที่จัดงาน: ${eventDate} (เวลา: ${eventTime})
+🗓️ วันสำรอง: ${backupDate !== '-' ? backupDate : 'ไม่มี'}
+👩‍🏫 ครูผู้ประสานงาน: ${teacherName} (โทร: ${teacherPhone})
+📚 หัวข้อที่ขอ: ${topicsStr}
+👥 รูปแบบกิจกรรม: ${activityCat} (จำนวน ${attendees} คน)
+${notes ? `📝 หมายเหตุเพิ่มเติม: ${notes}\n` : ''}----------------------------------------
+สถานะ: ยื่นคำขอเข้าสู่ระบบเพื่อรอทีม A กลั่นกรองงบประมาณและส่งต่อฝ่ายวิชาการ`;
+    }
+
+    function previewAndCopyToLine() {
+      const msg = generateLineMessage();
+      document.getElementById('lineMessageText').innerText = msg;
+      const modal = document.getElementById('linePreviewModal');
+      modal.classList.remove('hidden');
+      modal.style.display = 'flex';
+    }
+
+    function closeLineModal() {
+      const modal = document.getElementById('linePreviewModal');
+      modal.classList.add('hidden');
+      modal.style.display = 'none';
+    }
+
+    function copyLineTextToClipboard() {
+      const msg = generateLineMessage();
+      navigator.clipboard.writeText(msg).then(() => {
+        alert('คัดลอกข้อความสรุปสำหรับส่ง LINE เรียบร้อยแล้ว!');
+        closeLineModal();
+      }).catch(err => {
+        alert('กรุณาคลุมดำและคัดลอกข้อความในกล่อง');
+      });
+    }
+
+    function handleSalesFormSubmit(e) {
+      e.preventDefault();
+      const msg = generateLineMessage();
+      alert('✅ บันทึกคำขอสำเร็จ!\n\n(ในโหมด Staging นี้ ข้อมูลยังไม่ถูกส่งเข้าระบบหลักตามเงื่อนไขที่กำหนด เมื่อระบบหลักสมบูรณ์แล้วจึงจะทำการเชื่อมต่อครับ)');
+      previewAndCopyToLine();
+    }
+  </script>
+</body>
+</html>

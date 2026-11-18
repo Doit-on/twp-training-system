@@ -1,14 +1,14 @@
 /**
  * ============================================================================
  * EMS Enterprise - Training Center TWP
- * Version: 1.22.12
+ * Version: 1.22.14
  * Architecture: Google Apps Script Backend (Serverless) + Google Sheets Database
  * Security: Zero-Trust Data Isolation + Multi-Operator Stamping + Concurrency Lock
  * Features: Multi-Device Sync + Team QR Pairing + PPC Standard A4 Report Engine (PDF & Word .docx)
  * ============================================================================
  */
 
-const SYSTEM_VERSION = '1.22.12';
+const SYSTEM_VERSION = '1.22.14';
 const DEFAULT_ADMIN_PASS = 'admin0000';
 // =============================================================================
 // MULTI-ACCOUNT GOOGLE SHEETS CONNECTIVITY (Cross-Account Shared Editor Access)
@@ -472,6 +472,9 @@ function doPost(e) {
       case 'DELETE_ANNUAL_PLAN':
         result = handleDeleteAnnualPlan(payload);
         break;
+      case 'TOGGLE_SKIP_ECERT':
+        result = handleToggleSkipECert(payload);
+        break;
       case 'DELETE_EVENT_REQUEST':
         result = handleDeleteEventRequest(payload);
         break;
@@ -632,6 +635,7 @@ function getInitialData() {
       otherSupportDetails: r[39] || '',
       speakerSignature: r[40] || '',
       speakers: r[41] ? (function() { try { return JSON.parse(r[41]); } catch(e) { return []; } })() : [],
+      skipECert: (r[43] === 'YES' || r[43] === true || false),
       rowIndex: i + 1
     });
   }
@@ -975,7 +979,7 @@ function updateReviewTeamB(payload) {
 
   if (targetRow === -1) throw new Error('ไม่พบรหัสคำขอ ' + eventId);
 
-  const nextStatus = decision === 'RETURN_TO_A' ? 'RETURNED_TO_A' : 'WAITING_EXEC';
+  const nextStatus = decision === 'RETURN_TO_A' ? 'RETURNED_TO_A' : (decision === 'REVERT_TO_WAITING_B' ? 'WAITING_B' : 'WAITING_EXEC');
 
   sheet.getRange(targetRow, 3).setValue(nextStatus);
   sheet.getRange(targetRow, 17).setValue(teamBSpeaker || '');
@@ -1049,6 +1053,12 @@ function handleSaveExpenses(payload) {
   // บันทึก JSON ค่าใช้จ่ายจริง 7 หมวดลงใน Column 43 (Actual_Expenses_JSON)
   const expensesJson = JSON.stringify(actualExpenses || {});
   sheet.getRange(targetRow, 43).setValue(expensesJson);
+
+  // Col 44: Skip_ECert (หากทีม B ระบุเปิด/ปิด E-Cert ก่อนประเมิน)
+  if (payload.skipECert !== undefined) {
+    sheet.getRange(targetRow, 44).setValue(payload.skipECert ? 'YES' : 'NO');
+  }
+
 
   logSystemAction(eventId, 'SETTLE_EXPENSES', operator, {
     actualBudget: actualBudget,
@@ -1473,7 +1483,7 @@ function ensureRequiredSheets(ss) {
         'Actual_Budget', 'Created_By', 'Reviewed_By', 'Approved_By', 'Last_Modified_By',
         'Submitted_To_B_At', 'Reviewed_By_B_At', 'Approved_At', 'A4_PDF_Url',
         'Need_Accommodation', 'Room_Count', 'Need_Transportation', 'Transport_Details', 'A4_Docx_Url', 'Is_Out_Of_Plan', 'Out_Of_Plan_Reason', 'Annual_Plan_ID',
-        'Expected_Trainees', 'Actual_Trainees', 'Need_Catering', 'Need_Product_Media', 'Other_Support_Details', 'Speaker_Signature_Data', 'Speakers_JSON', 'Actual_Expenses_JSON'
+        'Expected_Trainees', 'Actual_Trainees', 'Need_Catering', 'Need_Product_Media', 'Other_Support_Details', 'Speaker_Signature_Data', 'Speakers_JSON', 'Actual_Expenses_JSON', 'Skip_ECert'
       ]
     },
     {
@@ -2136,6 +2146,27 @@ function handleSaveAnnualPlans(payload) {
   }
 
   return { success: true, savedCount: rows.length };
+}
+
+
+function handleToggleSkipECert(payload) {
+  const { eventId, skipECert, operatorName } = payload || {};
+  if (!eventId) throw new Error('Missing eventId');
+  const ss = getSpreadsheet();
+  ensureRequiredSheets(ss);
+  const sheet = ss.getSheetByName('Event_Requests');
+  const data = sheet.getDataRange().getValues();
+  const operator = operatorName || 'ทีม B (วิชาการ)';
+
+  for (let i = 1; i < data.length; i++) {
+    if (String(data[i][0]).trim() === String(eventId).trim()) {
+      sheet.getRange(i + 1, 44).setValue(skipECert ? 'YES' : 'NO');
+      sheet.getRange(i + 1, 23).setValue(operator);
+      logSystemAction(eventId, 'TOGGLE_SKIP_ECERT', operator, { skipECert: !!skipECert });
+      return { success: true, eventId: eventId, skipECert: !!skipECert };
+    }
+  }
+  throw new Error('ไม่พบรหัสคำขอ: ' + eventId);
 }
 
 function handleDeleteEventRequest(payload) {

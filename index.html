@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-  <title>Training Center TWP - ระบบบริหารคำขอจัดอบรมและประเมินผล v1.22.12</title>
+  <title>Training Center TWP - ระบบบริหารคำขอจัดอบรมและประเมินผล v1.22.14</title>
   <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
   <!-- Google Fonts: Sarabun -->
@@ -313,10 +313,10 @@
       </div>
       <div class="flex items-center space-x-2 sm:space-x-3 text-xs">
         <!-- Release Notes Button on Landing -->
-        <button type="button" onclick="openWhatsNewModal()" class="bg-amber-400/20 hover:bg-amber-400/30 text-amber-200 px-3 py-1.5 rounded-full border border-amber-300/40 backdrop-blur-sm font-bold flex items-center space-x-1.5 transition cursor-pointer" title="ดูรายละเอียดการอัปเดตระบบ v1.22.12">
+        <button type="button" onclick="openWhatsNewModal()" class="bg-amber-400/20 hover:bg-amber-400/30 text-amber-200 px-3 py-1.5 rounded-full border border-amber-300/40 backdrop-blur-sm font-bold flex items-center space-x-1.5 transition cursor-pointer" title="ดูรายละเอียดการอัปเดตระบบ v1.22.14">
           <i class="fa-solid fa-bullhorn text-amber-300 animate-pulse"></i>
           <span class="hidden sm:inline">อัปเดต</span>
-          <span class="bg-emerald-500 text-white font-mono font-black text-[10px] px-1.5 py-0.2 rounded-full">v1.22.12</span>
+          <span class="bg-emerald-500 text-white font-mono font-black text-[10px] px-1.5 py-0.2 rounded-full">v1.22.14</span>
         </button>
         <!-- Team Login Gate Button / User Badge -->
         <button id="landingLoginBtn" type="button" onclick="openSwitchProfileModal()" class="bg-gradient-to-r from-amber-400 to-amber-500 hover:from-amber-300 hover:to-amber-400 text-slate-950 font-black px-3.5 py-1.5 rounded-xl shadow-md transition cursor-pointer flex items-center space-x-1.5">
@@ -470,7 +470,7 @@
     <!-- Bottom Footer on Landing Page -->
     <div class="max-w-7xl mx-auto w-full px-6 py-4 flex flex-col sm:flex-row items-center justify-between text-xs text-blue-200 border-t border-white/10 relative z-10 gap-2">
       <div>&copy; 2026 Training Center TWP - บริษัท ไทยวัฒนาพานิช จำกัด. All rights reserved.</div>
-      <div class="font-mono text-[11px] bg-white/10 px-3 py-1 rounded-full border border-white/15">EMS Enterprise Platform v1.22.12 (Live Apps Script Engine)</div>
+      <div class="font-mono text-[11px] bg-white/10 px-3 py-1 rounded-full border border-white/15">EMS Enterprise Platform v1.22.14 (Live Apps Script Engine)</div>
     </div>
 
   </div>
@@ -495,7 +495,7 @@
           <div class="sidebar-brand-text truncate">
             <div class="flex items-center space-x-1.5">
               <span class="font-extrabold text-sm tracking-wide text-white">TWP</span>
-              <span onclick="openVersionReleaseModal()" class="bg-blue-400/20 hover:bg-blue-400/30 text-blue-200 text-[9px] font-mono px-1.5 py-0.5 rounded-full border border-blue-300/30 cursor-pointer transition flex items-center gap-1" title="คลิกดูรายละเอียดเวอร์ชัน v1.22.12"><i class="fa-solid fa-sparkles text-amber-300 text-[8px]"></i><span class="bg-emerald-500 text-white font-black px-2 py-0.5 rounded-full">v1.22.12</span></span>
+              <span onclick="openVersionReleaseModal()" class="bg-blue-400/20 hover:bg-blue-400/30 text-blue-200 text-[9px] font-mono px-1.5 py-0.5 rounded-full border border-blue-300/30 cursor-pointer transition flex items-center gap-1" title="คลิกดูรายละเอียดเวอร์ชัน v1.22.14"><i class="fa-solid fa-sparkles text-amber-300 text-[8px]"></i><span class="bg-emerald-500 text-white font-black px-2 py-0.5 rounded-full">v1.22.14</span></span>
             </div>
             <p class="text-[10px] text-blue-200 truncate">ระบบบริหารงานฝึกอบรม</p>
           </div>
@@ -1838,9 +1838,13 @@
             <i class="fa-solid fa-list-check"></i>
             <span>1. คิวรอตรวจ (<span id="teamBStage1Count">0</span>)</span>
           </button>
+          <button type="button" onclick="scrollToTeamBSection('WAITING_EXEC')" class="px-3.5 py-2 bg-amber-500/80 hover:bg-amber-500 text-white text-xs font-bold rounded-xl border border-amber-300/40 transition flex items-center space-x-1.5 shadow-sm btn-tactile cursor-pointer whitespace-nowrap">
+            <i class="fa-solid fa-hourglass-half"></i>
+            <span>2. รอผู้บริหารอนุมัติ (<span id="teamBWaitingExecCount">0</span>)</span>
+          </button>
           <button type="button" onclick="scrollToTeamBSection('STAGE2')" class="px-3.5 py-2 bg-gradient-to-r from-amber-400 to-amber-500 hover:from-amber-300 hover:to-amber-400 text-slate-950 text-xs font-black rounded-xl shadow-md transition flex items-center space-x-1.5 btn-tactile cursor-pointer whitespace-nowrap">
             <i class="fa-solid fa-qrcode"></i>
-            <span>2. แท่นจัดงาน & QR (<span id="teamBStage2Count">0</span>)</span>
+            <span>3. แท่นจัดงาน & QR (<span id="teamBStage2Count">0</span>)</span>
           </button>
           <button type="button" onclick="openTeamQrModal('teamB')" class="px-3 py-2 bg-white/10 hover:bg-white/20 text-white text-xs font-bold rounded-xl border border-white/20 transition flex items-center space-x-1.5 shadow-xs btn-tactile cursor-pointer whitespace-nowrap">
             <i class="fa-solid fa-users"></i>
@@ -1873,6 +1877,33 @@
 
         <div id="teamBQueueContainer" class="space-y-4">
           <!-- Rendered dynamically via renderTeamBQueue -->
+        </div>
+      </div>
+
+      <!-- STAGE 1.5: PENDING EXECUTIVE APPROVAL (งานที่ทีม B ส่งต่อให้ผู้บริหารแล้ว - รออนุมัติ) -->
+      <div id="teamBWaitingExecSection" class="bg-white rounded-3xl border-2 border-amber-200 shadow-sm p-5 sm:p-6 space-y-4">
+        <div class="border-b border-amber-100 pb-3 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+          <div class="flex items-center space-x-3">
+            <div class="w-10 h-10 rounded-2xl bg-amber-100 text-amber-700 flex items-center justify-center text-lg shadow-xs">
+              <i class="fa-solid fa-hourglass-half animate-pulse"></i>
+            </div>
+            <div>
+              <div class="flex items-center space-x-2">
+                <span class="text-[10px] bg-amber-100 text-amber-800 font-bold px-2 py-0.5 rounded-full uppercase">จังหวะที่ 1.5 (ส่งผู้บริหารแล้ว)</span>
+                <h3 class="text-base sm:text-lg font-bold text-slate-900">คิวรอผู้บริหารอนุมัติงบประมาณ (Pending Executive Approval)</h3>
+              </div>
+              <p class="text-xs text-slate-500">คำขอที่ทีม B ตรวจทานและลงลายเซ็นวิทยากรเรียบร้อยแล้ว กำลังรอการลงนามอนุมัติจากผู้บริหาร (ผศ.อินทิรา บุนนาค)</p>
+            </div>
+          </div>
+          <div class="flex items-center space-x-2">
+            <span class="text-xs bg-amber-50 text-amber-700 font-bold px-3 py-1 rounded-full border border-amber-200">
+              สถานะ: WAITING_EXEC (<span id="teamBWaitingExecBadge">0</span>)
+            </span>
+          </div>
+        </div>
+
+        <div id="teamBWaitingExecContainer" class="space-y-4">
+          <!-- Rendered dynamically via renderTeamBWaitingExecQueue -->
         </div>
       </div>
 
@@ -3249,6 +3280,9 @@
           </button>
         </div>
 
+        <!-- E-Cer Setting Banner in Modal -->
+        <div id="modalSkipECertBannerContainer" class="text-left"></div>
+
         <!-- QR Code Presentation Canvas Box -->
         <div class="p-2.5 bg-gradient-to-b from-slate-50 to-white border border-slate-200 rounded-2xl flex flex-col items-center justify-center shadow-inner relative">
           <div id="qrcodeWrapper" class="p-1.5 bg-white rounded-xl shadow-xs border border-slate-200 flex items-center justify-center min-w-[144px] min-h-[144px]"></div>
@@ -3452,7 +3486,7 @@
               <i class="fa-solid fa-code-compare text-amber-300"></i>
               <span class="text-xs font-bold uppercase tracking-wider">รายละเอียดการปรับปรุงเวอร์ชัน (Version Release Notes)</span>
             </div>
-            <span class="text-[10px] bg-amber-400 text-slate-950 font-black px-2 py-0.5 rounded-full">v1.22.12 Live</span>
+            <span class="text-[10px] bg-amber-400 text-slate-950 font-black px-2 py-0.5 rounded-full">v1.22.14 Live</span>
           </div>
           <p class="text-xs text-blue-100 leading-relaxed">
             <strong>v1.22.0 (Enterprise Compact QR & Drive Standard):</strong> ปรับขนาดหน้าต่างแท่นแสดงผล QR Code ให้กะทัดรัด (Compact Responsive) รองรับโน้ตบุ๊กทุกขนาดหน้าจอ, เพิ่มปุ่มปิดหน้าต่างทั้งบน ล่าง และกด Esc/คลิกนอกกรอบเพื่อปิดได้ทันที, พร้อมกำหนด Google Drive โฟลเดอร์กลางสำหรับเก็บเอกสารโครงการ
@@ -6398,8 +6432,46 @@
       if (modal) modal.classList.add('hidden');
     }
 
+    function toggleSkipECert(eventId) {
+      const req = AppState.requests.find(r => r.eventId === eventId);
+      if (!req) return;
+
+      req.skipECert = !req.skipECert;
+      localStorage.setItem('twp_requests_store', JSON.stringify(AppState.requests));
+
+      if (req.skipECert) {
+        showAlert(`🚫 ตั้งค่าคำขอ ${eventId}: "ไม่ต้องออก E-Cer" เรียบร้อยแล้ว (ผู้เข้าอบรมจะทำแบบประเมินอย่างเดียว)`, 'info');
+      } else {
+        showAlert(`🎓 เปิดใช้งาน "ออก E-Cer ตามปกติ" สำหรับคำขอ ${eventId} เรียบร้อยแล้ว`, 'success');
+      }
+
+      renderTeamBQueue();
+      renderTeamBExecutionQueue();
+      if (typeof renderTeamBWaitingExecQueue === 'function') renderTeamBWaitingExecQueue();
+
+      // If QR modal is open for this event, refresh it live
+      if (activeQrModalEventId === eventId) {
+        switchQrModalMode(activeQrModalMode);
+      }
+
+      if (AppState.gasEndpoint) {
+        postToBackend('TOGGLE_SKIP_ECERT', {
+          eventId: eventId,
+          skipECert: req.skipECert,
+          operatorName: AppState.currentUser?.fullName || AppState.operatorName || 'ทีม B (วิชาการ)'
+        }).catch(err => console.warn('Toggle skip ECert sync failed:', err));
+      }
+    }
+
+    function toggleSkipECertFromModal() {
+      if (!activeQrModalEventId) return;
+      toggleSkipECert(activeQrModalEventId);
+    }
+
     function scrollToTeamBSection(stage) {
-      const targetId = stage === 'STAGE1' ? 'teamBStage1Section' : 'teamBStage2Section';
+      let targetId = 'teamBStage1Section';
+      if (stage === 'WAITING_EXEC') targetId = 'teamBWaitingExecSection';
+      else if (stage === 'STAGE2') targetId = 'teamBStage2Section';
       const elem = document.getElementById(targetId);
       if (elem) elem.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
@@ -6786,13 +6858,16 @@
     function renderTeamBExecutionQueue() {
       const container = document.getElementById('teamBExecutionQueueContainer');
       const stage1Badge = document.getElementById('teamBStage1Count');
+      const waitExecBadge = document.getElementById('teamBWaitingExecCount');
       const stage2Badge = document.getElementById('teamBStage2Count');
       if (!container) return;
 
       const waitBCount = (AppState.requests || []).filter(r => r.status === 'WAITING_B').length;
+      const waitExecCount = (AppState.requests || []).filter(r => r.status === 'WAITING_EXEC').length;
       const approved = (AppState.requests || []).filter(r => r.status === 'APPROVED' || r.status === 'COMPLETED');
 
       if (stage1Badge) stage1Badge.innerText = waitBCount;
+      if (waitExecBadge) waitExecBadge.innerText = waitExecCount;
       if (stage2Badge) stage2Badge.innerText = approved.length;
 
       if (approved.length === 0) {
@@ -6824,6 +6899,7 @@
                     '<span class="text-xs bg-emerald-100 text-emerald-800 font-bold px-2.5 py-0.5 rounded-full border border-emerald-300 flex items-center"><i class="fa-solid fa-circle-check mr-1 text-emerald-600"></i>ปิดโครงการสมบูรณ์ (COMPLETED)</span>' : 
                     '<span class="text-xs bg-sky-100 text-sky-800 font-bold px-2.5 py-0.5 rounded-full border border-sky-300 flex items-center"><i class="fa-solid fa-circle-play mr-1 text-sky-600 animate-pulse"></i>อนุมัติแล้ว &bull; พร้อมจัดงานจริง</span>'}
                   ${isOutOfPlan ? '<span class="text-xs bg-amber-100 text-amber-900 font-bold px-2 py-0.5 rounded-full border border-amber-300">⚡ นอกแผนหลักการ</span>' : ''}
+                  ${req.skipECert ? '<span class="text-xs bg-rose-100 text-rose-800 font-bold px-2.5 py-0.5 rounded-full border border-rose-300 flex items-center"><i class="fa-solid fa-ban mr-1 text-rose-600"></i>ไม่ออก E-Cer</span>' : ''}
                   <span class="text-xs bg-slate-100 text-slate-600 px-2 py-0.5 rounded-md font-mono">จัดวันที่: ${req.eventDate || '-'}</span>
                 </div>
                 <h3 class="font-bold text-slate-900 text-base mt-1.5">${req.courseTopic}</h3>
@@ -6875,6 +6951,25 @@
                   </div>
                   <span class="font-bold text-emerald-700 text-xs">${evalPct}%</span>
                 </div>
+              </div>
+
+              <!-- E-Certificate Issuance Toggle Bar (ก่อนส่ง QR ให้ผู้เข้าอบรมสแกน) -->
+              <div class="p-2.5 rounded-xl border flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-xs ${req.skipECert ? 'bg-rose-50 border-rose-300 text-rose-950' : 'bg-white border-sky-200 text-slate-800'}">
+                <div class="flex items-center space-x-2">
+                  <i class="fa-solid ${req.skipECert ? 'fa-ban text-rose-600 text-base' : 'fa-award text-amber-500 text-base'}"></i>
+                  <div>
+                    <span class="font-bold block text-xs">
+                      ${req.skipECert ? 'สถานะ: ปิดการออก E-Cer (ผู้เข้าอบรมจะทำแบบประเมินอย่างเดียว)' : 'สถานะ: ออกวุฒิบัตร E-Certificate อัตโนมัติหลังประเมิน'}
+                    </span>
+                    <span class="text-[10px] ${req.skipECert ? 'text-rose-700' : 'text-slate-500'}">
+                      ${req.skipECert ? 'เมื่อผู้เข้าอบรมสแกน QR ระบบจะแสดงเฉพาะแบบประเมิน 10 ข้อ โดยไม่มีขั้นตอนระบุชื่อรับวุฒิบัตร' : 'กดปุ่มด้านขวา หากงานอบรมครั้งนี้ "ไม่ต้องออก E-Cer" ก่อนส่ง QR ให้ผู้อบรมสแกน'}
+                    </span>
+                  </div>
+                </div>
+                <button type="button" onclick="toggleSkipECert('${req.eventId}')" class="px-3.5 py-1.5 rounded-xl text-xs font-bold transition flex items-center space-x-1.5 shadow-xs cursor-pointer btn-tactile self-start sm:self-auto shrink-0 ${req.skipECert ? 'bg-white hover:bg-rose-100 text-rose-800 border border-rose-300' : 'bg-gradient-to-r from-rose-600 to-red-600 hover:from-rose-500 hover:to-red-500 text-white'}">
+                  <i class="fa-solid ${req.skipECert ? 'fa-rotate-left' : 'fa-ban'}"></i>
+                  <span>${req.skipECert ? '↩️ เปิดให้ออก E-Cer ตามเดิม' : '🚫 ปุ่ม: ไม่ต้องออก E-Cer'}</span>
+                </button>
               </div>
 
               <!-- 4 QR Action Buttons -->
@@ -7042,10 +7137,12 @@
     function shareSurveyToLine(eventId) {
       const req = AppState.requests.find(r => r.eventId === eventId);
       if (!req) return;
-      const surveyUrl = getSurveyFullUrl(req.eventId);
+      const isNoCert = req.skipECert === true || req.skipECert === 'YES' || req.noECert === true;
+      const surveyUrl = getSurveyFullUrl(req.eventId, req);
+      const actionText = isNoCert ? 'สแกนหรือคลิกลิงก์ด้านล่างเพื่อทำแบบประเมินความพึงพอใจโครงการ:\n' : 'สแกนหรือคลิกลิงก์ด้านล่างเพื่อทำแบบสอบถามและรับวุฒิบัตรอิเล็กทรอนิกส์:\n';
       const text = `📋 [แบบประเมินโครงการอบรม TWP]\n` +
         `ขอเรียนเชิญคุณครูและผู้เข้าร่วมอบรมโครงการ: "${req.courseTopic}" ณ ${req.schoolName}\n` +
-        `สแกนหรือคลิกลิงก์ด้านล่างเพื่อทำแบบสอบถามและรับวุฒิบัตรอิเล็กทรอนิกส์:\n${surveyUrl}`;
+        actionText + surveyUrl;
       window.open(`https://line.me/R/msg/text/?${encodeURIComponent(text)}`, '_blank');
     }
 
@@ -7156,6 +7253,7 @@
       renderAnnualPlanSelectOptions();
       renderTeamAMyRequests();
       renderTeamBQueue();
+      renderTeamBWaitingExecQueue();
       renderTeamBExecutionQueue();
       renderExecQueue();
       renderEvaluationCenter();
@@ -8197,6 +8295,7 @@
           localStorage.setItem('ems_operator_name', AppState.operatorName);
         }
         renderTeamBQueue();
+        renderTeamBWaitingExecQueue();
         renderTeamBExecutionQueue();
       } else if (tabId === 'exec') {
         renderExecQueue();
@@ -10605,6 +10704,25 @@
               </div>
             </div>
 
+            <!-- E-Certificate Issuance Toggle for this event -->
+            <div class="p-3 rounded-2xl border flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-xs ${req.skipECert ? 'bg-rose-50 border-rose-300' : 'bg-white border-purple-200'}">
+              <div class="flex items-center space-x-2">
+                <i class="fa-solid ${req.skipECert ? 'fa-ban text-rose-600' : 'fa-award text-purple-600'} text-base"></i>
+                <div>
+                  <span class="font-bold text-slate-800">
+                    ${req.skipECert ? 'การออกวุฒิบัตร: 🚫 ไม่ต้องออก E-Cer (ผู้เข้าอบรมทำแบบประเมินอย่างเดียว)' : 'การออกวุฒิบัตร: 🎓 ออกวุฒิบัตร E-Certificate ปกติ'}
+                  </span>
+                  <p class="text-[10px] text-slate-500">
+                    ${req.skipECert ? 'หากโครงการนี้ไม่ต้องออกวุฒิบัตร ครูผู้เข้าอบรมจะทำแบบประเมินอย่างเดียว' : 'หากต้องการงดออกวุฒิบัตร ให้กดปุ่ม "ไม่ต้องออก E-Cer" ด้านขวา'}
+                  </p>
+                </div>
+              </div>
+              <button type="button" onclick="toggleSkipECert('${req.eventId}')" class="px-3 py-1.5 rounded-xl text-xs font-bold transition flex items-center space-x-1 shadow-xs cursor-pointer ${req.skipECert ? 'bg-white hover:bg-rose-100 text-rose-800 border border-rose-300' : 'bg-rose-50 hover:bg-rose-100 text-rose-700 border border-rose-200'}">
+                <i class="fa-solid ${req.skipECert ? 'fa-rotate-left' : 'fa-ban'}"></i>
+                <span>${req.skipECert ? 'เปิดออก E-Cer' : 'ไม่ต้องออก E-Cer'}</span>
+              </button>
+            </div>
+
             <!-- Notes Section -->
             <div>
               <label class="block text-xs font-semibold text-slate-700 mb-1">ข้อเสนอแนะเพิ่มเติมเชิงวิชาการ</label>
@@ -10914,11 +11032,15 @@
       const execBadge = document.getElementById('badgeWaitingExec');
       const approvedBadge = document.getElementById('badgeApprovedB');
       const stage1Badge = document.getElementById('teamBStage1Count');
+      const teamBWaitExecBadge = document.getElementById('teamBWaitingExecCount');
+      const teamBWaitExecSubBadge = document.getElementById('teamBWaitingExecBadge');
       const stage2Badge = document.getElementById('teamBStage2Count');
       const archivesBadge = document.getElementById('dashArchivesBadgeCount');
 
       if (bBadge) bBadge.innerText = waitB;
       if (execBadge) execBadge.innerText = waitExec;
+      if (teamBWaitExecBadge) teamBWaitExecBadge.innerText = waitExec;
+      if (teamBWaitExecSubBadge) teamBWaitExecSubBadge.innerText = waitExec;
       const revBadge = document.getElementById('execRevisionCountBadge');
       const revCount = (AppState.requests || []).filter(r => r.status === 'REVISION_REQUESTED').length;
       if (revBadge) revBadge.innerText = revCount;
@@ -11215,10 +11337,64 @@
       return req.speakers;
     }
 
+    function harvestAllTeamBFieldsFromDOM(eventId) {
+      if (!eventId) return;
+      const req = AppState.requests.find(r => r.eventId === eventId);
+      if (!req) return;
+
+      // 1. Harvest Speakers
+      if (req.speakers && req.speakers.length > 0) {
+        req.speakers.forEach((sp, i) => {
+          const nameInp = document.getElementById(`teamBSpeakerName-${eventId}-${i}`);
+          const roleInp = document.getElementById(`teamBSpeakerRole-${eventId}-${i}`);
+          if (nameInp) sp.name = nameInp.value.trim();
+          if (roleInp) sp.role = roleInp.value.trim();
+        });
+        req.teamBSpeaker = req.speakers.map(s => s.name).filter(Boolean).join(', ');
+        if (req.speakers[0] && req.speakers[0].signature) {
+          req.speakerSignature = req.speakers[0].signature;
+        }
+      }
+
+      // 2. Harvest Financials, Attendees & Target Sales
+      const budgetEl = document.getElementById(`actualBudget-${eventId}`);
+      if (budgetEl && budgetEl.value !== '') {
+        req.actualBudget = Number(budgetEl.value) || 0;
+      }
+
+      const traineesEl = document.getElementById(`teamBActualTrainees-${eventId}`);
+      if (traineesEl && traineesEl.value !== '') {
+        req.actualTrainees = Number(traineesEl.value) || 0;
+      }
+
+      const targetSalesEl = document.getElementById(`teamBTargetSales-${eventId}`);
+      if (targetSalesEl && targetSalesEl.value !== '') {
+        req.targetSales = Number(targetSalesEl.value) || 0;
+      }
+
+      // 3. Harvest Reviewer & Notes
+      const reviewerEl = document.getElementById(`teamBReviewer-${eventId}`);
+      if (reviewerEl && reviewerEl.value.trim() !== '') {
+        req.reviewedBy = reviewerEl.value.trim();
+      }
+
+      const notesEl = document.getElementById(`teamBNotes-${eventId}`);
+      if (notesEl) {
+        req.teamBNotes = notesEl.value;
+      }
+
+      // 4. Immediately persist to localStorage so no input is ever lost
+      localStorage.setItem('twp_requests_store', JSON.stringify(AppState.requests));
+    }
+
+    function harvestTeamBSpeakersFromDOM(eventId) {
+      harvestAllTeamBFieldsFromDOM(eventId);
+    }
+
     function addSpeakerToEvent(eventId) {
       const req = AppState.requests.find(r => r.eventId === eventId);
       if (!req) return;
-      harvestTeamBSpeakersFromDOM(eventId);
+      harvestAllTeamBFieldsFromDOM(eventId);
       if (!req.speakers) getEventSpeakers(req);
       const newIndex = req.speakers.length + 1;
       req.speakers.push({
@@ -11227,13 +11403,15 @@
         signature: null
       });
       localStorage.setItem('twp_requests_store', JSON.stringify(AppState.requests));
+      const curScroll = window.scrollY;
       renderTeamBQueue();
+      window.scrollTo({ top: curScroll, behavior: 'instant' });
     }
 
     function removeSpeakerFromEvent(eventId, index) {
       const req = AppState.requests.find(r => r.eventId === eventId);
       if (!req || !req.speakers) return;
-      harvestTeamBSpeakersFromDOM(eventId);
+      harvestAllTeamBFieldsFromDOM(eventId);
       if (req.speakers.length <= 1) {
         showAlert('ต้องมีวิทยากรหลักอย่างน้อย 1 ท่าน', 'warning');
         return;
@@ -11241,32 +11419,21 @@
       req.speakers.splice(index, 1);
       req.teamBSpeaker = req.speakers.map(s => s.name).filter(Boolean).join(', ');
       localStorage.setItem('twp_requests_store', JSON.stringify(AppState.requests));
+      const curScroll = window.scrollY;
       renderTeamBQueue();
-    }
-
-    function harvestTeamBSpeakersFromDOM(eventId) {
-      const req = AppState.requests.find(r => r.eventId === eventId);
-      if (!req || !req.speakers) return;
-      req.speakers.forEach((sp, i) => {
-        const nameInp = document.getElementById(`teamBSpeakerName-${eventId}-${i}`);
-        const roleInp = document.getElementById(`teamBSpeakerRole-${eventId}-${i}`);
-        if (nameInp) sp.name = nameInp.value.trim();
-        if (roleInp) sp.role = roleInp.value.trim();
-      });
-      req.teamBSpeaker = req.speakers.map(s => s.name).filter(Boolean).join(', ');
-      if (req.speakers[0] && req.speakers[0].signature) {
-        req.speakerSignature = req.speakers[0].signature;
-      }
+      window.scrollTo({ top: curScroll, behavior: 'instant' });
     }
 
     function removeSpeakerSignature(eventId, index) {
       const req = AppState.requests.find(r => r.eventId === eventId);
       if (!req || !req.speakers || !req.speakers[index]) return;
-      harvestTeamBSpeakersFromDOM(eventId);
+      harvestAllTeamBFieldsFromDOM(eventId);
       req.speakers[index].signature = null;
       if (index === 0) req.speakerSignature = null;
       localStorage.setItem('twp_requests_store', JSON.stringify(AppState.requests));
+      const curScroll = window.scrollY;
       renderTeamBQueue();
+      window.scrollTo({ top: curScroll, behavior: 'instant' });
     }
 
     function openSpeakerSignaturePadModal(eventId, index) {
@@ -11276,7 +11443,7 @@
 
       const req = AppState.requests.find(r => r.eventId === eventId);
       if (!req) return;
-      harvestTeamBSpeakersFromDOM(eventId);
+      harvestAllTeamBFieldsFromDOM(eventId);
       const speakers = getEventSpeakers(req);
       const sp = speakers[index] || { name: '', role: '', signature: null };
 
@@ -11305,7 +11472,7 @@
           };
           img.src = sp.signature;
         }
-      }, 50);
+      }, 60);
     }
 
     function closeSpeakerSignatureModal() {
@@ -11324,9 +11491,13 @@
       spkSigCanvasCtx = spkSigCanvasElem.getContext('2d');
 
       const rect = spkSigCanvasElem.getBoundingClientRect();
-      const ratio = window.devicePixelRatio || 1;
-      spkSigCanvasElem.width = rect.width * ratio;
-      spkSigCanvasElem.height = rect.height * ratio;
+      const ratio = Math.max(window.devicePixelRatio || 1, 1);
+      const cssWidth = Math.round(rect.width) || 450;
+      const cssHeight = Math.round(rect.height) || 176;
+
+      spkSigCanvasElem.width = cssWidth * ratio;
+      spkSigCanvasElem.height = cssHeight * ratio;
+      spkSigCanvasCtx.setTransform(1, 0, 0, 1, 0, 0);
       spkSigCanvasCtx.scale(ratio, ratio);
       spkSigCanvasCtx.lineWidth = 2.8;
       spkSigCanvasCtx.lineCap = 'round';
@@ -11335,14 +11506,17 @@
 
       function getPos(e) {
         const r = spkSigCanvasElem.getBoundingClientRect();
-        if (e.touches && e.touches.length > 0) {
-          return { x: e.touches[0].clientX - r.left, y: e.touches[0].clientY - r.top };
-        }
-        return { x: e.clientX - r.left, y: e.clientY - r.top };
+        const clientX = e.clientX !== undefined ? e.clientX : (e.touches && e.touches[0] ? e.touches[0].clientX : 0);
+        const clientY = e.clientY !== undefined ? e.clientY : (e.touches && e.touches[0] ? e.touches[0].clientY : 0);
+        return {
+          x: clientX - r.left,
+          y: clientY - r.top
+        };
       }
 
       function startDraw(e) {
         e.preventDefault();
+        try { if (e.pointerId && spkSigCanvasElem.setPointerCapture) spkSigCanvasElem.setPointerCapture(e.pointerId); } catch(_) {}
         isSpkSigDrawing = true;
         hasDrawnSpkSig = true;
         spkUploadedSigDataUrl = null;
@@ -11365,24 +11539,34 @@
         if (isSpkSigDrawing) {
           isSpkSigDrawing = false;
           spkSigCanvasCtx.closePath();
+          try { if (e.pointerId && spkSigCanvasElem.releasePointerCapture) spkSigCanvasElem.releasePointerCapture(e.pointerId); } catch(_) {}
         }
       }
 
-      spkSigCanvasElem.onmousedown = startDraw;
-      spkSigCanvasElem.onmousemove = draw;
-      spkSigCanvasElem.onmouseup = stopDraw;
-      spkSigCanvasElem.onmouseleave = stopDraw;
-
-      spkSigCanvasElem.addEventListener('touchstart', startDraw, { passive: false });
-      spkSigCanvasElem.addEventListener('touchmove', draw, { passive: false });
-      spkSigCanvasElem.addEventListener('touchend', stopDraw, { passive: false });
-      spkSigCanvasElem.addEventListener('touchcancel', stopDraw, { passive: false });
+      if (window.PointerEvent) {
+        spkSigCanvasElem.onpointerdown = startDraw;
+        spkSigCanvasElem.onpointermove = draw;
+        spkSigCanvasElem.onpointerup = stopDraw;
+        spkSigCanvasElem.onpointercancel = stopDraw;
+        spkSigCanvasElem.onpointerleave = stopDraw;
+      } else {
+        spkSigCanvasElem.onmousedown = startDraw;
+        spkSigCanvasElem.onmousemove = draw;
+        spkSigCanvasElem.onmouseup = stopDraw;
+        spkSigCanvasElem.onmouseleave = stopDraw;
+        spkSigCanvasElem.ontouchstart = startDraw;
+        spkSigCanvasElem.ontouchmove = draw;
+        spkSigCanvasElem.ontouchend = stopDraw;
+        spkSigCanvasElem.ontouchcancel = stopDraw;
+      }
     }
 
     function clearSpeakerSigCanvas() {
       if (!spkSigCanvasElem || !spkSigCanvasCtx) return;
-      const rect = spkSigCanvasElem.getBoundingClientRect();
-      spkSigCanvasCtx.clearRect(0, 0, rect.width, rect.height);
+      spkSigCanvasCtx.setTransform(1, 0, 0, 1, 0, 0);
+      spkSigCanvasCtx.clearRect(0, 0, spkSigCanvasElem.width, spkSigCanvasElem.height);
+      const ratio = Math.max(window.devicePixelRatio || 1, 1);
+      spkSigCanvasCtx.scale(ratio, ratio);
       hasDrawnSpkSig = false;
       spkUploadedSigDataUrl = null;
       const ph = document.getElementById('spkSigPlaceholder');
@@ -11423,6 +11607,7 @@
 
     function confirmSpeakerSignatureModal() {
       if (!currentSigningSpeakerEventId) return;
+      harvestAllTeamBFieldsFromDOM(currentSigningSpeakerEventId);
       const req = AppState.requests.find(r => r.eventId === currentSigningSpeakerEventId);
       if (!req) return;
 
@@ -11452,8 +11637,10 @@
 
       localStorage.setItem('twp_requests_store', JSON.stringify(AppState.requests));
       closeSpeakerSignatureModal();
-      showAlert('บันทึกลายเซ็นและข้อมูลวิทยากรเรียบร้อยแล้ว', 'success');
+      showAlert('✅ บันทึกลายเซ็นและข้อมูลวิทยากรเรียบร้อยแล้ว (เก็บข้อมูลทั้งหมดโดยไม่สูญหาย)', 'success');
+      const curScroll = window.scrollY;
       renderTeamBQueue();
+      window.scrollTo({ top: curScroll, behavior: 'instant' });
     }
 
     function syncOnsiteToTeamB(eventId) {
@@ -11480,21 +11667,21 @@
     }
 
     function handleTeamBAction(eventId, decision) {
-      harvestTeamBSpeakersFromDOM(eventId);
+      harvestAllTeamBFieldsFromDOM(eventId);
       const req = AppState.requests.find(r => r.eventId === eventId);
       const speakers = (req && req.speakers) ? req.speakers : [];
       const speaker = (req && req.teamBSpeaker) ? req.teamBSpeaker : (document.getElementById('teamBSpeaker-' + eventId)?.value || '');
-      const actualBudget = Number(document.getElementById('actualBudget-' + eventId)?.value) || 0;
+      const actualBudget = Number(document.getElementById('actualBudget-' + eventId)?.value) || Number(req?.actualBudget) || 0;
       const actualTrainees = Number(document.getElementById('teamBActualTrainees-' + eventId)?.value) || Number(req?.actualTrainees) || Number(req?.expectedTrainees) || 50;
       const targetSalesInput = document.getElementById('teamBTargetSales-' + eventId);
       const targetSales = targetSalesInput ? (Number(targetSalesInput.value) || 0) : (Number(req?.targetSales) || 0);
       const reviewerInput = document.getElementById('teamBReviewer-' + eventId);
-      const reviewerName = reviewerInput ? reviewerInput.value.trim() : (AppState.currentUser?.fullName || AppState.operatorName || 'ฝ่ายวิชาการ (ทีม B)');
+      const reviewerName = reviewerInput ? reviewerInput.value.trim() : (req?.reviewedBy || AppState.currentUser?.fullName || AppState.operatorName || 'ฝ่ายวิชาการ (ทีม B)');
       if (reviewerName) {
         AppState.operatorName = reviewerName;
         localStorage.setItem('ems_operator_name', reviewerName);
       }
-      const notes = document.getElementById('teamBNotes-' + eventId)?.value || '';
+      const notes = document.getElementById('teamBNotes-' + eventId)?.value ?? (req?.teamBNotes || '');
 
       const payload = {
         eventId: eventId,
@@ -11529,32 +11716,168 @@
           req.reviewedByBAt = new Date().toISOString();
           localStorage.setItem('twp_requests_store', JSON.stringify(AppState.requests));
         }
-        if (isFallback) {
-          showAlert(`✅ บันทึกผลการตรวจสอบทีม B ให้คำขอ ${eventId} เรียบร้อยแล้ว (บันทึกในเครื่อง: Google Apps Script ยังไม่พร้อมเชื่อมต่อ)`, 'success');
+        if (decision === 'RETURN_TO_A') {
+          showAlert(`↩️ ส่งคำขอ ${eventId} กลับให้ทีม A ปรับปรุงเรียบร้อยแล้ว`, 'info');
         } else {
-          showAlert('บันทึกผลการตรวจสอบของทีม B เรียบร้อยแล้ว', 'success');
+          showAlert(`✅ บันทึกและส่งคำขอ ${eventId} ไปยัง "คิวรอผู้บริหารอนุมัติงบ" เรียบร้อยแล้ว (ข้อมูลถูกจัดเก็บครบถ้วน)`, 'success');
         }
         notifyDataUpdated('UPDATE_REVIEW_B');
         renderAll();
       }
 
+      // 1. Optimistic Local Persistence FIRST (Zero Data Loss)
+      applyLocalTeamB(false);
+
+      // 2. Sync to Backend (if online/endpoint available)
       if (AppState.gasEndpoint) {
         postToBackend('UPDATE_REVIEW_B', payload)
           .then(res => {
             if (res && res.status === 'SUCCESS') {
-              showAlert('บันทึกผลการตรวจสอบของทีม B เรียบร้อยแล้ว (ซิงค์ Google Sheets สำเร็จ)', 'success');
-              notifyDataUpdated('UPDATE_REVIEW_B');
-              fetchInitialData();
+              console.log('UPDATE_REVIEW_B synced to GAS successfully');
             } else {
-              applyLocalTeamB(true);
+              console.warn('postToBackend UPDATE_REVIEW_B non-success status, kept local:', res);
             }
           })
           .catch(err => {
-            console.warn('postToBackend UPDATE_REVIEW_B failed, falling back to local storage:', err);
-            applyLocalTeamB(true);
+            console.warn('postToBackend UPDATE_REVIEW_B failed, keeping optimistic local storage:', err);
           });
-      } else {
-        applyLocalTeamB(false);
+      }
+    }
+
+    function renderTeamBWaitingExecQueue() {
+      const container = document.getElementById('teamBWaitingExecContainer');
+      const countBadge = document.getElementById('teamBWaitingExecCount');
+      const subBadge = document.getElementById('teamBWaitingExecBadge');
+      if (!container) return;
+
+      const queue = (AppState.requests || []).filter(r => r.status === 'WAITING_EXEC');
+      if (countBadge) countBadge.innerText = queue.length;
+      if (subBadge) subBadge.innerText = queue.length;
+
+      if (queue.length === 0) {
+        container.innerHTML = `
+          <div class="p-8 text-center bg-amber-50/40 rounded-2xl border border-dashed border-amber-200 text-slate-400 space-y-2">
+            <i class="fa-solid fa-hourglass-half text-amber-500 text-3xl"></i>
+            <p class="text-sm font-semibold text-slate-600">ไม่มีคำขอที่อยู่ระหว่างรอผู้บริหารอนุมัติ</p>
+            <p class="text-xs text-slate-400">เมื่อทีม B กด "ยืนยันและส่งต่อผู้บริหารอนุมัติ" ในคิวตรวจด้านบน คำขอจะมาปรากฏที่นี่เพื่อติดตามสถานะ</p>
+          </div>`;
+        return;
+      }
+
+      container.innerHTML = queue.map(req => {
+        const reqSpeakers = getEventSpeakers(req);
+        const speakersText = reqSpeakers.map((s, idx) => {
+          const sigTag = s.signature ? '<span class="text-emerald-600 font-semibold">(เซ็นแล้ว)</span>' : '<span class="text-amber-600">(รอเซ็น)</span>';
+          return `${s.name || 'ไม่ระบุชื่อ'} ${sigTag}`;
+        }).join(', ');
+
+        const isOutOfPlan = req.isOutOfPlan === 'YES' || req.outOfPlanReason;
+        const actualBudgetText = Number(req.actualBudget || 0).toLocaleString();
+        const estBudgetText = Number(req.estBudget || 0).toLocaleString();
+        const targetSalesText = Number(req.targetSales || 0).toLocaleString();
+        const traineesCount = Number(req.actualTrainees || req.expectedTrainees || 50).toLocaleString();
+
+        return `
+          <div onclick="setActiveReadingCard(this)" class="reading-card bg-gradient-to-br from-white via-amber-50/20 to-purple-50/20 rounded-3xl p-5 sm:p-6 border-2 border-amber-200 shadow-sm hover:shadow-md transition space-y-4 cursor-pointer">
+            <!-- Header -->
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-amber-100 pb-3">
+              <div>
+                <div class="flex flex-wrap items-center gap-2">
+                  <span class="font-black text-slate-900 font-mono text-base">${req.eventId} ${getSampleBadgeHtml(req)}</span>
+                  <span class="text-xs bg-amber-100 text-amber-900 font-bold px-2.5 py-0.5 rounded-full border border-amber-300 flex items-center">
+                    <i class="fa-solid fa-hourglass-half mr-1 text-amber-600 animate-spin"></i>ส่งต่อแล้ว • รอผู้บริหารลงนามอนุมัติ (WAITING_EXEC)
+                  </span>
+                  ${isOutOfPlan ? '<span class="text-xs bg-rose-100 text-rose-800 font-bold px-2 py-0.5 rounded-full border border-rose-300">⚡ นอกแผนหลักการ</span>' : ''}
+                  ${req.skipECert ? '<span class="text-xs bg-rose-100 text-rose-800 font-bold px-2.5 py-0.5 rounded-full border border-rose-300 flex items-center"><i class="fa-solid fa-ban mr-1 text-rose-600"></i>ไม่ออก E-Cer</span>' : ''}
+                  <span class="text-xs bg-slate-100 text-slate-600 px-2 py-0.5 rounded-md font-mono">วันที่จัด: ${req.eventDate || '-'}</span>
+                </div>
+                <h3 class="font-bold text-slate-900 text-base mt-1.5">${req.courseTopic}</h3>
+                <p class="text-xs text-blue-700 font-medium">${req.schoolName} (${req.province}) &bull; เสนอโดยทีม A: <strong>${req.saleName || req.createdBy || '-'}</strong></p>
+              </div>
+
+              <div class="flex flex-wrap items-center gap-2">
+                <button type="button" onclick="openPpcReportModal('${req.eventId}', 'MEMO')" class="px-3.5 py-2 bg-blue-50 hover:bg-blue-100 text-[#08539E] border border-blue-200 text-xs font-bold rounded-xl transition flex items-center space-x-1.5 shadow-xs cursor-pointer btn-tactile" title="เปิดดูบันทึกข้อความขออนุมัติปฏิบัติงาน A4 พร้อมลายเซ็นวิทยากร">
+                  <i class="fa-solid fa-file-invoice text-blue-600"></i>
+                  <span>ดูบันทึกขออนุมัติ A4</span>
+                </button>
+                <button type="button" onclick="revertTeamBToReview('${req.eventId}')" class="px-3.5 py-2 bg-amber-50 hover:bg-amber-100 text-amber-800 border border-amber-300 rounded-xl text-xs font-bold transition flex items-center space-x-1.5 shadow-xs cursor-pointer btn-tactile" title="ดึงคำขอนี้กลับมาแก้ไขข้อมูลในคิวตรวจทาน (ทีม B)">
+                  <i class="fa-solid fa-arrow-rotate-left text-amber-700"></i>
+                  <span>↩️ ดึงกลับมาแก้ไข</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- Parameters Grid (Saved Values Display) -->
+            <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5 text-xs">
+              <div class="bg-white p-3 rounded-2xl border border-amber-200/70 shadow-xs">
+                <span class="text-slate-400 block text-[10px]">งบประมาณตัดจ่าย (ทีม B):</span>
+                <span class="text-base font-extrabold text-purple-900 font-mono">฿${actualBudgetText}</span>
+                <span class="text-[10px] text-slate-500 block">ขอดั้งเดิม: ฿${estBudgetText}</span>
+              </div>
+              <div class="bg-white p-3 rounded-2xl border border-amber-200/70 shadow-xs">
+                <span class="text-slate-400 block text-[10px]">เป้าหมายยอดขายที่กระทบ:</span>
+                <span class="text-base font-extrabold text-emerald-700 font-mono">฿${targetSalesText}</span>
+                <span class="text-[10px] text-emerald-600 font-semibold block">ประเมินโดยทีม B</span>
+              </div>
+              <div class="bg-white p-3 rounded-2xl border border-amber-200/70 shadow-xs">
+                <span class="text-slate-400 block text-[10px]">ผู้เข้าอบรมที่คาดว่าจะเกิดขึ้น:</span>
+                <span class="text-base font-extrabold text-indigo-700 font-mono">${traineesCount} คน</span>
+                <span class="text-[10px] text-slate-500 block">จากเดิม: ${(req.expectedTrainees || 50).toLocaleString()} คน</span>
+              </div>
+              <div class="bg-white p-3 rounded-2xl border border-amber-200/70 shadow-xs">
+                <span class="text-slate-400 block text-[10px]">ผู้ตรวจทาน (ทีม B):</span>
+                <span class="text-xs font-bold text-slate-800 block truncate mt-1">${req.reviewedBy || 'ฝ่ายวิชาการ'}</span>
+                <span class="text-[10px] text-slate-500 block">${req.reviewedByBAt ? new Date(req.reviewedByBAt).toLocaleDateString('th-TH') : 'ตรวจแล้ว'}</span>
+              </div>
+            </div>
+
+            <!-- Speakers & Signatures Bar -->
+            <div class="bg-white p-3 rounded-2xl border border-slate-200 text-xs flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+              <div class="flex items-center space-x-2">
+                <i class="fa-solid fa-chalkboard-user text-purple-600"></i>
+                <span class="font-bold text-slate-700">คณะวิทยากร:</span>
+                <span class="text-slate-800 font-medium">${speakersText || req.teamBSpeaker || '-'}</span>
+              </div>
+              <div class="flex items-center space-x-2">
+                ${req.speakerSignature ? `
+                  <span class="text-[11px] text-emerald-700 font-bold bg-emerald-50 px-2.5 py-1 rounded-lg border border-emerald-200 flex items-center">
+                    <i class="fa-solid fa-circle-check text-emerald-600 mr-1.5"></i>เก็บบันทึกลายเซ็นดิจิทัลแล้ว
+                  </span>
+                ` : `
+                  <span class="text-[11px] text-slate-500 bg-slate-100 px-2.5 py-1 rounded-lg border border-slate-200">
+                    ไม่มีลายเซ็นดิจิทัล
+                  </span>
+                `}
+              </div>
+            </div>
+
+            ${req.teamBNotes ? `
+              <div class="bg-purple-50/50 p-2.5 rounded-xl border border-purple-100 text-xs text-purple-950">
+                <strong class="text-purple-900">ข้อเสนอแนะทีม B:</strong> ${req.teamBNotes}
+              </div>
+            ` : ''}
+
+          </div>
+        `;
+      }).join('');
+    }
+
+    function revertTeamBToReview(eventId) {
+      const req = AppState.requests.find(r => r.eventId === eventId);
+      if (!req) return;
+      if (!confirm(`คุณต้องการดึงคำขอ ${eventId} กลับมาแก้ไขในคิวตรวจทาน (ทีม B) ใช่หรือไม่?`)) return;
+
+      req.status = 'WAITING_B';
+      localStorage.setItem('twp_requests_store', JSON.stringify(AppState.requests));
+      showAlert(`ดึงคำขอ ${eventId} กลับมายังคิวตรวจทานทีม B เรียบร้อยแล้ว`, 'info');
+      renderAll();
+
+      if (AppState.gasEndpoint) {
+        postToBackend('UPDATE_REVIEW_B', {
+          eventId: eventId,
+          decision: 'REVERT_TO_WAITING_B',
+          status: 'WAITING_B'
+        }).catch(err => console.warn('Sync revert failed:', err));
       }
     }
 
@@ -11624,9 +11947,13 @@
       sigCanvasCtx = sigCanvasElem.getContext('2d');
 
       const rect = sigCanvasElem.getBoundingClientRect();
-      const ratio = window.devicePixelRatio || 1;
-      sigCanvasElem.width = rect.width * ratio;
-      sigCanvasElem.height = rect.height * ratio;
+      const ratio = Math.max(window.devicePixelRatio || 1, 1);
+      const cssWidth = Math.round(rect.width) || 450;
+      const cssHeight = Math.round(rect.height) || 176;
+
+      sigCanvasElem.width = cssWidth * ratio;
+      sigCanvasElem.height = cssHeight * ratio;
+      sigCanvasCtx.setTransform(1, 0, 0, 1, 0, 0);
       sigCanvasCtx.scale(ratio, ratio);
       sigCanvasCtx.lineWidth = 2.8;
       sigCanvasCtx.lineCap = 'round';
@@ -11635,14 +11962,17 @@
 
       function getPos(e) {
         const r = sigCanvasElem.getBoundingClientRect();
-        if (e.touches && e.touches.length > 0) {
-          return { x: e.touches[0].clientX - r.left, y: e.touches[0].clientY - r.top };
-        }
-        return { x: e.clientX - r.left, y: e.clientY - r.top };
+        const clientX = e.clientX !== undefined ? e.clientX : (e.touches && e.touches[0] ? e.touches[0].clientX : 0);
+        const clientY = e.clientY !== undefined ? e.clientY : (e.touches && e.touches[0] ? e.touches[0].clientY : 0);
+        return {
+          x: clientX - r.left,
+          y: clientY - r.top
+        };
       }
 
       function startDraw(e) {
         e.preventDefault();
+        try { if (e.pointerId && sigCanvasElem.setPointerCapture) sigCanvasElem.setPointerCapture(e.pointerId); } catch(_) {}
         isSigDrawing = true;
         hasDrawnSignature = true;
         const ph = document.getElementById('sigPlaceholder');
@@ -11664,26 +11994,34 @@
         if (isSigDrawing) {
           isSigDrawing = false;
           sigCanvasCtx.closePath();
+          try { if (e.pointerId && sigCanvasElem.releasePointerCapture) sigCanvasElem.releasePointerCapture(e.pointerId); } catch(_) {}
         }
       }
 
-      // Mouse Listeners
-      sigCanvasElem.onmousedown = startDraw;
-      sigCanvasElem.onmousemove = draw;
-      sigCanvasElem.onmouseup = stopDraw;
-      sigCanvasElem.onmouseleave = stopDraw;
-
-      // Touch Listeners (iPhone / Android / Tablet)
-      sigCanvasElem.addEventListener('touchstart', startDraw, { passive: false });
-      sigCanvasElem.addEventListener('touchmove', draw, { passive: false });
-      sigCanvasElem.addEventListener('touchend', stopDraw, { passive: false });
-      sigCanvasElem.addEventListener('touchcancel', stopDraw, { passive: false });
+      if (window.PointerEvent) {
+        sigCanvasElem.onpointerdown = startDraw;
+        sigCanvasElem.onpointermove = draw;
+        sigCanvasElem.onpointerup = stopDraw;
+        sigCanvasElem.onpointercancel = stopDraw;
+        sigCanvasElem.onpointerleave = stopDraw;
+      } else {
+        sigCanvasElem.onmousedown = startDraw;
+        sigCanvasElem.onmousemove = draw;
+        sigCanvasElem.onmouseup = stopDraw;
+        sigCanvasElem.onmouseleave = stopDraw;
+        sigCanvasElem.ontouchstart = startDraw;
+        sigCanvasElem.ontouchmove = draw;
+        sigCanvasElem.ontouchend = stopDraw;
+        sigCanvasElem.ontouchcancel = stopDraw;
+      }
     }
 
     function clearSignatureCanvas() {
       if (!sigCanvasElem || !sigCanvasCtx) return;
-      const rect = sigCanvasElem.getBoundingClientRect();
-      sigCanvasCtx.clearRect(0, 0, rect.width, rect.height);
+      sigCanvasCtx.setTransform(1, 0, 0, 1, 0, 0);
+      sigCanvasCtx.clearRect(0, 0, sigCanvasElem.width, sigCanvasElem.height);
+      const ratio = Math.max(window.devicePixelRatio || 1, 1);
+      sigCanvasCtx.scale(ratio, ratio);
       hasDrawnSignature = false;
       const ph = document.getElementById('sigPlaceholder');
       if (ph) ph.style.display = 'flex';
@@ -11863,7 +12201,9 @@
       
       // Keep QR URL ultra-compact (only token/eventId) to ensure massive, sharp, instant QR scanning!
       const effToken = token || (req && (req.token || req.eventId)) || 'demo-active-learning-2026';
-      return baseUrl + '?t=' + encodeURIComponent(effToken);
+      const isNoCert = req && (req.skipECert === true || req.skipECert === 'YES' || req.noECert === true);
+      const extraParam = isNoCert ? '&no_cert=1' : '';
+      return baseUrl + '?t=' + encodeURIComponent(effToken) + extraParam;
     }
 
     function switchQrModalMode(mode) {
@@ -11883,11 +12223,52 @@
       let targetUrl = '';
       let darkColor = '#1e3a8a';
 
+      const isNoCert = req.skipECert === true || req.skipECert === 'YES' || req.noECert === true;
+      const bannerEl = document.getElementById('modalSkipECertBannerContainer');
+
       if (mode === 'SURVEY') {
         surveyBtn.className = 'py-1.5 px-2 rounded-lg bg-white text-blue-700 shadow-sm flex items-center justify-center space-x-1 transition cursor-pointer';
         resBtn.className = 'py-1.5 px-2 rounded-lg text-slate-600 hover:text-slate-900 flex items-center justify-center space-x-1 transition cursor-pointer';
-        subtitle.innerText = 'สแกนด้วยสมาร์ทโฟนเพื่อทำแบบประเมินผลการอบรม 10 ข้อ';
-        linkTag.innerText = 'แบบประเมินออนไลน์ 10 ข้อ';
+        
+        if (bannerEl) {
+          bannerEl.classList.remove('hidden');
+          if (isNoCert) {
+            bannerEl.innerHTML = `
+              <div class="p-2.5 bg-rose-50 border border-rose-300 text-rose-900 rounded-xl flex items-center justify-between gap-2 text-xs">
+                <div class="flex items-center space-x-2">
+                  <i class="fa-solid fa-ban text-rose-600 text-base"></i>
+                  <div>
+                    <strong>โหมด: ไม่ต้องออก E-Cer (เปิดอยู่)</strong>
+                    <p class="text-[10px] text-rose-700">ผู้เข้าอบรมจะทำแบบประเมิน 10 ข้ออย่างเดียว โดยไม่มีการออกวุฒิบัตร</p>
+                  </div>
+                </div>
+                <button type="button" onclick="toggleSkipECertFromModal()" class="px-2.5 py-1 bg-white hover:bg-rose-100 text-rose-800 border border-rose-300 rounded-lg text-xs font-bold transition cursor-pointer whitespace-nowrap">
+                  <i class="fa-solid fa-rotate-left mr-1"></i>เปิดออก E-Cer
+                </button>
+              </div>
+            `;
+            subtitle.innerText = 'สแกนด้วยสมาร์ทโฟนเพื่อทำแบบประเมิน 10 ข้อ (หลักสูตรนี้ไม่ออกวุฒิบัตร E-Cer)';
+            linkTag.innerText = 'แบบประเมิน 10 ข้อ (ไม่ออก E-Cer)';
+          } else {
+            bannerEl.innerHTML = `
+              <div class="p-2.5 bg-slate-50 border border-slate-200 text-slate-700 rounded-xl flex items-center justify-between gap-2 text-xs">
+                <div class="flex items-center space-x-2">
+                  <i class="fa-solid fa-award text-amber-500 text-base"></i>
+                  <div>
+                    <strong>โหมด: ออกวุฒิบัตร E-Certificate ปกติ</strong>
+                    <p class="text-[10px] text-slate-500">ผู้เข้าอบรมประเมิน ➔ รับวุฒิบัตร A4 อัตโนมัติ</p>
+                  </div>
+                </div>
+                <button type="button" onclick="toggleSkipECertFromModal()" class="px-2.5 py-1 bg-rose-600 hover:bg-rose-700 text-white rounded-lg text-xs font-bold shadow-xs transition cursor-pointer whitespace-nowrap">
+                  <i class="fa-solid fa-ban mr-1"></i>ไม่ต้องออก E-Cer
+                </button>
+              </div>
+            `;
+            subtitle.innerText = 'สแกนด้วยสมาร์ทโฟนเพื่อทำแบบประเมินผลการอบรม 10 ข้อ';
+            linkTag.innerText = 'แบบประเมินออนไลน์ 10 ข้อ';
+          }
+        }
+
         linkTag.className = 'text-[9px] text-blue-600 bg-blue-50 px-1 py-0.5 rounded';
         resEditBox.classList.add('hidden');
 
@@ -11895,6 +12276,7 @@
         targetUrl = getSurveyFullUrl(token, req);
         darkColor = '#1e3a8a';
       } else {
+        if (bannerEl) bannerEl.classList.add('hidden');
         resBtn.className = 'py-1.5 px-2 rounded-lg bg-white text-amber-700 shadow-sm flex items-center justify-center space-x-1 transition cursor-pointer';
         surveyBtn.className = 'py-1.5 px-2 rounded-lg text-slate-600 hover:text-slate-900 flex items-center justify-center space-x-1 transition cursor-pointer';
         subtitle.innerHTML = '<span class="text-amber-700 font-bold"><i class="fa-solid fa-lock mr-1"></i>ผู้เข้าอบรมจะสแกนเข้าถึงไฟล์ได้ต่อเมื่อ "ทำแบบประเมินเสร็จแล้วเท่านั้น"</span><br><span class="text-slate-500 text-[9.5px]">(ระบบจะปลดล็อกปุ่มและ QR Code คลังไฟล์ในหน้าวุฒิบัตรทันทีหลังส่งประเมิน)</span>';
@@ -11942,8 +12324,11 @@
       const req = AppState.requests.find(r => r.eventId === activeQrModalEventId);
       if (!req) return;
 
-      const title = 'แบบประเมินผลการจัดอบรม 10 ข้อ';
-      const sub = 'กรุณาสแกน QR Code เพื่อทำแบบประเมิน 10 ข้อ และรับวุฒิบัตร e-Certificate พร้อมปลดล็อกคลังดาวน์โหลดไฟล์เอกสารประกอบโครงการ';
+      const isNoCert = req.skipECert === true || req.skipECert === 'YES' || req.noECert === true;
+      const title = isNoCert ? 'แบบประเมินความพึงพอใจการจัดอบรม 10 ข้อ' : 'แบบประเมินผลการจัดอบรม 10 ข้อ';
+      const sub = isNoCert 
+        ? 'กรุณาสแกน QR Code เพื่อทำแบบประเมินความพึงพอใจ 10 ข้อ (หลักสูตรนี้ไม่มีการออกใบวุฒิบัตร e-Certificate)'
+        : 'กรุณาสแกน QR Code เพื่อทำแบบประเมิน 10 ข้อ และรับวุฒิบัตร e-Certificate พร้อมปลดล็อกคลังดาวน์โหลดไฟล์เอกสารประกอบโครงการ';
       const url = document.getElementById('modalShareUrl').value;
 
       const printWin = window.open('', '_blank');
@@ -13110,7 +13495,7 @@ function renderA4EvalReportHtmlClient(d) {
           </table>
 
           <div style="margin-top:14px; padding-top:4px; border-top:1px solid #e2e8f0; font-size:8.5pt; color:#94a3b8; text-align:center;">
-            เอกสารฉบับนี้สร้างโดยระบบ Training Center TWP (EMS Enterprise Platform v1.22.12) • ใช้สำหรับติดตามและควบคุมผลการปฏิบัติงานภายใน (PPC Standard)
+            เอกสารฉบับนี้สร้างโดยระบบ Training Center TWP (EMS Enterprise Platform v1.22.14) • ใช้สำหรับติดตามและควบคุมผลการปฏิบัติงานภายใน (PPC Standard)
           </div>
         </div>
       `;
@@ -15242,7 +15627,7 @@ function renderA4EvalReportHtmlClient(d) {
     }
 
     // =========================================================================
-    // AUTOMATED PIPELINE SELF-DIAGNOSTIC & INTEGRITY AUDIT SUITE (v1.22.12)
+    // AUTOMATED PIPELINE SELF-DIAGNOSTIC & INTEGRITY AUDIT SUITE (v1.22.14)
     // การันตีความปลอดภัย 100%: ไม่แตะต้อง/ไม่เขียนทับข้อมูลจริงในเครื่องหรือ Cloud
     // =========================================================================
     let lastDiagnosticResult = null;
@@ -15932,7 +16317,7 @@ function renderA4EvalReportHtmlClient(d) {
           <div>
             <div class="flex items-center space-x-2">
               <h3 class="font-bold text-slate-900 text-lg">ประวัติและการปรับปรุงระบบเวอร์ชัน (Release Notes)</h3>
-              <span class="bg-blue-100 text-[#08539E] text-xs font-bold font-mono px-2 py-0.5 rounded-full">v1.22.12 Current</span>
+              <span class="bg-blue-100 text-[#08539E] text-xs font-bold font-mono px-2 py-0.5 rounded-full">v1.22.14 Current</span>
             </div>
             <p class="text-xs text-slate-500">บันทึกประวัติการปรับปรุงสถาปัตยกรรมและฟังก์ชันการทำงานอย่างละเอียด</p>
           </div>
@@ -15945,11 +16330,11 @@ function renderA4EvalReportHtmlClient(d) {
       <!-- Release Timeline List -->
       <div class="space-y-4">
         
-        <!-- v1.22.12 (Current Major Release) -->
+        <!-- v1.22.14 (Current Major Release) -->
         <div class="p-5 bg-gradient-to-br from-emerald-50 via-white to-teal-50/70 border-2 border-emerald-400 rounded-3xl space-y-3 shadow-sm">
           <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-1">
             <div class="flex items-center space-x-2">
-              <span class="bg-emerald-600 text-white text-xs font-black px-2.5 py-0.5 rounded-lg font-mono">v1.22.12</span>
+              <span class="bg-emerald-600 text-white text-xs font-black px-2.5 py-0.5 rounded-lg font-mono">v1.22.14</span>
               <span class="font-bold text-slate-900 text-sm">Automated Pipeline Self-Diagnostic Suite & Zero-Loss Data Protection</span>
             </div>
             <span class="text-[11px] text-emerald-700 font-bold font-mono">2026-11-16 &bull; Current Release</span>
@@ -16248,7 +16633,7 @@ function renderA4EvalReportHtmlClient(d) {
               <span class="text-xs bg-emerald-500/30 text-emerald-300 border border-emerald-400/40 px-2 py-0.5 rounded-full font-mono font-bold">Release Note</span>
               <span class="text-xs text-slate-300">อัปเดตระบบเวอร์ชัน 1.22.12</span>
             </div>
-            <h2 class="text-lg sm:text-xl font-black text-white mt-1">ประกาศอัปเดตระบบ Training Center TWP v1.22.12</h2>
+            <h2 class="text-lg sm:text-xl font-black text-white mt-1">ประกาศอัปเดตระบบ Training Center TWP v1.22.14</h2>
           </div>
         </div>
         <button type="button" onclick="closeWhatsNewModal()" class="text-white/70 hover:text-white text-xl p-1 cursor-pointer">
@@ -16260,7 +16645,7 @@ function renderA4EvalReportHtmlClient(d) {
       <div class="p-6 overflow-y-auto custom-scrollbar space-y-3.5 text-xs">
         <div class="p-3.5 bg-gradient-to-r from-emerald-50 to-teal-50 border-2 border-emerald-400 rounded-2xl space-y-2 mb-3 shadow-xs">
           <div class="flex items-center space-x-2">
-            <span class="px-2 py-0.5 rounded-full text-[10px] font-black bg-emerald-700 text-white">ไฮไลต์ v1.22.12</span>
+            <span class="px-2 py-0.5 rounded-full text-[10px] font-black bg-emerald-700 text-white">ไฮไลต์ v1.22.14</span>
             <span class="font-bold text-slate-900 text-xs sm:text-sm">ระบบตรวจสุขภาพและทดสอบตัวเองอัตโนมัติ (Automated Pipeline Self-Diagnostic Suite) ปลอดภัย 100%</span>
           </div>
           <p class="text-slate-700 leading-relaxed font-medium">
@@ -16271,7 +16656,7 @@ function renderA4EvalReportHtmlClient(d) {
           </p>
         </div>
         <p class="text-slate-600 font-medium leading-relaxed">
-          สรุปรายละเอียดการพัฒนาต่อเนื่องของระบบ <strong>Enterprise Governance & Cross-Team Real-time Sync Edition (v1.22.12)</strong>:
+          สรุปรายละเอียดการพัฒนาต่อเนื่องของระบบ <strong>Enterprise Governance & Cross-Team Real-time Sync Edition (v1.22.14)</strong>:
         </p>
 
         <!-- Feature 1 -->
@@ -16625,7 +17010,7 @@ function renderA4EvalReportHtmlClient(d) {
       <div class="p-4 bg-slate-50 border-t border-slate-200 flex flex-col sm:flex-row items-center justify-between gap-3 shrink-0 text-xs">
         <div class="flex items-center space-x-2 text-slate-500">
           <i class="fa-solid fa-shield-check text-emerald-600 text-sm"></i>
-          <span>In-Memory Sandbox • Zero-Loss Guarantee • TWP Enterprise v1.22.12</span>
+          <span>In-Memory Sandbox • Zero-Loss Guarantee • TWP Enterprise v1.22.14</span>
         </div>
         <button type="button" onclick="closeSelfDiagnosticModal()" class="px-5 py-2 bg-slate-200 hover:bg-slate-300 text-slate-700 rounded-xl font-bold transition cursor-pointer">
           ปิดหน้าต่าง

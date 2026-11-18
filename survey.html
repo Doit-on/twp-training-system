@@ -217,7 +217,7 @@
         
         <div class="text-[11px] bg-blue-900/80 px-2.5 py-1 rounded-full border border-blue-400/30 hidden sm:flex items-center">
           <i class="fa-solid fa-award text-amber-300 mr-1.5"></i>
-          <span>v1.22.1</span>
+          <span>v1.22.14</span>
         </div>
       </div>
     </div>
@@ -803,7 +803,7 @@
 
   <!-- Footer -->
   <footer class="py-4 text-center text-xs text-slate-400 border-t border-slate-200/60 mt-auto bg-white">
-    EMS Enterprise Closed-Loop Feedback & e-Certificate Platform v1.22.1 &copy; 2026 สำนักพิมพ์ไทยวัฒนาพานิช จำกัด
+    EMS Enterprise Closed-Loop Feedback & e-Certificate Platform v1.22.14 &copy; 2026 สำนักพิมพ์ไทยวัฒนาพานิช จำกัด
   </footer>
 
   <script>
@@ -896,6 +896,7 @@
     const urlParams = new URLSearchParams(window.location.search);
     const surveyToken = urlParams.get('t') || urlParams.get('token') || urlParams.get('evt') || 'demo-active-learning-2026';
     const gasEndpoint = urlParams.get('ep') || DEFAULT_GAS_ENDPOINT;
+    const isNoCertParam = urlParams.get('no_cert') === '1' || urlParams.get('skip_cert') === '1' || urlParams.get('nocert') === '1';
 
     // Global Survey & Certificate State
     let currentParticipant = {
@@ -904,6 +905,7 @@
       school: '',
       email: '',
       certId: '',
+      skipECert: isNoCertParam,
       courseTitle: 'Active Learning สู่สมรรถนะผู้เรียนด้วยสื่อนวัตกรรมดิจิทัล',
       speakerName: 'ศ.ดร.ประสาน ปัญญาเลิศ',
       speakers: [
@@ -992,11 +994,21 @@
         return;
       }
 
+      // Check URL param or state for no cert mode
+      if (isNoCertParam || currentParticipant.skipECert) {
+        applyNoCertModeIfNeeded();
+      }
+
       // 2. Check if already completed Step 1 in local session
       const submittedResp = localStorage.getItem('ems_submitted_' + surveyToken);
       const isEmailSent = localStorage.getItem('ems_cert_sent_' + surveyToken) === 'SENT';
 
       if (submittedResp) {
+        const isNoCert = currentParticipant.skipECert || isNoCertParam;
+        if (isNoCert) {
+          showNoCertCompletionCard(submittedResp);
+          return;
+        }
         const savedData = localStorage.getItem('ems_participant_data_' + surveyToken);
         if (savedData) {
           try {
@@ -1131,6 +1143,10 @@
 
       function applyFoundEvent(found) {
         if (!found) return;
+        if (found.skipECert === true || found.skipECert === 'YES' || found.noECert === true) {
+          currentParticipant.skipECert = true;
+          applyNoCertModeIfNeeded();
+        }
         if (!pTopic && found.courseTopic) currentParticipant.courseTitle = found.courseTopic;
         if (!pSpeaker && (found.teamBSpeaker || found.speakerType)) currentParticipant.speakerName = found.teamBSpeaker || found.speakerType;
         if (found.approvedBy) currentParticipant.executiveName = found.approvedBy;
@@ -1365,7 +1381,108 @@
       }).catch(e => console.log('Offline evaluation logged'));
 
       // Instant transition (Zero-lag responsive UI)
-      switchToStep2(certNumber, respId);
+      const isNoCert = currentParticipant.skipECert || isNoCertParam;
+      if (isNoCert) {
+        showNoCertCompletionCard(respId);
+      } else {
+        switchToStep2(certNumber, respId);
+      }
+    }
+
+    function applyNoCertModeIfNeeded() {
+      const isNoCert = currentParticipant.skipECert || isNoCertParam;
+      if (!isNoCert) return;
+
+      const headerTitle = document.getElementById('headerMainTitle');
+      if (headerTitle) {
+        headerTitle.innerText = (currentLang === 'en') ? 'Training Satisfaction Evaluation' : 'แบบประเมินความพึงพอใจการจัดอบรม';
+      }
+
+      const stepperCard = document.getElementById('stepperCard');
+      if (stepperCard) {
+        stepperCard.innerHTML = `
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+            <div class="flex items-center space-x-2 text-blue-700 font-bold text-xs sm:text-sm">
+              <div class="w-7 h-7 rounded-full bg-blue-600 text-white flex items-center justify-center text-xs font-black shadow-sm">
+                <i class="fa-solid fa-clipboard-check"></i>
+              </div>
+              <span>${currentLang === 'en' ? 'Workshop Satisfaction Evaluation (10 Questions)' : 'แบบประเมินความพึงพอใจโครงการฝึกอบรม (10 ข้อ)'}</span>
+            </div>
+            <span class="text-[10px] bg-slate-100 text-slate-700 font-bold px-2.5 py-1 rounded-full border border-slate-300 self-start sm:self-auto flex items-center gap-1">
+              <i class="fa-solid fa-info-circle text-blue-600"></i>
+              <span>${currentLang === 'en' ? 'Evaluation Only (No e-Certificate)' : 'ทำแบบประเมินอย่างเดียว (ไม่มีวุฒิบัตร)'}</span>
+            </span>
+          </div>
+        `;
+      }
+
+      const btnSubmit = document.getElementById('btnSubmitEval');
+      if (btnSubmit) {
+        btnSubmit.innerHTML = (currentLang === 'en')
+          ? `<span>Submit Evaluation</span><i class="fa-solid fa-paper-plane text-amber-300 ml-1.5"></i>`
+          : `<span>ส่งผลการประเมินโครงการ</span><i class="fa-solid fa-paper-plane text-amber-300 ml-1.5"></i>`;
+      }
+    }
+
+    function showNoCertCompletionCard(respId) {
+      const step1 = document.getElementById('step1Container');
+      if (step1) step1.classList.add('hidden');
+      const step2 = document.getElementById('step2Container');
+      if (step2) step2.classList.add('hidden');
+      const stepper = document.getElementById('stepperCard');
+      if (stepper) stepper.classList.add('hidden');
+
+      let completionContainer = document.getElementById('noCertCompletionContainer');
+      if (!completionContainer) {
+        completionContainer = document.createElement('div');
+        completionContainer.id = 'noCertCompletionContainer';
+        const main = document.querySelector('main');
+        if (main) main.appendChild(completionContainer);
+      }
+      completionContainer.classList.remove('hidden');
+
+      const driveUrl = currentParticipant.resourceLink || 'https://drive.google.com/drive/u/0/folders/1GxHFu2kMPwtl7j3PvnD6wHRb_YwlQGqk';
+
+      completionContainer.innerHTML = `
+        <div class="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200 shadow-xl text-center space-y-5 max-w-lg mx-auto animate-fadeIn">
+          <div class="w-16 h-16 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center text-3xl mx-auto shadow-inner">
+            <i class="fa-solid fa-circle-check"></i>
+          </div>
+          <div>
+            <span class="text-xs bg-emerald-100 text-emerald-800 font-bold px-3 py-1 rounded-full border border-emerald-300">
+              บันทึกผลการประเมินเรียบร้อยแล้ว
+            </span>
+            <h3 class="text-xl font-black text-slate-900 mt-2.5">ขอขอบพระคุณทุกท่าน</h3>
+            <p class="text-xs text-slate-600 mt-1.5 leading-relaxed">
+              ความคิดเห็นและข้อเสนอแนะอันมีค่ายิ่งของท่าน จะถูกนำไปใช้ในการพัฒนาและปรับปรุงคุณภาพการจัดอบรมของบริษัท ไทยวัฒนาพานิช จำกัด ให้ดียิ่งขึ้นต่อไป
+            </p>
+          </div>
+
+          <div class="p-4 bg-slate-50 rounded-2xl border border-slate-200 text-xs text-slate-600 space-y-2 text-left">
+            <div><span class="text-slate-400 block text-[10px]">โครงการ / หลักสูตร:</span><strong class="text-slate-900">${currentParticipant.courseTitle || '-'}</strong></div>
+            <div><span class="text-slate-400 block text-[10px]">สถานศึกษา / หน่วยงาน:</span><strong class="text-blue-700">${currentParticipant.school || '-'}</strong></div>
+            <div><span class="text-slate-400 block text-[10px]">วิทยากร:</span><strong>${currentParticipant.speakerName || '-'}</strong></div>
+            <div class="flex items-center justify-between pt-2 border-t border-slate-200/80">
+              <span class="text-[11px] text-slate-400">รหัสยืนยันการตอบ:</span>
+              <span class="font-mono font-bold text-[#08539E]">${respId || 'RES-' + Date.now().toString().slice(-6)}</span>
+            </div>
+            <div class="text-[11px] text-amber-800 bg-amber-50 p-2.5 rounded-xl border border-amber-200 flex items-start gap-1.5 mt-2 leading-relaxed">
+              <i class="fa-solid fa-circle-info text-amber-600 shrink-0 mt-0.5"></i>
+              <span>หมายเหตุ: การอบรมหลักสูตรนี้ตั้งค่าสำหรับทำแบบประเมินความพึงพอใจอย่างเดียว (ไม่มีการออกใบวุฒิบัตรอิเล็กทรอนิกส์)</span>
+            </div>
+          </div>
+
+          <div class="pt-2 flex flex-col sm:flex-row gap-2 justify-center">
+            <a href="${driveUrl}" target="_blank" rel="noopener noreferrer" class="px-5 py-2.5 bg-gradient-to-r from-blue-700 to-indigo-700 hover:from-blue-600 hover:to-indigo-600 text-white rounded-xl text-xs font-bold shadow-md transition flex items-center justify-center space-x-1.5">
+              <i class="fa-brands fa-google-drive text-amber-300"></i>
+              <span>เปิดโฟลเดอร์ไฟล์เอกสารการอบรม</span>
+            </a>
+            <button type="button" onclick="resetForNewParticipant()" class="px-4 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl text-xs font-semibold transition cursor-pointer">
+              <i class="fa-solid fa-rotate-left mr-1"></i>เริ่มประเมินใหม่
+            </button>
+          </div>
+        </div>
+      `;
     }
 
     // Direct Certificate View Mode: Used when accessing certificate via email link
