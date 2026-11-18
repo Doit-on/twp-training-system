@@ -9868,7 +9868,20 @@
     function resetToSafeDefaultsAction() {
       if (confirm('ยืนยันการรีเซ็ตระบบสู่ค่าเริ่มต้นที่ปลอดภัยหรือไม่? (ข้อมูล 2,363 โรงเรียนและเคสตัวอย่างจะยังคงอยู่อย่างสมบูรณ์)')) {
         localStorage.removeItem('twp_requests_store');
-        AppState.requests = getPersistedRequests();
+        AppState.requests = (function() {
+        const reqs = getPersistedRequests();
+        reqs.forEach(r => {
+          if (r.reviewedBy && (r.reviewedBy.includes('ทีม A') || r.reviewedBy.includes('ฝ่ายขาย') || r.reviewedBy.includes('Sales'))) {
+            r.reviewedBy = 'ฝ่ายวิชาการ (ทีม B)';
+          }
+          if (r.approvedBy) {
+            const p = resolveExecutiveProfile(r.approvedBy, r.approverRole);
+            r.approvedBy = p.name;
+            r.approverRole = p.role;
+          }
+        });
+        return reqs;
+      })();
         renderAll();
         showAlert('รีเซ็ตระบบสู่ค่าเริ่มต้นที่ปลอดภัยเรียบร้อยแล้ว', 'info');
       }
@@ -10700,7 +10713,14 @@
                 <label class="block text-xs font-semibold text-slate-700 mb-1">
                   <i class="fa-solid fa-user-check text-purple-600 mr-1"></i>ผู้ตรวจทานฝ่ายวิชาการ (ทีม B) *
                 </label>
-                <input type="text" id="teamBReviewer-${req.eventId}" value="${req.reviewedBy || AppState.currentUser?.fullName || AppState.operatorName || 'ฝ่ายวิชาการ (ทีม B)'}" placeholder="ระบุชื่อผู้ตรวจทานฝ่ายวิชาการ..." class="w-full bg-white border border-slate-300 rounded-xl p-2.5 text-xs font-bold text-purple-900 focus:ring-2 focus:ring-purple-500 focus:outline-none">
+                <input type="text" id="teamBReviewer-${req.eventId}" value="${(function() {
+                  let r = (req.reviewedBy || '').trim();
+                  if (!r || r.includes('ทีม A') || r.includes('ฝ่ายขาย') || r.includes('Sales')) {
+                    if (AppState.currentUser && (AppState.currentUser.teamRole === 'TEAM_B' || AppState.currentUser.team === 'ฝ่ายวิชาการ')) return AppState.currentUser.fullName;
+                    return 'ฝ่ายวิชาการ (ทีม B)';
+                  }
+                  return r;
+                })()}" placeholder="ระบุชื่อผู้ตรวจทานฝ่ายวิชาการ..." class="w-full bg-white border border-slate-300 rounded-xl p-2.5 text-xs font-bold text-purple-900 focus:ring-2 focus:ring-purple-500 focus:outline-none">
               </div>
             </div>
 
@@ -11676,7 +11696,11 @@
       const targetSalesInput = document.getElementById('teamBTargetSales-' + eventId);
       const targetSales = targetSalesInput ? (Number(targetSalesInput.value) || 0) : (Number(req?.targetSales) || 0);
       const reviewerInput = document.getElementById('teamBReviewer-' + eventId);
-      const reviewerName = reviewerInput ? reviewerInput.value.trim() : (req?.reviewedBy || AppState.currentUser?.fullName || AppState.operatorName || 'ฝ่ายวิชาการ (ทีม B)');
+      let reviewerName = reviewerInput ? reviewerInput.value.trim() : (req?.reviewedBy || '');
+      if (!reviewerName || reviewerName.includes('ทีม A') || reviewerName.includes('ฝ่ายขาย') || reviewerName.includes('Sales')) {
+        if (AppState.currentUser && (AppState.currentUser.teamRole === 'TEAM_B' || AppState.currentUser.team === 'ฝ่ายวิชาการ')) reviewerName = AppState.currentUser.fullName;
+        else reviewerName = 'ฝ่ายวิชาการ (ทีม B)';
+      }
       if (reviewerName) {
         AppState.operatorName = reviewerName;
         localStorage.setItem('ems_operator_name', reviewerName);
@@ -12104,7 +12128,9 @@
       }
 
       const effectiveApprover = approverInfo ? approverInfo.name : (AppState.currentUser.fullName || 'คุณอินทิรา บุนนาค');
-      const effectiveRole = approverInfo ? approverInfo.role : 'กรรมการผู้จัดการ';
+      const prof = resolveExecutiveProfile(approverInfo ? approverInfo.name : req.approvedBy, approverInfo ? approverInfo.role : req.approverRole);
+      const effectiveRole = prof.role;
+      const effectiveName = prof.name;
 
       // 1. OPTIMISTIC INSTANT UPDATE (Zero Lag - Immediate UI Reaction)
       const req = AppState.requests.find(r => r.eventId === eventId);
@@ -12517,6 +12543,26 @@
       }
     }
 
+    
+    // ------------------- EXECUTIVE PROFILE RESOLVER -------------------
+    function resolveExecutiveProfile(approvedBy, existingRole) {
+      let name = (approvedBy || '').trim();
+      name = name.replace(/\s*\(.*?\)/g, '').trim();
+
+      let role = existingRole || '';
+      if (name.includes('นิพนธ์') || name.includes('ศรแก้ว')) {
+        name = 'คุณนิพนธ์ ศรแก้ว';
+        role = 'ผู้จัดการทั่วไป';
+      } else if (name.includes('อินทิรา') || name.includes('บุนนาค')) {
+        name = 'คุณอินทิรา บุนนาค';
+        role = 'กรรมการผู้จัดการ';
+      } else {
+        if (!name) name = 'คุณอินทิรา บุนนาค';
+        if (!role) role = 'กรรมการผู้จัดการ';
+      }
+      return { name, role };
+    }
+
     function openPpcReportModal(eventId, docType = 'MEMO') {
       currentReportEventId = eventId;
       const modal = document.getElementById('ppcReportModal');
@@ -12631,9 +12677,26 @@
           expMisc: Math.round(actualBudget * 0.06)
         },
         actualExpensesTotal: req.actualExpensesTotal || actualBudget,
-        createdBy: req.createdBy || req.saleName || 'พนักงานขาย (ทีม A)',
-        reviewedBy: req.reviewedBy || 'ฝ่ายวิชาการ (ทีม B)',
-        approvedBy: req.approvedBy || 'คุณนิพนธ์ ศรแก้ว (ผู้จัดการทั่วไป)',
+                createdBy: req.saleName || req.createdBy || 'พนักงานขาย (ทีม A)',
+        reviewedBy: (function() {
+          let rb = (req.reviewedBy || '').trim();
+          if (!rb || rb.includes('ทีม A') || rb.includes('ฝ่ายขาย') || rb.includes('Sales') || (req.saleName && rb.includes(req.saleName))) {
+            return 'ฝ่ายวิชาการ (ทีม B)';
+          }
+          return rb;
+        })(),
+        approvedBy: (function() {
+          const ep = resolveExecutiveProfile(req.approvedBy, req.approverRole || req.approverPosition);
+          return ep.name;
+        })(),
+        approverRole: (function() {
+          const ep = resolveExecutiveProfile(req.approvedBy, req.approverRole || req.approverPosition);
+          return ep.role;
+        })(),
+        approverPosition: (function() {
+          const ep = resolveExecutiveProfile(req.approvedBy, req.approverRole || req.approverPosition);
+          return ep.role;
+        })(),
         approvedAt: req.approvedAt ? new Date(req.approvedAt).toLocaleDateString('th-TH') : new Date().toLocaleDateString('th-TH'),
         avgSpeaker: '4.95',
         avgContent: '4.90',
@@ -12828,8 +12891,8 @@
                 <div style="height:42px; display:flex; align-items:flex-end; justify-content:center; margin-bottom:4px;">
                   <img src="${execSigSrc}" style="max-height:40px; max-width:140px; object-fit:contain;" alt="ลายเซ็นผู้บริหาร">
                 </div>
-                <div style="font-size:11pt; font-weight:700; color:#1e293b;">( ${d.approvedBy || 'คุณอินทิรา บุนนาค'} )</div>
-                <div style="font-size:9pt; color:#64748b;">${d.approverRole || 'กรรมการผู้จัดการ'}</div>
+                <div style="font-size:11pt; font-weight:700; color:#1e293b;">( ${d.approvedBy} )</div>
+                <div style="font-size:9pt; color:#64748b;">${d.approverRole}</div>
                 <div style="font-size:8.5pt; color:#08539E; font-weight:600;">บริษัท ไทยวัฒนาพานิช จำกัด</div>
               </div>
 
@@ -13177,7 +13240,7 @@ function renderA4EvalReportHtmlClient(d) {
               <div style="border:1px solid #e2e8f0; border-radius:8px; padding:6px; background:#f8fafc;">
                 <div style="font-weight:700; color:#6b21a8; margin-bottom:2px;">ผู้ตรวจสอบทางวิชาการ</div>
                 <div style="color:#64748b; font-size:9pt; margin-bottom:18px;">(ฝ่ายวิชาการ - ทีม B)</div>
-                <div style="color:#334155; font-weight:600;">( ${d.reviewedBy} )</div>
+                <div style="color:#334155; font-weight:600;">( ${d.reviewedBy || "ฝ่ายวิชาการ (ทีม B)"} )</div>
                 <div style="color:#64748b; font-size:8.5pt; margin-top:2px;">เจ้าหน้าที่ฝ่ายวิชาการ</div>
               </div>
 
@@ -13192,8 +13255,8 @@ function renderA4EvalReportHtmlClient(d) {
                 ` : `
                   <div style="margin:16px auto 4px; border-bottom:1px dotted #94a3b8; width:110px;"></div>
                 `}
-                <div style="color:#1e293b; font-weight:700;">( ${d.approvedBy || 'คุณอินทิรา บุนนาค'} )</div>
-                <div style="color:#08539E; font-size:8.5pt; font-weight:700; margin-top:1px;">${d.approverRole || d.approverPosition || 'กรรมการผู้จัดการ'}</div>
+                <div style="color:#1e293b; font-weight:700;">( ${d.approvedBy} )</div>
+                <div style="color:#08539E; font-size:8.5pt; font-weight:700; margin-top:1px;">${d.approverRole}</div>
                 <div style="color:#64748b; font-size:8pt;">บริษัท ไทยวัฒนาพานิช จำกัด</div>
               </div>
 
@@ -13352,7 +13415,7 @@ function renderA4EvalReportHtmlClient(d) {
               <div style="border:1px solid #e2e8f0; border-radius:8px; padding:8px 6px; background:#f8fafc;">
                 <div style="font-weight:700; color:#6b21a8; margin-bottom:4px;">ผู้กลั่นกรอง / เห็นควรอนุมัติ</div>
                 <div style="color:#64748b; font-size:9.5pt; margin-bottom:18px;">(ฝ่ายวิชาการ - ทีม B)</div>
-                <div style="color:#334155; font-weight:600;">( ${d.reviewedBy} )</div>
+                <div style="color:#334155; font-weight:600;">( ${d.reviewedBy || "ฝ่ายวิชาการ (ทีม B)"} )</div>
                 <div style="color:#64748b; font-size:9pt; margin-top:2px;">เจ้าหน้าที่ฝ่ายวิชาการ</div>
                 <div style="color:#64748b; font-size:9pt; margin-top:2px;">วันที่: ${d.createdAt}</div>
               </div>
@@ -13370,8 +13433,8 @@ function renderA4EvalReportHtmlClient(d) {
                 ` : `
                   <div style="margin:16px auto 4px; border-bottom:1px dotted #94a3b8; width:110px;"></div>
                 `}
-                <div style="color:#1e293b; font-weight:700;">( ${d.approvedBy || 'คุณอินทิรา บุนนาค'} )</div>
-                <div style="color:#08539E; font-size:9pt; font-weight:700; margin-top:2px;">${d.approverRole || d.approverPosition || 'กรรมการผู้จัดการ'}</div>
+                <div style="color:#1e293b; font-weight:700;">( ${d.approvedBy} )</div>
+                <div style="color:#08539E; font-size:9pt; font-weight:700; margin-top:2px;">${d.approverRole}</div>
                 <div style="color:#64748b; font-size:8.5pt;">บริษัท ไทยวัฒนาพานิช จำกัด</div>
                 <div style="color:#64748b; font-size:9pt; margin-top:2px;">วันที่: ${d.approvedAt}</div>
               </div>

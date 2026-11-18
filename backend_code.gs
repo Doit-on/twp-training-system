@@ -969,7 +969,10 @@ function updateReviewTeamB(payload) {
   const sheet = ss.getSheetByName('Event_Requests');
   const data = sheet.getDataRange().getValues();
   const now = new Date().toISOString();
-  const operator = reviewedBy || operatorName || 'เจ้าหน้าที่วิชาการ (ทีม B)';
+  let operator = reviewedBy || operatorName || 'ฝ่ายวิชาการ (ทีม B)';
+  if (operator.includes('ทีม A') || operator.includes('ฝ่ายขาย') || operator.includes('Sales')) {
+    operator = 'ฝ่ายวิชาการ (ทีม B)';
+  }
 
   let targetRow = -1;
   for (let i = 1; i < data.length; i++) {
