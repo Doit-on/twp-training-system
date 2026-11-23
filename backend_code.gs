@@ -1,14 +1,14 @@
 /**
  * ============================================================================
  * EMS Enterprise - Training Center TWP
- * Version: 1.22.15
+ * Version: 1.22.16
  * Architecture: Google Apps Script Backend (Serverless) + Google Sheets Database
  * Security: Zero-Trust Data Isolation + Multi-Operator Stamping + Concurrency Lock
  * Features: Multi-Device Sync + Team QR Pairing + PPC Standard A4 Report Engine (PDF & Word .docx)
  * ============================================================================
  */
 
-const SYSTEM_VERSION = '1.22.15';
+const SYSTEM_VERSION = '1.22.16';
 const DEFAULT_ADMIN_PASS = 'admin0000';
 // =============================================================================
 // MULTI-ACCOUNT GOOGLE SHEETS CONNECTIVITY (Cross-Account Shared Editor Access)
@@ -893,7 +893,9 @@ function createRequestTeamA(payload) {
     }
   }
   
-  const eventId = 'EVT-' + Utilities.formatDate(new Date(), "GMT+7", "yyyyMMdd") + '-' + Math.floor(1000 + Math.random() * 9000);
+  const eventId = (payload.eventId && String(payload.eventId).trim().startsWith('EVT-'))
+    ? String(payload.eventId).trim()
+    : ('EVT-' + Utilities.formatDate(new Date(), "GMT+7", "yyyyMMdd") + '-' + Math.floor(1000 + Math.random() * 9000));
   const operator = payload.operatorName || payload.saleName || 'ทีม A (Sales)';
 
   const expectedTrainees = (payload.expectedTrainees !== undefined && payload.expectedTrainees !== null && payload.expectedTrainees !== '') ? Number(payload.expectedTrainees) : 50;
