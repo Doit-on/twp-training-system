@@ -1,14 +1,14 @@
 /**
  * ============================================================================
  * EMS Enterprise - Training Center TWP
- * Version: 1.22.16
+ * Version: 1.22.17
  * Architecture: Google Apps Script Backend (Serverless) + Google Sheets Database
  * Security: Zero-Trust Data Isolation + Multi-Operator Stamping + Concurrency Lock
  * Features: Multi-Device Sync + Team QR Pairing + PPC Standard A4 Report Engine (PDF & Word .docx)
  * ============================================================================
  */
 
-const SYSTEM_VERSION = '1.22.16';
+const SYSTEM_VERSION = '1.22.17';
 const DEFAULT_ADMIN_PASS = 'admin0000';
 // =============================================================================
 // MULTI-ACCOUNT GOOGLE SHEETS CONNECTIVITY (Cross-Account Shared Editor Access)
@@ -384,6 +384,9 @@ function doPost(e) {
       case 'CREATE_REQUEST_A':
         result = createRequestTeamA(payload);
         break;
+      case 'TEAM_B_PICK_JOB':
+        result = handleTeamBPickJob(payload);
+        break;
       case 'UPDATE_REVIEW_B':
         result = updateReviewTeamB(payload);
         break;
@@ -569,10 +572,33 @@ function getInitialData() {
   const reqSheet = ss.getSheetByName('Event_Requests');
   const reqRows = reqSheet.getDataRange().getValues();
   const requests = [];
+  const seenEventIds = new Set();
 
   for (let i = 1; i < reqRows.length; i++) {
     const r = reqRows[i];
-    if (!r[0]) continue;
+    const hasData = !!(r[3] || r[4] || r[6] || r[7] || r[8] || r[10] || r[14] || r[15]);
+    if (!r[0] && !hasData) continue;
+
+    let eventId = String(r[0] || '').trim();
+
+    // 1. AUTO-HEAL MISSING ID: If Event_ID is blank, auto-assign valid unique ID and write to sheet
+    if (!eventId || eventId === 'undefined' || eventId === 'null') {
+      eventId = 'EVT-' + Utilities.formatDate(r[1] ? new Date(r[1]) : new Date(), "GMT+7", "yyyyMMdd") + '-' + Math.floor(1000 + Math.random() * 9000);
+      try {
+        reqSheet.getRange(i + 1, 1).setValue(eventId);
+      } catch(e) {}
+      r[0] = eventId;
+    }
+
+    // 2. AUTO-HEAL DUPLICATE ID: If Event_ID already seen, auto-deduplicate
+    if (seenEventIds.has(eventId)) {
+      eventId = 'EVT-' + Utilities.formatDate(r[1] ? new Date(r[1]) : new Date(), "GMT+7", "yyyyMMdd") + '-' + Math.floor(1000 + Math.random() * 9000);
+      try {
+        reqSheet.getRange(i + 1, 1).setValue(eventId);
+      } catch(e) {}
+      r[0] = eventId;
+    }
+    seenEventIds.add(eventId);
 
     let actualExp = null;
     if (r[42]) {
@@ -964,6 +990,42 @@ function createRequestTeamA(payload) {
 }
 
 // ------------------- TEAM B: REVIEW & CONFIRM -------------------
+
+function handleTeamBPickJob(payload) {
+  const eventId = payload ? payload.eventId : '';
+  if (!eventId) throw new Error('กรุณาระบุ eventId ที่ต้องการรับงาน');
+  const operator = payload.operatorName || 'ฝ่ายวิชาการ (ทีม B)';
+
+  const ss = getSpreadsheet();
+  const sheet = ss.getSheetByName('Event_Requests');
+  const data = sheet.getDataRange().getValues();
+  let targetRow = -1;
+
+  for (let i = 1; i < data.length; i++) {
+    if (String(data[i][0]).trim() === String(eventId).trim()) {
+      targetRow = i + 1;
+      break;
+    }
+  }
+
+  if (targetRow === -1) throw new Error('ไม่พบคำขอ ' + eventId);
+
+  // Set Status to B_PICKED_UP (col 3)
+  sheet.getRange(targetRow, 3).setValue('B_PICKED_UP');
+  // Set Reviewed_By to operator (col 21)
+  sheet.getRange(targetRow, 21).setValue(operator);
+  // Set Last_Modified_By (col 23)
+  sheet.getRange(targetRow, 23).setValue(operator);
+  // Set Reviewed_By_B_At (col 25)
+  sheet.getRange(targetRow, 25).setValue(new Date().toISOString());
+
+  logSystemAction(eventId, 'TEAM_B_PICK_JOB', operator, {
+    status: 'B_PICKED_UP',
+    message: 'ฝ่ายวิชาการ (ทีม B) กดรับงานเข้าคิวปฏิบัติการแล้ว'
+  });
+
+  return { success: true, eventId: eventId, status: 'B_PICKED_UP', reviewedBy: operator };
+}
 
 function updateReviewTeamB(payload) {
   const { eventId, decision, teamBSpeaker, teamBNotes, actualBudget, operatorName, reviewedBy, actualTrainees, speakerSignature, speakers, targetSales } = payload;
