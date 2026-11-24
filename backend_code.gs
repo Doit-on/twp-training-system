@@ -1,7 +1,7 @@
 /**
  * ============================================================================
  * EMS Enterprise - Training Center TWP
- * Version: 1.22.21
+ * Version: 1.22.22
  * Architecture: Google Apps Script Backend (Serverless) + Google Sheets Database
  * Security: Zero-Trust Data Isolation + Multi-Operator Stamping + Concurrency Lock
  * Features: Multi-Device Sync + Team QR Pairing + PPC Standard A4 Report Engine (PDF & Word .docx)
@@ -1654,8 +1654,8 @@ function ensureRequiredSheets(ss) {
       ['USR-003', 'sale.member', 'sale1234', 'สุรศักดิ์ จันทรศิลปิน (ฝ่ายขาย)', 'TEAM_A_MEMBER', 'ภาคเหนือ', 'ACTIVE', new Date().toISOString(), ''],
       ['USR-004', 'acad.lead', 'acad1234', 'ณัฐพล วิชาการ (หัวหน้าฝ่ายวิชาการ B)', 'TEAM_B_LEAD', 'ส่วนกลาง', 'ACTIVE', new Date().toISOString(), ''],
       ['USR-005', 'acad.member', 'acad1234', 'กานดา ปฏิบัติการ (เจ้าหน้าที่วิชาการ)', 'TEAM_B_MEMBER', 'ส่วนกลาง', 'ACTIVE', new Date().toISOString(), ''],
-      ['USR-004', 'exec.gm', 'exec1234', 'คุณนิพนธ์ ศรแก้ว (ผู้จัดการทั่วไป)', 'EXEC', 'ALL', 'ACTIVE', new Date().toISOString(), ''],
-    ['USR-006', 'exec.lead', 'exec1234', 'คุณอินทิรา บุนนาค (กรรมการผู้จัดการ)', 'EXEC', 'ALL', 'ACTIVE', new Date().toISOString(), '']
+      ['USR-006', 'exec.lead', 'exec1234', 'คุณอินทิรา บุนนาค (กรรมการผู้จัดการ)', 'EXEC', 'ALL', 'ACTIVE', new Date().toISOString(), ''],
+      ['USR-007', 'exec.gm', 'exec1234', 'คุณนิพนธ์ ศรแก้ว (ผู้จัดการทั่วไป)', 'EXEC', 'ALL', 'ACTIVE', new Date().toISOString(), '']
     ];
     defaultAccounts.forEach(acc => teamAccSheet.appendRow(acc));
   }

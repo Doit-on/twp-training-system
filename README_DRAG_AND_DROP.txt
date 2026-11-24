@@ -1,6 +1,6 @@
 ================================================================================
 คำแนะนำการอัปโหลดไฟล์ขึ้น GitHub ด้วยวิธีลากและวาง (Drag and Drop)
-เวอร์ชันระบบ: 1.22.3 (Enterprise Governance & Cross-Team Real-time Sync Edition)
+เวอร์ชันระบบ: 1.22.22 (Enterprise Governance & Cross-Team Real-time Sync Edition)
 ================================================================================
 
 ไฟล์ทั้งหมดในโฟลเดอร์นี้ได้รับการรวบรวมและจัดโครงสร้างแบบ Root Level ไว้อย่างสมบูรณ์
@@ -19,7 +19,7 @@
    - VERSION
    - MANUAL.md
 4. ลากไฟล์ทั้งหมดไปปล่อย (Drop) ในช่องอัปโหลดบนหน้าเว็บ GitHub
-5. พิมพ์ข้อความกำกับ เช่น "Release v1.22.3 Enterprise Governance & Cross-Team Real-time Sync"
+5. พิมพ์ข้อความกำกับ เช่น "Release v1.22.22 Enterprise Governance & Cross-Team Real-time Sync"
 6. กดปุ่มสีเขียว "Commit changes" ด้านล่าง
 
-ระบบ GitHub Pages จะทำการ Build และ Deploy หน้าเว็บเวอร์ชัน 1.22.3 ให้ใช้งานได้ทันทีภายใน 1-2 นาทีครับ
+ระบบ GitHub Pages จะทำการ Build และ Deploy หน้าเว็บเวอร์ชัน 1.22.22 ให้ใช้งานได้ทันทีภายใน 1-2 นาทีครับ
