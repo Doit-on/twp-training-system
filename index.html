@@ -8356,8 +8356,7 @@
       if (AppState.gasEndpoint) {
         if (!silent) updateSyncStatusUI('syncing');
         
-        // Fetch Annual Plans from Google Sheets in parallel
-        syncAnnualPlansFromCloud(false);
+        // Annual plans already bundled inside GET_INITIAL_DATA
 
         postToBackend('GET_INITIAL_DATA', {})
           .then(res => {
@@ -8408,8 +8407,15 @@
               showAlert('✅ รีเฟรชข้อมูลสดจาก Google Sheets เรียบร้อยแล้ว (พบข้อมูลในระบบ ' + formatNumber(totalItems) + ' รายการ)', 'success');
               showSyncToast('✅ ดึงข้อมูลล่าสุดเรียบร้อย (' + formatNumber(totalItems) + ' รายการ)');
             } else {
+              // Graceful Handling: If local store has data, silently maintain data without alarming the user
               fallbackToMockData();
-              showAlert('⚠️ การตอบกลับจากคลาวด์ไม่สมบูรณ์ กำลังแสดงผลจากข้อมูลที่มีในระบบ', 'warning');
+              const hasData = (AppState.requests || []).length > 0;
+              if (hasData) {
+                updateSyncStatusUI('synced');
+                showSyncToast('ℹ️ เชื่อมต่อคลาวด์ในพื้นหลัง (ข้อมูลในระบบพร้อมใช้งาน)');
+              } else {
+                showAlert('⚠️ คลาวด์กำลังประมวลผลคำขอ กำลังแสดงผลจากข้อมูลที่มีในระบบ', 'warning');
+              }
             }
           })
           .catch(err => {

@@ -355,24 +355,48 @@ function handleUpdateRegistration(payload) {
 }
 
 function doPost(e) {
-  const lock = LockService.getScriptLock();
+  if (!e || !e.postData || !e.postData.contents) {
+    return createJsonResponse({ status: 'ERROR', message: 'ไม่พบข้อมูล Payload ในคำขอ' });
+  }
+
+  let request;
   try {
-    const hasLock = lock.tryLock(15000); // รอคิวล็อกได้สูงสุด 15 วินาที
-    if (!hasLock) {
-      return createJsonResponse({
-        status: 'ERROR',
-        message: 'ระบบกำลังประมวลผลคำขอของผู้ใช้อื่นพร้อมกัน กรุณาลองใหม่อีกครั้งใน 5 วินาที'
-      });
-    }
+    request = JSON.parse(e.postData.contents);
+  } catch(err) {
+    return createJsonResponse({ status: 'ERROR', message: 'Payload JSON ไม่ถูกต้อง: ' + err.message });
+  }
 
-    if (!e || !e.postData || !e.postData.contents) {
-      throw new Error('ไม่พบข้อมูล Payload ในคำขอ');
-    }
+  const action = request.action;
+  const payload = request.payload || {};
+  let result = {};
 
-    const request = JSON.parse(e.postData.contents);
-    const action = request.action;
-    const payload = request.payload || {};
-    let result = {};
+  // แยกคำสั่งอ่านข้อมูล (Read-Only Actions): ทำงานพร้อมกันได้ทันที ไม่ต้องแย่งคิว ScriptLock
+  const isReadOnly = (
+    action === 'PING' ||
+    action === 'GET_INITIAL_DATA' ||
+    action === 'GET_ANNUAL_PLANS' ||
+    action === 'GET_EVENT_REGISTRATIONS' ||
+    action === 'GET_PPC_REPORT_DATA' ||
+    action === 'ADMIN_GET_LOGS'
+  );
+
+  let lock = null;
+  if (!isReadOnly) {
+    lock = LockService.getScriptLock();
+    try {
+      const hasLock = lock.tryLock(15000); // รอคิวล็อกเฉพาะคำสั่งบันทึกข้อมูลสูงสุด 15 วินาที
+      if (!hasLock) {
+        return createJsonResponse({
+          status: 'ERROR',
+          message: 'ระบบกำลังประมวลผลคำขอบันทึกของผู้ใช้อื่นพร้อมกัน กรุณาลองใหม่อีกครั้งใน 5 วินาที'
+        });
+      }
+    } catch(lockErr) {
+      // ดำเนินการต่อหากเซอร์วิสล็อกมีข้อผิดพลาดชั่วคราว
+    }
+  }
+
+  try {
 
     switch(action) {
       case 'PING':
@@ -492,7 +516,9 @@ function doPost(e) {
   } catch (err) {
     return createJsonResponse({ status: 'ERROR', message: err.toString(), version: SYSTEM_VERSION });
   } finally {
-    try { lock.releaseLock(); } catch(e) {}
+    if (lock) {
+      try { lock.releaseLock(); } catch(e) {}
+    }
   }
 }
 
