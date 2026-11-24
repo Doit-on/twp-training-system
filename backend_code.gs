@@ -8,7 +8,7 @@
  * ============================================================================
  */
 
-const SYSTEM_VERSION = '1.22.23';
+const SYSTEM_VERSION = '1.22.24';
 const DEFAULT_ADMIN_PASS = 'admin0000';
 // =============================================================================
 // MULTI-ACCOUNT GOOGLE SHEETS CONNECTIVITY (Cross-Account Shared Editor Access)
@@ -60,7 +60,7 @@ function testSendCertificateEmail() {
     courseTopic: 'Active Learning สู่สมรรถนะผู้เรียนด้วยสื่อนวัตกรรมดิจิทัล',
     certId: 'TWP-TEST-' + Math.floor(100000 + Math.random() * 900000),
     eventDate: new Date().toLocaleDateString('th-TH'),
-    speakerName: 'ศ.ดร.ประสาน ปัญญาเลิศ',
+    speakerName: '',
     token: 'TEST-TOKEN-999'
   };
   return handleSendECertificateEmail(testPayload);
@@ -758,7 +758,7 @@ function getInitialData() {
     courseTopics: new Set(['อบรมคศ.3-4 นวัตกรรมการเรียนรู้', 'Active Learning สู่สมรรถนะผู้เรียน', 'Coding & STEM Education', 'เทคนิคการวัดและประเมินผล', 'AI เพื่อการจัดการเรียนการสอน']),
     speakerTypes: new Set(['อาจารย์ที่ปรึกษา', 'ทีมวิชาการภายใน', 'อาจารย์ภายนอก', 'Supplier/Partner']),
     venueTypes: new Set(['โรงเรียน', 'โรงแรม', 'ออนไลน์ (Zoom/Meet)', 'หอประชุมประจำจังหวัด']),
-    teamBSpeakers: new Set(['ศ.ดร.ประสาน ปัญญาเลิศ', 'ดร.สมเกียรติ นวัตกรรม']),
+    teamBSpeakers: new Set(['วิทยากรประจำหลักสูตร', 'อาจารย์ผู้ทรงคุณวุฒิ']),
     transportDetails: new Set(['รถตู้รับ-ส่งสนามบิน-โรงแรม', 'รถตู้รับ-ส่งสถานีรถไฟ-โรงเรียน', 'รถตู้บริษัทพร้อมคนขับ'])
   };
 
@@ -1864,10 +1864,10 @@ function handleSendECertificateEmail(payload) {
               '<td style="width: 35%; text-align: center; vertical-align: bottom;">' +
                 '<div style="height: 38px; line-height: 38px;">' +
                   '<span style="font-family: cursive, \'Brush Script MT\', sans-serif; font-size: 19px; color: #08539E; font-weight: bold;">' +
-                    (speakerName || 'ศ.ดร.ประสาน ปัญญาเลิศ') +
+                    (speakerName || '') +
                   '</span>' +
                 '</div>' +
-                '<div style="font-size: 13px; font-weight: bold; color: #1e293b; margin-top: 4px;">' + (speakerName || 'ศ.ดร.ประสาน ปัญญาเลิศ') + '</div>' +
+                '<div style="font-size: 13px; font-weight: bold; color: #1e293b; margin-top: 4px;">' + (speakerName || '') + '</div>' +
                 '<div style="font-size: 11px; color: #64748b;">วิทยากรประจำหลักสูตร</div>' +
                 '<div style="font-size: 10px; color: #94a3b8;">ฝ่ายพัฒนาวิชาการและนวัตกรรมการเรียนรู้</div>' +
               '</td>' +

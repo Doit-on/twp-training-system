@@ -217,7 +217,7 @@
         
         <div class="text-[11px] bg-blue-900/80 px-2.5 py-1 rounded-full border border-blue-400/30 hidden sm:flex items-center">
           <i class="fa-solid fa-award text-amber-300 mr-1.5"></i>
-          <span>v1.22.14</span>
+          <span>v1.22.24</span>
         </div>
       </div>
     </div>
@@ -272,7 +272,7 @@
         </div>
         <div>
           <span class="text-slate-400 block text-[10px]">วิทยากรผู้บรรยาย:</span>
-          <strong id="dispSpeakerName" class="text-slate-800 font-semibold">ศ.ดร.ประสาน ปัญญาเลิศ</strong>
+          <strong id="dispSpeakerName" class="text-slate-800 font-semibold">-</strong>
         </div>
         <div>
           <span class="text-slate-400 block text-[10px]">วันที่จัดกิจกรรม:</span>
@@ -531,7 +531,7 @@
               <span>1. ชื่อ-นามสกุล (ภาษาไทย) *</span>
               <span class="text-[10px] text-blue-600 font-normal">ระบุคำนำหน้าชื่อ</span>
             </label>
-            <input type="text" id="participantNameTh" placeholder="เช่น นายสมชาย มุ่งมั่นพัฒนา" class="w-full bg-white border border-slate-300 rounded-xl p-2.5 text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none" oninput="updateCertLivePreview()" onchange="updateCertLivePreview()">
+            <input type="text" id="participantNameTh" placeholder="เช่น นายสมเกียรติ รักเรียน" class="w-full bg-white border border-slate-300 rounded-xl p-2.5 text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none" oninput="updateCertLivePreview()" onchange="updateCertLivePreview()">
           </div>
 
           <!-- English Name -->
@@ -663,7 +663,7 @@
                 <div class="h-10 flex items-end justify-center pb-0.5">
                   <img id="viewCertSpeakerSig" src="" style="max-height:38px; max-width:130px; object-fit:contain;" alt="ลายเซ็นวิทยากร">
                 </div>
-                <div id="viewCertSpeaker" class="text-xs font-bold text-slate-800 leading-tight">ศ.ดร.ประสาน ปัญญาเลิศ</div>
+                <div id="viewCertSpeaker" class="text-xs font-bold text-slate-800 leading-tight">-</div>
                 <div class="text-[10px] text-slate-500">วิทยากรประจำหลักสูตร</div>
                 <div class="text-[9px] text-slate-400">ฝ่ายพัฒนาวิชาการและนวัตกรรมการเรียนรู้</div>
               </div>
@@ -803,7 +803,7 @@
 
   <!-- Footer -->
   <footer class="py-4 text-center text-xs text-slate-400 border-t border-slate-200/60 mt-auto bg-white">
-    EMS Enterprise Closed-Loop Feedback & e-Certificate Platform v1.22.14 &copy; 2026 สำนักพิมพ์ไทยวัฒนาพานิช จำกัด
+    EMS Enterprise Closed-Loop Feedback & e-Certificate Platform v1.22.24 &copy; 2026 สำนักพิมพ์ไทยวัฒนาพานิช จำกัด
   </footer>
 
   <script>
@@ -890,7 +890,7 @@
     const EXECUTIVE_SIGNATURE_SVG = 'data:image/svg+xml;utf8,' + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="260" height="90" viewBox="0 0 260 90"><path d="M 25 55 Q 50 15, 75 50 T 115 40 Q 145 25, 165 55 T 205 45 Q 235 35, 250 40" fill="none" stroke="#003399" stroke-width="2.6" stroke-linecap="round"/><path d="M 55 65 Q 125 70, 225 58" fill="none" stroke="#003399" stroke-width="2.2" stroke-linecap="round"/><path d="M 100 30 Q 110 10, 120 35" fill="none" stroke="#003399" stroke-width="2.2" stroke-linecap="round"/><text x="110" y="80" font-family="sans-serif" font-size="13" fill="#08539E" font-weight="bold">คุณอินทิรา บุนนาค</text></svg>');
 
     // Signature data URI of Course Speaker (Academic Leader)
-    const SPEAKER_SIGNATURE_SVG = 'data:image/svg+xml;utf8,' + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="260" height="90" viewBox="0 0 260 90"><path d="M 30 60 Q 60 15, 85 45 T 130 35 Q 160 20, 185 50 T 225 35" fill="none" stroke="#003399" stroke-width="2.6" stroke-linecap="round"/><path d="M 50 40 Q 120 25, 230 45" fill="none" stroke="#003399" stroke-width="2.2" stroke-linecap="round"/><path d="M 115 25 L 145 68" fill="none" stroke="#003399" stroke-width="2.4" stroke-linecap="round"/><text x="95" y="82" font-family="sans-serif" font-size="12" fill="#08539E" font-weight="bold">ศ.ดร.ประสาน ปัญญาเลิศ</text></svg>');
+    const SPEAKER_SIGNATURE_SVG = 'data:image/svg+xml;utf8,' + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="260" height="90" viewBox="0 0 260 90"><path d="M 30 60 Q 60 15, 85 45 T 130 35 Q 160 20, 185 50 T 225 35" fill="none" stroke="#003399" stroke-width="2.6" stroke-linecap="round"/><path d="M 50 40 Q 120 25, 230 45" fill="none" stroke="#003399" stroke-width="2.2" stroke-linecap="round"/><path d="M 115 25 L 145 68" fill="none" stroke="#003399" stroke-width="2.4" stroke-linecap="round"/><text x="85" y="82" font-family="sans-serif" font-size="11" fill="#08539E" font-weight="bold">วิทยากรประจำหลักสูตร</text></svg>');
 
     // Pull Token & GasEndpoint from URL
     const urlParams = new URLSearchParams(window.location.search);
@@ -907,10 +907,10 @@
       certId: '',
       skipECert: isNoCertParam,
       courseTitle: 'Active Learning สู่สมรรถนะผู้เรียนด้วยสื่อนวัตกรรมดิจิทัล',
-      speakerName: 'ศ.ดร.ประสาน ปัญญาเลิศ',
+      speakerName: '',
       speakers: [
         {
-          name: 'ศ.ดร.ประสาน ปัญญาเลิศ',
+          name: '',
           role: 'วิทยากรประจำหลักสูตร',
           dept: 'ฝ่ายพัฒนาวิชาการและนวัตกรรมการเรียนรู้',
           signature: null
@@ -1258,7 +1258,7 @@
       const speakers = (currentParticipant.speakers && currentParticipant.speakers.length > 0)
         ? currentParticipant.speakers
         : [{
-            name: currentParticipant.speakerName || 'ศ.ดร.ประสาน ปัญญาเลิศ',
+            name: currentParticipant.speakerName || '',
             role: 'วิทยากรประจำหลักสูตร',
             dept: 'ฝ่ายพัฒนาวิชาการและนวัตกรรมการเรียนรู้',
             signature: null
