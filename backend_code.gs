@@ -1,14 +1,14 @@
 /**
  * ============================================================================
  * EMS Enterprise - Training Center TWP
- * Version: 1.22.17
+ * Version: 1.22.21
  * Architecture: Google Apps Script Backend (Serverless) + Google Sheets Database
  * Security: Zero-Trust Data Isolation + Multi-Operator Stamping + Concurrency Lock
  * Features: Multi-Device Sync + Team QR Pairing + PPC Standard A4 Report Engine (PDF & Word .docx)
  * ============================================================================
  */
 
-const SYSTEM_VERSION = '1.22.17';
+const SYSTEM_VERSION = '1.22.21';
 const DEFAULT_ADMIN_PASS = 'admin0000';
 // =============================================================================
 // MULTI-ACCOUNT GOOGLE SHEETS CONNECTIVITY (Cross-Account Shared Editor Access)
@@ -624,7 +624,7 @@ function getInitialData() {
       customTopic: r[5],
       eventDate: r[6] ? Utilities.formatDate(new Date(r[6]), "GMT+7", "yyyy-MM-dd") : '',
       province: r[7],
-      saleName: r[8],
+      saleName: (r[8] && String(r[8]).includes('สมชาย')) ? 'กิตติศักดิ์ ฉันทวุฒินันท์' : (r[8] || ''),
       schoolId: r[9],
       schoolName: r[10],
       speakerType: r[11],
@@ -635,10 +635,10 @@ function getInitialData() {
       teamBSpeaker: r[16] || '',
       teamBNotes: r[17] || '',
       actualBudget: Number(r[18]) || 0,
-      createdBy: r[19] || '',
-      reviewedBy: r[20] || '',
+      createdBy: (r[19] && String(r[19]).includes('สมชาย')) ? 'กิตติศักดิ์ ฉันทวุฒินันท์ (หัวหน้าทีมขาย A)' : (r[19] || ''),
+      reviewedBy: (r[20] && String(r[20]).includes('สมชาย')) ? 'ฝ่ายวิชาการ (ทีม B)' : (r[20] || ''),
       approvedBy: r[21] || '',
-      lastModifiedBy: r[22] || '',
+      lastModifiedBy: (r[22] && String(r[22]).includes('สมชาย')) ? 'กิตติศักดิ์ ฉันทวุฒินันท์ (หัวหน้าทีมขาย A)' : (r[22] || ''),
       submittedToBAt: r[23] || '',
       reviewedByBAt: r[24] || '',
       approvedAt: r[25] || '',
@@ -1542,6 +1542,29 @@ function handleAdminUpdateSettings(payload) {
 // ------------------- SCHEMA AUTO-INITIALIZATION -------------------
 
 function ensureRequiredSheets(ss) {
+  // Auto-heal legacy Somchai occurrences in Team_Accounts & Event_Requests
+  try {
+    const accSheet = ss.getSheetByName('Team_Accounts');
+    if (accSheet) {
+      const aData = accSheet.getDataRange().getValues();
+      for (let r = 1; r < aData.length; r++) {
+        if (String(aData[r][3] || '').includes('สมชาย')) {
+          accSheet.getRange(r + 1, 4).setValue('กิตติศักดิ์ ฉันทวุฒินันท์ (หัวหน้าทีมขาย A)');
+        }
+      }
+    }
+    const evtSheet = ss.getSheetByName('Event_Requests');
+    if (evtSheet) {
+      const eData = evtSheet.getDataRange().getValues();
+      for (let i = 1; i < eData.length; i++) {
+        if (String(eData[i][8] || '').includes('สมชาย')) evtSheet.getRange(i + 1, 9).setValue('กิตติศักดิ์ ฉันทวุฒินันท์');
+        if (String(eData[i][19] || '').includes('สมชาย')) evtSheet.getRange(i + 1, 20).setValue('กิตติศักดิ์ ฉันทวุฒินันท์ (หัวหน้าทีมขาย A)');
+        if (String(eData[i][20] || '').includes('สมชาย')) evtSheet.getRange(i + 1, 21).setValue('ฝ่ายวิชาการ (ทีม B)');
+        if (String(eData[i][22] || '').includes('สมชาย')) evtSheet.getRange(i + 1, 23).setValue('กิตติศักดิ์ ฉันทวุฒินันท์ (หัวหน้าทีมขาย A)');
+      }
+    }
+  } catch(e) {}
+
   const required = [
     {
       name: 'PPC_Master',
@@ -1627,7 +1650,7 @@ function ensureRequiredSheets(ss) {
   if (teamAccSheet && teamAccSheet.getLastRow() <= 1) {
     const defaultAccounts = [
       ['USR-001', 'admin', 'admin0000', 'ผู้ดูแลระบบส่วนกลาง (Admin)', 'ADMIN', 'ALL', 'ACTIVE', new Date().toISOString(), ''],
-      ['USR-002', 'sale.lead', 'sale1234', 'สมชาย มุ่งมั่น (หัวหน้าทีมขาย A)', 'TEAM_A_LEAD', 'กรุงเทพฯ และปริมณฑล', 'ACTIVE', new Date().toISOString(), ''],
+      ['USR-002', 'sale.lead', 'sale1234', 'กิตติศักดิ์ ฉันทวุฒินันท์ (หัวหน้าทีมขาย A)', 'TEAM_A_LEAD', 'กรุงเทพฯ และปริมณฑล', 'ACTIVE', new Date().toISOString(), ''],
       ['USR-003', 'sale.member', 'sale1234', 'สุรศักดิ์ จันทรศิลปิน (ฝ่ายขาย)', 'TEAM_A_MEMBER', 'ภาคเหนือ', 'ACTIVE', new Date().toISOString(), ''],
       ['USR-004', 'acad.lead', 'acad1234', 'ณัฐพล วิชาการ (หัวหน้าฝ่ายวิชาการ B)', 'TEAM_B_LEAD', 'ส่วนกลาง', 'ACTIVE', new Date().toISOString(), ''],
       ['USR-005', 'acad.member', 'acad1234', 'กานดา ปฏิบัติการ (เจ้าหน้าที่วิชาการ)', 'TEAM_B_MEMBER', 'ส่วนกลาง', 'ACTIVE', new Date().toISOString(), ''],
