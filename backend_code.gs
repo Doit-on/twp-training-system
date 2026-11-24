@@ -8,7 +8,7 @@
  * ============================================================================
  */
 
-const SYSTEM_VERSION = '1.22.25';
+const SYSTEM_VERSION = 'v1.22.26';
 const DEFAULT_ADMIN_PASS = 'admin0000';
 // =============================================================================
 // MULTI-ACCOUNT GOOGLE SHEETS CONNECTIVITY (Cross-Account Shared Editor Access)
@@ -504,6 +504,9 @@ function doPost(e) {
         break;
       case 'DELETE_EVENT_REQUEST':
         result = handleDeleteEventRequest(payload);
+        break;
+      case 'UPDATE_COURSE_TOPIC':
+        result = handleUpdateCourseTopic(payload);
         break;
       case 'UPDATE_TEAM_B_ATTENDEES':
         result = handleUpdateTeamBAttendees(payload);
@@ -2011,20 +2014,35 @@ function handleGetEventRegistrations(payload) {
     }
   }
 
-  // Lookup event metadata from Requests sheet
+    // Lookup event metadata from Event_Requests sheet (Correct sheet and column mapping)
   let eventInfo = null;
   try {
-    const reqSheet = ss.getSheetByName('Requests');
+    const reqSheet = ss.getSheetByName('Event_Requests');
     if (reqSheet && eventId) {
       const reqRows = reqSheet.getDataRange().getValues();
       for (let j = 1; j < reqRows.length; j++) {
         if (String(reqRows[j][0] || '').trim().toUpperCase() === eventId) {
+          let parsedSpeakers = [];
+          try {
+            if (reqRows[j][44]) {
+              parsedSpeakers = JSON.parse(reqRows[j][44]);
+            }
+          } catch(e) {}
+
           eventInfo = {
             eventId: reqRows[j][0],
-            schoolName: reqRows[j][2] || '',
-            courseTopic: reqRows[j][3] || '',
-            eventDate: reqRows[j][5] || '',
-            speakerName: reqRows[j][8] || ''
+            status: reqRows[j][2] || '',
+            courseTopic: reqRows[j][4] || '',
+            eventDate: reqRows[j][6] || '',
+            province: reqRows[j][7] || '',
+            schoolName: reqRows[j][10] || '',
+            speakerName: reqRows[j][16] || reqRows[j][15] || '',
+            speakerType: reqRows[j][15] || '',
+            approvedBy: reqRows[j][21] || 'คุณนิพนธ์ ศรแก้ว',
+            approvedRole: 'กรรมการผู้จัดการ',
+            speakers: parsedSpeakers,
+            speakerSignature: reqRows[j][45] || '',
+            approvedSignature: reqRows[j][46] || ''
           };
           break;
         }
@@ -2332,4 +2350,36 @@ function handleDeleteAnnualPlan(payload) {
   }
 
   return { success: false, message: 'ไม่พบรหัสโครงการ: ' + planId };
+}
+
+
+/**
+ * Update Course Topic in Event_Requests (Team B rename) without breaking status or approvals
+ */
+function handleUpdateCourseTopic(payload) {
+  if (!payload || !payload.eventId) {
+    throw new Error('ไม่พบข้อมูล eventId สำหรับการอัปเดตหัวข้ออบรม');
+  }
+  const eventId = String(payload.eventId).trim().toUpperCase();
+  const newTopic = String(payload.courseTopic || '').trim();
+  if (!newTopic) throw new Error('หัวข้อการอบรมต้องไม่เป็นค่าว่าง');
+
+  const ss = getSpreadsheet();
+  ensureRequiredSheets(ss);
+  const sheet = ss.getSheetByName('Event_Requests');
+  if (!sheet) throw new Error('ไม่พบชีต Event_Requests');
+
+  const data = sheet.getDataRange().getValues();
+  let foundRow = -1;
+  for (let i = 1; i < data.length; i++) {
+    if (String(data[i][0] || '').trim().toUpperCase() === eventId) {
+      foundRow = i + 1; // 1-based row index
+      break;
+    }
+  }
+  if (foundRow === -1) throw new Error('ไม่พบรายการคำขอรหัส ' + eventId + ' ในชีต');
+
+  // Column 5 is Course_Topic (Column E)
+  sheet.getRange(foundRow, 5).setValue(newTopic);
+  return { eventId: eventId, courseTopic: newTopic, updated: true };
 }
