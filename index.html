@@ -2125,6 +2125,28 @@
         <div id="execQueueContainer" class="space-y-4">
           <!-- Rendered dynamically -->
         </div>
+      <!-- Section 2: Approved Projects Ledger (v1.22.21) -->
+      <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-6 space-y-4 mt-6">
+        <div class="border-b border-slate-100 pb-3 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+          <div class="flex items-center space-x-3">
+            <div class="w-9 h-9 rounded-xl bg-emerald-100 text-emerald-800 flex items-center justify-center">
+              <i class="fa-solid fa-circle-check text-lg"></i>
+            </div>
+            <div>
+              <h3 class="text-base font-bold text-slate-900">ทะเบียนโครงการที่ฝ่ายบริหารอนุมัติและลงนามแล้ว</h3>
+              <p class="text-xs text-slate-400">โครงการที่มีผลอนุมัติสมบูรณ์ เอกสารบันทึกข้อความ A4 พร้อมลงนาม และเปิด Token อัตโนมัติ</p>
+            </div>
+          </div>
+          <span id="execApprovedCountBadge" class="text-xs bg-emerald-50 text-emerald-800 font-bold px-3 py-1 rounded-full border border-emerald-200 self-start sm:self-auto">
+            0 โครงการ
+          </span>
+        </div>
+
+        <div id="execApprovedContainer" class="space-y-3">
+          <!-- Rendered dynamically -->
+        </div>
+      </div>
+
       </div>
     </section>
 
@@ -2178,6 +2200,19 @@
             <i class="fa-solid fa-file-excel text-emerald-400"></i>
             <span>แม่แบบ Excel</span>
           </button>
+        </div>
+      </div>
+
+      <!-- Approval Lock Gate Banner (v1.22.21) -->
+      <div id="regApprovalGateBanner" class="hidden p-4 bg-amber-50 border-2 border-amber-300 rounded-2xl text-amber-950 flex items-start gap-3 shadow-xs">
+        <div class="w-8 h-8 rounded-xl bg-amber-500 text-white flex items-center justify-center shrink-0 mt-0.5">
+          <i class="fa-solid fa-lock text-base"></i>
+        </div>
+        <div class="space-y-0.5 text-xs">
+          <h4 class="font-bold text-sm text-amber-900">โครงการนี้อยู่ระหว่างรอการอนุมัติจากฝ่ายบริหาร</h4>
+          <p id="regApprovalGateText" class="text-amber-800 leading-relaxed">
+            ระบบล็อกการเช็กชื่อและการพิมพ์ป้าย QR ชั่วคราว โครงการต้องได้รับการอนุมัติและลงนามจากผู้บริหารระดับสูงก่อน จึงจะสามารถเปิดระบบลงทะเบียนได้
+          </p>
         </div>
       </div>
 
@@ -11391,162 +11426,192 @@
 
     function renderExecQueue() {
       const container = document.getElementById('execQueueContainer');
-      const queue = AppState.requests.filter(r => r.status === 'WAITING_EXEC');
+      const approvedContainer = document.getElementById('execApprovedContainer');
+      const approvedCountBadge = document.getElementById('execApprovedCountBadge');
+      
+      const queue = (AppState.requests || []).filter(r => r.status === 'WAITING_EXEC');
+      const approvedQueue = (AppState.requests || []).filter(r => r.status === 'APPROVED' || r.status === 'COMPLETED');
 
-      if (queue.length === 0) {
-        container.innerHTML = `<div class="p-8 text-center text-slate-400 bg-slate-50 rounded-xl border border-dashed border-slate-200">ไม่มีคำขอค้างรอการอนุมัติจากผู้บริหาร</div>`;
-        return;
+      if (approvedCountBadge) approvedCountBadge.innerText = formatNumber(approvedQueue.length) + ' โครงการ';
+
+      // 1. Render Pending Approvals Queue
+      if (container) {
+        if (queue.length === 0) {
+          container.innerHTML = `
+            <div class="p-8 text-center bg-slate-50 rounded-2xl border border-dashed border-slate-200 text-slate-400 space-y-2">
+              <i class="fa-solid fa-circle-check text-emerald-500 text-3xl"></i>
+              <p class="text-sm font-semibold text-slate-700">ไม่มีคำขอค้างรอการอนุมัติจากผู้บริหารในขณะนี้</p>
+              <p class="text-xs text-slate-400">คำขอทั้งหมดได้รับการพิจารณาเรียบร้อยแล้ว หรืออยู่ระหว่างการกลั่นกรองของฝ่ายวิชาการ (ทีม B)</p>
+            </div>
+          `;
+        } else {
+          container.innerHTML = queue.map(req => {
+            const estBudget = req.estBudget || 0;
+            const actualBudget = req.actualBudget || estBudget;
+            const targetSales = req.targetSales || 0;
+            const costRatio = targetSales > 0 ? ((actualBudget / targetSales) * 100).toFixed(1) + '%' : '-';
+            const savedAmount = Math.max(estBudget - actualBudget, 0);
+
+            return `
+            <div onclick="setActiveReadingCard(this)" class="reading-card bg-white rounded-3xl p-6 border border-slate-200 shadow-sm space-y-5 cursor-pointer transition">
+              <!-- Exec Header -->
+              <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-100 pb-3.5">
+                <div>
+                  <div class="flex items-center space-x-2">
+                    <span class="font-black text-slate-900 text-lg font-mono flex items-center">${req.eventId} ${getSampleBadgeHtml(req)}</span>
+                    <span class="text-xs bg-amber-100 text-amber-900 font-bold px-2.5 py-0.5 rounded-full border border-amber-200">${req.activityType}</span>
+                    <span class="text-xs bg-slate-100 text-slate-600 px-2 py-0.5 rounded-md font-mono">วันที่จัด: ${req.eventDate || '-'}</span>
+                    ${(req.isOutOfPlan === 'YES' || req.outOfPlanReason) ? `
+                      <span class="text-xs bg-amber-100 text-amber-900 font-bold px-2.5 py-0.5 rounded-full border border-amber-300 flex items-center">
+                        <i class="fa-solid fa-triangle-exclamation mr-1 text-amber-600"></i>นอกแผนหลักการ (กรณีพิเศษ)
+                      </span>
+                    ` : ''}
+                  </div>
+                  <h3 class="font-bold text-slate-800 text-base mt-1">${req.courseTopic}</h3>
+                </div>
+                <div class="flex items-center space-x-2">
+                  ${formatPendingSLA(req.reviewedByBAt || req.createdAt, req.status)}
+                  <button onclick="openPpcReportModal('${req.eventId}', 'MEMO')" class="px-3 py-1.5 bg-blue-50 hover:bg-blue-100 text-[#08539E] border border-blue-200 text-xs font-bold rounded-xl transition flex items-center space-x-1.5 shadow-sm" title="เปิดดูบันทึกเสนอขออนุมัติปฏิบัติงาน A4 (Preview & Sign)">
+                    <i class="fa-solid fa-stamp text-amber-500"></i>
+                    <span>ตรวจบันทึกขออนุมัติ A4</span>
+                  </button>
+                  ${AppState.adminUnlocked ? `
+                    <button onclick="openAdminEditRequestModal('${req.eventId}')" class="px-2 py-1 bg-amber-100 hover:bg-amber-200 text-amber-900 text-xs font-bold rounded-lg transition ml-1" title="แก้ไขคำขอโดย Admin"><i class="fa-solid fa-pen-to-square mr-1"></i>แก้ (Admin)</button>
+                    <button onclick="adminDeleteRequest('${req.eventId}')" class="px-2 py-1 bg-rose-100 hover:bg-rose-200 text-rose-800 text-xs font-bold rounded-lg transition ml-1" title="ลบคำขอโดย Admin"><i class="fa-solid fa-trash mr-1"></i>ลบ</button>
+                  ` : ''}
+                </div>
+              </div>
+
+              <!-- SIDE-BY-SIDE SUMMARY: TEAM A & TEAM B DOSSIER -->
+              <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 text-xs">
+                <!-- Left: Team A Submission Summary -->
+                <div class="bg-emerald-50/40 rounded-2xl p-4 border border-emerald-200/80 space-y-2.5">
+                  <div class="flex items-center justify-between border-b border-emerald-200/50 pb-2">
+                    <span class="font-bold text-emerald-900 uppercase flex items-center">
+                      <i class="fa-solid fa-paper-plane mr-1.5 text-emerald-600"></i>1. ข้อเสนอจากทีม A (ฝ่ายขาย)
+                    </span>
+                    <span class="text-[11px] text-emerald-700">ผู้แทนขาย: <strong>${req.saleName}</strong></span>
+                  </div>
+                  <div>
+                    <span class="text-slate-400 block text-[11px]">โรงเรียน / หน่วยงานเป้าหมาย:</span>
+                    <span class="font-bold text-slate-800 text-sm">${req.schoolName} (${req.province})</span>
+                    <div class="text-[11px] text-slate-500 font-medium mt-0.5">
+                      <span>ขนาด [${req.schoolSize || req.schoolTier || 'Tier B'}]</span>
+                      ${req.schoolArea ? ` • <span>${req.schoolArea}</span>` : ''}
+                      ${req.totalStudents ? ` • <span>นร.รวม ${Number(req.totalStudents).toLocaleString()} คน</span>` : ''}
+                    </div>
+                  </div>
+                  <div class="grid grid-cols-2 gap-2 text-slate-700">
+                    <div>จำนวนผู้เข้าอบรม: <strong class="text-indigo-700 font-bold">${(req.expectedTrainees || 50).toLocaleString()} คน</strong></div>
+                    <div>เป้าหมายยอดขาย: <strong class="text-emerald-700 font-bold">฿${targetSales.toLocaleString()}</strong></div>
+                  </div>
+                  <div class="text-slate-600 text-[11px] leading-relaxed">
+                    <strong>วัตถุประสงค์:</strong> ${req.objective || 'ขยายผลการใช้งานสื่อการสอนและสร้างความสัมพันธ์กับสถาบันการศึกษาเป้าหมาย'}
+                  </div>
+                  <div class="text-[11px] text-slate-500 pt-1 border-t border-emerald-200/40">
+                    งบประมาณที่ขอ: <strong>฿${estBudget.toLocaleString()}</strong>
+                  </div>
+                </div>
+
+                <!-- Right: Team B Academic Endorsement -->
+                <div class="bg-purple-50/40 rounded-2xl p-4 border border-purple-200/80 space-y-2.5">
+                  <div class="flex items-center justify-between border-b border-purple-200/50 pb-2">
+                    <span class="font-bold text-purple-900 uppercase flex items-center">
+                      <i class="fa-solid fa-clipboard-check mr-1.5 text-purple-600"></i>2. การกลั่นกรองจากทีม B (วิชาการ)
+                    </span>
+                    <span class="text-[11px] text-purple-700">ผู้ตรวจ: <strong>${req.reviewedBy || 'ฝ่ายวิชาการ'}</strong></span>
+                  </div>
+                  <div>
+                    <span class="text-slate-400 block text-[11px]">วิทยากรผู้บรรยายที่ยืนยัน:</span>
+                    <span class="font-bold text-purple-900 text-sm">${req.teamBSpeaker || req.speakerType || 'วิทยากรประจำหลักสูตร'}</span>
+                    ${(req.speakers && req.speakers.length > 1) ? `
+                      <div class="text-[11px] text-slate-500 mt-0.5">
+                        (รวมวิทยากร ${req.speakers.length} ท่าน: ${req.speakers.map(s => s.name).filter(Boolean).join(', ')})
+                      </div>
+                    ` : ''}
+                  </div>
+                  <div>
+                    <span class="text-slate-400 block text-[11px]">ความเห็นทางวิชาการ:</span>
+                    <p class="text-slate-700 text-[11px] leading-relaxed">${req.teamBNotes || 'มีความพร้อมด้านเนื้อหาและสื่ออุปกรณ์ สอดคล้องตามเกณฑ์มาตรฐาน'}</p>
+                  </div>
+                  <div class="text-[11px] text-slate-600 pt-1 border-t border-purple-200/40 flex items-center justify-between">
+                    <span>งบตัดจ่ายจริง: <strong class="text-slate-900 text-sm">฿${actualBudget.toLocaleString()}</strong></span>
+                    ${savedAmount > 0 ? `<span class="text-emerald-700 font-bold bg-emerald-100 px-2 py-0.5 rounded">ประหยัดงบ: ฿${savedAmount.toLocaleString()}</span>` : ''}
+                  </div>
+                </div>
+              </div>
+
+              <!-- Financial & Logistics Comparison Bar -->
+              <div class="bg-slate-50 p-4 rounded-2xl border border-slate-200 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs">
+                <div class="flex flex-wrap items-center gap-x-6 gap-y-1">
+                  <div>
+                    <span class="text-slate-400">งบขออนุมัติสุทธิ:</span>
+                    <strong class="text-slate-900 text-sm ml-1 font-mono">฿${actualBudget.toLocaleString()}</strong>
+                  </div>
+                  <div>
+                    <span class="text-slate-400">สัดส่วนงบต่อยอดขาย (ROI):</span>
+                    <strong class="text-blue-700 text-sm ml-1 font-mono">${costRatio}</strong>
+                  </div>
+                </div>
+
+                <!-- Exec Decision Actions -->
+                <div class="flex items-center space-x-2">
+                  <button onclick="handleExecDecision('${req.eventId}', 'REJECT')" class="px-4 py-2 bg-slate-200 hover:bg-slate-300 text-slate-700 text-xs font-bold rounded-xl transition">
+                    <i class="fa-solid fa-ban mr-1 text-red-500"></i>ไม่อนุมัติ
+                  </button>
+                  <button onclick="openSignatureModal('${req.eventId}')" class="px-6 py-2 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold rounded-xl shadow-md transition flex items-center space-x-1.5 btn-tactile">
+                    <i class="fa-solid fa-signature mr-1 text-amber-300"></i>
+                    <span>อนุมัติโครงการ (Sign & Approve)</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+            `;
+          }).join('');
+        }
       }
 
-      container.innerHTML = queue.map(req => {
-        const estBudget = req.estBudget || 0;
-        const actualBudget = req.actualBudget || estBudget;
-        const targetSales = req.targetSales || 0;
-        const costRatio = targetSales > 0 ? ((actualBudget / targetSales) * 100).toFixed(1) + '%' : '-';
-        const savedAmount = Math.max(estBudget - actualBudget, 0);
-
-        return `
-        <div onclick="setActiveReadingCard(this)" class="reading-card bg-white rounded-3xl p-6 border border-slate-200 shadow-sm space-y-5 cursor-pointer transition">
-          
-          <!-- Exec Header -->
-          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-100 pb-3.5">
-            <div>
-              <div class="flex items-center space-x-2">
-                <span class="font-black text-slate-900 text-lg font-mono flex items-center">${req.eventId} ${getSampleBadgeHtml(req)}</span>
-                <span class="text-xs bg-amber-100 text-amber-900 font-bold px-2.5 py-0.5 rounded-full border border-amber-200">${req.activityType}</span>
-                <span class="text-xs bg-slate-100 text-slate-600 px-2 py-0.5 rounded-md font-mono">วันที่จัด: ${req.eventDate || '-'}</span>
-                ${(req.isOutOfPlan === 'YES' || req.outOfPlanReason) ? `
-                  <span class="text-xs bg-amber-100 text-amber-900 font-bold px-2.5 py-0.5 rounded-full border border-amber-300 flex items-center">
-                    <i class="fa-solid fa-triangle-exclamation mr-1 text-amber-600"></i>นอกแผนหลักการ (กรณีพิเศษ)
-                  </span>
-                ` : ''}
-              </div>
-              <h3 class="font-bold text-slate-800 text-base mt-1">${req.courseTopic}</h3>
-            </div>
-            <div class="flex items-center space-x-2">
-              ${formatPendingSLA(req.reviewedByBAt || req.createdAt, req.status)}
-              <button onclick="openPpcReportModal('${req.eventId}', 'MEMO')" class="px-3 py-1.5 bg-blue-50 hover:bg-blue-100 text-[#08539E] border border-blue-200 text-xs font-bold rounded-xl transition flex items-center space-x-1.5 shadow-sm" title="เปิดดูบันทึกเสนอขออนุมัติปฏิบัติงาน A4 (Preview & Sign)">
-                <i class="fa-solid fa-stamp text-amber-500"></i>
-                <span>ตรวจบันทึกขออนุมัติ A4</span>
-              </button>
-              ${AppState.adminUnlocked ? `
-                <button onclick="openAdminEditRequestModal('${req.eventId}')" class="px-2 py-1 bg-amber-100 hover:bg-amber-200 text-amber-900 text-xs font-bold rounded-lg transition ml-1" title="แก้ไขคำขอโดย Admin"><i class="fa-solid fa-pen-to-square mr-1"></i>แก้ (Admin)</button>
-                <button onclick="adminDeleteRequest('${req.eventId}')" class="px-2 py-1 bg-rose-100 hover:bg-rose-200 text-rose-800 text-xs font-bold rounded-lg transition ml-1" title="ลบคำขอโดย Admin"><i class="fa-solid fa-trash mr-1"></i>ลบ</button>
-              ` : ''}
-            </div>
-          </div>
-
-          <!-- SIDE-BY-SIDE SUMMARY: TEAM A & TEAM B DOSSIER -->
-          <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 text-xs">
-            
-            <!-- Left: Team A Submission Summary -->
-            <div class="bg-emerald-50/40 rounded-2xl p-4 border border-emerald-200/80 space-y-2.5">
-              <div class="flex items-center justify-between border-b border-emerald-200/50 pb-2">
-                <span class="font-bold text-emerald-900 uppercase flex items-center">
-                  <i class="fa-solid fa-paper-plane mr-1.5 text-emerald-600"></i>1. ข้อเสนอจากทีม A (ฝ่ายขาย)
-                </span>
-                <span class="text-[11px] text-emerald-700">ผู้แทนขาย: <strong>${req.saleName}</strong></span>
-              </div>
-              <div>
-                <span class="text-slate-400 block text-[11px]">โรงเรียน / หน่วยงานเป้าหมาย:</span>
-                <span class="font-bold text-slate-800 text-sm">${req.schoolName} (${req.province})</span>
-                <div class="text-[11px] text-slate-500 font-medium mt-0.5">
-                  <span>ขนาด [${req.schoolSize || req.schoolTier || 'Tier B'}]</span>
-                  ${req.schoolArea ? ` • <span>${req.schoolArea}</span>` : ''}
-                  ${req.totalStudents ? ` • <span>นร.รวม ${Number(req.totalStudents).toLocaleString()} คน</span>` : ''}
-                </div>
-              </div>
-              <div class="grid grid-cols-2 gap-2 text-slate-700">
-                <div>จำนวนผู้เข้าอบรม: <strong class="text-indigo-700 font-bold">${(req.expectedTrainees || 50).toLocaleString()} คน</strong></div>
-                <div>เป้าหมายยอดขาย: <strong class="text-emerald-700 font-bold">฿${targetSales.toLocaleString()}</strong></div>
-              </div>
-              <div class="text-slate-600 text-[11px] leading-relaxed">
-                <strong>วัตถุประสงค์:</strong> ${req.objective || 'ขยายผลการใช้งานสื่อการสอนและสร้างความสัมพันธ์กับสถาบันการศึกษาเป้าหมาย'}
-              </div>
-              <div class="text-[11px] text-slate-500 pt-1 border-t border-emerald-200/40">
-                งบประมาณที่ขอ: <strong>฿${estBudget.toLocaleString()}</strong>
-              </div>
-              ${(req.isOutOfPlan === 'YES' || req.outOfPlanReason) ? `
-                <div class="bg-amber-100/70 border border-amber-300 rounded-xl p-2.5 text-xs text-amber-900 space-y-1">
-                  <span class="font-bold flex items-center"><i class="fa-solid fa-triangle-exclamation text-amber-600 mr-1"></i>เหตุผลนอกแผนหลักการ:</span>
-                  <p class="text-amber-800 leading-relaxed font-medium">${req.outOfPlanReason || 'ขอจัดเป็นกรณีพิเศษ'}</p>
-                </div>
-              ` : ''}
-            </div>
-
-            <!-- Right: Team B Academic Endorsement -->
-            <div class="bg-purple-50/40 rounded-2xl p-4 border border-purple-200/80 space-y-2.5">
-              <div class="flex items-center justify-between border-b border-purple-200/50 pb-2">
-                <span class="font-bold text-purple-900 uppercase flex items-center">
-                  <i class="fa-solid fa-clipboard-check mr-1.5 text-purple-600"></i>2. การกลั่นกรองจากทีม B (วิชาการ)
-                </span>
-                <span class="text-[11px] text-purple-700">ผู้ตรวจ: <strong>${req.reviewedBy || 'ฝ่ายวิชาการ'}</strong></span>
-              </div>
-              <div>
-                <span class="text-slate-400 block text-[11px]">วิทยากรผู้บรรยายที่ยืนยัน:</span>
-                <span class="font-bold text-purple-900 text-sm">${req.teamBSpeaker || req.speakerType || 'วิทยากรประจำหลักสูตร'}</span>
-                ${(req.speakers && req.speakers.length > 1) ? `
-                  <div class="text-[11px] text-slate-500 mt-0.5">
-                    (รวมวิทยากร ${req.speakers.length} ท่าน: ${req.speakers.map(s => s.name).filter(Boolean).join(', ')})
-                  </div>
-                ` : ''}
-                ${(req.speakers && req.speakers.some(s => s.signature)) ? `
-                  <div class="mt-1 flex items-center space-x-1.5">
-                    <span class="text-[10px] bg-emerald-100 text-emerald-800 font-bold px-2 py-0.5 rounded-full border border-emerald-200 flex items-center">
-                      <i class="fa-solid fa-signature mr-1 text-emerald-600"></i>เก็บบันทึกลายเซ็นดิจิทัลแล้ว (${req.speakers.filter(s => s.signature).length}/${req.speakers.length} ท่าน)
+      // 2. Render Approved Projects Section
+      if (approvedContainer) {
+        if (approvedQueue.length === 0) {
+          approvedContainer.innerHTML = `<div class="p-6 text-center text-slate-400 bg-slate-50 rounded-xl border border-dashed border-slate-200 text-xs">ยังไม่มีโครงการที่ได้รับการอนุมัติ</div>`;
+        } else {
+          approvedContainer.innerHTML = approvedQueue.map(req => {
+            return `
+              <div class="bg-emerald-50/40 rounded-2xl p-4 border border-emerald-200/80 shadow-xs flex flex-col md:flex-row md:items-center justify-between gap-3 text-xs">
+                <div class="space-y-1">
+                  <div class="flex items-center gap-2">
+                    <span class="font-black text-slate-900 font-mono text-sm">${req.eventId}</span>
+                    <span class="bg-emerald-100 text-emerald-800 font-bold px-2 py-0.5 rounded-full border border-emerald-300 flex items-center text-[10px]">
+                      <i class="fa-solid fa-circle-check mr-1 text-emerald-600"></i>อนุมัติเรียบร้อยแล้ว
                     </span>
+                    <span class="bg-slate-100 text-slate-600 px-2 py-0.5 rounded-md font-mono text-[10px]">วันที่จัด: ${req.eventDate || '-'}</span>
                   </div>
-                ` : ''}
+                  <div class="font-bold text-slate-800">${req.schoolName} (${req.province}) - <span class="text-slate-600 font-normal">${req.courseTopic}</span></div>
+                  <div class="text-[11px] text-slate-500 flex flex-wrap gap-x-4">
+                    <span>งบอนุมัติ: <strong class="text-slate-800 font-bold">฿${(Number(req.actualBudget) || Number(req.estBudget) || 0).toLocaleString()}</strong></span>
+                    <span>ผู้อนุมัติ: <strong class="text-emerald-800 font-bold">${req.approvedBy || 'คุณอินทิรา บุนนาค'}</strong> (${req.approverRole || 'กรรมการผู้จัดการ'})</span>
+                    ${req.approvedAt ? `<span>วันที่อนุมัติ: <strong>${new Date(req.approvedAt).toLocaleDateString('th-TH')}</strong></span>` : ''}
+                    <span>Token: <code class="bg-white px-1.5 py-0.5 rounded border border-emerald-300 font-mono text-emerald-700 font-bold">${req.token || '-'}</code></span>
+                  </div>
+                </div>
+                <div class="flex items-center gap-2 self-start md:self-auto shrink-0">
+                  <button type="button" onclick="openPpcReportModal('${req.eventId}', 'MEMO')" class="px-3.5 py-2 bg-blue-50 hover:bg-blue-100 text-[#08539E] border border-blue-200 rounded-xl font-bold transition flex items-center gap-1.5 shadow-xs cursor-pointer" title="เปิดดูบันทึกข้อความขออนุมัติ A4 ที่ลงนามแล้ว">
+                    <i class="fa-solid fa-stamp text-amber-500"></i>
+                    <span>ดูบันทึก A4 ลงนามแล้ว</span>
+                  </button>
+                  <button type="button" onclick="switchTab('evaluation')" class="px-3.5 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl font-bold transition flex items-center gap-1.5 shadow-xs cursor-pointer" title="ไปที่ศูนย์ประเมินและเปิด QR Code">
+                    <i class="fa-solid fa-qrcode text-amber-200"></i>
+                    <span>ศูนย์ประเมิน & QR</span>
+                  </button>
+                </div>
               </div>
-              <div>
-                <span class="text-slate-400 block text-[11px]">ความเห็นทางวิชาการ:</span>
-                <p class="text-slate-700 text-[11px] leading-relaxed">${req.teamBNotes || 'มีความพร้อมด้านเนื้อหาและสื่ออุปกรณ์ สอดคล้องตามเกณฑ์มาตรฐาน'}</p>
-              </div>
-              <div class="text-[11px] text-slate-600 pt-1 border-t border-purple-200/40 flex items-center justify-between">
-                <span>งบตัดจ่ายจริง: <strong class="text-slate-900 text-sm">฿${actualBudget.toLocaleString()}</strong></span>
-                ${savedAmount > 0 ? `<span class="text-emerald-700 font-bold bg-emerald-100 px-2 py-0.5 rounded">ประหยัดงบ: ฿${savedAmount.toLocaleString()}</span>` : ''}
-              </div>
-            </div>
-
-          </div>
-
-          <!-- Financial & Logistics Comparison Bar -->
-          <div class="bg-slate-50 p-4 rounded-2xl border border-slate-200 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs">
-            <div class="flex flex-wrap items-center gap-x-6 gap-y-1">
-              <div>
-                <span class="text-slate-400">งบขออนุมัติสุทธิ:</span>
-                <strong class="text-slate-900 text-sm ml-1 font-mono">฿${actualBudget.toLocaleString()}</strong>
-              </div>
-              <div>
-                <span class="text-slate-400">สัดส่วนงบต่อยอดขาย (ROI):</span>
-                <strong class="text-blue-700 text-sm ml-1 font-mono">${costRatio}</strong>
-              </div>
-              <div>
-                <span class="text-slate-400">ห้องพัก:</span>
-                <span class="text-slate-700 font-medium ml-1">${(req.needAccommodation === 'YES' || req.roomCount > 0) ? `${req.roomCount} ห้อง` : 'ไม่ต้องการ'}</span>
-              </div>
-              <div>
-                <span class="text-slate-400">รถรับ-ส่ง:</span>
-                <span class="text-slate-700 font-medium ml-1">${(req.needTransportation === 'YES' || req.transportDetails) ? `${req.transportDetails || 'รถตู้'}` : 'ไม่ต้องการ'}</span>
-              </div>
-            </div>
-
-            <!-- Exec Decision Actions -->
-            <div class="flex items-center space-x-2">
-              <button onclick="handleExecDecision('${req.eventId}', 'REJECT')" class="px-4 py-2 bg-slate-200 hover:bg-slate-300 text-slate-700 text-xs font-bold rounded-xl transition">
-                <i class="fa-solid fa-ban mr-1 text-red-500"></i>ไม่อนุมัติ
-              </button>
-              <button onclick="openSignatureModal('${req.eventId}')" class="px-6 py-2 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold rounded-xl shadow-md transition flex items-center space-x-1.5 btn-tactile">
-                <i class="fa-solid fa-signature mr-1 text-amber-300"></i>
-                <span>อนุมัติโครงการ (Sign & Approve)</span>
-              </button>
-            </div>
-          </div>
-
-        </div>
-      `;
-      }).join('');
+            `;
+          }).join('');
+        }
+      }
     }
+    
 
     function renderEvaluationCenter() {
       const container = document.getElementById('approvedEventsContainer');
@@ -12733,34 +12798,39 @@
     }
 
     function handleExecDecision(eventId, decision, signatureDataUrl = null, approverInfo = null) {
-      // Strict Signing Authority Enforcement
+      // 1. Get the request FIRST (Prevent TDZ ReferenceError)
+      const req = (AppState.requests || []).find(r => r.eventId === eventId);
+      if (!req) {
+        showAlert('ไม่พบข้อมูลคำขอ ' + eventId, 'error');
+        return;
+      }
+
+      // 2. Strict Signing Authority Enforcement
       if (!AppState.currentUser || (AppState.currentUser.team !== 'EXEC' && AppState.currentUser.teamRole !== 'ADMIN')) {
         showAlert('⛔ ปฏิเสธการลงนาม: เฉพาะฝ่ายบริหาร (Executive: กรรมการผู้จัดการ) เท่านั้นที่มีอำนาจอนุมัติงบประมาณและโครงการ', 'error');
         return;
       }
 
       const effectiveApprover = approverInfo ? approverInfo.name : (AppState.currentUser.fullName || 'คุณอินทิรา บุนนาค');
-      const prof = resolveExecutiveProfile(approverInfo ? approverInfo.name : req.approvedBy, approverInfo ? approverInfo.role : req.approverRole);
+      const prof = resolveExecutiveProfile(effectiveApprover, approverInfo ? approverInfo.role : req.approverRole);
       const effectiveRole = prof.role;
       const effectiveName = prof.name;
 
-      // 1. OPTIMISTIC INSTANT UPDATE (Zero Lag - Immediate UI Reaction)
-      const req = AppState.requests.find(r => r.eventId === eventId);
-      if (req) {
-        req.status = decision;
-        req.approvedBy = effectiveApprover;
-        req.approverRole = effectiveRole;
-        req.approverPosition = effectiveRole;
-        req.approvedAt = new Date().toISOString();
-        if (signatureDataUrl) {
-          req.approverSignature = signatureDataUrl;
-        }
-        if (decision === 'APPROVE') {
-          req.token = req.token || ('tok-' + Math.random().toString(36).substring(2, 10));
-          req.pdfUrl = req.pdfUrl || '#memo-approved';
-        }
-        localStorage.setItem('twp_requests_store', JSON.stringify(AppState.requests));
+      // 3. OPTIMISTIC INSTANT UPDATE (Zero Lag - Immediate UI Reaction)
+      const nextStatus = decision === 'APPROVE' ? 'APPROVED' : (decision === 'REJECT' ? 'REJECTED' : decision);
+      req.status = nextStatus;
+      req.approvedBy = effectiveName;
+      req.approverRole = effectiveRole;
+      req.approverPosition = effectiveRole;
+      req.approvedAt = new Date().toISOString();
+      if (signatureDataUrl) {
+        req.approverSignature = signatureDataUrl;
       }
+      if (decision === 'APPROVE') {
+        req.token = req.token || ('tok-' + Math.random().toString(36).substring(2, 10));
+        req.pdfUrl = req.pdfUrl || '#memo-approved';
+      }
+      localStorage.setItem('twp_requests_store', JSON.stringify(AppState.requests));
 
       // 2. Refresh UI immediately so the user sees the card transition without 1ms delay
       showAlert(decision === 'APPROVE' 
@@ -15712,7 +15782,9 @@ function postToBackend(action, payload) {
         return;
       }
       select.innerHTML = requests.map(r => {
-        return `<option value="${r.eventId}">${r.eventId} : ${r.schoolName} - ${r.courseTopic}</option>`;
+        const isApproved = r.status === 'APPROVED' || r.status === 'COMPLETED';
+        const badge = isApproved ? '✅ [อนุมัติแล้ว]' : '🔒 [รออนุมัติ - ล็อกการใช้งาน]';
+        return `<option value="${r.eventId}">${badge} ${r.eventId} : ${r.schoolName} - ${r.courseTopic}</option>`;
       }).join('');
     }
 
@@ -15725,6 +15797,18 @@ function postToBackend(action, payload) {
       if (!eventId) return;
       const req = AppState.requests.find(r => r.eventId === eventId);
       
+      const isApproved = req && (req.status === 'APPROVED' || req.status === 'COMPLETED');
+      const gateBanner = document.getElementById('regApprovalGateBanner');
+      const gateText = document.getElementById('regApprovalGateText');
+      if (gateBanner) {
+        if (!isApproved) {
+          gateBanner.classList.remove('hidden');
+          if (gateText) gateText.innerHTML = '<strong>🔒 โครงการนี้อยู่ระหว่างรอการอนุมัติจากฝ่ายบริหาร (สถานะปัจจุบัน: ' + (req?.status || 'รอพิจารณา') + ')</strong><br/>ระบบปิดล็อกการเช็กชื่อและการพิมพ์ป้าย QR ชั่วคราว ต้องได้รับการพิจารณาและลงนามอนุมัติจากฝ่ายบริหาร (Executive) ก่อน จึงจะสามารถเปิดใช้งานระบบลงทะเบียนได้';
+        } else {
+          gateBanner.classList.add('hidden');
+        }
+      }
+
       // Update Standee Preview Info
       const stTopic = document.getElementById('standeeEventTopic');
       const stMeta = document.getElementById('standeeEventMeta');
