@@ -8,7 +8,7 @@
  * ============================================================================
  */
 
-const SYSTEM_VERSION = '1.22.24';
+const SYSTEM_VERSION = '1.22.25';
 const DEFAULT_ADMIN_PASS = 'admin0000';
 // =============================================================================
 // MULTI-ACCOUNT GOOGLE SHEETS CONNECTIVITY (Cross-Account Shared Editor Access)
