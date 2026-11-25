@@ -8,7 +8,7 @@
  * ============================================================================
  */
 
-const SYSTEM_VERSION = 'v1.22.28';
+const SYSTEM_VERSION = 'v1.22.30';
 const DEFAULT_ADMIN_PASS = 'admin0000';
 // =============================================================================
 // MULTI-ACCOUNT GOOGLE SHEETS CONNECTIVITY (Cross-Account Shared Editor Access)
@@ -504,6 +504,12 @@ function doPost(e) {
         break;
       case 'DELETE_EVENT_REQUEST':
         result = handleDeleteEventRequest(payload);
+        break;
+      case 'GET_SIGNATURES_VAULT':
+        result = handleGetSignaturesVault();
+        break;
+      case 'SAVE_SIGNATURE_TO_VAULT':
+        result = handleSaveSignatureToVault(payload);
         break;
       case 'SAVE_EVENT_SIGNATURES':
         result = handleSaveEventSignatures(payload);
@@ -1603,6 +1609,10 @@ function ensureRequiredSheets(ss) {
 
   const required = [
     {
+      name: 'Signatures_Vault',
+      headers: ['Signatory_ID', 'Name', 'Role', 'Signatory_Type', 'Signature_Data', 'Drive_File_Id', 'Drive_File_Url', 'Updated_At', 'Updated_By']
+    },
+    {
       name: 'PPC_Master',
       headers: ['Zone_ID', 'Province', 'Sale_ID', 'Sale_Name', 'School_ID', 'School_Name', 'Account_Tier']
     },
@@ -2494,5 +2504,137 @@ function handleSaveEventSignatures(payload) {
     signatoryType: signatoryType,
     signatoryName: sigName,
     updated: true
+  };
+}
+
+
+/**
+ * Retrieve all Master Signatures from Signatures_Vault
+ */
+function handleGetSignaturesVault() {
+  const ss = getSpreadsheet();
+  ensureRequiredSheets(ss);
+  const sheet = ss.getSheetByName('Signatures_Vault');
+  if (!sheet) return [];
+
+  const rows = sheet.getDataRange().getValues();
+  const vault = [];
+  for (let i = 1; i < rows.length; i++) {
+    const r = rows[i];
+    if (!r[1]) continue;
+    vault.push({
+      id: r[0],
+      name: r[1],
+      role: r[2],
+      type: r[3],
+      signatureData: r[4] || '',
+      driveFileId: r[5] || '',
+      driveFileUrl: r[6] || '',
+      updatedAt: r[7] || '',
+      updatedBy: r[8] || ''
+    });
+  }
+  return vault;
+}
+
+/**
+ * Save Master Signature to Signatures_Vault and upload transparent PNG to Google Drive
+ */
+function handleSaveSignatureToVault(payload) {
+  if (!payload || !payload.name) {
+    throw new Error('ไม่พบข้อมูลชื่อผู้ลงนามสำหรับบันทึกเข้าคลัง');
+  }
+
+  const name = String(payload.name).trim();
+  const role = String(payload.role || '').trim();
+  const signatoryType = payload.signatoryType || (role.includes('ผู้จัดการ') ? 'EXECUTIVE' : 'SPEAKER');
+  const signatureData = String(payload.signatureData || '').trim();
+  const operatorName = payload.operatorName || 'ทีมวิชาการ B';
+
+  let driveFileId = '';
+  let driveFileUrl = '';
+
+  // 1. Upload transparent PNG to Google Drive folder 'TWP_Signatures_Vault'
+  if (signatureData.startsWith('data:image')) {
+    try {
+      const folderName = 'TWP_Signatures_Vault';
+      let folder;
+      const folders = DriveApp.getFoldersByName(folderName);
+      if (folders.hasNext()) {
+        folder = folders.next();
+      } else {
+        folder = DriveApp.createFolder(folderName);
+        try { folder.setSharing(DriveApp.Access.ANYONE_WITH_LINK, DriveApp.Permission.VIEW); } catch(e) {}
+      }
+
+      const parts = signatureData.split(',');
+      if (parts.length > 1) {
+        const base64Data = parts[1];
+        const decoded = Utilities.base64Decode(base64Data);
+        const safeName = name.replace(/[^a-zA-Z0-9_\u0E00-\u0E7F]/g, '_');
+        const fileName = 'SIG_' + signatoryType + '_' + safeName + '.png';
+        const blob = Utilities.newBlob(decoded, 'image/png', fileName);
+        const file = folder.createFile(blob);
+        try { file.setSharing(DriveApp.Access.ANYONE_WITH_LINK, DriveApp.Permission.VIEW); } catch(e) {}
+        driveFileId = file.getId();
+        driveFileUrl = file.getUrl();
+      }
+    } catch (err) {
+      Logger.log('Drive upload notice: ' + err.message);
+    }
+  }
+
+  // 2. Save / Update in Signatures_Vault sheet
+  const ss = getSpreadsheet();
+  ensureRequiredSheets(ss);
+  const sheet = ss.getSheetByName('Signatures_Vault');
+  const data = sheet.getDataRange().getValues();
+  let foundRow = -1;
+
+  for (let i = 1; i < data.length; i++) {
+    if (String(data[i][1]).trim() === name && String(data[i][3]).trim() === signatoryType) {
+      foundRow = i + 1;
+      break;
+    }
+  }
+
+  const now = new Date().toISOString();
+  const sigId = 'SIG-VAULT-' + Date.now().toString().slice(-6);
+
+  if (foundRow > -1) {
+    sheet.getRange(foundRow, 3).setValue(role);
+    if (signatureData) sheet.getRange(foundRow, 5).setValue(signatureData);
+    if (driveFileId) sheet.getRange(foundRow, 6).setValue(driveFileId);
+    if (driveFileUrl) sheet.getRange(foundRow, 7).setValue(driveFileUrl);
+    sheet.getRange(foundRow, 8).setValue(now);
+    sheet.getRange(foundRow, 9).setValue(operatorName);
+  } else {
+    sheet.appendRow([
+      sigId,
+      name,
+      role,
+      signatoryType,
+      signatureData,
+      driveFileId,
+      driveFileUrl,
+      now,
+      operatorName
+    ]);
+  }
+
+  handleLogAuditTrail({
+    eventId: payload.eventId || 'GLOBAL',
+    operatorName: operatorName,
+    actionType: 'SAVE_SIGNATURE_VAULT',
+    details: 'บันทึกลายมือชื่อลงคลังกลางและ Google Drive: ' + name + ' (' + role + ')'
+  });
+
+  return {
+    success: true,
+    name: name,
+    role: role,
+    signatoryType: signatoryType,
+    driveFileUrl: driveFileUrl,
+    updatedAt: now
   };
 }
