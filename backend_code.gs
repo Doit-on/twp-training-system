@@ -8,7 +8,7 @@
  * ============================================================================
  */
 
-const SYSTEM_VERSION = 'v1.22.26';
+const SYSTEM_VERSION = 'v1.22.27';
 const DEFAULT_ADMIN_PASS = 'admin0000';
 // =============================================================================
 // MULTI-ACCOUNT GOOGLE SHEETS CONNECTIVITY (Cross-Account Shared Editor Access)
@@ -1081,6 +1081,10 @@ function updateReviewTeamB(payload) {
 
   sheet.getRange(targetRow, 3).setValue(nextStatus);
   sheet.getRange(targetRow, 17).setValue(teamBSpeaker || '');
+  if (payload.courseTopic && String(payload.courseTopic).trim()) {
+    sheet.getRange(targetRow, 5).setValue(String(payload.courseTopic).trim());
+    sheet.getRange(targetRow, 6).setValue(String(payload.courseTopic).trim());
+  }
   sheet.getRange(targetRow, 18).setValue(teamBNotes || '');
   sheet.getRange(targetRow, 19).setValue(Number(actualBudget) || 0);
   sheet.getRange(targetRow, 21).setValue(operator);
@@ -2379,7 +2383,18 @@ function handleUpdateCourseTopic(payload) {
   }
   if (foundRow === -1) throw new Error('ไม่พบรายการคำขอรหัส ' + eventId + ' ในชีต');
 
-  // Column 5 is Course_Topic (Column E)
+  // Column 5 is Course_Topic (Column E), Column 6 is Custom_Topic (Column F)
   sheet.getRange(foundRow, 5).setValue(newTopic);
+  sheet.getRange(foundRow, 6).setValue(newTopic);
+  sheet.getRange(foundRow, 23).setValue('ฝ่ายวิชาการ (ทีม B)'); // Last_Modified_By
+  sheet.getRange(foundRow, 25).setValue(new Date().toISOString()); // Reviewed_By_B_At
+
+  handleLogAuditTrail({
+    eventId: eventId,
+    operatorName: 'ฝ่ายวิชาการ (ทีม B)',
+    actionType: 'UPDATE_COURSE_TOPIC',
+    details: 'ปรับปรุงชื่อหัวข้ออบรมทางการสำหรับ E-Cer & ลงทะเบียน: ' + newTopic
+  });
+
   return { eventId: eventId, courseTopic: newTopic, updated: true };
 }
