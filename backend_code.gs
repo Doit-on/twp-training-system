@@ -8,7 +8,7 @@
  * ============================================================================
  */
 
-const SYSTEM_VERSION = 'v1.22.27';
+const SYSTEM_VERSION = 'v1.22.28';
 const DEFAULT_ADMIN_PASS = 'admin0000';
 // =============================================================================
 // MULTI-ACCOUNT GOOGLE SHEETS CONNECTIVITY (Cross-Account Shared Editor Access)
@@ -504,6 +504,9 @@ function doPost(e) {
         break;
       case 'DELETE_EVENT_REQUEST':
         result = handleDeleteEventRequest(payload);
+        break;
+      case 'SAVE_EVENT_SIGNATURES':
+        result = handleSaveEventSignatures(payload);
         break;
       case 'UPDATE_COURSE_TOPIC':
         result = handleUpdateCourseTopic(payload);
@@ -1612,7 +1615,7 @@ function ensureRequiredSheets(ss) {
         'Actual_Budget', 'Created_By', 'Reviewed_By', 'Approved_By', 'Last_Modified_By',
         'Submitted_To_B_At', 'Reviewed_By_B_At', 'Approved_At', 'A4_PDF_Url',
         'Need_Accommodation', 'Room_Count', 'Need_Transportation', 'Transport_Details', 'A4_Docx_Url', 'Is_Out_Of_Plan', 'Out_Of_Plan_Reason', 'Annual_Plan_ID',
-        'Expected_Trainees', 'Actual_Trainees', 'Need_Catering', 'Need_Product_Media', 'Other_Support_Details', 'Speaker_Signature_Data', 'Speakers_JSON', 'Actual_Expenses_JSON', 'Skip_ECert'
+        'Expected_Trainees', 'Actual_Trainees', 'Need_Catering', 'Need_Product_Media', 'Other_Support_Details', 'Speaker_Signature_Data', 'Speakers_JSON', 'Actual_Expenses_JSON', 'Skip_ECert', 'Approver_Signature_Data'
       ]
     },
     {
@@ -2045,8 +2048,8 @@ function handleGetEventRegistrations(payload) {
             approvedBy: reqRows[j][21] || 'คุณนิพนธ์ ศรแก้ว',
             approvedRole: 'กรรมการผู้จัดการ',
             speakers: parsedSpeakers,
-            speakerSignature: reqRows[j][45] || '',
-            approvedSignature: reqRows[j][46] || ''
+            speakerSignature: reqRows[j][40] || reqRows[j][45] || '',
+            approvedSignature: reqRows[j][44] || reqRows[j][46] || ''
           };
           break;
         }
@@ -2397,4 +2400,99 @@ function handleUpdateCourseTopic(payload) {
   });
 
   return { eventId: eventId, courseTopic: newTopic, updated: true };
+}
+
+
+/**
+ * Save Speaker and Executive Digital Signatures permanently in Event_Requests
+ */
+function handleSaveEventSignatures(payload) {
+  if (!payload || !payload.eventId) {
+    throw new Error('ไม่พบข้อมูล eventId สำหรับการบันทึกลายเซ็น');
+  }
+  const eventId = String(payload.eventId).trim().toUpperCase();
+  const signatoryType = payload.signatoryType || 'SPEAKER'; // 'SPEAKER' or 'EXECUTIVE'
+  const sigData = payload.signatureData || '';
+  const sigName = String(payload.signatoryName || '').trim();
+  const sigRole = String(payload.signatoryRole || '').trim();
+  const speakerIndex = Number(payload.speakerIndex) || 0;
+
+  const ss = getSpreadsheet();
+  ensureRequiredSheets(ss);
+  const sheet = ss.getSheetByName('Event_Requests');
+  if (!sheet) throw new Error('ไม่พบชีต Event_Requests');
+
+  const data = sheet.getDataRange().getValues();
+  let foundRow = -1;
+  for (let i = 1; i < data.length; i++) {
+    if (String(data[i][0] || '').trim().toUpperCase() === eventId) {
+      foundRow = i + 1; // 1-based row index
+      break;
+    }
+  }
+  if (foundRow === -1) throw new Error('ไม่พบรายการคำขอรหัส ' + eventId + ' ในชีต');
+
+  const now = new Date().toISOString();
+
+  if (signatoryType === 'EXECUTIVE') {
+    // Column 45 is Approver_Signature_Data
+    sheet.getRange(foundRow, 45).setValue(sigData);
+    if (sigName) sheet.getRange(foundRow, 22).setValue(sigName); // Approved_By (Col 22)
+    sheet.getRange(foundRow, 26).setValue(now); // Approved_At (Col 26)
+    sheet.getRange(foundRow, 23).setValue('ผู้บริหาร / กรรมการผู้จัดการ'); // Last_Modified_By
+
+    handleLogAuditTrail({
+      eventId: eventId,
+      operatorName: sigName || 'กรรมการผู้จัดการ',
+      actionType: 'SAVE_EXEC_SIGNATURE',
+      details: 'บันทึกลายมือชื่อดิจิทัลของกรรมการผู้จัดการ (' + (sigName || 'คุณนิพนธ์ ศรแก้ว') + ') สำหรับ E-Cer'
+    });
+  } else {
+    // SPEAKER
+    if (speakerIndex === 0) {
+      // Column 41 is Speaker_Signature_Data
+      sheet.getRange(foundRow, 41).setValue(sigData);
+    }
+
+    // Update Speakers_JSON (Column 42)
+    let speakers = [];
+    try {
+      const raw = sheet.getRange(foundRow, 42).getValue();
+      if (raw) speakers = JSON.parse(raw);
+    } catch(e) {}
+
+    if (!Array.isArray(speakers) || speakers.length === 0) {
+      speakers = [{
+        name: sigName || sheet.getRange(foundRow, 17).getValue() || 'วิทยากร',
+        role: sigRole || 'วิทยากรประจำหลักสูตร',
+        signature: sigData
+      }];
+    } else {
+      if (speakers[speakerIndex]) {
+        speakers[speakerIndex].signature = sigData;
+        if (sigName) speakers[speakerIndex].name = sigName;
+        if (sigRole) speakers[speakerIndex].role = sigRole;
+      } else {
+        speakers.push({ name: sigName, role: sigRole, signature: sigData });
+      }
+    }
+
+    sheet.getRange(foundRow, 42).setValue(JSON.stringify(speakers));
+    sheet.getRange(foundRow, 23).setValue('ฝ่ายวิชาการ (ทีม B)'); // Last_Modified_By
+
+    handleLogAuditTrail({
+      eventId: eventId,
+      operatorName: 'ฝ่ายวิชาการ (ทีม B)',
+      actionType: 'SAVE_SPEAKER_SIGNATURE',
+      details: 'บันทึกลายมือชื่อดิจิทัลของ ' + (sigRole || 'วิทยากร') + ' (' + (sigName || '') + ') สำหรับ E-Cer'
+    });
+  }
+
+  return {
+    success: true,
+    eventId: eventId,
+    signatoryType: signatoryType,
+    signatoryName: sigName,
+    updated: true
+  };
 }

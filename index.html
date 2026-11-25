@@ -1,9 +1,178 @@
-<!DOCTYPE html>
+
+  <!-- MODAL: DIGITAL SIGNATURE MANAGEMENT STUDIO FOR TEAM B -->
+  <div id="signatureManagementModal" class="hidden fixed inset-0 z-50 bg-slate-900/65 backdrop-blur-xs flex items-center justify-center p-3 sm:p-4 overflow-y-auto">
+    <div class="bg-white rounded-3xl max-w-2xl w-full p-5 sm:p-6 space-y-4 shadow-2xl border border-slate-200 my-auto">
+      
+      <!-- Modal Header -->
+      <div class="flex items-start justify-between pb-3 border-b border-slate-100">
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 rounded-2xl bg-indigo-100 text-indigo-700 flex items-center justify-center text-lg font-bold shadow-xs">
+            <i class="fa-solid fa-file-signature"></i>
+          </div>
+          <div>
+            <h3 class="text-base font-black text-slate-900">สตูดิโอจัดการลายมือชื่อดิจิทัล (E-Certificate Signatures)</h3>
+            <p id="sigModalEventMeta" class="text-xs text-indigo-600 font-bold font-mono">โครงการ: -</p>
+          </div>
+        </div>
+        <button type="button" onclick="closeSignatureManagementModal()" class="w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-500 flex items-center justify-center transition cursor-pointer">
+          <i class="fa-solid fa-xmark text-sm"></i>
+        </button>
+      </div>
+
+      <!-- Navigation Tabs: Speaker vs Executive -->
+      <div class="flex rounded-2xl bg-slate-100 p-1 gap-1 text-xs font-bold">
+        <button type="button" id="tabBtnSigSpeaker" onclick="switchSignatureTab('SPEAKER')" class="flex-1 py-2 rounded-xl transition flex items-center justify-center gap-2 bg-white text-indigo-900 shadow-xs cursor-pointer">
+          <i class="fa-solid fa-chalkboard-user"></i>
+          <span>1. ลายเซ็นวิทยากรประจำหลักสูตร</span>
+        </button>
+        <button type="button" id="tabBtnSigExec" onclick="switchSignatureTab('EXEC')" class="flex-1 py-2 rounded-xl transition flex items-center justify-center gap-2 text-slate-600 hover:text-slate-900 cursor-pointer">
+          <i class="fa-solid fa-user-tie"></i>
+          <span>2. ลายเซ็นกรรมการผู้จัดการ</span>
+        </button>
+      </div>
+
+      <!-- TAB 1: SPEAKER SIGNATURE -->
+      <div id="sigTabSpeakerContent" class="space-y-3">
+        
+        <!-- Speaker Selector (if multiple speakers) -->
+        <div class="bg-slate-50 p-3 rounded-2xl border border-slate-200 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+          <div>
+            <label class="block text-[11px] font-bold text-slate-700 mb-0.5">เลือกวิทยากรผู้ลงนาม:</label>
+            <select id="sigSpeakerSelect" onchange="onSignatureSpeakerSelectChange()" class="p-2 bg-white border border-slate-300 rounded-xl text-xs font-bold text-slate-800 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+              <!-- populated dynamically -->
+            </select>
+          </div>
+          <div class="text-right sm:text-right">
+            <span class="text-[10px] text-slate-400 block">สถานะลายเซ็นปัจจุบัน:</span>
+            <span id="sigSpeakerStatusBadge" class="inline-block px-2 py-0.5 rounded-full text-[10px] font-bold bg-amber-100 text-amber-800">ใช้ลายเซ็นแม่แบบทางการ</span>
+          </div>
+        </div>
+
+        <!-- Identity Confirmation Box -->
+        <div class="p-2.5 bg-blue-50/70 border border-blue-200/80 rounded-2xl flex items-center justify-between text-xs">
+          <div class="flex items-center gap-2">
+            <i class="fa-solid fa-id-card text-blue-600 text-sm"></i>
+            <div>
+              <span class="text-slate-500 text-[11px]">ยืนยันการผูกลายเซ็นกับ:</span>
+              <strong id="sigConfirmSpeakerName" class="text-blue-950 font-black ml-1">( วิทยากร )</strong>
+            </div>
+          </div>
+          <span id="sigConfirmSpeakerRole" class="text-[11px] font-medium text-slate-500">วิทยากรประจำหลักสูตร</span>
+        </div>
+
+        <!-- Interactive Canvas Area -->
+        <div class="space-y-1.5">
+          <div class="flex items-center justify-between text-xs">
+            <span class="font-bold text-slate-700 flex items-center gap-1.5">
+              <i class="fa-solid fa-pen-nib text-indigo-600"></i>
+              <span>ลงลายมือชื่อสด (ด้วยนิ้วมือ หรือ ปากกาสไตลัสบนหน้าจอสัมผัส/เมาส์):</span>
+            </span>
+            <button type="button" onclick="clearSignatureCanvas('SPEAKER')" class="text-[11px] text-rose-600 hover:text-rose-700 font-bold flex items-center gap-1 cursor-pointer">
+              <i class="fa-solid fa-eraser"></i>
+              <span>ล้างกระดาน</span>
+            </button>
+          </div>
+
+          <div class="border-2 border-dashed border-indigo-200 rounded-2xl bg-slate-50 relative overflow-hidden flex items-center justify-center p-1">
+            <canvas id="speakerSigCanvas" width="560" height="150" class="w-full h-36 bg-white rounded-xl shadow-inner touch-none cursor-crosshair"></canvas>
+            <div id="speakerCanvasWatermark" class="pointer-events-none absolute inset-0 flex items-center justify-center text-slate-300 text-xs font-medium">
+              แตะหรือลากเพื่อเซ็นชื่อที่นี่ (Sign Here)
+            </div>
+          </div>
+        </div>
+
+        <!-- Attachment & Action Buttons -->
+        <div class="flex flex-wrap items-center justify-between gap-2 pt-1">
+          <div class="flex items-center gap-2">
+            <input type="file" id="speakerSigFileInput" accept="image/png,image/jpeg,image/webp" onchange="handleSignatureFileUpload(event, 'SPEAKER')" class="hidden">
+            <button type="button" onclick="document.getElementById('speakerSigFileInput').click()" class="px-3 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl text-xs font-bold transition flex items-center gap-1.5 cursor-pointer">
+              <i class="fa-solid fa-cloud-arrow-up text-indigo-600"></i>
+              <span>แนบไฟล์ภาพลายเซ็น</span>
+            </button>
+            <button type="button" onclick="downloadSignaturePng('SPEAKER')" class="px-3 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl text-xs font-bold transition flex items-center gap-1.5 cursor-pointer">
+              <i class="fa-solid fa-download text-emerald-600"></i>
+              <span>ดาวน์โหลดภาพ (.PNG)</span>
+            </button>
+          </div>
+
+          <button type="button" onclick="confirmSaveSignature('SPEAKER')" class="px-5 py-2 bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 text-white rounded-xl text-xs font-bold shadow-md transition flex items-center gap-1.5 cursor-pointer">
+            <i class="fa-solid fa-check-double text-amber-300"></i>
+            <span>ยืนยันบันทึกลายเซ็นวิทยากร</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- TAB 2: EXECUTIVE SIGNATURE -->
+      <div id="sigTabExecContent" class="space-y-3 hidden">
+        
+        <!-- Identity Confirmation Box for Executive Director -->
+        <div class="p-3 bg-indigo-50/70 border border-indigo-200 rounded-2xl flex items-center justify-between text-xs">
+          <div class="flex items-center gap-2.5">
+            <div class="w-8 h-8 rounded-full bg-indigo-600 text-white flex items-center justify-center text-xs font-black shadow-xs">
+              TWP
+            </div>
+            <div>
+              <span class="text-slate-500 text-[10px] block">ผู้บริหารสูงสุดผู้ลงนามรับรองวุฒิบัตร:</span>
+              <strong class="text-indigo-950 font-black text-sm">คุณนิพนธ์ ศรแก้ว</strong>
+            </div>
+          </div>
+          <div class="text-right">
+            <span class="text-[11px] font-bold text-indigo-700 block">กรรมการผู้จัดการ</span>
+            <span class="text-[10px] text-slate-500">บริษัท ไทยวัฒนาพานิช จำกัด</span>
+          </div>
+        </div>
+
+        <!-- Interactive Canvas Area -->
+        <div class="space-y-1.5">
+          <div class="flex items-center justify-between text-xs">
+            <span class="font-bold text-slate-700 flex items-center gap-1.5">
+              <i class="fa-solid fa-pen-nib text-indigo-600"></i>
+              <span>ลงลายมือชื่อสดของกรรมการผู้จัดการ (นิ้วมือ / ปากกาสไตลัส):</span>
+            </span>
+            <button type="button" onclick="clearSignatureCanvas('EXEC')" class="text-[11px] text-rose-600 hover:text-rose-700 font-bold flex items-center gap-1 cursor-pointer">
+              <i class="fa-solid fa-eraser"></i>
+              <span>ล้างกระดาน</span>
+            </button>
+          </div>
+
+          <div class="border-2 border-dashed border-indigo-200 rounded-2xl bg-slate-50 relative overflow-hidden flex items-center justify-center p-1">
+            <canvas id="execSigCanvas" width="560" height="150" class="w-full h-36 bg-white rounded-xl shadow-inner touch-none cursor-crosshair"></canvas>
+            <div id="execCanvasWatermark" class="pointer-events-none absolute inset-0 flex items-center justify-center text-slate-300 text-xs font-medium">
+              แตะหรือลากเพื่อเซ็นชื่อกรรมการผู้จัดการ (Executive Sign Here)
+            </div>
+          </div>
+        </div>
+
+        <!-- Attachment & Action Buttons -->
+        <div class="flex flex-wrap items-center justify-between gap-2 pt-1">
+          <div class="flex items-center gap-2">
+            <input type="file" id="execSigFileInput" accept="image/png,image/jpeg,image/webp" onchange="handleSignatureFileUpload(event, 'EXEC')" class="hidden">
+            <button type="button" onclick="document.getElementById('execSigFileInput').click()" class="px-3 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl text-xs font-bold transition flex items-center gap-1.5 cursor-pointer">
+              <i class="fa-solid fa-cloud-arrow-up text-indigo-600"></i>
+              <span>แนบไฟล์ภาพลายเซ็นผู้บริหาร</span>
+            </button>
+            <button type="button" onclick="downloadSignaturePng('EXEC')" class="px-3 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl text-xs font-bold transition flex items-center gap-1.5 cursor-pointer">
+              <i class="fa-solid fa-download text-emerald-600"></i>
+              <span>ดาวน์โหลดภาพ (.PNG)</span>
+            </button>
+          </div>
+
+          <button type="button" onclick="confirmSaveSignature('EXEC')" class="px-5 py-2 bg-indigo-600 hover:bg-indigo-700 active:bg-indigo-800 text-white rounded-xl text-xs font-bold shadow-md transition flex items-center gap-1.5 cursor-pointer">
+            <i class="fa-solid fa-check-double text-amber-300"></i>
+            <span>ยืนยันบันทึกลายเซ็นกรรมการผู้จัดการ</span>
+          </button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+  
+  <!DOCTYPE html>
 <html lang="th">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-  <title>Training Center TWP - ระบบบริหารคำขอจัดอบรมและประเมินผล v1.22.27</title>
+  <title>Training Center TWP - ระบบบริหารคำขอจัดอบรมและประเมินผล v1.22.28</title>
   <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
   <!-- Google Fonts: Sarabun -->
@@ -320,10 +489,10 @@
       </div>
       <div class="flex items-center space-x-2 sm:space-x-3 text-xs">
         <!-- Release Notes Button on Landing -->
-        <button type="button" onclick="openWhatsNewModal()" class="bg-amber-400/20 hover:bg-amber-400/30 text-amber-200 px-3 py-1.5 rounded-full border border-amber-300/40 backdrop-blur-sm font-bold flex items-center space-x-1.5 transition cursor-pointer" title="ดูรายละเอียดการอัปเดตระบบ v1.22.27">
+        <button type="button" onclick="openWhatsNewModal()" class="bg-amber-400/20 hover:bg-amber-400/30 text-amber-200 px-3 py-1.5 rounded-full border border-amber-300/40 backdrop-blur-sm font-bold flex items-center space-x-1.5 transition cursor-pointer" title="ดูรายละเอียดการอัปเดตระบบ v1.22.28">
           <i class="fa-solid fa-bullhorn text-amber-300 animate-pulse"></i>
           <span class="hidden sm:inline">อัปเดต</span>
-          <span class="bg-emerald-500 text-white font-mono font-black text-[10px] px-1.5 py-0.2 rounded-full">v1.22.27</span>
+          <span class="bg-emerald-500 text-white font-mono font-black text-[10px] px-1.5 py-0.2 rounded-full">v1.22.28</span>
         </button>
         <!-- Team Login Gate Button / User Badge -->
         <button id="landingLoginBtn" type="button" onclick="openSwitchProfileModal()" class="bg-gradient-to-r from-amber-400 to-amber-500 hover:from-amber-300 hover:to-amber-400 text-slate-950 font-black px-3.5 py-1.5 rounded-xl shadow-md transition cursor-pointer flex items-center space-x-1.5">
@@ -366,7 +535,7 @@
       </div>
 
       <!-- Mandatory Login Gate Alert Card on Landing Page (if not logged in) -->
-      <!-- Comprehensive Enterprise Team Sign-In Card (v1.22.27) -->
+      <!-- Comprehensive Enterprise Team Sign-In Card (v1.22.28) -->
       <!-- Enterprise Sign-In Card (Standard Secure Authentication) -->
       <div id="landingLoginSection" class="max-w-md mx-auto w-full bg-white text-slate-800 rounded-3xl p-6 sm:p-8 shadow-2xl border border-slate-200/80 space-y-5 text-left relative z-20 animate-fadeIn">
         
@@ -477,7 +646,7 @@
     <!-- Bottom Footer on Landing Page -->
     <div class="max-w-7xl mx-auto w-full px-6 py-4 flex flex-col sm:flex-row items-center justify-between text-xs text-blue-200 border-t border-white/10 relative z-10 gap-2">
       <div>&copy; 2026 Training Center TWP - บริษัท ไทยวัฒนาพานิช จำกัด. All rights reserved.</div>
-      <div class="font-mono text-[11px] bg-white/10 px-3 py-1 rounded-full border border-white/15">EMS Enterprise Platform v1.22.27 (Live Apps Script Engine)</div>
+      <div class="font-mono text-[11px] bg-white/10 px-3 py-1 rounded-full border border-white/15">EMS Enterprise Platform v1.22.28 (Live Apps Script Engine)</div>
     </div>
 
   </div>
@@ -502,7 +671,7 @@
           <div class="sidebar-brand-text truncate">
             <div class="flex items-center space-x-1.5">
               <span class="font-extrabold text-sm tracking-wide text-white">TWP</span>
-              <span onclick="openVersionReleaseModal()" class="bg-blue-400/20 hover:bg-blue-400/30 text-blue-200 text-[9px] font-mono px-1.5 py-0.5 rounded-full border border-blue-300/30 cursor-pointer transition flex items-center gap-1" title="คลิกดูรายละเอียดเวอร์ชัน v1.22.27"><i class="fa-solid fa-sparkles text-amber-300 text-[8px]"></i><span class="bg-emerald-500 text-white font-black px-2 py-0.5 rounded-full">v1.22.27</span></span>
+              <span onclick="openVersionReleaseModal()" class="bg-blue-400/20 hover:bg-blue-400/30 text-blue-200 text-[9px] font-mono px-1.5 py-0.5 rounded-full border border-blue-300/30 cursor-pointer transition flex items-center gap-1" title="คลิกดูรายละเอียดเวอร์ชัน v1.22.28"><i class="fa-solid fa-sparkles text-amber-300 text-[8px]"></i><span class="bg-emerald-500 text-white font-black px-2 py-0.5 rounded-full">v1.22.28</span></span>
             </div>
             <p class="text-[10px] text-blue-200 truncate">ระบบบริหารงานฝึกอบรม</p>
           </div>
@@ -756,7 +925,7 @@
       </button>
     </div>
 
-    <!-- Role-Based Asynchronous Action Inbox Banner (v1.22.27) -->
+    <!-- Role-Based Asynchronous Action Inbox Banner (v1.22.28) -->
     <div id="actionInboxBanner" class="bg-gradient-to-r from-slate-900 via-indigo-950 to-[#08539E] text-white rounded-2xl p-4 sm:p-5 shadow-lg border border-slate-700/60 transition-all mb-4">
       <div class="flex flex-col md:flex-row md:items-center justify-between gap-3 border-b border-white/10 pb-3">
         <div class="flex items-center space-x-3">
@@ -840,7 +1009,7 @@
     <!-- ========================================== -->
     <section id="view-dashboard" class="space-y-6">
 
-      <!-- Admin Central Live Pipeline & Team A Requests Monitor (v1.22.27) -->
+      <!-- Admin Central Live Pipeline & Team A Requests Monitor (v1.22.28) -->
       <div id="adminTeamALiveMonitorCard" class="bg-white rounded-3xl border-2 border-emerald-400/80 shadow-md p-5 sm:p-6 space-y-4 animate-fadeIn">
         <div class="flex flex-col sm:flex-row sm:items-center justify-between pb-3 border-b border-slate-100 gap-3">
           <div class="flex items-center space-x-3">
@@ -1432,7 +1601,7 @@
         </button>
       </div>
 
-      <!-- Team A Submitted Requests Tracking Table (v1.22.27 - Top Priority View) -->
+      <!-- Team A Submitted Requests Tracking Table (v1.22.28 - Top Priority View) -->
       <div id="teamAMyRequestsCard" class="bg-white rounded-2xl border-2 border-emerald-500/40 shadow-md p-5 space-y-4 max-w-4xl mx-auto">
         <div class="flex flex-col sm:flex-row sm:items-center justify-between pb-3 border-b border-slate-100 gap-3">
           <div class="flex items-center space-x-3">
@@ -1507,7 +1676,7 @@
           </div>
         </div>
 
-        <!-- Orange Edit Notice Banner for Team A (v1.22.27) -->
+        <!-- Orange Edit Notice Banner for Team A (v1.22.28) -->
         <div id="teamAEditBanner" class="hidden mb-4 p-3.5 bg-amber-500/15 border border-amber-400/50 rounded-xl flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-amber-900 animate-fadeIn">
           <div class="flex items-center space-x-2.5 text-xs">
             <i class="fa-solid fa-pen-to-square text-amber-600 text-sm"></i>
@@ -1909,8 +2078,8 @@
     <!-- ========================================== -->
     <section id="view-exec" class="hidden space-y-6">
 
-      <!-- Executive Annual Incident & Obstacle Ledger Widget (v1.22.27) -->
-      <!-- Executive Post-Approval Revision & Unlock Queue (v1.22.27) -->
+      <!-- Executive Annual Incident & Obstacle Ledger Widget (v1.22.28) -->
+      <!-- Executive Post-Approval Revision & Unlock Queue (v1.22.28) -->
       <div id="execRevisionQueueCard" class="bg-white rounded-3xl p-5 sm:p-6 shadow-sm border-2 border-amber-300/80 space-y-4">
         <div class="flex flex-col sm:flex-row sm:items-center justify-between border-b border-slate-100 pb-3 gap-2">
           <div class="flex items-center space-x-3">
@@ -3469,10 +3638,10 @@
               <i class="fa-solid fa-code-compare text-amber-300"></i>
               <span class="text-xs font-bold uppercase tracking-wider">รายละเอียดการปรับปรุงเวอร์ชัน (Version Release Notes)</span>
             </div>
-            <span class="text-[10px] bg-amber-400 text-slate-950 font-black px-2 py-0.5 rounded-full">v1.22.27 Live</span>
+            <span class="text-[10px] bg-amber-400 text-slate-950 font-black px-2 py-0.5 rounded-full">v1.22.28 Live</span>
           </div>
           <p class="text-xs text-blue-100 leading-relaxed">
-            <strong>v1.22.27 (Enterprise Compact QR & Drive Standard):</strong> ปรับขนาดหน้าต่างแท่นแสดงผล QR Code ให้กะทัดรัด (Compact Responsive) รองรับโน้ตบุ๊กทุกขนาดหน้าจอ, เพิ่มปุ่มปิดหน้าต่างทั้งบน ล่าง และกด Esc/คลิกนอกกรอบเพื่อปิดได้ทันที, พร้อมกำหนด Google Drive โฟลเดอร์กลางสำหรับเก็บเอกสารโครงการ
+            <strong>v1.22.28 (Enterprise Compact QR & Drive Standard):</strong> ปรับขนาดหน้าต่างแท่นแสดงผล QR Code ให้กะทัดรัด (Compact Responsive) รองรับโน้ตบุ๊กทุกขนาดหน้าจอ, เพิ่มปุ่มปิดหน้าต่างทั้งบน ล่าง และกด Esc/คลิกนอกกรอบเพื่อปิดได้ทันที, พร้อมกำหนด Google Drive โฟลเดอร์กลางสำหรับเก็บเอกสารโครงการ
           </p>
           <div class="pt-1 flex items-center justify-between text-[11px] text-blue-200">
             <span>ฐานข้อมูล: Google Sheets + Local Offline Cache</span>
@@ -4460,7 +4629,7 @@
   <!-- MODAL: SWITCH OPERATOR PROFILE (เลือกโปรไฟล์) -->
   <!-- ========================================== -->
   <!-- ======================================================== -->
-  <!-- MODAL: ENTERPRISE TEAM AUTHENTICATION & LOGIN HUB (v1.22.27) -->
+  <!-- MODAL: ENTERPRISE TEAM AUTHENTICATION & LOGIN HUB (v1.22.28) -->
   <!-- ======================================================== -->
   <div id="switchProfileModal" class="hidden fixed inset-0 z-[9990] bg-slate-900/80 backdrop-blur-md flex items-center justify-center p-4 animate-fadeIn">
     <div class="bg-white rounded-3xl max-w-lg w-full overflow-hidden shadow-2xl border border-slate-200 space-y-0">
@@ -4474,7 +4643,7 @@
           <div>
             <div class="flex items-center space-x-2">
               <span class="text-xs bg-emerald-500/30 text-emerald-300 border border-emerald-400/40 px-2 py-0.5 rounded-full font-mono font-bold">Authentication Gate</span>
-              <span class="text-xs text-slate-300">v1.22.27</span>
+              <span class="text-xs text-slate-300">v1.22.28</span>
             </div>
             <h3 class="font-black text-white text-base sm:text-lg mt-0.5">เข้าสู่ระบบประจำทีม (Team Sign-In)</h3>
           </div>
@@ -4845,7 +5014,7 @@
     };
 
     
-    // Embedded Production Slate (v1.22.27): 30 Cloud Records Pre-seeded for Instant 0ms Multi-Device Sync
+    // Embedded Production Slate (v1.22.28): 30 Cloud Records Pre-seeded for Instant 0ms Multi-Device Sync
     const INITIAL_PRODUCTION_REQUESTS = [
   {
     "eventId": "EVT-20261116-5111",
@@ -6791,7 +6960,7 @@
 
     // Landing Page Navigation & Authentication Gate
     
-    // ------------------- ENTERPRISE TEAM AUTHENTICATION HANDLERS (v1.22.27) -------------------
+    // ------------------- ENTERPRISE TEAM AUTHENTICATION HANDLERS (v1.22.28) -------------------
     
     
 
@@ -7951,7 +8120,7 @@
         if (epInput) epInput.value = AppState.gasEndpoint;
       }
 
-      // 1.1 Check Release Notes Popup (v1.22.27) and Mandatory Login Gate on System Enter
+      // 1.1 Check Release Notes Popup (v1.22.28) and Mandatory Login Gate on System Enter
       checkAndShowWhatsNewOnEnter();
       
       // 2. Fetch latest cloud updates asynchronously in background without blocking UI
@@ -8613,6 +8782,10 @@
                       <i class="fa-solid fa-pen text-[10px]"></i>
                       <span>ปรับปรุงชื่อหลักสูตร (E-Cer)</span>
                     </button>
+                    <button type="button" onclick="openSignatureManagementModal('${req.eventId}')" class="px-2 py-0.5 bg-emerald-50 hover:bg-emerald-100 text-emerald-800 border border-emerald-300 rounded-lg text-[11px] font-bold transition flex items-center gap-1 cursor-pointer" title="จัดการลายมือชื่อวิทยากรและกรรมการผู้จัดการสำหรับ E-Cer">
+                      <i class="fa-solid fa-signature text-emerald-600 text-[10px]"></i>
+                      <span>✍️ จัดการลายเซ็น E-Cer</span>
+                    </button>
                   </div>
                   ${req.teamATopic && req.teamATopic !== req.courseTopic ? `
                     <div class="text-[11px] text-slate-500 flex items-center gap-1.5 mt-0.5">
@@ -8720,7 +8893,7 @@
               </div>
             </div>
 
-            <!-- 6-Pillar Operation Readiness Checklist (v1.22.27) -->
+            <!-- 6-Pillar Operation Readiness Checklist (v1.22.28) -->
             <div class="bg-white/95 backdrop-blur-sm rounded-2xl p-4 border border-indigo-100 shadow-xs space-y-3">
               <div class="flex items-center justify-between">
                 <span class="text-xs font-bold text-slate-800 flex items-center gap-1.5">
@@ -8760,7 +8933,7 @@
               </div>
             </div>
 
-            <!-- On-Site Incident & Obstacle Logger Collapsible (v1.22.27) -->
+            <!-- On-Site Incident & Obstacle Logger Collapsible (v1.22.28) -->
             <div class="bg-amber-50/60 rounded-2xl p-4 border border-amber-200/80 space-y-3">
               <div class="flex items-center justify-between cursor-pointer" onclick="document.getElementById('incBox_${req.eventId}').classList.toggle('hidden')">
                 <div class="flex items-center space-x-2 text-xs font-bold text-amber-900">
@@ -11445,7 +11618,7 @@
         '</style></head><body>' +
         '<div class="header">' +
         '<div><h2 style="margin:0; color:#08539E; font-size:16pt;">บริษัท ไทยวัฒนาพานิช จำกัด (TWP)</h2><div style="font-size:11pt; color:#475569;">รายงานสรุปการกระทบยอดงบประมาณจัดอบรมกับยอดขายจริง ประจำปี 2569</div></div>' +
-        '<div style="text-align:right; font-size:9pt; color:#64748b;">ออกโดยระบบ EMS Enterprise v1.22.27<br>วันที่พิมพ์: ' + new Date().toLocaleDateString('th-TH') + '</div>' +
+        '<div style="text-align:right; font-size:9pt; color:#64748b;">ออกโดยระบบ EMS Enterprise v1.22.28<br>วันที่พิมพ์: ' + new Date().toLocaleDateString('th-TH') + '</div>' +
         '</div>' +
         '<div style="display:flex; justify-content:space-between; background:#f8fafc; padding:8px 12px; border-radius:6px; margin-bottom:10px; font-size:10pt;">' +
         '<div>โครงการทั้งหมด: <strong>' + projects.length + ' โครงการ</strong></div>' +
@@ -14139,6 +14312,10 @@
 
               <!-- Action buttons -->
               <div class="flex items-center gap-2 self-end sm:self-center">
+                <button type="button" onclick="openSignatureManagementModal('${d.eventId}')" class="px-3.5 py-1.5 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white rounded-xl text-xs font-bold transition flex items-center gap-1.5 shadow-sm cursor-pointer" title="จัดการเซ็นชื่อสดหรือแนบไฟล์รูปลายเซ็นสำหรับวิทยากรและกรรมการผู้จัดการ">
+                  <i class="fa-solid fa-file-signature text-amber-300"></i>
+                  <span>✍️ จัดการลายเซ็น E-Cer (วิทยากร & ผู้บริหาร)</span>
+                </button>
                 <button type="button" onclick="printReportContainer()" class="px-3.5 py-1.5 bg-amber-500 hover:bg-amber-600 text-white rounded-xl text-xs font-bold transition flex items-center gap-1.5 shadow-sm cursor-pointer">
                   <i class="fa-solid fa-print"></i>
                   <span>พิมพ์แม่แบบ A4 แนวนอน</span>
@@ -14649,7 +14826,7 @@ function renderA4EvalReportHtmlClient(d) {
           <div style="border-top:1px dashed #cbd5e1; margin-top:10px; padding-top:4px; display:flex; justify-content:space-between; align-items:center; font-size:8.5pt; color:#64748b;">
             <div>
               <i class="fa-solid fa-file-contract mr-1 text-[#08539E]"></i>
-              รายงานประเมินและวิเคราะห์ต้นทุนการจัดอบรม A4 • ออกโดย TWP Training Enterprise Platform (v1.22.27)
+              รายงานประเมินและวิเคราะห์ต้นทุนการจัดอบรม A4 • ออกโดย TWP Training Enterprise Platform (v1.22.28)
             </div>
             <div>
               หน้า 1/1 • ${d.eventId}
@@ -14828,7 +15005,7 @@ function renderA4EvalReportHtmlClient(d) {
           <div style="border-top:1px dashed #cbd5e1; margin-top:14px; padding-top:6px; display:flex; justify-content:space-between; align-items:center; font-size:8.5pt; color:#64748b;">
             <div>
               <i class="fa-solid fa-shield-halved" style="color:#08539E; margin-right:4px;"></i>
-              เอกสารอิเล็กทรอนิกส์มาตรฐาน A4 ออกโดย TWP Training Enterprise Management System (EMS v1.22.27)
+              เอกสารอิเล็กทรอนิกส์มาตรฐาน A4 ออกโดย TWP Training Enterprise Management System (EMS v1.22.28)
             </div>
             <div>
               รหัสอ้างอิง: <span style="font-family:monospace; font-weight:700; color:#0f172a;">${d.eventId}</span> | หน้า 1/1
@@ -15001,7 +15178,7 @@ function renderA4EvalReportHtmlClient(d) {
           </table>
 
           <div style="margin-top:14px; padding-top:4px; border-top:1px solid #e2e8f0; font-size:8.5pt; color:#94a3b8; text-align:center;">
-            เอกสารฉบับนี้สร้างโดยระบบ Training Center TWP (EMS Enterprise Platform v1.22.27) • ใช้สำหรับติดตามและควบคุมผลการปฏิบัติงานภายใน (PPC Standard)
+            เอกสารฉบับนี้สร้างโดยระบบ Training Center TWP (EMS Enterprise Platform v1.22.28) • ใช้สำหรับติดตามและควบคุมผลการปฏิบัติงานภายใน (PPC Standard)
           </div>
         </div>
       `;
@@ -15283,7 +15460,7 @@ function renderA4EvalReportHtmlClient(d) {
       }
       if (opInput) opInput.value = currentProfile.name;
 
-      // Update Sidebar Profile (v1.17.0 / v1.22.27)
+      // Update Sidebar Profile (v1.17.0 / v1.22.28)
       const sideName = document.getElementById('sideUserName');
       const sideRole = document.getElementById('sideUserRole');
       const sideAvatar = document.getElementById('sideUserAvatar');
@@ -16311,7 +16488,7 @@ function renderA4EvalReportHtmlClient(d) {
 
 
     // ========================================================
-    // ONSITE REGISTRATION & CHECK-IN MODULE (v1.22.27)
+    // ONSITE REGISTRATION & CHECK-IN MODULE (v1.22.28)
     // ========================================================
     let currentRegEventId = null;
     let currentRegAttendees = [];
@@ -16600,16 +16777,16 @@ function renderA4EvalReportHtmlClient(d) {
         val: v !== null && v !== undefined ? String(v).trim() : ''
       })).filter(e => e.val !== '');
 
-      // Common Thai prefixes
-      const thPrefixes = ['นาย', 'นางสาว', 'นาง', 'ดร.', 'ดร', 'ศ.', 'ผศ.', 'รศ.', 'อาจารย์', 'อ.', 'ครู', 'ว่าที่ ร.ต.', 'ว่าที่ร้อยตรี', 'ว่าที่ ร.ต.หญิง', 'ม.ล.', 'ม.ร.ว.', 'คุณ', 'พระ', 'พระครู'];
+      // Common Thai & English prefixes
+      const thPrefixes = ['ว่าที่ ร.ต.หญิง', 'ว่าที่ร้อยตรีหญิง', 'ว่าที่ ร.ต.', 'ว่าที่ร้อยตรี', 'ผศ.ดร.', 'รศ.ดร.', 'ดร.', 'ดร', 'ศ.', 'ผศ.', 'รศ.', 'อาจารย์', 'อ.', 'ครู', 'นาย', 'นางสาว', 'นาง', 'ม.ล.', 'ม.ร.ว.', 'คุณ', 'พระครู', 'พระ'];
       const enPrefixes = ['mr.', 'mr', 'mrs.', 'mrs', 'ms.', 'ms', 'miss', 'dr.', 'dr', 'prof.', 'prof', 'aj.', 'master'];
 
       for (const { key, val } of entries) {
         const kLow = key.toLowerCase();
 
-        // 1. Prefix / Title (คำนำหน้านาม)
+        // 1. Prefix / Title
         if (!prefix) {
-          if (kLow === 'prefix' || kLow === 'title' || kLow === 'คำนำหน้า' || kLow === 'คำนำหน้านาม' || kLow === 'คำนำหน้าชื่อ' || kLow === 'คำนำ') {
+          if (kLow === 'prefix' || kLow === 'title' || kLow === 'คำนำหน้า' || kLow === 'คำนำหน้านาม' || kLow === 'คำนำหน้าชื่อ' || kLow === 'คำนำ' || kLow === 'คำนำหน้า (ไทย)' || kLow === 'คำนำหน้าชื่อ(ไทย)') {
             prefix = val;
             continue;
           }
@@ -16634,31 +16811,33 @@ function renderA4EvalReportHtmlClient(d) {
           if (
             kLow === 'name_th' || kLow === 'nameth' || kLow === 'ชื่อ-นามสกุล' || kLow === 'ชื่อ - นามสกุล' ||
             kLow === 'ชื่อและนามสกุล' || kLow === 'ชื่อ-สกุล' || kLow === 'ชื่อ สกุล' || kLow === 'ชื่อผู้เข้าอบรม' ||
-            kLow === 'ชื่อผู้รับการอบรม' || kLow === 'รายชื่อ' || kLow === 'ชื่อ นามสกุล'
+            kLow === 'ชื่อผู้รับการอบรม' || kLow === 'รายชื่อ' || kLow === 'ชื่อ นามสกุล' || kLow === 'ชื่อ - สกุล' ||
+            kLow === 'ชื่อ-สกุล (ภาษาไทย)' || kLow === 'ชื่อ - นามสกุล (ไทย)'
           ) {
             nameTh = val;
             continue;
           }
         }
 
-        // 4. English Name / Separate First & Last Name (English)
-        if (kLow === 'prefix_en' || kLow === 'title_en' || kLow === 'title en') {
+        // 4. English Name & Separate First/Last Name (English)
+        if (kLow === 'prefix_en' || kLow === 'title_en' || kLow === 'title en' || kLow === 'คำนำหน้า (อังกฤษ)' || kLow === 'คำนำหน้า (en)') {
           prefixEn = val;
           continue;
         }
-        if (kLow === 'first name (en)' || kLow === 'firstname_en' || kLow === 'firstname en' || kLow === 'fname_en') {
+        if (kLow === 'first name (en)' || kLow === 'firstname_en' || kLow === 'firstname en' || kLow === 'fname_en' || kLow === 'first name (english)') {
           firstNameEn = val;
           continue;
         }
-        if (kLow === 'last name (en)' || kLow === 'lastname_en' || kLow === 'lastname en' || kLow === 'lname_en' || kLow === 'surname_en') {
+        if (kLow === 'last name (en)' || kLow === 'lastname_en' || kLow === 'lastname en' || kLow === 'lname_en' || kLow === 'surname_en' || kLow === 'last name (english)') {
           lastNameEn = val;
           continue;
         }
         if (!nameEn) {
           if (
             kLow === 'name_en' || kLow === 'nameen' || kLow === 'full name' || kLow === 'fullname' ||
-            kLow === 'english name' || kLow === 'name-surename' || kLow === 'name—surename' ||
-            kLow === 'name-surname' || kLow === 'name-surname (en)' || kLow === 'ชื่อภาษาอังกฤษ' ||
+            kLow === 'full name (english)' || kLow === 'full name (en)' || kLow === 'english name' ||
+            kLow === 'name-surename' || kLow === 'name—surename' || kLow === 'name-surname' ||
+            kLow === 'name-surname (en)' || kLow === 'ชื่อภาษาอังกฤษ' || kLow === 'ชื่อ-สกุล (ภาษาอังกฤษ)' ||
             kLow.includes('certificate name') || kLow.includes('cert_name')
           ) {
             nameEn = val;
@@ -16671,14 +16850,14 @@ function renderA4EvalReportHtmlClient(d) {
           if (
             kLow === 'school_name' || kLow === 'schoolname' || kLow === 'school' || kLow === 'โรงเรียน' ||
             kLow === 'สถานศึกษา' || kLow === 'หน่วยงาน' || kLow === 'สังกัด' || kLow === 'organization' || kLow === 'institution' ||
-            kLow.includes('โรงเรียน') || kLow.includes('สถานศึกษา')
+            kLow === 'ชื่อโรงเรียน' || kLow.includes('โรงเรียน') || kLow.includes('สถานศึกษา')
           ) {
             school = val;
             continue;
           }
         }
 
-        // 6. Province (จังหวัด)
+        // 6. Province
         if (!province) {
           if (kLow === 'province' || kLow === 'จังหวัด' || kLow === 'จ.' || kLow === 'ที่ตั้งจังหวัด' || kLow === 'จังหวัดที่ตั้ง') {
             province = val;
@@ -16703,7 +16882,7 @@ function renderA4EvalReportHtmlClient(d) {
         }
       }
 
-      // Combine separate First and Last names if found
+      // Combine separate first and last names if found
       if (!nameTh && (firstNameTh || lastNameTh)) {
         nameTh = [firstNameTh, lastNameTh].filter(Boolean).join(' ').trim();
       }
@@ -16716,7 +16895,7 @@ function renderA4EvalReportHtmlClient(d) {
         nameTh = row['Name_TH'] || row['ชื่อ - นามสกุล'] || row['ชื่อ-นามสกุล'] || row['ชื่อ-สกุล'] || row['ชื่อ'] || '';
       }
       if (!nameEn) {
-        nameEn = row['Name_EN'] || row['Full Name'] || row['English Name'] || '';
+        nameEn = row['Name_EN'] || row['Full Name'] || row['English Name'] || row['FULL NAME (ENGLISH)'] || '';
       }
       if (!school) {
         school = row['School_Name'] || row['โรงเรียน'] || row['สถานศึกษา'] || row['School'] || '';
@@ -16731,27 +16910,55 @@ function renderA4EvalReportHtmlClient(d) {
         phone = row['Phone'] || row['เบอร์โทร'] || '';
       }
 
-      // Extract prefix from nameTh if prefix wasn't in a separate column
-      nameTh = String(nameTh).trim();
-      if (!prefix && nameTh) {
-        for (const p of thPrefixes) {
-          if (nameTh.startsWith(p)) {
-            prefix = p;
+      // Clean invalid placeholder strings
+      nameTh = String(nameTh || '').trim();
+      nameEn = String(nameEn || '').trim();
+      prefix = String(prefix || '').trim();
+
+      if (nameTh === '-' || nameTh === 'นาย-' || nameTh === 'นาง-' || nameTh === 'นางสาว-') {
+        nameTh = '';
+      }
+
+      // Check if nameTh contains ONLY English characters (e.g. foreigner names entered into Thai column)
+      const hasThaiLetters = /[\u0E00-\u0E7F]/.test(nameTh);
+      if (nameTh && !hasThaiLetters) {
+        if (!nameEn) nameEn = nameTh;
+        nameTh = ''; // Clear so we don't display English in Thai column with broken Thai prefix!
+      }
+
+      // SMART PREFIX EXTRACTION & DEDUPLICATION:
+      // If nameTh contains a prefix at the start, extract it to prefix and strip from nameTh
+      for (const p of thPrefixes) {
+        if (nameTh.startsWith(p)) {
+          if (!prefix) prefix = p;
+          nameTh = nameTh.substring(p.length).trim();
+          break;
+        }
+      }
+
+      // If prefix is present and nameTh STILL starts with it, strip it
+      if (prefix && nameTh.startsWith(prefix)) {
+        nameTh = nameTh.substring(prefix.length).trim();
+      }
+
+      // English prefix extraction for foreign teachers if prefix is empty or English
+      if (nameEn) {
+        const enLow = nameEn.toLowerCase();
+        for (const ep of enPrefixes) {
+          if (enLow.startsWith(ep + ' ') || enLow.startsWith(ep)) {
+            if (!prefix || thPrefixes.includes(prefix)) {
+              prefix = ep.charAt(0).toUpperCase() + ep.slice(1);
+              if (!prefix.endsWith('.') && prefix !== 'Miss') prefix += '.';
+            }
             break;
           }
         }
       }
 
-      // Ensure nameTh includes prefix if prefix was separate and not already attached
-      if (prefix && nameTh && !nameTh.startsWith(prefix)) {
-        // e.g. prefix="นาย", nameTh="สมเกียรติ รักเรียน" -> "นายสมเกียรติ รักเรียน"
-        nameTh = prefix + (prefix.endsWith('.') ? ' ' : '') + nameTh;
-      }
-
       return {
         prefix: prefix.trim(),
         nameTh: nameTh.trim(),
-        nameEn: String(nameEn).trim(),
+        nameEn: nameEn.trim(),
         school: String(school).trim(),
         province: String(province).trim(),
         email: String(email).trim(),
@@ -17023,7 +17230,7 @@ function renderA4EvalReportHtmlClient(d) {
           <tr class="hover:bg-slate-50/80 transition ${isChecked ? 'bg-emerald-50/20' : ''}">
             <td class="py-3 px-2 text-center text-slate-700 font-mono font-bold">${a.fileRowIndex || (idx + 1)}</td>
             <td class="py-3 px-2"><span class="px-1.5 py-0.5 rounded bg-slate-100 text-slate-700 font-medium text-[11px]">${a.prefix || '-'}</span></td>
-            <td class="py-3 px-3 font-extrabold text-slate-900">${a.nameTh || '-'}</td>
+            <td class="py-3 px-3 font-extrabold text-slate-900">${a.nameTh ? a.nameTh : (a.nameEn ? '<span class="text-slate-400 font-sans italic font-normal">(' + a.nameEn + ')</span>' : '<span class="text-slate-400 font-normal">-</span>')}</td>
             <td class="py-3 px-3 text-blue-900 font-serif italic text-xs font-semibold">${a.nameEn ? a.nameEn : '<span class="text-slate-400 font-sans italic font-normal">-</span>'}</td>
             <td class="py-3 px-3 text-slate-800 font-medium">${a.school || '-'}</td>
             <td class="py-3 px-2 text-slate-600 font-medium">${a.province || '-'}</td>
@@ -17157,7 +17364,386 @@ function renderA4EvalReportHtmlClient(d) {
       }
     }
 
-  </script>
+  
+    // -------------------------------------------------------------------------
+    // DIGITAL SIGNATURE MANAGEMENT STUDIO CONTROLLER (TEAM B & EXECUTIVE)
+    // -------------------------------------------------------------------------
+    let currentSigModalEventId = null;
+    let currentSigTab = 'SPEAKER';
+    let speakerPadInitialized = false;
+    let execPadInitialized = false;
+
+    function openSignatureManagementModal(eventId) {
+      currentSigModalEventId = eventId || currentRegEventId || currentLandingRegEventId || (AppState.requests && AppState.requests[0]?.eventId);
+      if (!currentSigModalEventId) {
+        showAlert('กรุณาเลือกโครงการที่ต้องการจัดการลายเซ็นก่อนครับ', 'warning');
+        return;
+      }
+
+      const req = (AppState.requests || []).find(r => r.eventId === currentSigModalEventId);
+      if (!req) return;
+
+      const metaEl = document.getElementById('sigModalEventMeta');
+      if (metaEl) {
+        metaEl.innerText = `${req.eventId} • ${req.courseTopic || 'หลักสูตรอบรม'} (${req.schoolName || '-'})`;
+      }
+
+      // Populate speaker dropdown
+      const spSelect = document.getElementById('sigSpeakerSelect');
+      if (spSelect) {
+        const spList = (req.speakers && req.speakers.length > 0)
+          ? req.speakers
+          : [{
+              name: req.teamBSpeaker || req.speakerType || 'วิทยากรประจำหลักสูตร',
+              role: 'วิทยากรประจำหลักสูตร',
+              signature: req.speakerSignature || null
+            }];
+
+        spSelect.innerHTML = spList.map((sp, idx) => {
+          return `<option value="${idx}">${idx === 0 ? '★ วิทยากรหลัก' : 'วิทยากรร่วม'}: ${sp.name || 'วิทยากร'}</option>`;
+        }).join('');
+      }
+
+      onSignatureSpeakerSelectChange();
+      switchSignatureTab('SPEAKER');
+
+      const modal = document.getElementById('signatureManagementModal');
+      if (modal) modal.classList.remove('hidden');
+
+      setTimeout(() => {
+        initSignaturePad('speakerSigCanvas', 'SPEAKER');
+        initSignaturePad('execSigCanvas', 'EXEC');
+        loadExistingSignatureOntoCanvas('SPEAKER');
+        loadExistingSignatureOntoCanvas('EXEC');
+      }, 150);
+    }
+
+    function closeSignatureManagementModal() {
+      const modal = document.getElementById('signatureManagementModal');
+      if (modal) modal.classList.add('hidden');
+    }
+
+    function switchSignatureTab(tab) {
+      currentSigTab = tab;
+      const btnSp = document.getElementById('tabBtnSigSpeaker');
+      const btnEx = document.getElementById('tabBtnSigExec');
+      const contSp = document.getElementById('sigTabSpeakerContent');
+      const contEx = document.getElementById('sigTabExecContent');
+
+      if (tab === 'SPEAKER') {
+        if (btnSp) { btnSp.className = 'flex-1 py-2 rounded-xl transition flex items-center justify-center gap-2 bg-white text-indigo-900 shadow-xs cursor-pointer'; }
+        if (btnEx) { btnEx.className = 'flex-1 py-2 rounded-xl transition flex items-center justify-center gap-2 text-slate-600 hover:text-slate-900 cursor-pointer'; }
+        if (contSp) contSp.classList.remove('hidden');
+        if (contEx) contEx.classList.add('hidden');
+      } else {
+        if (btnEx) { btnEx.className = 'flex-1 py-2 rounded-xl transition flex items-center justify-center gap-2 bg-white text-indigo-900 shadow-xs cursor-pointer'; }
+        if (btnSp) { btnSp.className = 'flex-1 py-2 rounded-xl transition flex items-center justify-center gap-2 text-slate-600 hover:text-slate-900 cursor-pointer'; }
+        if (contEx) contEx.classList.remove('hidden');
+        if (contSp) contSp.classList.add('hidden');
+      }
+    }
+
+    function onSignatureSpeakerSelectChange() {
+      const req = (AppState.requests || []).find(r => r.eventId === currentSigModalEventId);
+      if (!req) return;
+
+      const spSelect = document.getElementById('sigSpeakerSelect');
+      const sIdx = spSelect ? Number(spSelect.value) || 0 : 0;
+
+      const spList = (req.speakers && req.speakers.length > 0)
+        ? req.speakers
+        : [{
+            name: req.teamBSpeaker || req.speakerType || 'วิทยากรประจำหลักสูตร',
+            role: 'วิทยากรประจำหลักสูตร',
+            signature: req.speakerSignature || null
+          }];
+
+      const currentSp = spList[sIdx] || spList[0];
+      const nameEl = document.getElementById('sigConfirmSpeakerName');
+      const roleEl = document.getElementById('sigConfirmSpeakerRole');
+      const badgeEl = document.getElementById('sigSpeakerStatusBadge');
+
+      if (nameEl) nameEl.innerText = `( ${currentSp?.name || 'วิทยากร'} )`;
+      if (roleEl) roleEl.innerText = currentSp?.role || (sIdx === 0 ? 'วิทยากรประจำหลักสูตร' : 'วิทยากรร่วม');
+
+      const sigData = currentSp?.signature || (sIdx === 0 ? req.speakerSignature : null);
+      if (badgeEl) {
+        if (sigData && sigData.startsWith('data:image')) {
+          badgeEl.className = 'inline-block px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-100 text-emerald-800';
+          badgeEl.innerText = '✓ มีลายเซ็นเฉพาะบันทึกไว้แล้ว';
+        } else {
+          badgeEl.className = 'inline-block px-2 py-0.5 rounded-full text-[10px] font-bold bg-amber-100 text-amber-800';
+          badgeEl.innerText = 'ใช้ลายเซ็นแม่แบบทางการ';
+        }
+      }
+
+      loadExistingSignatureOntoCanvas('SPEAKER');
+    }
+
+    // Touch & Mouse Drawing Pad Initialization
+    function initSignaturePad(canvasId, type) {
+      const canvas = document.getElementById(canvasId);
+      if (!canvas) return;
+
+      // Adjust canvas resolution for sharp retina display
+      const rect = canvas.getBoundingClientRect();
+      const dpr = window.devicePixelRatio || 1;
+      canvas.width = (rect.width || 560) * dpr;
+      canvas.height = (rect.height || 144) * dpr;
+      const ctx = canvas.getContext('2d');
+      ctx.scale(dpr, dpr);
+      ctx.lineCap = 'round';
+      ctx.lineJoin = 'round';
+      ctx.lineWidth = 2.8;
+      ctx.strokeStyle = '#08539E'; // Classic TWP Navy Signature Blue
+
+      let isDrawing = false;
+      let lastX = 0;
+      let lastY = 0;
+
+      function getPos(e) {
+        const cRect = canvas.getBoundingClientRect();
+        if (e.touches && e.touches.length > 0) {
+          return {
+            x: e.touches[0].clientX - cRect.left,
+            y: e.touches[0].clientY - cRect.top
+          };
+        }
+        return {
+          x: e.clientX - cRect.left,
+          y: e.clientY - cRect.top
+        };
+      }
+
+      function startDraw(e) {
+        isDrawing = true;
+        const pos = getPos(e);
+        lastX = pos.x;
+        lastY = pos.y;
+        hideCanvasWatermark(type);
+      }
+
+      function draw(e) {
+        if (!isDrawing) return;
+        e.preventDefault();
+        const pos = getPos(e);
+        ctx.beginPath();
+        ctx.moveTo(lastX, lastY);
+        ctx.lineTo(pos.x, pos.y);
+        ctx.stroke();
+        lastX = pos.x;
+        lastY = pos.y;
+        canvas.setAttribute('data-has-signature', 'true');
+      }
+
+      function stopDraw() {
+        isDrawing = false;
+      }
+
+      canvas.onmousedown = startDraw;
+      canvas.onmousemove = draw;
+      canvas.onmouseup = stopDraw;
+      canvas.onmouseleave = stopDraw;
+
+      canvas.ontouchstart = startDraw;
+      canvas.ontouchmove = draw;
+      canvas.ontouchend = stopDraw;
+    }
+
+    function hideCanvasWatermark(type) {
+      const wm = document.getElementById(type === 'SPEAKER' ? 'speakerCanvasWatermark' : 'execCanvasWatermark');
+      if (wm) wm.classList.add('hidden');
+    }
+
+    function clearSignatureCanvas(type) {
+      const canvasId = (type === 'SPEAKER') ? 'speakerSigCanvas' : 'execSigCanvas';
+      const canvas = document.getElementById(canvasId);
+      if (!canvas) return;
+      const ctx = canvas.getContext('2d');
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      canvas.removeAttribute('data-has-signature');
+
+      const wm = document.getElementById(type === 'SPEAKER' ? 'speakerCanvasWatermark' : 'execCanvasWatermark');
+      if (wm) wm.classList.remove('hidden');
+    }
+
+    function loadExistingSignatureOntoCanvas(type) {
+      const req = (AppState.requests || []).find(r => r.eventId === currentSigModalEventId);
+      if (!req) return;
+
+      let sigSrc = null;
+      if (type === 'SPEAKER') {
+        const spSelect = document.getElementById('sigSpeakerSelect');
+        const sIdx = spSelect ? Number(spSelect.value) || 0 : 0;
+        sigSrc = (req.speakers && req.speakers[sIdx]?.signature) || (sIdx === 0 ? req.speakerSignature : null);
+      } else {
+        sigSrc = req.approverSignature || req.approvedSignature || null;
+      }
+
+      const canvasId = (type === 'SPEAKER') ? 'speakerSigCanvas' : 'execSigCanvas';
+      const canvas = document.getElementById(canvasId);
+      if (!canvas) return;
+
+      clearSignatureCanvas(type);
+
+      if (sigSrc && sigSrc.startsWith('data:image')) {
+        const img = new Image();
+        img.onload = function() {
+          const ctx = canvas.getContext('2d');
+          const dpr = window.devicePixelRatio || 1;
+          const rect = canvas.getBoundingClientRect();
+          const drawW = Math.min(img.width, rect.width * 0.7);
+          const drawH = (img.height / img.width) * drawW;
+          const offsetX = (rect.width - drawW) / 2;
+          const offsetY = (rect.height - drawH) / 2;
+
+          ctx.drawImage(img, offsetX, offsetY, drawW, drawH);
+          canvas.setAttribute('data-has-signature', 'true');
+          hideCanvasWatermark(type);
+        };
+        img.src = sigSrc;
+      }
+    }
+
+    function handleSignatureFileUpload(event, type) {
+      const file = event.target.files && event.target.files[0];
+      if (!file) return;
+
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        const img = new Image();
+        img.onload = function() {
+          const canvasId = (type === 'SPEAKER') ? 'speakerSigCanvas' : 'execSigCanvas';
+          const canvas = document.getElementById(canvasId);
+          if (!canvas) return;
+
+          clearSignatureCanvas(type);
+          const ctx = canvas.getContext('2d');
+          const rect = canvas.getBoundingClientRect();
+          const drawW = Math.min(img.width, rect.width * 0.75);
+          const drawH = (img.height / img.width) * drawW;
+          const offsetX = (rect.width - drawW) / 2;
+          const offsetY = (rect.height - drawH) / 2;
+
+          ctx.drawImage(img, offsetX, offsetY, drawW, drawH);
+          canvas.setAttribute('data-has-signature', 'true');
+          hideCanvasWatermark(type);
+          showAlert('✓ แนบไฟล์ภาพลายเซ็นขึ้นกระดานเรียบร้อยแล้ว กรุณากดยืนยันบันทึก', 'success');
+        };
+        img.src = e.target.result;
+      };
+      reader.readAsDataURL(file);
+    }
+
+    function downloadSignaturePng(type) {
+      const canvasId = (type === 'SPEAKER') ? 'speakerSigCanvas' : 'execSigCanvas';
+      const canvas = document.getElementById(canvasId);
+      if (!canvas || !canvas.getAttribute('data-has-signature')) {
+        showAlert('ยังไม่มีลายมือชื่อบนกระดานสำหรับดาวน์โหลดครับ', 'warning');
+        return;
+      }
+
+      const link = document.createElement('a');
+      link.download = `signature_${type.toLowerCase()}_${currentSigModalEventId || 'twp'}.png`;
+      link.href = canvas.toDataURL('image/png');
+      link.click();
+      showAlert('✓ ดาวน์โหลดภาพลายเซ็น (.PNG โปร่งใส) สำเร็จ', 'success');
+    }
+
+    function confirmSaveSignature(type) {
+      const canvasId = (type === 'SPEAKER') ? 'speakerSigCanvas' : 'execSigCanvas';
+      const canvas = document.getElementById(canvasId);
+      if (!canvas || !canvas.getAttribute('data-has-signature')) {
+        showAlert('กรุณาเซ็นชื่อบนกระดาน หรือแนบไฟล์ภาพก่อนกดยืนยันครับ', 'warning');
+        return;
+      }
+
+      const req = (AppState.requests || []).find(r => r.eventId === currentSigModalEventId);
+      if (!req) return;
+
+      const sigData = canvas.toDataURL('image/png');
+
+      if (type === 'SPEAKER') {
+        const spSelect = document.getElementById('sigSpeakerSelect');
+        const sIdx = spSelect ? Number(spSelect.value) || 0 : 0;
+
+        if (!Array.isArray(req.speakers) || req.speakers.length === 0) {
+          req.speakers = [{
+            name: req.teamBSpeaker || req.speakerType || 'วิทยากรประจำหลักสูตร',
+            role: 'วิทยากรประจำหลักสูตร',
+            dept: 'ฝ่ายพัฒนาวิชาการและนวัตกรรมการเรียนรู้',
+            signature: sigData
+          }];
+        } else {
+          if (req.speakers[sIdx]) {
+            req.speakers[sIdx].signature = sigData;
+          } else {
+            req.speakers.push({
+              name: req.teamBSpeaker || 'วิทยากร',
+              role: 'วิทยากรประจำหลักสูตร',
+              signature: sigData
+            });
+          }
+        }
+
+        if (sIdx === 0) {
+          req.speakerSignature = sigData;
+        }
+
+        const spName = req.speakers[sIdx]?.name || req.teamBSpeaker || 'วิทยากร';
+        const spRole = req.speakers[sIdx]?.role || 'วิทยากรประจำหลักสูตร';
+
+        // Save local
+        try { localStorage.setItem('twp_requests_store', JSON.stringify(AppState.requests)); } catch(e) {}
+
+        // Backend save
+        if (AppState.gasEndpoint) {
+          postToBackend('SAVE_EVENT_SIGNATURES', {
+            eventId: req.eventId,
+            signatoryType: 'SPEAKER',
+            speakerIndex: sIdx,
+            signatureData: sigData,
+            signatoryName: spName,
+            signatoryRole: spRole
+          }).then(res => console.log('Speaker signature saved to cloud:', res))
+            .catch(e => console.warn('Cloud signature save warning:', e));
+        }
+
+        showAlert(`✓ บันทึกลายเซ็นของ ${spName} เรียบร้อยแล้ว (นำไปใช้ใน E-Cer ทันที)`, 'success');
+      } else {
+        // EXECUTIVE (คุณนิพนธ์ ศรแก้ว)
+        req.approverSignature = sigData;
+        req.approvedSignature = sigData;
+        req.approvedBy = 'คุณนิพนธ์ ศรแก้ว';
+        req.approverRole = 'กรรมการผู้จัดการ';
+
+        // Save local
+        try { localStorage.setItem('twp_requests_store', JSON.stringify(AppState.requests)); } catch(e) {}
+
+        // Backend save
+        if (AppState.gasEndpoint) {
+          postToBackend('SAVE_EVENT_SIGNATURES', {
+            eventId: req.eventId,
+            signatoryType: 'EXECUTIVE',
+            signatureData: sigData,
+            signatoryName: 'คุณนิพนธ์ ศรแก้ว',
+            signatoryRole: 'กรรมการผู้จัดการ'
+          }).then(res => console.log('Executive signature saved to cloud:', res))
+            .catch(e => console.warn('Cloud signature save warning:', e));
+        }
+
+        showAlert('✓ บันทึกลายเซ็นของ คุณนิพนธ์ ศรแก้ว (กรรมการผู้จัดการ) เรียบร้อยแล้ว', 'success');
+      }
+
+      // Re-render open A4 Master Certificate paper if viewing
+      const paper = document.getElementById('ppcReportPaper');
+      if (paper && window.currentModalEventId === req.eventId) {
+        paper.innerHTML = renderA4CertificateMasterHtmlClient(req);
+        if (typeof generateMasterCertQr === 'function') generateMasterCertQr(req.eventId);
+      }
+    }
+
+</script>
 
   <!-- ======================================================== -->
   <!-- MODAL: INTERACTIVE ROLE-BASED USER MANUAL (คู่มือการใช้งาน) -->
@@ -17411,7 +17997,7 @@ function renderA4EvalReportHtmlClient(d) {
           <div>
             <div class="flex items-center space-x-2">
               <h3 class="font-bold text-slate-900 text-lg">ประวัติและการปรับปรุงระบบเวอร์ชัน (Release Notes)</h3>
-              <span class="bg-blue-100 text-[#08539E] text-xs font-bold font-mono px-2 py-0.5 rounded-full">v1.22.27 Current</span>
+              <span class="bg-blue-100 text-[#08539E] text-xs font-bold font-mono px-2 py-0.5 rounded-full">v1.22.28 Current</span>
             </div>
             <p class="text-xs text-slate-500">บันทึกประวัติการปรับปรุงสถาปัตยกรรมและฟังก์ชันการทำงานอย่างละเอียด</p>
           </div>
@@ -17424,11 +18010,11 @@ function renderA4EvalReportHtmlClient(d) {
       <!-- Release Timeline List -->
       <div class="space-y-4">
         
-        <!-- v1.22.27 (Current Major Release) -->
+        <!-- v1.22.28 (Current Major Release) -->
         <div class="p-5 bg-gradient-to-br from-emerald-50 via-white to-teal-50/70 border-2 border-emerald-400 rounded-3xl space-y-3 shadow-sm">
           <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-1">
             <div class="flex items-center space-x-2">
-              <span class="bg-emerald-600 text-white text-xs font-black px-2.5 py-0.5 rounded-lg font-mono">v1.22.27</span>
+              <span class="bg-emerald-600 text-white text-xs font-black px-2.5 py-0.5 rounded-lg font-mono">v1.22.28</span>
               <span class="font-bold text-slate-900 text-sm">Annual Principle Plans Cloud Sync & Top Team A Ledger</span>
             </div>
             <span class="text-[11px] text-emerald-700 font-bold font-mono">2026-11-16 &bull; Current Release</span>
@@ -17441,11 +18027,11 @@ function renderA4EvalReportHtmlClient(d) {
           </ul>
         </div>
 
-        <!-- v1.22.27 -->
+        <!-- v1.22.28 -->
         <div class="p-5 bg-gradient-to-br from-slate-50 via-white to-slate-100/70 border border-slate-200 rounded-3xl space-y-3 shadow-xs">
           <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-1">
             <div class="flex items-center space-x-2">
-              <span class="bg-slate-700 text-white text-xs font-black px-2.5 py-0.5 rounded-lg font-mono">v1.22.27</span>
+              <span class="bg-slate-700 text-white text-xs font-black px-2.5 py-0.5 rounded-lg font-mono">v1.22.28</span>
               <span class="font-bold text-slate-900 text-sm">Landing Page Login Gate, Release Notes Popup & Attendee Individual Edit/Delete</span>
             </div>
             <span class="text-[11px] text-slate-500 font-bold font-mono">2026-11-14</span>
@@ -17459,11 +18045,11 @@ function renderA4EvalReportHtmlClient(d) {
           </ul>
         </div>
 
-        <!-- v1.22.27 (Major Milestone) -->
+        <!-- v1.22.28 (Major Milestone) -->
         <div class="p-5 bg-gradient-to-br from-blue-50 via-white to-indigo-50/70 border-2 border-blue-300 rounded-3xl space-y-3 shadow-xs">
           <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-1">
             <div class="flex items-center space-x-2">
-              <span class="bg-blue-700 text-white text-xs font-black px-2.5 py-0.5 rounded-lg font-mono">v1.22.27</span>
+              <span class="bg-blue-700 text-white text-xs font-black px-2.5 py-0.5 rounded-lg font-mono">v1.22.28</span>
               <span class="font-bold text-slate-900 text-sm">แท่น QR กะทัดรัด (Compact Responsive), มาตรฐานคลังไฟล์ Google Drive & ยกระดับการปิด Modal</span>
             </div>
             <span class="text-[11px] text-blue-700 font-bold font-mono">2026-11-11 &bull; Latest Release</span>
@@ -17476,11 +18062,11 @@ function renderA4EvalReportHtmlClient(d) {
           </ul>
         </div>
 
-        <!-- v1.22.27 (Major Milestone) -->
+        <!-- v1.22.28 (Major Milestone) -->
         <div class="p-5 bg-gradient-to-br from-indigo-50/80 via-white to-sky-50/60 border border-slate-200 rounded-3xl space-y-3 shadow-xs">
           <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-1">
             <div class="flex items-center space-x-2">
-              <span class="bg-indigo-600 text-white text-xs font-black px-2.5 py-0.5 rounded-lg font-mono">v1.22.27</span>
+              <span class="bg-indigo-600 text-white text-xs font-black px-2.5 py-0.5 rounded-lg font-mono">v1.22.28</span>
               <span class="font-bold text-slate-900 text-sm">ระบบประเมิน 2 ขั้นตอน (Evaluation-First), รวมศูนย์ QR Code & Smart Expense Engine</span>
             </div>
             <span class="text-[11px] text-slate-400 font-mono">2026-11-11</span>
@@ -17618,7 +18204,7 @@ function renderA4EvalReportHtmlClient(d) {
 
 
 
-<!-- Modal: Audit Revision Request (Strict Post-Approval Freeze - v1.22.27) -->
+<!-- Modal: Audit Revision Request (Strict Post-Approval Freeze - v1.22.28) -->
   <div id="auditRevisionModal" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 animate-fadeIn">
     <div class="bg-white rounded-3xl max-w-lg w-full p-6 shadow-2xl border border-slate-200 space-y-4">
       <div class="flex items-center justify-between border-b border-slate-100 pb-3">
@@ -17678,7 +18264,7 @@ function renderA4EvalReportHtmlClient(d) {
 
 
 
-  <!-- Modal: What's New Release Notes (v1.22.27) -->
+  <!-- Modal: What's New Release Notes (v1.22.28) -->
   <div id="whatsNewModal" class="hidden fixed inset-0 z-[9999] flex items-center justify-center bg-black/75 backdrop-blur-md p-4 animate-fadeIn">
     <div class="bg-white rounded-3xl max-w-2xl w-full max-h-[90vh] flex flex-col shadow-2xl border border-slate-200 overflow-hidden">
       
@@ -17693,7 +18279,7 @@ function renderA4EvalReportHtmlClient(d) {
               <span class="text-xs bg-emerald-500/30 text-emerald-300 border border-emerald-400/40 px-2 py-0.5 rounded-full font-mono font-bold">Release Note</span>
               <span class="text-xs text-slate-300">อัปเดตระบบเวอร์ชัน 1.22.23</span>
             </div>
-            <h2 class="text-lg sm:text-xl font-black text-white mt-1">ประกาศอัปเดตระบบ Training Center TWP v1.22.27</h2>
+            <h2 class="text-lg sm:text-xl font-black text-white mt-1">ประกาศอัปเดตระบบ Training Center TWP v1.22.28</h2>
           </div>
         </div>
         <button type="button" onclick="closeWhatsNewModal()" class="text-white/70 hover:text-white text-xl p-1 cursor-pointer">
@@ -17705,7 +18291,7 @@ function renderA4EvalReportHtmlClient(d) {
       <div class="p-6 overflow-y-auto custom-scrollbar space-y-3.5 text-xs">
         <div class="p-3.5 bg-gradient-to-r from-emerald-50 to-teal-50 border-2 border-emerald-400 rounded-2xl space-y-2 mb-3 shadow-xs">
           <div class="flex items-center space-x-2">
-            <span class="px-2 py-0.5 rounded-full text-[10px] font-black bg-emerald-700 text-white">ไฮไลต์ v1.22.27</span>
+            <span class="px-2 py-0.5 rounded-full text-[10px] font-black bg-emerald-700 text-white">ไฮไลต์ v1.22.28</span>
             <span class="font-bold text-slate-900 text-xs sm:text-sm">ซิงค์โครงการอนุมัติหลักการประจำปี (Annual Plans) ตรงจาก Google Sheets เข้าสู่ระบบแบบอัตโนมัติ</span>
           </div>
           <p class="text-slate-700 leading-relaxed font-medium">
@@ -17715,7 +18301,7 @@ function renderA4EvalReportHtmlClient(d) {
           </p>
         </div>
         <p class="text-slate-600 font-medium leading-relaxed">
-          สรุปรายละเอียดการพัฒนาต่อเนื่องของระบบ <strong>Enterprise Governance & Cross-Team Real-time Sync Edition (v1.22.27)</strong>:
+          สรุปรายละเอียดการพัฒนาต่อเนื่องของระบบ <strong>Enterprise Governance & Cross-Team Real-time Sync Edition (v1.22.28)</strong>:
         </p>
 
         <!-- Feature 1 -->
@@ -17810,7 +18396,7 @@ function renderA4EvalReportHtmlClient(d) {
 
 
 
-  <!-- Modal: Team Accounts & Member QR Onboarding (v1.22.27) -->
+  <!-- Modal: Team Accounts & Member QR Onboarding (v1.22.28) -->
   <div id="teamAccountsModal" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 animate-fadeIn">
     <div class="bg-white rounded-3xl max-w-2xl w-full max-h-[90vh] flex flex-col shadow-2xl border border-slate-200 overflow-hidden">
       
@@ -17946,7 +18532,7 @@ function renderA4EvalReportHtmlClient(d) {
 
 
 
-  <!-- Modal: Edit Individual Attendee (v1.22.27) -->
+  <!-- Modal: Edit Individual Attendee (v1.22.28) -->
   <div id="editAttendeeModal" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 animate-fadeIn">
     <div class="bg-white rounded-3xl max-w-md w-full p-6 shadow-2xl border border-slate-200 space-y-4">
       <div class="flex items-center justify-between border-b border-slate-100 pb-3">
