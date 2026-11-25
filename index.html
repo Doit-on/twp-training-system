@@ -14267,6 +14267,10 @@ function renderA4EvalReportHtmlClient(d) {
     // ONSITE REGISTRATION & CHECK-IN MODULE (v1.22.0)
     // ========================================================
     let currentRegEventId = null;
+    
+    // OFFICIAL WORKSHOP ROSTER (51 ATTENDEES FROM EXCEL FOR EVT-20261116-5111)
+    const TWP_OFFICIAL_ROSTER_5111 = [{"regId":"REG-20261116-001","eventId":"EVT-20261116-5111","fileRowIndex":1,"prefix":"นาย","nameTh":"Bryan Ferry Doctor","prefixEn":"Mr.","nameEn":"Bryan Ferry Doctor","fullNameEn":"Mr. Bryan Ferry Doctor","school":"Pathum Thani Nanthamuni Bamrung School","province":"ปทุมธานี","phone":"0619041417","email":"bryanferry.doctor@gmail.com","checkinStatus":"PENDING","checkinTime":"","regType":"PRE"},{"regId":"REG-20261116-002","eventId":"EVT-20261116-5111","fileRowIndex":2,"prefix":"นางสาว","nameTh":"Jeanric Bajao","prefixEn":"Ms.","nameEn":"Jeanric Bajao","fullNameEn":"Ms. Jeanric Bajao","school":"Wat Khian Khet School","province":"ปทุมธานี","phone":"0618368171","email":"jeanbajao614@gmail.com","checkinStatus":"PENDING","checkinTime":"","regType":"PRE"},{"regId":"REG-20261116-003","eventId":"EVT-20261116-5111","fileRowIndex":3,"prefix":"นาย","nameTh":"Lordan Saura","prefixEn":"Mr.","nameEn":"Lordan Saura","fullNameEn":"Mr. Lordan Saura","school":"Wat Khien Khet School","province":"ปทุมธานี","phone":"0991814507","email":"lordansaura2097@gmail.com","checkinStatus":"PENDING","checkinTime":"","regType":"PRE"},{"regId":"REG-20261116-004","eventId":"EVT-20261116-5111","fileRowIndex":4,"prefix":"นาย","nameTh":"วิโรจน์ เอี่ยมยิ้ม","prefixEn":"Mr.","nameEn":"Wiroj Aiemyim","fullNameEn":"Mr. Wiroj Aiemyim","school":"โรงเรียนพูลเจริญวิทยาคม","province":"จังหวัดสมุทรปราการ","phone":"0656507785","email":"wiroj.a7@gmail.com","checkinStatus":"PENDING","checkinTime":"","regType":"PRE"},{"regId":"REG-20261116-005","eventId":"EVT-20261116-5111","fileRowIndex":5,"prefix":"นางสาว","nameTh":"Lheanne Kaye E. Frugalidad","prefixEn":"Ms.","nameEn":"Lheanne Kaye E. Frugalidad","fullNameEn":"Ms. Lheanne Kaye E. Frugalidad","school":"Wat Khien Khet School","province":"ปทุมธานี","phone":"0929506124","email":"lkfrugalidad@gmail.com","checkinStatus":"PENDING","checkinTime":"","regType":"PRE"},{"regId":"REG-20261116-006","eventId":"EVT-20261116-5111","fileRowIndex":6,"prefix":"นาย","nameTh":"ศิรสิน ฟุ้งสกุล","prefixEn":"Mr.","nameEn":"Sirasin Fungsakul","fullNameEn":"Mr. Sirasin Fungsakul","school":"โรงเรียนสารวิทยา","province":"กรุงเทพมหานคร","phone":"0973323993","email":"f.sirasin@srv.ac.th","checkinStatus":"PENDING","checkinTime":"","regType":"PRE"},{"regId":"REG-20261116-007","eventId":"EVT-20261116-5111","fileRowIndex":7,"prefix":"นาย","nameTh":"ชนม์กระสินธ์ จรูญวัฒนไพบูลย์","prefixEn":"Mr.","nameEn":"Chonkrasin Jaroonwattanapaiboon","fullNameEn":"Mr. Chonkrasin Jaroonwattanapaiboon","school":"แอ๊ดเวนตีสเอกมัย","province":"กรุงเทพมหานคร","phone":"0877599961","email":"leng.chks@gmail.com","checkinStatus":"PENDING","checkinTime":"","regType":"PRE"},{"regId":"REG-20261116-008","eventId":"EVT-20261116-5111","fileRowIndex":8,"prefix":"นาย","nameTh":"กิตติพัทธ์ สุขลิ้ม","prefixEn":"Mr.","nameEn":"Kittiphat Suklim","fullNameEn":"Mr. Kittiphat Suklim","school":"สารวิทยา","province":"กรุงเทพมหานคร","phone":"0946515446","email":"cb498521@gmail.com","checkinStatus":"PENDING","checkinTime":"","regType":"PRE"},{"regId":"REG-20261116-009","eventId":"EVT-20261116-5111","fileRowIndex":9,"prefix":"นาย","nameTh":"วรกร กลิ่นเกิด","prefixEn":"Mr.","nameEn":"Worakorn Klinkerd","fullNameEn":"Mr. Worakorn Klinkerd","school":"โรงเรียนสารวิทยา","province":"กรุงเทพมหานคร","phone":"0923783192","email":"whitetofukung@gmail.com","checkinStatus":"PENDING","checkinTime":"","regType":"PRE"},{"regId":"REG-20261116-010","eventId":"EVT-20261116-5111","fileRowIndex":10,"prefix":"นาย","nameTh":"ศศิวงศ์ พงศ์วัชรปกรณ์","prefixEn":"Mr.","nameEn":"Sasiwong Pongwatcharapakorn","fullNameEn":"Mr. Sasiwong Pongwatcharapakorn","school":"โรงเรียนหอวัง","province":"กรุงเทพมหานคร","phone":"0865115591","email":"sasiwongpongwatcharapakorn@gmail.com","checkinStatus":"PENDING","checkinTime":"","regType":"PRE"},{"regId":"REG-20261116-011","eventId":"EVT-20261116-5111","fileRowIndex":11,"prefix":"นางสาว","nameTh":"มนัสวี แก้วผลึก","prefixEn":"Miss","nameEn":"Manassawee  Kaewpluk","fullNameEn":"Miss Manassawee  Kaewpluk","school":"โรงเรียนมัธยมวัดหนองแขม","province":"กรุงเทพมหานคร","phone":"0839165491","email":"manassawee@nk.ac.th","checkinStatus":"PENDING","checkinTime":"","regType":"PRE"},{"regId":"REG-20261116-012","eventId":"EVT-20261116-5111","fileRowIndex":12,"prefix":"นาย","nameTh":"อมฤต จันทร์เกษร","prefixEn":"Mr.","nameEn":"Amarit Chankasorn","fullNameEn":"Mr. Amarit Chankasorn","school":"โรงเรียนสาธิตมหาวิทยาลัยรามคำแหง (ฝ่ายมัธยม)","province":"กรุงเทพมหานคร","phone":"0988245528","email":"amarit.c@ds.ru.ac.th","checkinStatus":"PENDING","checkinTime":"","regType":"PRE"},{"regId":"REG-20261116-013","eventId":"EVT-20261116-5111","fileRowIndex":13,"prefix":"นาย","nameTh":"ประเสริฐ  ปานเพชร","prefixEn":"Mr.","nameEn":"Prasert  Panpet","fullNameEn":"Mr. Prasert  Panpet","school":"โรงเรียนพระหฤทัยคอนแวนต์","province":"กรุงเทพมหานคร","phone":"0879752760","email":"prasert@shc.ac.th","checkinStatus":"PENDING","checkinTime":"","regType":"PRE"},{"regId":"REG-20261116-014","eventId":"EVT-20261116-5111","fileRowIndex":14,"prefix":"นางสาว","nameTh":"ณัฐชยา มุ่งมาตร์มิตร","prefixEn":"Miss","nameEn":"NATCHAYA MUNGMATMIT","fullNameEn":"Miss NATCHAYA MUNGMATMIT","school":"ทวีธาภิเศก บางขุนเทียน","province":"กรุงเทพมหานคร","phone":"0889516146","email":"natchaya.m@tpt.ac.th","checkinStatus":"PENDING","checkinTime":"","regType":"PRE"},{"regId":"REG-20261116-015","eventId":"EVT-20261116-5111","fileRowIndex":15,"prefix":"นางสาว","nameTh":"พิงพิชญ์ ไกรเกตุ","prefixEn":"Miss","nameEn":"Phingphit Kraiket","fullNameEn":"Miss Phingphit Kraiket","school":"โรงเรียนทวีธาภิเศก บางขุนเทียน","province":"กรุงเทพมหานคร","phone":"0902122139","email":"phingphit.k@tpt.ac.th","checkinStatus":"PENDING","checkinTime":"","regType":"PRE"},{"regId":"REG-20261116-016","eventId":"EVT-20261116-5111","fileRowIndex":16,"prefix":"นางสาว","nameTh":"ภักดิ์สุดา เจริญวงศ์","prefixEn":"Miss","nameEn":"Phaksuda  Charoenwong","fullNameEn":"Miss Phaksuda  Charoenwong","school":"โรงเรียนสีกัน (วัฒนานันท์อุปถัมภ์)","province":"กรุงเทพมหานคร","phone":"0912135331","email":"phaksuda.nanny@gmail.com","checkinStatus":"PENDING","checkinTime":"","regType":"PRE"},{"regId":"REG-20261116-017","eventId":"EVT-20261116-5111","fileRowIndex":17,"prefix":"นางสาว","nameTh":"สกาว​ทิพย์​  ปาทา","prefixEn":"Miss","nameEn":"Sakaowtip​  Pata","fullNameEn":"Miss Sakaowtip​  Pata","school":"บดินทร​เดชา (สิงห์ สิงหเสนี)​๒​","province":"กรุงเทพมหานคร","phone":"0842323516","email":"sakaowtip@bodin2.ac.th","checkinStatus":"PENDING","checkinTime":"","regType":"PRE"},{"regId":"REG-20261116-018","eventId":"EVT-20261116-5111","fileRowIndex":18,"prefix":"นางสาว","nameTh":"ปยุดา ภู่พงษ์","prefixEn":"Ms.","nameEn":"Payuda Phupong","fullNameEn":"Ms. Payuda Phupong","school":"โรงเรียนสตรีวัดมหาพฤฒาราม ในพระบรมราชินูปถัมภ์","province":"กรุงเทพมหานคร","phone":"0989194904","email":"payuda-pong@mps.ac.th","checkinStatus":"PENDING","checkinTime":"","regType":"PRE"},{"regId":"REG-20261116-019","eventId":"EVT-20261116-5111","fileRowIndex":19,"prefix":"นางสาว","nameTh":"พรรษประเวศ สัตตบุษย์วรกุล","prefixEn":"Miss","nameEn":"Passaprawes Sattabutworakul","fullNameEn":"Miss Passaprawes Sattabutworakul","school":"เตรียมอุดมศึกษา","province":"กรุงเทพมหานคร","phone":"0927414002","email":"passaprawes.sat@triamudom.ac.th","checkinStatus":"PENDING","checkinTime":"","regType":"PRE"},{"regId":"REG-20261116-020","eventId":"EVT-20261116-5111","fileRowIndex":20,"prefix":"นางสาว","nameTh":"วริศรา จำปา","prefixEn":"Ms.","nameEn":"WARISARA  CHAMPA","fullNameEn":"Ms. WARISARA  CHAMPA","school":"สาธิตมหาวิทยาลัยรามคำแหง","province":"กรุงเทพมหานคร","phone":"816490364","email":"berrismint@gmail.com","checkinStatus":"PENDING","checkinTime":"","regType":"PRE"},{"regId":"REG-20261116-021","eventId":"EVT-20261116-5111","fileRowIndex":21,"prefix":"นาย","nameTh":"สุรชัย เกื้อนพกุล","prefixEn":"Mr.","nameEn":"Surachai Kuanopakul","fullNameEn":"Mr. Surachai Kuanopakul","school":"โรงเรียนธนบุรีวรเทพีพลารักษ์","province":"กรุงเทพมหานคร","phone":"0953924508","email":"popular8920@gmail.com","checkinStatus":"PENDING","checkinTime":"","regType":"PRE"},{"regId":"REG-20261116-022","eventId":"EVT-20261116-5111","fileRowIndex":22,"prefix":"นางสาว","nameTh":"วิราณี โพธิพงศา","prefixEn":"Miss","nameEn":"Wiranee Potipongsa","fullNameEn":"Miss Wiranee Potipongsa","school":"สตรีวัดอัปสรสวรรค์","province":"กรุงเทพมหานคร","phone":"080 701 9724","email":"wiranee.po@gmail.com","checkinStatus":"PENDING","checkinTime":"","regType":"PRE"},{"regId":"REG-20261116-023","eventId":"EVT-20261116-5111","fileRowIndex":23,"prefix":"นางสาว","nameTh":"กมลชนก ชื่นมนุษย์","prefixEn":"Ms.","nameEn":"Kamonchanok Chuenmanuse","fullNameEn":"Ms. Kamonchanok Chuenmanuse","school":"นวมินทราชินูทิศ บดินทรเดชา","province":"กรุงเทพมหานคร","phone":"0898523138","email":"kamonchanok@bodin3.ac.th","checkinStatus":"PENDING","checkinTime":"","regType":"PRE"},{"regId":"REG-20261116-024","eventId":"EVT-20261116-5111","fileRowIndex":24,"prefix":"นางสาว","nameTh":"ภัสนี มะรังศรี","prefixEn":"Miss","nameEn":"Pussanee Marungsri","fullNameEn":"Miss Pussanee Marungsri","school":"บดินทรเดชา (สิงห์ สิงหเสนี)๒","province":"กรุงเทพมหานคร","phone":"0992170573","email":"pussanee@bodin2.ac.th","checkinStatus":"PENDING","checkinTime":"","regType":"PRE"},{"regId":"REG-20261116-025","eventId":"EVT-20261116-5111","fileRowIndex":25,"prefix":"นาง","nameTh":"นางกิตติยา  ทัศนะสกุล","prefixEn":"Mrs.","nameEn":"Kittiya Tassanasakul","fullNameEn":"Mrs. Kittiya Tassanasakul","school":"รร บดินทรเดชา(สิงห์ สิงหเสนี)๒","province":"กรุงเทพมหานคร","phone":"086-9797507","email":"kittiya3482@gmail.com","checkinStatus":"PENDING","checkinTime":"","regType":"PRE"},{"regId":"REG-20261116-026","eventId":"EVT-20261116-5111","fileRowIndex":26,"prefix":"นาง","nameTh":"WILMA  LLANES","prefixEn":"Ms.","nameEn":"WILMA. LLANES","fullNameEn":"Ms. WILMA. LLANES","school":"WISUTTHIKASATTREE SCHOOL","province":"จังหวัดสมุทรปราการ","phone":"0929668504","email":"amwildoligaling@gmail.com","checkinStatus":"PENDING","checkinTime":"","regType":"PRE"},{"regId":"REG-20261116-027","eventId":"EVT-20261116-5111","fileRowIndex":27,"prefix":"นาย","nameTh":"Fule, Rolf Saimon Becilles","prefixEn":"Mr.","nameEn":"Fule","fullNameEn":"Mr. Fule","school":"Watyaichaimongkol School","province":"Ayutthaya","phone":"0911557906","email":"fulerolfsaimon2012@gmail.com","checkinStatus":"PENDING","checkinTime":"","regType":"PRE"},{"regId":"REG-20261116-028","eventId":"EVT-20261116-5111","fileRowIndex":28,"prefix":"นาง","nameTh":"โจ-แอนน์ จอย เจ. โดราโด","prefixEn":"Ms.","nameEn":"Jo-anne Joy J.  Dorado","fullNameEn":"Ms. Jo-anne Joy J.  Dorado","school":"Chetupon Commercial College","province":"Pracha Uthit , Bangkok thailand","phone":"094-597-3755","email":"joannejoydorado12@gmail.com","checkinStatus":"PENDING","checkinTime":"","regType":"PRE"},{"regId":"REG-20261116-029","eventId":"EVT-20261116-5111","fileRowIndex":29,"prefix":"นาย","nameTh":"Roilo Barbacena","prefixEn":"Mr.","nameEn":"Roilo Barbacena","fullNameEn":"Mr. Roilo Barbacena","school":"Wat Khien Khet School","province":"ปทุมธานี","phone":"0968843208","email":"barbacenaroilo21@gmail.com","checkinStatus":"PENDING","checkinTime":"","regType":"PRE"},{"regId":"REG-20261116-030","eventId":"EVT-20261116-5111","fileRowIndex":30,"prefix":"นาง","nameTh":"AMIE G. JARA","prefixEn":"Mrs.","nameEn":"AMIE G. JARA","fullNameEn":"Mrs. AMIE G. JARA","school":"Wat Khien Khet School","province":"ปทุมธานี","phone":"0984417992","email":"amiegjara@gmail.com","checkinStatus":"PENDING","checkinTime":"","regType":"PRE"},{"regId":"REG-20261116-031","eventId":"EVT-20261116-5111","fileRowIndex":31,"prefix":"นาย","nameTh":"Froilan Japano","prefixEn":"Mr.","nameEn":"Froilan Japano","fullNameEn":"Mr. Froilan Japano","school":"Wat Khienkhet School","province":"ปทุมธานี","phone":"0652566261","email":"poohpoy@gmail.com","checkinStatus":"PENDING","checkinTime":"","regType":"PRE"},{"regId":"REG-20261116-032","eventId":"EVT-20261116-5111","fileRowIndex":32,"prefix":"นางสาว","nameTh":"ณัฐธิดา วันแก้ว","prefixEn":"Miss","nameEn":"Nattida Wankaew","fullNameEn":"Miss Nattida Wankaew","school":"ปทุมธานีนันทมุนีบำรุง","province":"ปทุมธานี","phone":"0986291379","email":"mookklose88@gmail.com","checkinStatus":"PENDING","checkinTime":"","regType":"PRE"},{"regId":"REG-20261116-033","eventId":"EVT-20261116-5111","fileRowIndex":33,"prefix":"นางสาว","nameTh":"มัสรินทร์ กิจพิทักษ์","prefixEn":"Ms.","nameEn":"Massarin Kitpitak","fullNameEn":"Ms. Massarin Kitpitak","school":"มัธยมสังคีตวิทยา กรุงเทพมหานคร","province":"ปทุมธานี","phone":"0979928950","email":"mkitpitak@gmail.com","checkinStatus":"PENDING","checkinTime":"","regType":"PRE"},{"regId":"REG-20261116-034","eventId":"EVT-20261116-5111","fileRowIndex":34,"prefix":"นางสาว","nameTh":"ธีราวรรณ ถนอมไชย","prefixEn":"Miss","nameEn":"Teerawan Thanomchai","fullNameEn":"Miss Teerawan Thanomchai","school":"มัธยมสังคีตวิทยากรุงเทพมหานคร","province":"ปทุมธานี","phone":"0649588942","email":"teerawan999@gmail.com","checkinStatus":"PENDING","checkinTime":"","regType":"PRE"},{"regId":"REG-20261116-035","eventId":"EVT-20261116-5111","fileRowIndex":35,"prefix":"นางสาว","nameTh":"วิลาศิณีย์ บัวประเสริฐ","prefixEn":"Miss","nameEn":"Wilasinee Buaprasert","fullNameEn":"Miss Wilasinee Buaprasert","school":"หอวัง ปทุมธานี","province":"ปทุมธานี","phone":"0851415634","email":"wilasinee.b@hwp.ac.th","checkinStatus":"PENDING","checkinTime":"","regType":"PRE"},{"regId":"REG-20261116-036","eventId":"EVT-20261116-5111","fileRowIndex":36,"prefix":"นาย","nameTh":"บริกิลโด","prefixEn":"Mr.","nameEn":"Allan Martin Brigildo","fullNameEn":"Mr. Allan Martin Brigildo","school":"Phanomsarakham Phanom Adun Withaya School","province":"Chacheongsao","phone":"0817728424","email":"sallanmartin@gmail.com","checkinStatus":"PENDING","checkinTime":"","regType":"PRE"},{"regId":"REG-20261116-037","eventId":"EVT-20261116-5111","fileRowIndex":37,"prefix":"นาย","nameTh":"ภูดิศ อุ่นไธสง","prefixEn":"Mr.","nameEn":"Pudis Untaisong","fullNameEn":"Mr. Pudis Untaisong","school":"AUA Language Center","province":"กรุงเทพมหานคร","phone":"0814705894","email":"riwpoy01@gmail.com","checkinStatus":"PENDING","checkinTime":"","regType":"PRE"},{"regId":"REG-20261116-038","eventId":"EVT-20261116-5111","fileRowIndex":38,"prefix":"นาย","nameTh":"Michael Armada Ranas","prefixEn":"Mr.","nameEn":"Michael Armada Ranas","fullNameEn":"Mr. Michael Armada Ranas","school":"Sarawittaya School","province":"กรุงเทพมหานคร","phone":"0644269517","email":"r.michael@srv.ac.th","checkinStatus":"PENDING","checkinTime":"","regType":"PRE"},{"regId":"REG-20261116-039","eventId":"EVT-20261116-5111","fileRowIndex":39,"prefix":"นาง","nameTh":"Joan Shamer Baltazar","prefixEn":"Mrs.","nameEn":"Joan Shamer Baltazar","fullNameEn":"Mrs. Joan Shamer Baltazar","school":"Rajinibon School","province":"กรุงเทพมหานคร","phone":"092508426","email":"sw2joan@gmail.com","checkinStatus":"PENDING","checkinTime":"","regType":"PRE"},{"regId":"REG-20261116-040","eventId":"EVT-20261116-5111","fileRowIndex":40,"prefix":"นาย","nameTh":"MARK YARE VERGARA","prefixEn":"Mr.","nameEn":"MARK YARE VERGARA","fullNameEn":"Mr. MARK YARE VERGARA","school":"BODIN DECHA SING SINGHASENI SCHOOL 4","province":"กรุงเทพมหานคร","phone":"0966609098","email":"vergaramark630@gmail.com","checkinStatus":"PENDING","checkinTime":"","regType":"PRE"},{"regId":"REG-20261116-041","eventId":"EVT-20261116-5111","fileRowIndex":41,"prefix":"นางสาว","nameTh":"Lanelyn Madelozo Banter","prefixEn":"Mrs.","nameEn":"Lanelyn Madelozo Bantigue","fullNameEn":"Mrs. Lanelyn Madelozo Bantigue","school":"Sarawittaya School","province":"กรุงเทพมหานคร","phone":"0982822812","email":"lanelyn.madelozo07@gmail.com","checkinStatus":"PENDING","checkinTime":"","regType":"PRE"},{"regId":"REG-20261116-042","eventId":"EVT-20261116-5111","fileRowIndex":42,"prefix":"นาย","nameTh":"Alden Arnillo","prefixEn":"Mr.","nameEn":"Alden Arnillo","fullNameEn":"Mr. Alden Arnillo","school":"Suraosaikongdin School","province":"กรุงเทพมหานคร","phone":"0618609117","email":"arnilloa@gmail.com","checkinStatus":"PENDING","checkinTime":"","regType":"PRE"},{"regId":"REG-20261116-043","eventId":"EVT-20261116-5111","fileRowIndex":43,"prefix":"นาย","nameTh":"John Rey R. Bustillos","prefixEn":"Mr.","nameEn":"John Rey R. Bustillos","fullNameEn":"Mr. John Rey R. Bustillos","school":"Anuban Watparinayok","province":"กรุงเทพมหานคร","phone":"0981081029","email":"johnreybustillos1010@gmail.com","checkinStatus":"PENDING","checkinTime":"","regType":"PRE"},{"regId":"REG-20261116-044","eventId":"EVT-20261116-5111","fileRowIndex":44,"prefix":"นาย","nameTh":"Mark John Escalante","prefixEn":"Mr.","nameEn":"Mark John Escalante","fullNameEn":"Mr. Mark John Escalante","school":"Rajinibon School","province":"กรุงเทพมหานคร","phone":"0994531421","email":"ehms.mark@gmail.com","checkinStatus":"PENDING","checkinTime":"","regType":"PRE"},{"regId":"REG-20261116-045","eventId":"EVT-20261116-5111","fileRowIndex":45,"prefix":"นาย","nameTh":"โรซาลีโอ อเบลลาโนซา","prefixEn":"Mr.","nameEn":"Rosalio Abellanosa","fullNameEn":"Mr. Rosalio Abellanosa","school":"Rajinibon School","province":"กรุงเทพมหานคร","phone":"0947141786","email":"rosalioabellanosa@gmail.com","checkinStatus":"PENDING","checkinTime":"","regType":"PRE"},{"regId":"REG-20261116-046","eventId":"EVT-20261116-5111","fileRowIndex":46,"prefix":"นาย","nameTh":"Angelo B. Madelozo","prefixEn":"Mr.","nameEn":"Angelo B. Madelozo","fullNameEn":"Mr. Angelo B. Madelozo","school":"Nawamintharachinuthit Bodindecha School","province":"กรุงเทพมหานคร","phone":"0988203878","email":"angelomadelozo@gmail.com","checkinStatus":"PENDING","checkinTime":"","regType":"PRE"},{"regId":"REG-20261116-047","eventId":"EVT-20261116-5111","fileRowIndex":47,"prefix":"นางสาว","nameTh":"Vima Glenne Murcia","prefixEn":"Ms.","nameEn":"Vima Glenne Murcia","fullNameEn":"Ms. Vima Glenne Murcia","school":"Donmuang Chaturachinda School","province":"กรุงเทพมหานคร","phone":"0969240602","email":"murciavima@gmail.com","checkinStatus":"PENDING","checkinTime":"","regType":"PRE"},{"regId":"REG-20261116-048","eventId":"EVT-20261116-5111","fileRowIndex":48,"prefix":"นาย","nameTh":"Anthony Bugto","prefixEn":"Mr.","nameEn":"Anthony Bugto","fullNameEn":"Mr. Anthony Bugto","school":"Sarasas Witaed Nimitmai","province":"กรุงเทพมหานคร","phone":"0816731929","email":"anthonybugto.teach@gmail.com","checkinStatus":"PENDING","checkinTime":"","regType":"PRE"},{"regId":"REG-20261116-049","eventId":"EVT-20261116-5111","fileRowIndex":49,"prefix":"นาย","nameTh":"Aldy June Inocian. Bo-o","prefixEn":"Mr.","nameEn":"Aldy June Inocian. Bo-o","fullNameEn":"Mr. Aldy June Inocian. Bo-o","school":"Pan-Asia International School","province":"กรุงเทพมหานคร","phone":"0817106968","email":"aldyjuneinocian.boo@gmail.com","checkinStatus":"PENDING","checkinTime":"","regType":"PRE"},{"regId":"REG-20261116-050","eventId":"EVT-20261116-5111","fileRowIndex":50,"prefix":"นาง","nameTh":"Inggrid Lottuss O. Rojo","prefixEn":"Mrs.","nameEn":"Inggrid Lottuss O. Rojo","fullNameEn":"Mrs. Inggrid Lottuss O. Rojo","school":"Nonthaburi Witthayalai School","province":"Nonthaburi","phone":"0617167457","email":"inggridlottussrojo@gmail.com","checkinStatus":"PENDING","checkinTime":"","regType":"PRE"},{"regId":"REG-20261116-051","eventId":"EVT-20261116-5111","fileRowIndex":51,"prefix":"นาง","nameTh":"Opalyn Berco","prefixEn":"Mrs.","nameEn":"OPALYN BERCO","fullNameEn":"Mrs. OPALYN BERCO","school":"Hua Hin Vitthayalai School","province":"Prachuap Khirikhan","phone":"0972514450","email":"opalyn19@gmail.com","checkinStatus":"PENDING","checkinTime":"","regType":"PRE"}];
+
     let currentRegAttendees = [];
     let currentRegFilter = 'ALL';
 
@@ -14592,11 +14596,12 @@ function renderA4EvalReportHtmlClient(d) {
     }
 
     function extractAttendeeFromRow(row) {
-      let prefix = '';
-      let prefixEn = '';
+      let prefixTh = '';
       let nameTh = '';
+      let prefixEn = '';
       let nameEn = '';
       let school = '';
+      let province = '';
       let email = '';
       let phone = '';
 
@@ -14608,96 +14613,77 @@ function renderA4EvalReportHtmlClient(d) {
       for (const { key, val } of entries) {
         const kLow = key.toLowerCase();
 
-        // 1. Thai Name
-        if (!nameTh) {
-          if (
-            (kLow.includes('ชื่อ') && (kLow.includes('สกุล') || kLow.includes('-') || kLow.includes('—'))) ||
-            kLow === 'name_th' || kLow === 'nameth' || kLow === 'ชื่อ' || kLow === 'ชื่อผู้เข้าอบรม' || kLow === 'ชื่อผู้รับการอบรม'
-          ) {
-            if (!kLow.includes('en') && !kLow.includes('surename') && !kLow.includes('surname') && !kLow.includes('อังกฤษ') && !kLow.includes('certificate')) {
-              nameTh = val;
-              continue;
-            }
-          }
+        // Thai Prefix: e.g. "คำนำหน้าชื่อ ภาษาไทย", "คำนำหน้า"
+        if (!prefixTh && (kLow.includes('คำนำหน้า') && (kLow.includes('ไทย') || !kLow.includes('อังกฤษ')))) {
+          prefixTh = val;
         }
 
-        // 2. English Name
-        if (!nameEn) {
-          if (
-            kLow.includes('surename') || kLow.includes('surname') || kLow.includes('certificate') ||
-            kLow.includes('name_en') || kLow.includes('nameen') || kLow.includes('english') ||
-            kLow.includes('full name') || kLow.includes('name-surename') || kLow.includes('name—surename')
-          ) {
-            nameEn = val;
-            continue;
-          }
+        // English Prefix: e.g. "คำนำหน้าชื่อ ภาษาอังกฤษ"
+        if (!prefixEn && (kLow.includes('คำนำหน้า') && (kLow.includes('อังกฤษ') || kLow.includes('en')))) {
+          prefixEn = val;
         }
 
-        // 3. School / Organization
-        if (!school) {
-          if (
-            kLow.includes('โรงเรียน') || kLow.includes('สถานศึกษา') || kLow.includes('หน่วยงาน') ||
-            kLow.includes('school') || kLow.includes('organization') || kLow.includes('institution') || kLow.includes('สังกัด')
-          ) {
-            school = val;
-            continue;
-          }
+        // Thai Name: e.g. "ชื่อ นามสกุล ภาษาไทย", "ชื่อ-นามสกุล", "ชื่อ"
+        if (!nameTh && (
+          (kLow.includes('ชื่อ') && (kLow.includes('สกุล') || kLow.includes('ไทย'))) ||
+          kLow === 'name_th' || kLow === 'nameth' || kLow === 'ชื่อ'
+        ) && !kLow.includes('คำนำหน้า') && !kLow.includes('อังกฤษ') && !kLow.includes('en') && !kLow.includes('โรงเรียน')) {
+          nameTh = val;
         }
 
-        // 4. Email
-        if (!email) {
-          if (
-            kLow.includes('email') || kLow.includes('อีเมล') || kLow.includes('เมล') || kLow.includes('e-mail') ||
-            val.includes('@')
-          ) {
-            email = val;
-            continue;
-          }
+        // English Name: e.g. "Name - Surname (ชื่อ- นามสกุล ภาษาอังกฤษ)", "Name - Surname", "Full Name (EN)"
+        if (!nameEn && (
+          (kLow.includes('name') && (kLow.includes('surname') || kLow.includes('surename'))) ||
+          (kLow.includes('ชื่อ') && kLow.includes('อังกฤษ') && !kLow.includes('คำนำหน้า')) ||
+          kLow === 'name_en' || kLow === 'nameen' || kLow === 'english name'
+        ) && !kLow.includes('คำนำหน้า')) {
+          nameEn = val;
         }
 
-        // 5. Phone / Contact
-        if (!phone) {
-          if (
-            kLow.includes('เบอร์โทร') || kLow.includes('โทรศัพท์') || kLow.includes('เบอร์ติดต่อ') ||
-            kLow.includes('phone') || kLow.includes('tel') || kLow.includes('mobile') || kLow.includes('line')
-          ) {
-            phone = val;
-            continue;
-          }
+        // School: e.g. "ชื่อโรงเรียนที่สอน (School Name)", "โรงเรียน"
+        if (!school && (
+          kLow.includes('โรงเรียน') || kLow.includes('school') || kLow.includes('สถานศึกษา') || kLow.includes('หน่วยงาน')
+        ) && !kLow.includes('จังหวัด') && !kLow.includes('province') && !kLow.includes('เขต') && !kLow.includes('อำเภอ')) {
+          school = val;
+        }
+
+        // Province: e.g. "โรงเรียนตั้งอยู่ จังหวัดใด", "จังหวัด"
+        if (!province && (kLow.includes('จังหวัด') || kLow.includes('province'))) {
+          province = val;
+        }
+
+        // Email: e.g. "ที่อยู่อีเมล", "email"
+        if (!email && (kLow.includes('email') || kLow.includes('อีเมล') || kLow.includes('เมล') || val.includes('@'))) {
+          email = val;
+        }
+
+        // Phone: e.g. "เบอร์โทรศัพท์ (Telephon No.)", "เบอร์โทร", "phone", "tel"
+        if (!phone && (kLow.includes('โทร') || kLow.includes('phone') || kLow.includes('tel') || kLow.includes('mobile'))) {
+          phone = val;
         }
       }
 
-      // Fallback direct check
+      // Fallback pass if column names were informal
       if (!nameTh) {
-        nameTh = row['Name_TH'] || row['ชื่อ - นามสกุล'] || row['ชื่อ-นามสกุล'] || row['ชื่อ-สกุล'] || row['ชื่อ'] || '';
+        for (const { key, val } of entries) {
+          const kLow = key.toLowerCase();
+          if ((kLow.includes('ชื่อ') || kLow.includes('name')) && !kLow.includes('โรงเรียน') && !kLow.includes('คำนำหน้า') && !kLow.includes('อังกฤษ')) {
+            nameTh = val;
+            break;
+          }
+        }
       }
       if (!nameEn) {
-        nameEn = row['Name_EN'] || row['Full Name'] || row['English Name'] || '';
-      }
-      if (!school) {
-        school = row['School_Name'] || row['โรงเรียน'] || row['โรงเรียนที่ปฏิบัติงาน'] || row['สถานศึกษา'] || row['School'] || '';
-      }
-      if (!email) {
-        email = row['Email'] || row['อีเมล'] || row['Email address'] || '';
-      }
-      if (!phone) {
-        phone = row['Phone'] || row['เบอร์โทร'] || row['เบอร์โทรศัพท์'] || '';
-      }
-
-      // Look for prefix columns in row
-      for (const [k, v] of Object.entries(row)) {
-        const kLow = String(k || '').trim().toLowerCase();
-        const vStr = String(v || '').trim();
-        if (!vStr) continue;
-        if (!prefix && (kLow === 'คำนำหน้า' || kLow === 'คำนำหน้านาม' || kLow === 'คำนำหน้าชื่อ' || kLow === 'prefix' || kLow === 'title' || kLow === 'ยศ')) {
-          prefix = vStr;
-        }
-        if (!prefixEn && (kLow === 'prefix_en' || kLow === 'title_en' || kLow === 'title (en)')) {
-          prefixEn = vStr;
+        for (const { key, val } of entries) {
+          const kLow = key.toLowerCase();
+          if ((kLow.includes('name') || kLow.includes('certificate') || kLow.includes('อังกฤษ')) && !kLow.includes('คำนำหน้า') && !kLow.includes('ไทย') && !kLow.includes('โรงเรียน')) {
+            nameEn = val;
+            break;
+          }
         }
       }
 
-      const cleanedTh = cleanThaiPrefixAndName(nameTh, prefix);
+      const cleanedTh = cleanThaiPrefixAndName(nameTh, prefixTh);
       const cleanedEn = cleanEnglishPrefixAndName(nameEn, prefixEn);
 
       let cleanSchool = String(school || '').trim();
@@ -14705,14 +14691,20 @@ function renderA4EvalReportHtmlClient(d) {
         cleanSchool = '';
       }
 
+      const finalNameTh = (cleanedTh.nameTh === '-' || !cleanedTh.nameTh)
+        ? (cleanedEn.nameEn || '-')
+        : cleanedTh.nameTh;
+
       return {
         prefix: cleanedTh.prefix,
-        nameTh: cleanedTh.nameTh,
+        nameTh: finalNameTh,
         prefixEn: cleanedEn.prefixEn,
         nameEn: cleanedEn.nameEn,
+        fullNameEn: (cleanedEn.prefixEn ? cleanedEn.prefixEn + ' ' : '') + cleanedEn.nameEn,
         school: cleanSchool,
-        email: String(email).trim(),
-        phone: String(phone).trim()
+        province: String(province || '').trim(),
+        email: String(email || '').trim(),
+        phone: String(phone || '').trim()
       };
     }
 
@@ -14762,8 +14754,9 @@ function renderA4EvalReportHtmlClient(d) {
             return;
           }
 
-          // Merge or Replace
-          currentRegAttendees = [...currentRegAttendees, ...parsedAttendees];
+          // Smart Replace pre-registrations for this event to prevent duplicate accumulation
+          const walkins = (currentRegAttendees || []).filter(a => a.regType === 'WALKIN');
+          currentRegAttendees = [...parsedAttendees, ...walkins];
           localStorage.setItem('twp_onsite_attendees_' + eventId, JSON.stringify(currentRegAttendees));
 
           // Post to backend (Support both participants and attendees keys)
