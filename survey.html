@@ -217,7 +217,7 @@
         
         <div class="text-[11px] bg-blue-900/80 px-2.5 py-1 rounded-full border border-blue-400/30 hidden sm:flex items-center">
           <i class="fa-solid fa-award text-amber-300 mr-1.5"></i>
-          <span>v1.22.35</span>
+          <span>v1.22.36</span>
         </div>
       </div>
     </div>
@@ -803,7 +803,7 @@
 
   <!-- Footer -->
   <footer class="py-4 text-center text-xs text-slate-400 border-t border-slate-200/60 mt-auto bg-white">
-    EMS Enterprise Closed-Loop Feedback & e-Certificate Platform v1.22.35 &copy; 2026 สำนักพิมพ์ไทยวัฒนาพานิช จำกัด
+    EMS Enterprise Closed-Loop Feedback & e-Certificate Platform v1.22.36 &copy; 2026 สำนักพิมพ์ไทยวัฒนาพานิช จำกัด
   </footer>
 
   <script>
@@ -945,8 +945,8 @@
           signature: null
         }
       ],
-      executiveName: 'คุณนิพนธ์ ศรแก้ว',
-      executiveRole: 'ผู้จัดการทั่วไป',
+      executiveName: 'คุณอินทิรา บุนนาค',
+      executiveRole: 'กรรมการผู้จัดการ',
       executiveSignature: null,
       eventDate: '9 พฤศจิกายน 2569',
       eventDateEn: 'November 9, 2026',
@@ -1360,9 +1360,17 @@
 
       const cId = currentParticipant.certId || 'TWP-2026-0001';
       let execSigSrc = currentParticipant.executiveSignature;
-      const isIntira = (currentParticipant.executiveName && currentParticipant.executiveName.includes('อินทิรา')) || (currentParticipant.executiveRole && currentParticipant.executiveRole.includes('กรรมการผู้จัดการ'));
-      if (!execSigSrc || execSigSrc === 'OFFICIAL_DIGITAL_SIGNATURE') {
-        execSigSrc = isIntira ? TWP_INTIRA_BUNNAG_SIG_BASE64 : EXECUTIVE_SIGNATURE_SVG;
+      const isIntira = (currentParticipant.executiveName && currentParticipant.executiveName.includes('อินทิรา')) || 
+                       (currentParticipant.executiveRole && currentParticipant.executiveRole.includes('กรรมการผู้จัดการ')) ||
+                       (execSigSrc === TWP_INTIRA_BUNNAG_SIG_BASE64) ||
+                       (typeof isEvt5111Token === 'function' && isEvt5111Token(surveyToken, currentParticipant.eventId));
+
+      if (isIntira) {
+        currentParticipant.executiveName = 'คุณอินทิรา บุนนาค';
+        currentParticipant.executiveRole = 'กรรมการผู้จัดการ';
+        execSigSrc = TWP_INTIRA_BUNNAG_SIG_BASE64;
+      } else if (!execSigSrc || execSigSrc === 'OFFICIAL_DIGITAL_SIGNATURE') {
+        execSigSrc = EXECUTIVE_SIGNATURE_SVG;
       }
 
       // Column layout: 1 speaker = 3 cols, 2 speakers = 4 cols, 3+ speakers = 5+ cols
