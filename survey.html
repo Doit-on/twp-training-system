@@ -217,7 +217,7 @@
         
         <div class="text-[11px] bg-blue-900/80 px-2.5 py-1 rounded-full border border-blue-400/30 hidden sm:flex items-center">
           <i class="fa-solid fa-award text-amber-300 mr-1.5"></i>
-          <span>v1.22.31</span>
+          <span>v1.22.32</span>
         </div>
       </div>
     </div>
@@ -803,7 +803,7 @@
 
   <!-- Footer -->
   <footer class="py-4 text-center text-xs text-slate-400 border-t border-slate-200/60 mt-auto bg-white">
-    EMS Enterprise Closed-Loop Feedback & e-Certificate Platform v1.22.31 &copy; 2026 สำนักพิมพ์ไทยวัฒนาพานิช จำกัด
+    EMS Enterprise Closed-Loop Feedback & e-Certificate Platform v1.22.32 &copy; 2026 สำนักพิมพ์ไทยวัฒนาพานิช จำกัด
   </footer>
 
   <script>
@@ -1156,7 +1156,20 @@
           document.getElementById('dispCourseTitle').innerText = found.courseTopic;
         }
       }
-        if (!pSpeaker && (found.teamBSpeaker || found.speakerType)) currentParticipant.speakerName = found.teamBSpeaker || found.speakerType;
+        if (currentParticipant.eventId === 'EVT-20261116-5111' || (found && found.eventId === 'EVT-20261116-5111')) {
+          currentParticipant.speakerName = '黎艳玲 Elaine Li';
+          currentParticipant.speakerRole = 'Academic Services Consultant';
+          currentParticipant.speakerOrg = 'National Geographic Learning';
+          currentParticipant.speakerSignature = 'assets/speaker_elaine_li_sig.png';
+          currentParticipant.speakers = [{
+            name: '黎艳玲 Elaine Li',
+            role: 'Academic Services Consultant',
+            dept: 'National Geographic Learning',
+            signature: 'assets/speaker_elaine_li_sig.png'
+          }];
+        } else if (!pSpeaker && (found.teamBSpeaker || found.speakerType)) {
+          currentParticipant.speakerName = found.teamBSpeaker || found.speakerType;
+        }
         if (found.approvedBy) currentParticipant.executiveName = found.approvedBy;
         if (found.approverRole || found.approverPosition) currentParticipant.executiveRole = found.approverRole || found.approverPosition;
         if (found.executiveSignature || found.approvedSignature) currentParticipant.executiveSignature = found.executiveSignature || found.approvedSignature;

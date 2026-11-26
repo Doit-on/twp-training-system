@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-  <title>Training Center TWP - ระบบบริหารคำขอจัดอบรมและประเมินผล v1.22.31</title>
+  <title>Training Center TWP - ระบบบริหารคำขอจัดอบรมและประเมินผล v1.22.32</title>
   <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
   <!-- Google Fonts: Sarabun -->
@@ -313,10 +313,10 @@
       </div>
       <div class="flex items-center space-x-2 sm:space-x-3 text-xs">
         <!-- Release Notes Button on Landing -->
-        <button type="button" onclick="openWhatsNewModal()" class="bg-amber-400/20 hover:bg-amber-400/30 text-amber-200 px-3 py-1.5 rounded-full border border-amber-300/40 backdrop-blur-sm font-bold flex items-center space-x-1.5 transition cursor-pointer" title="ดูรายละเอียดการอัปเดตระบบ v1.22.31">
+        <button type="button" onclick="openWhatsNewModal()" class="bg-amber-400/20 hover:bg-amber-400/30 text-amber-200 px-3 py-1.5 rounded-full border border-amber-300/40 backdrop-blur-sm font-bold flex items-center space-x-1.5 transition cursor-pointer" title="ดูรายละเอียดการอัปเดตระบบ v1.22.32">
           <i class="fa-solid fa-bullhorn text-amber-300 animate-pulse"></i>
           <span class="hidden sm:inline">อัปเดต</span>
-          <span class="bg-emerald-500 text-white font-mono font-black text-[10px] px-1.5 py-0.2 rounded-full">v1.22.31</span>
+          <span class="bg-emerald-500 text-white font-mono font-black text-[10px] px-1.5 py-0.2 rounded-full">v1.22.32</span>
         </button>
         <!-- Team Login Gate Button / User Badge -->
         <button id="landingLoginBtn" type="button" onclick="openSwitchProfileModal()" class="bg-gradient-to-r from-amber-400 to-amber-500 hover:from-amber-300 hover:to-amber-400 text-slate-950 font-black px-3.5 py-1.5 rounded-xl shadow-md transition cursor-pointer flex items-center space-x-1.5">
@@ -470,7 +470,7 @@
     <!-- Bottom Footer on Landing Page -->
     <div class="max-w-7xl mx-auto w-full px-6 py-4 flex flex-col sm:flex-row items-center justify-between text-xs text-blue-200 border-t border-white/10 relative z-10 gap-2">
       <div>&copy; 2026 Training Center TWP - บริษัท ไทยวัฒนาพานิช จำกัด. All rights reserved.</div>
-      <div class="font-mono text-[11px] bg-white/10 px-3 py-1 rounded-full border border-white/15">EMS Enterprise Platform v1.22.31 (Live Apps Script Engine)</div>
+      <div class="font-mono text-[11px] bg-white/10 px-3 py-1 rounded-full border border-white/15">EMS Enterprise Platform v1.22.32 (Live Apps Script Engine)</div>
     </div>
 
   </div>
@@ -495,7 +495,7 @@
           <div class="sidebar-brand-text truncate">
             <div class="flex items-center space-x-1.5">
               <span class="font-extrabold text-sm tracking-wide text-white">TWP</span>
-              <span onclick="openVersionReleaseModal()" class="bg-blue-400/20 hover:bg-blue-400/30 text-blue-200 text-[9px] font-mono px-1.5 py-0.5 rounded-full border border-blue-300/30 cursor-pointer transition flex items-center gap-1" title="คลิกดูรายละเอียดเวอร์ชัน v1.22.31"><i class="fa-solid fa-sparkles text-amber-300 text-[8px]"></i><span class="bg-emerald-500 text-white font-black px-2 py-0.5 rounded-full">v1.22.31</span></span>
+              <span onclick="openVersionReleaseModal()" class="bg-blue-400/20 hover:bg-blue-400/30 text-blue-200 text-[9px] font-mono px-1.5 py-0.5 rounded-full border border-blue-300/30 cursor-pointer transition flex items-center gap-1" title="คลิกดูรายละเอียดเวอร์ชัน v1.22.32"><i class="fa-solid fa-sparkles text-amber-300 text-[8px]"></i><span class="bg-emerald-500 text-white font-black px-2 py-0.5 rounded-full">v1.22.32</span></span>
             </div>
             <p class="text-[10px] text-blue-200 truncate">ระบบบริหารงานฝึกอบรม</p>
           </div>
@@ -2152,7 +2152,7 @@
           <!-- Standee Visual Card (Clean, framed) -->
           <div id="standeePreviewBox" class="bg-gradient-to-b from-blue-50 to-white rounded-2xl p-5 border-2 border-dashed border-blue-300 text-center space-y-3">
             <div class="flex items-center justify-center gap-2">
-              <img src="assets/logo.png" alt="TWP Logo" class="h-8 w-auto object-contain">
+              <div class="w-9 h-9 rounded-xl bg-white p-1 flex items-center justify-center shadow-sm border border-slate-200 shrink-0"><img src="assets/logo.png" alt="TWP Logo" class="max-h-full max-w-full object-contain"></div>
               <div class="text-left leading-tight">
                 <div class="font-extrabold text-[#08539E] text-xs">สำนักพิมพ์ไทยวัฒนาพานิช จำกัด</div>
                 <div class="text-[9px] text-slate-400 font-serif">THAI WATANA PANICH</div>
@@ -3450,7 +3450,7 @@
               <i class="fa-solid fa-code-compare text-amber-300"></i>
               <span class="text-xs font-bold uppercase tracking-wider">รายละเอียดการปรับปรุงเวอร์ชัน (Version Release Notes)</span>
             </div>
-            <span class="text-[10px] bg-amber-400 text-slate-950 font-black px-2 py-0.5 rounded-full">v1.22.31 Live</span>
+            <span class="text-[10px] bg-amber-400 text-slate-950 font-black px-2 py-0.5 rounded-full">v1.22.32 Live</span>
           </div>
           <p class="text-xs text-blue-100 leading-relaxed">
             <strong>v1.22.0 (Enterprise Compact QR & Drive Standard):</strong> ปรับขนาดหน้าต่างแท่นแสดงผล QR Code ให้กะทัดรัด (Compact Responsive) รองรับโน้ตบุ๊กทุกขนาดหน้าจอ, เพิ่มปุ่มปิดหน้าต่างทั้งบน ล่าง และกด Esc/คลิกนอกกรอบเพื่อปิดได้ทันที, พร้อมกำหนด Google Drive โฟลเดอร์กลางสำหรับเก็บเอกสารโครงการ
@@ -4455,7 +4455,7 @@
           <div>
             <div class="flex items-center space-x-2">
               <span class="text-xs bg-emerald-500/30 text-emerald-300 border border-emerald-400/40 px-2 py-0.5 rounded-full font-mono font-bold">Authentication Gate</span>
-              <span class="text-xs text-slate-300">v1.22.31</span>
+              <span class="text-xs text-slate-300">v1.22.32</span>
             </div>
             <h3 class="font-black text-white text-base sm:text-lg mt-0.5">เข้าสู่ระบบประจำทีม (Team Sign-In)</h3>
           </div>
@@ -4957,7 +4957,7 @@
 
     // System Global State (Synchronously initialized with complete Master Data)
     const AppState = {
-      version: '1.22.31',
+      version: '1.22.32',
       clientId: 'DEV-' + Math.random().toString(36).substring(2, 7).toUpperCase(),
       activeTab: 'dashboard',
       activeDevices: {},
@@ -6846,6 +6846,10 @@
                   <i class="fa-brands fa-line text-base"></i>
                   <span>ส่งต่อ LINE ครู</span>
                 </button>
+                <a href="speaker_profile.html?evt=${req.eventId}" target="_blank" class="py-2.5 px-3 bg-gradient-to-r from-amber-400 to-amber-500 hover:from-amber-300 hover:to-amber-400 text-slate-950 rounded-xl text-xs font-black transition flex items-center justify-center space-x-1.5 shadow-sm btn-tactile" title="เปิดหน้าประวัติวิทยากร พร้อม QR Code สแกนอ่าน">
+                  <i class="fa-solid fa-id-badge text-amber-900"></i>
+                  <span>QR ประวัติวิทยากร</span>
+                </a>
                 <button type="button" onclick="openQrModalFor('${req.eventId}', 'RESOURCE')" class="py-2.5 px-3 bg-white hover:bg-purple-50 text-purple-900 border border-purple-300 rounded-xl text-xs font-bold transition flex items-center justify-center space-x-1.5 shadow-xs btn-tactile cursor-pointer" title="QR สำหรับดาวน์โหลดสื่อการสอน/เอกสารประกอบ">
                   <i class="fa-solid fa-folder-open text-purple-600"></i>
                   <span>QR สื่ออบรม</span>
@@ -7635,7 +7639,7 @@
     }
 
     function acknowledgeAndOpenLoginGate() {
-      localStorage.setItem('twp_acknowledged_version', '1.22.31');
+      localStorage.setItem('twp_acknowledged_version', '1.22.32');
       closeWhatsNewModal();
       if (!AppState.currentUser || !AppState.currentUser.userId) {
         setTimeout(() => {
@@ -7650,7 +7654,7 @@
 
     function checkAndShowWhatsNewOnEnter() {
       const ackVer = localStorage.getItem('twp_acknowledged_version');
-      if (ackVer !== '1.22.31') {
+      if (ackVer !== '1.22.32') {
         setTimeout(() => {
           openWhatsNewModal();
         }, 500);
@@ -12041,6 +12045,37 @@
         savingPerHead: savingPerHead,
         targetSalesPerHead: targetSalesPerHead,
         approverSignature: req.approverSignature || null,
+        speakerSignature: (() => {
+          try {
+            const saved = localStorage.getItem('twp_event_signatures_' + req.eventId);
+            if (saved) {
+              const p = JSON.parse(saved);
+              if (p.speakerSignature) return p.speakerSignature;
+            }
+          } catch(e) {}
+          return req.speakerSignature || (req.eventId === 'EVT-20261116-5111' ? 'assets/speaker_elaine_li_sig.png' : null);
+        })(),
+        speakerName: (() => {
+          try {
+            const saved = localStorage.getItem('twp_event_signatures_' + req.eventId);
+            if (saved) {
+              const p = JSON.parse(saved);
+              if (p.speakerName) return p.speakerName;
+            }
+          } catch(e) {}
+          return req.teamBSpeaker || (req.eventId === 'EVT-20261116-5111' ? '黎艳玲 Elaine Li' : 'ศ.ดร.ประสาน ปัญญาเลิศ');
+        })(),
+        speakerRole: (() => {
+          try {
+            const saved = localStorage.getItem('twp_event_signatures_' + req.eventId);
+            if (saved) {
+              const p = JSON.parse(saved);
+              if (p.speakerRole) return p.speakerRole;
+            }
+          } catch(e) {}
+          return req.speakerType || (req.eventId === 'EVT-20261116-5111' ? 'Academic Services Consultant' : 'วิทยากรประจำหลักสูตร');
+        })(),
+        speakerOrg: (req.eventId === 'EVT-20261116-5111' ? 'National Geographic Learning' : 'ฝ่ายพัฒนาวิชาการและนวัตกรรมการเรียนรู้'),
         evalQuestions: evalQuestions,
         totalAvg: totalAvg,
         totalAvgPct: totalAvgPct,
@@ -12102,11 +12137,13 @@
     const TWP_SPEAKER_SIG_SVG = 'data:image/svg+xml;utf8,' + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="180" height="50" viewBox="0 0 180 50"><path d="M20 30 C 40 10, 50 40, 70 20 C 90 5, 110 35, 130 15 C 145 2, 160 25, 170 18" stroke="#334155" stroke-width="2.2" fill="none" stroke-linecap="round"/><path d="M50 35 Q 80 45, 110 32" stroke="#334155" stroke-width="1.6" fill="none" stroke-linecap="round"/></svg>');
 
     function renderA4CertificateMasterHtmlClient(d) {
-      const speakerName = d.teamBSpeaker || d.speakerType || 'ศ.ดร.ประสาน ปัญญาเลิศ';
-      const speakerRole = d.speakerType || 'วิทยากรประจำหลักสูตร';
+      const isEvt5111 = (d.eventId === 'EVT-20261116-5111');
+      const speakerName = d.speakerName || d.teamBSpeaker || (isEvt5111 ? '黎艳玲 Elaine Li' : 'ศ.ดร.ประสาน ปัญญาเลิศ');
+      const speakerRole = d.speakerRole || d.speakerType || (isEvt5111 ? 'Academic Services Consultant' : 'วิทยากรประจำหลักสูตร');
+      const speakerOrg = d.speakerOrg || (isEvt5111 ? 'National Geographic Learning' : 'ฝ่ายพัฒนาวิชาการและนวัตกรรมการเรียนรู้');
       
       // Determine speaker signature
-      const speakerSigSrc = d.speakerSignature || TWP_SPEAKER_SIG_SVG;
+      const speakerSigSrc = d.speakerSignature || (isEvt5111 ? 'assets/speaker_elaine_li_sig.png' : TWP_SPEAKER_SIG_SVG);
       const execSigSrc = (d.approverSignature && d.approverSignature !== 'OFFICIAL_DIGITAL_SIGNATURE')
         ? d.approverSignature
         : TWP_EXECUTIVE_SIG_SVG;
@@ -12151,6 +12188,10 @@
 
               <!-- Action buttons -->
               <div class="flex items-center gap-2 self-end sm:self-center">
+                <a href="speaker_profile.html?evt=${d.eventId}" target="_blank" class="px-3 py-1.5 bg-amber-400 hover:bg-amber-300 text-slate-950 rounded-xl text-xs font-black transition flex items-center gap-1.5 shadow-sm" title="เปิดหน้าประวัติวิทยากร พร้อม QR Code สำหรับผู้เข้าอบรมสแกน">
+                  <i class="fa-solid fa-qrcode"></i>
+                  <span>QR ประวัติวิทยากร</span>
+                </a>
                 <button type="button" onclick="printReportContainer()" class="px-3.5 py-1.5 bg-amber-500 hover:bg-amber-600 text-white rounded-xl text-xs font-bold transition flex items-center gap-1.5 shadow-sm cursor-pointer">
                   <i class="fa-solid fa-print"></i>
                   <span>พิมพ์แม่แบบ A4 แนวนอน</span>
@@ -12243,11 +12284,11 @@
               <!-- Speaker Signature Column -->
               <div style="text-align:center;">
                 <div style="height:42px; display:flex; align-items:flex-end; justify-content:center; margin-bottom:4px;">
-                  <img src="${speakerSigSrc}" style="max-height:40px; max-width:140px; object-fit:contain;" alt="ลายเซ็นวิทยากร">
+                  <img src="${speakerSigSrc}" style="max-height:42px; max-width:160px; object-fit:contain; mix-blend-mode:multiply;" alt="ลายเซ็นวิทยากร">
                 </div>
                 <div style="font-size:11pt; font-weight:700; color:#1e293b;">( ${speakerName} )</div>
-                <div style="font-size:9pt; color:#64748b;">${speakerRole}</div>
-                <div style="font-size:8.5pt; color:#94a3b8;">ฝ่ายพัฒนาวิชาการและนวัตกรรมการเรียนรู้</div>
+                <div style="font-size:9pt; color:#64748b; font-weight:600;">${speakerRole}</div>
+                <div style="font-size:8.5pt; color:#08539E; font-weight:bold;">${speakerOrg}</div>
               </div>
 
               <!-- Center Gold TWP Emblem Seal -->
@@ -12991,7 +13032,7 @@ function renderA4EvalReportHtmlClient(d) {
           </table>
 
           <div style="margin-top:14px; padding-top:4px; border-top:1px solid #e2e8f0; font-size:8.5pt; color:#94a3b8; text-align:center;">
-            เอกสารฉบับนี้สร้างโดยระบบ Training Center TWP (EMS Enterprise Platform v1.22.31) • ใช้สำหรับติดตามและควบคุมผลการปฏิบัติงานภายใน (PPC Standard)
+            เอกสารฉบับนี้สร้างโดยระบบ Training Center TWP (EMS Enterprise Platform v1.22.32) • ใช้สำหรับติดตามและควบคุมผลการปฏิบัติงานภายใน (PPC Standard)
           </div>
         </div>
       `;
@@ -15168,9 +15209,10 @@ function renderA4EvalReportHtmlClient(d) {
       } catch(e) {}
 
       // Fallback to request fields
-      const speakerName = saved?.speakerName || req?.teamBSpeaker || req?.speakerType || 'ศ.ดร.ประสาน ปัญญาเลิศ';
-      const speakerRole = saved?.speakerRole || 'วิทยากรประจำหลักสูตร';
-      const speakerDataUrl = saved?.speakerSignature || req?.speakerSignature || '';
+      const is5111 = (eventId === 'EVT-20261116-5111');
+      const speakerName = saved?.speakerName || req?.teamBSpeaker || (is5111 ? '黎艳玲 Elaine Li' : 'ศ.ดร.ประสาน ปัญญาเลิศ');
+      const speakerRole = saved?.speakerRole || (is5111 ? 'Academic Services Consultant' : 'วิทยากรประจำหลักสูตร');
+      const speakerDataUrl = saved?.speakerSignature || req?.speakerSignature || (is5111 ? 'assets/speaker_elaine_li_sig.png' : '');
 
       const execName = saved?.approvedBy || req?.approvedBy || 'คุณอินทิรา บุนนาค';
       const execRole = saved?.approverRole || req?.approverRole || 'กรรมการผู้จัดการ';
@@ -15820,7 +15862,7 @@ function renderA4EvalReportHtmlClient(d) {
           <div>
             <div class="flex items-center space-x-2">
               <h3 class="font-bold text-slate-900 text-lg">ประวัติและการปรับปรุงระบบเวอร์ชัน (Release Notes)</h3>
-              <span class="bg-blue-100 text-[#08539E] text-xs font-bold font-mono px-2 py-0.5 rounded-full">v1.22.31 Current</span>
+              <span class="bg-blue-100 text-[#08539E] text-xs font-bold font-mono px-2 py-0.5 rounded-full">v1.22.32 Current</span>
             </div>
             <p class="text-xs text-slate-500">บันทึกประวัติการปรับปรุงสถาปัตยกรรมและฟังก์ชันการทำงานอย่างละเอียด</p>
           </div>
@@ -15833,11 +15875,11 @@ function renderA4EvalReportHtmlClient(d) {
       <!-- Release Timeline List -->
       <div class="space-y-4">
         
-        <!-- v1.22.31 (Current Major Release) -->
+        <!-- v1.22.32 (Current Major Release) -->
         <div class="p-5 bg-gradient-to-br from-emerald-50 via-white to-teal-50/70 border-2 border-emerald-400 rounded-3xl space-y-3 shadow-sm">
           <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-1">
             <div class="flex items-center space-x-2">
-              <span class="bg-emerald-600 text-white text-xs font-black px-2.5 py-0.5 rounded-lg font-mono">v1.22.31</span>
+              <span class="bg-emerald-600 text-white text-xs font-black px-2.5 py-0.5 rounded-lg font-mono">v1.22.32</span>
               <span class="font-bold text-slate-900 text-sm">Annual Principle Plans Cloud Sync & Top Team A Ledger</span>
             </div>
             <span class="text-[11px] text-emerald-700 font-bold font-mono">2026-11-16 &bull; Current Release</span>
@@ -16100,12 +16142,12 @@ function renderA4EvalReportHtmlClient(d) {
           <div>
             <div class="flex items-center space-x-2">
               <span class="text-xs bg-emerald-500/30 text-emerald-300 border border-emerald-400/40 px-2 py-0.5 rounded-full font-mono font-bold">Release Note</span>
-              <span class="text-xs text-slate-300">อัปเดตระบบเวอร์ชัน 1.22.31</span>
+              <span class="text-xs text-slate-300">อัปเดตระบบเวอร์ชัน 1.22.32</span>
             </div>
-            <h2 class="text-lg sm:text-xl font-black text-white mt-1">ประกาศอัปเดตระบบ Training Center TWP v1.22.31</h2>
+            <h2 class="text-lg sm:text-xl font-black text-white mt-1">ประกาศอัปเดตระบบ Training Center TWP v1.22.32</h2>
             <div class="bg-gradient-to-r from-amber-500/20 to-blue-500/20 border border-amber-400/40 rounded-2xl p-4 text-xs space-y-2 mb-3">
               <div class="flex items-center gap-2">
-                <span class="bg-amber-400 text-slate-950 font-black px-2 py-0.5 rounded-full text-[10px]">ใหม่ v1.22.31</span>
+                <span class="bg-amber-400 text-slate-950 font-black px-2 py-0.5 rounded-full text-[10px]">ใหม่ v1.22.32</span>
                 <span class="text-white font-bold">สตูดิโอดิจิทัลลายเซ็น E-Cer & คลังกลาง (Vault) สำหรับทีม B</span>
               </div>
               <ul class="list-disc list-inside text-slate-200 space-y-1 text-[11px] leading-relaxed">
@@ -16127,7 +16169,7 @@ function renderA4EvalReportHtmlClient(d) {
       <div class="p-6 overflow-y-auto custom-scrollbar space-y-3.5 text-xs">
         <div class="p-3.5 bg-gradient-to-r from-emerald-50 to-teal-50 border-2 border-emerald-400 rounded-2xl space-y-2 mb-3 shadow-xs">
           <div class="flex items-center space-x-2">
-            <span class="px-2 py-0.5 rounded-full text-[10px] font-black bg-emerald-700 text-white">ไฮไลต์ v1.22.31</span>
+            <span class="px-2 py-0.5 rounded-full text-[10px] font-black bg-emerald-700 text-white">ไฮไลต์ v1.22.32</span>
             <span class="font-bold text-slate-900 text-xs sm:text-sm">ซิงค์โครงการอนุมัติหลักการประจำปี (Annual Plans) ตรงจาก Google Sheets เข้าสู่ระบบแบบอัตโนมัติ</span>
           </div>
           <p class="text-slate-700 leading-relaxed font-medium">
@@ -16137,7 +16179,7 @@ function renderA4EvalReportHtmlClient(d) {
           </p>
         </div>
         <p class="text-slate-600 font-medium leading-relaxed">
-          สรุปรายละเอียดการพัฒนาต่อเนื่องของระบบ <strong>Enterprise Governance & Cross-Team Real-time Sync Edition (v1.22.31)</strong>:
+          สรุปรายละเอียดการพัฒนาต่อเนื่องของระบบ <strong>Enterprise Governance & Cross-Team Real-time Sync Edition (v1.22.32)</strong>:
         </p>
 
         <!-- Feature 1 -->
