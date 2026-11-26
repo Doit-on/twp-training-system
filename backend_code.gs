@@ -8,7 +8,7 @@
  * ============================================================================
  */
 
-const SYSTEM_VERSION = 'v1.22.33';
+const SYSTEM_VERSION = 'v1.22.34';
 const DEFAULT_ADMIN_PASS = 'admin0000';
 // =============================================================================
 // MULTI-ACCOUNT GOOGLE SHEETS CONNECTIVITY (Cross-Account Shared Editor Access)
@@ -658,7 +658,7 @@ function getInitialData() {
       createdAt: r[1],
       status: r[2],
       activityType: r[3],
-      courseTopic: r[4],
+      courseTopic: (isEvt5111 && (!r[4] || r[4] === 'อบรมใหญ่')) ? 'Beyond the textbook! Transform Reading & Writing into Active Learning' : r[4],
       customTopic: r[5],
       eventDate: r[6] ? Utilities.formatDate(new Date(r[6]), "GMT+7", "yyyy-MM-dd") : '',
       province: r[7],
@@ -670,7 +670,7 @@ function getInitialData() {
       objective: r[13],
       targetSales: Number(r[14]) || 0,
       estBudget: Number(r[15]) || 0,
-      teamBSpeaker: r[16] || '',
+      teamBSpeaker: speakerVal,
       teamBNotes: r[17] || '',
       actualBudget: Number(r[18]) || 0,
       createdBy: (r[19] && String(r[19]).includes('สมชาย')) ? 'กิตติศักดิ์ ฉันทวุฒินันท์ (หัวหน้าทีมขาย A)' : (r[19] || ''),
@@ -697,7 +697,7 @@ function getInitialData() {
       needCatering: r[37] || 'NO',
       needProductMedia: r[38] || 'NO',
       otherSupportDetails: r[39] || '',
-      speakerSignature: r[40] || '',
+      speakerSignature: sigVal,
       speakers: r[41] ? (function() { try { return JSON.parse(r[41]); } catch(e) { return []; } })() : [],
       skipECert: (r[43] === 'YES' || r[43] === true || false),
       rowIndex: i + 1
