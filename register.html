@@ -50,7 +50,7 @@
         <button type="button" onclick="loadAttendees(true)" class="p-1 bg-white/10 hover:bg-white/20 active:bg-white/30 rounded-lg text-white text-xs transition" title="รีเฟรชข้อมูลล่าสุด">
           <i id="btnRefreshIcon" class="fa-solid fa-arrows-rotate"></i>
         </button>
-        <span class="text-[10px] bg-white/20 text-blue-100 font-mono font-bold px-2 py-0.5 rounded-full border border-emerald-300/40 bg-emerald-500 text-white font-black px-2.5 py-0.5 shadow-sm">v1.22.32 (ล่าสุด)</span>
+        <span class="text-[10px] bg-white/20 text-blue-100 font-mono font-bold px-2 py-0.5 rounded-full border border-emerald-300/40 bg-emerald-500 text-white font-black px-2.5 py-0.5 shadow-sm">v1.22.33 (ล่าสุด)</span>
       </div>
     </div>
   </header>
@@ -84,6 +84,23 @@
           <span id="dispEventSpeaker" class="truncate max-w-[150px]">-</span>
         </div>
       </div>
+    </div>
+
+    <!-- KEYNOTE SPEAKER & QR BIO QUICK-ACCESS -->
+    <div class="bg-gradient-to-r from-amber-500/10 via-amber-100/40 to-blue-50 border border-amber-300 rounded-2xl p-3 flex items-center justify-between shadow-xs">
+      <div class="flex items-center space-x-2.5">
+        <div class="w-9 h-9 rounded-xl bg-amber-400 text-slate-950 flex items-center justify-center font-black text-sm shrink-0 shadow-xs border border-amber-500">
+          <i class="fa-solid fa-user-tie"></i>
+        </div>
+        <div>
+          <div class="text-[10px] font-bold text-amber-900 uppercase tracking-wider">วิทยากรประจำหลักสูตร (Keynote Speaker)</div>
+          <div class="text-xs font-black text-slate-900 leading-tight">黎艳玲 Elaine Li <span class="text-[10px] font-normal text-slate-500 block sm:inline">• NatGeo Learning</span></div>
+        </div>
+      </div>
+      <a href="speaker_profile.html?evt=EVT-20261116-5111" target="_blank" class="px-2.5 py-1.5 bg-gradient-to-r from-amber-400 to-amber-500 hover:from-amber-300 hover:to-amber-400 text-slate-950 font-black rounded-xl text-[11px] shadow-xs transition flex items-center gap-1 shrink-0">
+        <i class="fa-solid fa-qrcode"></i>
+        <span>อ่านประวัติ / QR</span>
+      </a>
     </div>
 
     <!-- ATTENDANCE OVERVIEW KPI BAR -->
@@ -332,7 +349,7 @@
   <!-- FOOTER -->
   <footer class="bg-white border-t border-slate-200 py-3 text-center text-slate-400 text-xs">
     <p>สำนักพิมพ์ไทยวัฒนาพานิช จำกัด • Thai Watana Panich Publishing House</p>
-    <p class="text-[10px] text-slate-400 mt-0.5">ระบบเช็กชื่อผู้เข้าอบรมมาตรฐานสากล (TWP Enterprise Onsite Check-in v1.22.32)</p>
+    <p class="text-[10px] text-slate-400 mt-0.5">ระบบเช็กชื่อผู้เข้าอบรมมาตรฐานสากล (TWP Enterprise Onsite Check-in v1.22.33)</p>
   </footer>
 
   <!-- SCRIPT LOGIC -->
@@ -1141,7 +1158,7 @@
 </script>
 
 
-  <!-- Modal: Edit Individual Attendee (v1.22.32) -->
+  <!-- Modal: Edit Individual Attendee (v1.22.33) -->
   <div id="editAttendeeModal" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 animate-fadeIn">
     <div class="bg-white rounded-3xl max-w-md w-full p-6 shadow-2xl border border-slate-200 space-y-4">
       <div class="flex items-center justify-between border-b border-slate-100 pb-3">
