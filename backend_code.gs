@@ -8,7 +8,7 @@
  * ============================================================================
  */
 
-const SYSTEM_VERSION = 'v1.22.43';
+const SYSTEM_VERSION = 'v1.22.44';
 const DEFAULT_ADMIN_PASS = 'admin0000';
 // =============================================================================
 // MULTI-ACCOUNT GOOGLE SHEETS CONNECTIVITY (Cross-Account Shared Editor Access)
@@ -2015,17 +2015,17 @@ function handleGetEventRegistrations(payload) {
       if (isWalkIn) walkInCount++;
 
       registrations.push({
-        regId: r[0],
-        eventId: r[1] || eventId || 'EVT-20261116-5111',
-        timestamp: r[2],
-        nameTh: r[3],
-        nameEn: r[4],
-        schoolName: r[5],
-        email: r[6],
-        phone: r[7],
-        checkinStatus: r[8] || 'PENDING',
-        checkinTime: r[9] || '',
-        regType: isWalkIn ? 'WALKIN' : (r[10] || 'PRE_REGISTERED'),
+        regId: String(r[0] || ''),
+        eventId: String(r[1] || eventId || 'EVT-20261116-5111'),
+        timestamp: String(r[2] || ''),
+        nameTh: String(r[3] || ''),
+        nameEn: String(r[4] || ''),
+        schoolName: String(r[5] || ''),
+        email: String(r[6] || ''),
+        phone: String(r[7] || ''),
+        checkinStatus: String(r[8] || 'PENDING'),
+        checkinTime: String(r[9] || ''),
+        regType: isWalkIn ? 'WALKIN' : String(r[10] || 'PRE_REGISTERED'),
         rowIndex: i + 1
       });
     }

@@ -50,7 +50,7 @@
         <button type="button" onclick="loadAttendees(true)" class="p-1 bg-white/10 hover:bg-white/20 active:bg-white/30 rounded-lg text-white text-xs transition" title="รีเฟรชข้อมูลล่าสุด">
           <i id="btnRefreshIcon" class="fa-solid fa-arrows-rotate"></i>
         </button>
-        <span class="text-[10px] bg-white/20 text-blue-100 font-mono font-bold px-2 py-0.5 rounded-full border border-emerald-300/40 bg-emerald-500 text-white font-black px-2.5 py-0.5 shadow-sm">v1.22.43 (ล่าสุด)</span>
+        <span class="text-[10px] bg-white/20 text-blue-100 font-mono font-bold px-2 py-0.5 rounded-full border border-emerald-300/40 bg-emerald-500 text-white font-black px-2.5 py-0.5 shadow-sm">v1.22.44 (ล่าสุด)</span>
       </div>
     </div>
   </header>
@@ -349,7 +349,7 @@
   <!-- FOOTER -->
   <footer class="bg-white border-t border-slate-200 py-3 text-center text-slate-400 text-xs">
     <p>สำนักพิมพ์ไทยวัฒนาพานิช จำกัด • Thai Watana Panich Publishing House</p>
-    <p class="text-[10px] text-slate-400 mt-0.5">ระบบเช็กชื่อผู้เข้าอบรมมาตรฐานสากล (TWP Enterprise Onsite Check-in v1.22.43)</p>
+    <p class="text-[10px] text-slate-400 mt-0.5">ระบบเช็กชื่อผู้เข้าอบรมมาตรฐานสากล (TWP Enterprise Onsite Check-in v1.22.44)</p>
   </footer>
 
   <!-- SCRIPT LOGIC -->
@@ -452,7 +452,11 @@
              a.isWalkIn === true;
     }
 
-function normalizeAndDeduplicateAttendees(rawList, eventId) {
+    function safePhoneClean(p) { return String(p || '').replace(/[^0-9]/g, ''); }
+    function safeEmailClean(e) { return String(e || '').toLowerCase().trim(); }
+    function safeStrClean(s) { return String(s || '').trim(); }
+
+    function normalizeAndDeduplicateAttendees(rawList, eventId) {
       if (!Array.isArray(rawList) || rawList.length === 0) {
         if (eventId === 'EVT-20261116-5111' && typeof TWP_OFFICIAL_ROSTER_5111 !== 'undefined') {
           return JSON.parse(JSON.stringify(TWP_OFFICIAL_ROSTER_5111));
@@ -464,9 +468,13 @@ function normalizeAndDeduplicateAttendees(rawList, eventId) {
       if (eventId === 'EVT-20261116-5111' && typeof TWP_OFFICIAL_ROSTER_5111 !== 'undefined') {
         const checkinMap = new Map();
         rawList.forEach(a => {
-          if (a.checkinStatus === 'CHECKED_IN') {
-            const k = (a.phone || a.email || a.nameTh || a.nameEn || '').toLowerCase().trim();
-            if (k) checkinMap.set(k, a.checkinTime || '');
+          if (a && a.checkinStatus === 'CHECKED_IN') {
+            const kPhone = safePhoneClean(a.phone);
+            const kEmail = safeEmailClean(a.email);
+            const kName = safeStrClean(a.nameTh || a.nameEn).toLowerCase();
+            if (kPhone) checkinMap.set(kPhone, a.checkinTime || '');
+            if (kEmail) checkinMap.set(kEmail, a.checkinTime || '');
+            if (kName) checkinMap.set(kName, a.checkinTime || '');
           }
         });
 
@@ -474,11 +482,11 @@ function normalizeAndDeduplicateAttendees(rawList, eventId) {
         const cleanList = TWP_OFFICIAL_ROSTER_5111.map((off, idx) => {
           const att = JSON.parse(JSON.stringify(off));
           att.fileRowIndex = idx + 1;
-          const kPhone = (att.phone || '').toLowerCase().trim();
-          const kEmail = (att.email || '').toLowerCase().trim();
-          const kName = (att.nameTh || '').toLowerCase().trim();
+          const kPhone = safePhoneClean(att.phone);
+          const kEmail = safeEmailClean(att.email);
+          const kName = safeStrClean(att.nameTh).toLowerCase();
 
-          if (checkinMap.has(kPhone) || checkinMap.has(kEmail) || checkinMap.has(kName)) {
+          if ((kPhone && checkinMap.has(kPhone)) || (kEmail && checkinMap.has(kEmail)) || (kName && checkinMap.has(kName))) {
             att.checkinStatus = 'CHECKED_IN';
             att.checkinTime = checkinMap.get(kPhone) || checkinMap.get(kEmail) || checkinMap.get(kName) || '';
           }
@@ -486,20 +494,15 @@ function normalizeAndDeduplicateAttendees(rawList, eventId) {
         });
 
         // Also append any new Walk-in attendees that were registered on-site
-        const walkins = rawList.filter(a => 
-          a && (
-            a.regType === 'WALKIN' || 
-            a.regType === 'WALK_IN' || 
-            String(a.regType || '').toUpperCase().includes('WALK') || 
-            String(a.regId || '').toUpperCase().includes('WALKIN')
-          )
-        );
+        const walkins = rawList.filter(isWalkInAttendee);
         walkins.forEach(w => {
-          const wId = w.regId || ('REG-WALKIN-' + (w.phone || w.email || w.nameTh || Math.random()));
+          const wPhone = safePhoneClean(w.phone);
+          const wEmail = safeEmailClean(w.email);
+          const wId = String(w.regId || ('REG-WALKIN-' + (wPhone || wEmail || safeStrClean(w.nameTh) || Math.random())));
           const alreadyExists = cleanList.some(c => 
             c.regId === wId ||
-            (w.phone && c.phone && c.phone.replace(/[^0-9]/g, '') === w.phone.replace(/[^0-9]/g, '')) ||
-            (w.email && c.email && c.email.toLowerCase().trim() === w.email.toLowerCase().trim())
+            (wPhone && safePhoneClean(c.phone) && safePhoneClean(c.phone) === wPhone) ||
+            (wEmail && safeEmailClean(c.email) && safeEmailClean(c.email) === wEmail)
           );
           if (!alreadyExists) {
             cleanList.push({
@@ -1187,7 +1190,7 @@ function normalizeAndDeduplicateAttendees(rawList, eventId) {
 </script>
 
 
-  <!-- Modal: Edit Individual Attendee (v1.22.43) -->
+  <!-- Modal: Edit Individual Attendee (v1.22.44) -->
   <div id="editAttendeeModal" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 animate-fadeIn">
     <div class="bg-white rounded-3xl max-w-md w-full p-6 shadow-2xl border border-slate-200 space-y-4">
       <div class="flex items-center justify-between border-b border-slate-100 pb-3">
