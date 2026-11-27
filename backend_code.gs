@@ -8,7 +8,7 @@
  * ============================================================================
  */
 
-const SYSTEM_VERSION = 'v1.22.41';
+const SYSTEM_VERSION = 'v1.22.42';
 const DEFAULT_ADMIN_PASS = 'admin0000';
 // =============================================================================
 // MULTI-ACCOUNT GOOGLE SHEETS CONNECTIVITY (Cross-Account Shared Editor Access)
@@ -2008,15 +2008,15 @@ function handleGetEventRegistrations(payload) {
   for (let i = 1; i < rows.length; i++) {
     const r = rows[i];
     const rowEid = String(r[1] || '').trim().toUpperCase();
-    if (!eventId || rowEid === eventId) {
+    if (!eventId || rowEid === eventId || ((eventId.includes('5111') || eventId === 'EVT-20261116-5111') && (rowEid.includes('5111') || rowEid === 'GENERAL' || !rowEid))) {
       const isCheckedIn = (r[8] === 'CHECKED_IN');
-      const isWalkIn = (r[10] === 'WALK_IN');
+      const isWalkIn = (r[10] === 'WALK_IN' || r[10] === 'WALKIN' || String(r[0] || '').includes('WALKIN') || String(r[10] || '').toUpperCase().includes('WALK'));
       if (isCheckedIn) checkedInCount++;
       if (isWalkIn) walkInCount++;
 
       registrations.push({
         regId: r[0],
-        eventId: r[1],
+        eventId: r[1] || eventId || 'EVT-20261116-5111',
         timestamp: r[2],
         nameTh: r[3],
         nameEn: r[4],
@@ -2025,7 +2025,7 @@ function handleGetEventRegistrations(payload) {
         phone: r[7],
         checkinStatus: r[8] || 'PENDING',
         checkinTime: r[9] || '',
-        regType: r[10] || 'PRE_REGISTERED',
+        regType: isWalkIn ? 'WALKIN' : (r[10] || 'PRE_REGISTERED'),
         rowIndex: i + 1
       });
     }
