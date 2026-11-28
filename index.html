@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-  <title>Training Center TWP - ระบบบริหารคำขอจัดอบรมและประเมินผล v1.22.49</title>
+  <title>Training Center TWP - ระบบบริหารคำขอจัดอบรมและประเมินผล v1.22.50</title>
   <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
   <!-- Google Fonts: Sarabun -->
@@ -313,10 +313,10 @@
       </div>
       <div class="flex items-center space-x-2 sm:space-x-3 text-xs">
         <!-- Release Notes Button on Landing -->
-        <button type="button" onclick="openWhatsNewModal()" class="bg-amber-400/20 hover:bg-amber-400/30 text-amber-200 px-3 py-1.5 rounded-full border border-amber-300/40 backdrop-blur-sm font-bold flex items-center space-x-1.5 transition cursor-pointer" title="ดูรายละเอียดการอัปเดตระบบ v1.22.49">
+        <button type="button" onclick="openWhatsNewModal()" class="bg-amber-400/20 hover:bg-amber-400/30 text-amber-200 px-3 py-1.5 rounded-full border border-amber-300/40 backdrop-blur-sm font-bold flex items-center space-x-1.5 transition cursor-pointer" title="ดูรายละเอียดการอัปเดตระบบ v1.22.50">
           <i class="fa-solid fa-bullhorn text-amber-300 animate-pulse"></i>
           <span class="hidden sm:inline">อัปเดต</span>
-          <span class="bg-emerald-500 text-white font-mono font-black text-[10px] px-1.5 py-0.2 rounded-full">v1.22.49</span>
+          <span class="bg-emerald-500 text-white font-mono font-black text-[10px] px-1.5 py-0.2 rounded-full">v1.22.50</span>
         </button>
         <!-- Team Login Gate Button / User Badge -->
         <button id="landingLoginBtn" type="button" onclick="openSwitchProfileModal()" class="bg-gradient-to-r from-amber-400 to-amber-500 hover:from-amber-300 hover:to-amber-400 text-slate-950 font-black px-3.5 py-1.5 rounded-xl shadow-md transition cursor-pointer flex items-center space-x-1.5">
@@ -359,7 +359,7 @@
       </div>
 
       <!-- Mandatory Login Gate Alert Card on Landing Page (if not logged in) -->
-      <!-- Comprehensive Enterprise Team Sign-In Card (v1.22.49) -->
+      <!-- Comprehensive Enterprise Team Sign-In Card (v1.22.50) -->
       <!-- Enterprise Sign-In Card (Standard Secure Authentication) -->
       <div id="landingLoginSection" class="max-w-xl mx-auto w-full bg-white text-slate-800 rounded-3xl p-6 sm:p-7 shadow-2xl border-2 border-amber-400/80 space-y-4 text-left relative z-20 animate-fadeIn">
         
@@ -506,7 +506,7 @@
     <!-- Bottom Footer on Landing Page -->
     <div class="max-w-7xl mx-auto w-full px-6 py-4 flex flex-col sm:flex-row items-center justify-between text-xs text-blue-200 border-t border-white/10 relative z-10 gap-2">
       <div>&copy; 2026 Training Center TWP - บริษัท ไทยวัฒนาพานิช จำกัด. All rights reserved.</div>
-      <div class="font-mono text-[11px] bg-white/10 px-3 py-1 rounded-full border border-white/15">EMS Enterprise Platform v1.22.49 (Live Apps Script Engine)</div>
+      <div class="font-mono text-[11px] bg-white/10 px-3 py-1 rounded-full border border-white/15">EMS Enterprise Platform v1.22.50 (Live Apps Script Engine)</div>
     </div>
 
   </div>
@@ -531,7 +531,7 @@
           <div class="sidebar-brand-text truncate">
             <div class="flex items-center space-x-1.5">
               <span class="font-extrabold text-sm tracking-wide text-white">TWP</span>
-              <span onclick="openVersionReleaseModal()" class="bg-blue-400/20 hover:bg-blue-400/30 text-blue-200 text-[9px] font-mono px-1.5 py-0.5 rounded-full border border-blue-300/30 cursor-pointer transition flex items-center gap-1" title="คลิกดูรายละเอียดเวอร์ชัน v1.22.49"><i class="fa-solid fa-sparkles text-amber-300 text-[8px]"></i><span class="bg-emerald-500 text-white font-black px-2 py-0.5 rounded-full">v1.22.49</span></span>
+              <span onclick="openVersionReleaseModal()" class="bg-blue-400/20 hover:bg-blue-400/30 text-blue-200 text-[9px] font-mono px-1.5 py-0.5 rounded-full border border-blue-300/30 cursor-pointer transition flex items-center gap-1" title="คลิกดูรายละเอียดเวอร์ชัน v1.22.50"><i class="fa-solid fa-sparkles text-amber-300 text-[8px]"></i><span class="bg-emerald-500 text-white font-black px-2 py-0.5 rounded-full">v1.22.50</span></span>
             </div>
             <p class="text-[10px] text-blue-200 truncate">ระบบบริหารงานฝึกอบรม</p>
           </div>
@@ -627,12 +627,20 @@
             <span class="sidebar-text truncate">5. แท่น QR & ประเมิน</span>
           </button>
 
-          <button onclick="switchTab('registration')" id="sideBtn-registration" class="sidebar-nav-btn w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-xs font-medium text-blue-100 cursor-pointer" title="6. ลงทะเบียนหน้างาน & นำเข้า Excel">
+          <button onclick="switchTab('registration')" id="sideBtn-registration" class="sidebar-nav-btn w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-xs font-medium text-blue-100 cursor-pointer" title="6. ลงทะเบียนล่วงหน้า & เช็กชื่อหน้างาน (RSVP 48ชม.)">
             <div class="flex items-center min-w-0">
               <i class="fa-solid fa-id-card-clip sidebar-icon text-amber-300 w-5 text-center mr-3 text-sm"></i>
-              <span class="sidebar-text truncate">6. ลงทะเบียนหน้างาน</span>
+              <span class="sidebar-text truncate">6. ลงทะเบียน & RSVP</span>
             </div>
-            <span id="sideBadgeRegistration" class="sidebar-badge-full bg-amber-500/40 text-amber-200 text-[10px] font-bold px-1.5 py-0.5 rounded-full shrink-0">QR</span>
+            <span id="sideBadgeRegistration" class="sidebar-badge-full bg-purple-500/40 text-purple-200 text-[10px] font-bold px-1.5 py-0.5 rounded-full shrink-0">RSVP</span>
+          </button>
+
+          <button onclick="switchTab('salesImpact')" id="sideBtn-salesImpact" class="sidebar-nav-btn w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-xs font-medium text-blue-100 cursor-pointer" title="7. วิเคราะห์ยอดขาย & เตือนออเดอร์หลุด (Sales Impact & Churn Risk)">
+            <div class="flex items-center min-w-0">
+              <i class="fa-solid fa-chart-line-up sidebar-icon text-emerald-400 w-5 text-center mr-3 text-sm"></i>
+              <span class="sidebar-text truncate">7. วิเคราะห์ยอดขาย & Churn</span>
+            </div>
+            <span id="sideBadgeSalesImpact" class="sidebar-badge-full bg-rose-500/50 text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full shrink-0 animate-pulse">เตือนภัย</span>
           </button>
         </div>
 
@@ -794,7 +802,7 @@
       </button>
     </div>
 
-    <!-- Role-Based Asynchronous Action Inbox Banner (v1.22.49) -->
+    <!-- Role-Based Asynchronous Action Inbox Banner (v1.22.50) -->
     <div id="actionInboxBanner" class="bg-gradient-to-r from-slate-900 via-indigo-950 to-[#08539E] text-white rounded-2xl p-4 sm:p-5 shadow-lg border border-slate-700/60 transition-all mb-4">
       <div class="flex flex-col md:flex-row md:items-center justify-between gap-3 border-b border-white/10 pb-3">
         <div class="flex items-center space-x-3">
@@ -878,7 +886,7 @@
     <!-- ========================================== -->
     <section id="view-dashboard" class="space-y-6">
 
-      <!-- Admin Central Live Pipeline & Team A Requests Monitor (v1.22.49) -->
+      <!-- Admin Central Live Pipeline & Team A Requests Monitor (v1.22.50) -->
       <div id="adminTeamALiveMonitorCard" class="bg-white rounded-3xl border-2 border-emerald-400/80 shadow-md p-5 sm:p-6 space-y-4 animate-fadeIn">
         <div class="flex flex-col sm:flex-row sm:items-center justify-between pb-3 border-b border-slate-100 gap-3">
           <div class="flex items-center space-x-3">
@@ -1470,7 +1478,7 @@
         </button>
       </div>
 
-      <!-- Team A Submitted Requests Tracking Table (v1.22.49 - Top Priority View) -->
+      <!-- Team A Submitted Requests Tracking Table (v1.22.50 - Top Priority View) -->
       <div id="teamAMyRequestsCard" class="bg-white rounded-2xl border-2 border-emerald-500/40 shadow-md p-5 space-y-4 max-w-4xl mx-auto">
         <div class="flex flex-col sm:flex-row sm:items-center justify-between pb-3 border-b border-slate-100 gap-3">
           <div class="flex items-center space-x-3">
@@ -1545,7 +1553,7 @@
           </div>
         </div>
 
-        <!-- Orange Edit Notice Banner for Team A (v1.22.49) -->
+        <!-- Orange Edit Notice Banner for Team A (v1.22.50) -->
         <div id="teamAEditBanner" class="hidden mb-4 p-3.5 bg-amber-500/15 border border-amber-400/50 rounded-xl flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-amber-900 animate-fadeIn">
           <div class="flex items-center space-x-2.5 text-xs">
             <i class="fa-solid fa-pen-to-square text-amber-600 text-sm"></i>
@@ -1951,8 +1959,8 @@
     <!-- ========================================== -->
     <section id="view-exec" class="hidden space-y-6">
 
-      <!-- Executive Annual Incident & Obstacle Ledger Widget (v1.22.49) -->
-      <!-- Executive Post-Approval Revision & Unlock Queue (v1.22.49) -->
+      <!-- Executive Annual Incident & Obstacle Ledger Widget (v1.22.50) -->
+      <!-- Executive Post-Approval Revision & Unlock Queue (v1.22.50) -->
       <div id="execRevisionQueueCard" class="bg-white rounded-3xl p-5 sm:p-6 shadow-sm border-2 border-amber-300/80 space-y-4">
         <div class="flex flex-col sm:flex-row sm:items-center justify-between border-b border-slate-100 pb-3 gap-2">
           <div class="flex items-center space-x-3">
@@ -2132,6 +2140,10 @@
             <select id="regEventSelect" onchange="onRegEventSelected(this.value)" class="bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-xs font-bold text-slate-800 focus:bg-white focus:ring-2 focus:ring-amber-500 focus:outline-none max-w-full sm:max-w-xs md:max-w-md">
               <!-- Rendered dynamically -->
             </select>
+            <button type="button" onclick="switchTab('salesImpact')" class="px-3 py-2 bg-gradient-to-r from-rose-600 to-rose-700 hover:from-rose-700 text-white rounded-xl text-xs font-bold transition flex items-center gap-1.5 shadow-xs cursor-pointer shrink-0" title="เปิดแดชบอร์ดวิเคราะห์ยอดขายและประเมินออเดอร์หลุด">
+              <i class="fa-solid fa-chart-line-up text-amber-300"></i>
+              <span>วิเคราะห์ยอดขาย & Churn</span>
+            </button>
             <button type="button" onclick="syncActiveOnsiteToTeamB()" class="px-3 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-xl text-xs font-bold transition flex items-center gap-1.5 shadow-xs cursor-pointer shrink-0" title="ส่งยอดผู้เช็กชื่อจริงเข้าสู่ทีม B ทันที">
               <i class="fa-solid fa-share-from-square text-amber-300"></i>
               <span>ส่งยอดเข้าทีม B</span>
@@ -2180,7 +2192,7 @@
 
       
       <!-- ============================================================================ -->
-      <!-- AI ATTENDANCE & NO-SHOW SCREENING / VENUE SIZING FORECASTER (v1.22.49)        -->
+      <!-- AI ATTENDANCE & NO-SHOW SCREENING / VENUE SIZING FORECASTER (v1.22.50)        -->
       <!-- ============================================================================ -->
       <div id="aiNoShowScreeningCard" class="bg-gradient-to-br from-slate-900 via-indigo-950 to-slate-900 text-white rounded-3xl p-5 sm:p-6 shadow-xl border border-indigo-500/30 space-y-5">
         
@@ -3203,6 +3215,248 @@
       </div>
     </section>
 
+  
+    <!-- ========================================================================= -->
+    <!-- TAB 7: SALES OPPORTUNITY & CHURN THREAT INTELLIGENCE (v1.22.50)           -->
+    <!-- ========================================================================= -->
+    <section id="view-salesImpact" class="hidden space-y-6">
+
+      <!-- HEADER BANNER -->
+      <div class="bg-gradient-to-r from-slate-900 via-indigo-950 to-slate-900 text-white rounded-3xl p-6 sm:p-7 shadow-xl border border-indigo-500/30 space-y-4">
+        <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
+          <div class="flex items-center space-x-3.5">
+            <div class="w-12 h-12 rounded-2xl bg-gradient-to-br from-amber-400 to-amber-600 text-slate-950 flex items-center justify-center font-black text-2xl shadow-md border border-amber-300">
+              <i class="fa-solid fa-chart-pie"></i>
+            </div>
+            <div>
+              <div class="flex items-center gap-2">
+                <span class="text-[10px] bg-rose-500 text-white font-black px-2 py-0.5 rounded-full uppercase tracking-wider animate-pulse">Early Warning Engine</span>
+                <span class="text-xs text-indigo-200 font-mono">Customer Intelligence & Churn Shield</span>
+              </div>
+              <h2 class="text-lg sm:text-xl font-black text-white mt-0.5">
+                ระบบวิเคราะห์ผลกระทบยอดขาย & สัญญาณเตือนออเดอร์หลุด
+              </h2>
+              <p class="text-xs text-slate-300 mt-1">
+                วิเคราะห์พฤติกรรมการเข้าร่วมอบรมเปรียบเทียบกับสถานะลูกค้า เพื่อเตือนภัยออเดอร์หาย และชี้เป้าหมายปิดการขายใหม่
+              </p>
+            </div>
+          </div>
+
+          <!-- Event Selector & Actions -->
+          <div class="flex flex-wrap items-center gap-2">
+            <select id="salesImpactEventSelect" onchange="onSalesImpactEventSelected(this.value)" class="bg-slate-800 text-white border border-indigo-400/40 rounded-xl px-3 py-2 text-xs font-bold focus:ring-2 focus:ring-amber-500 outline-none">
+              <!-- Rendered dynamically -->
+            </select>
+
+            <button type="button" onclick="exportSalesActionPlanToExcel()" class="btn-touch px-3.5 py-2 bg-gradient-to-r from-emerald-600 to-teal-700 hover:from-emerald-700 hover:to-teal-800 text-white rounded-xl text-xs font-bold shadow-md transition flex items-center gap-1.5 cursor-pointer">
+              <i class="fa-solid fa-file-excel text-amber-300"></i>
+              <span>ส่งออกใบงานฝ่ายขาย (Excel UTF-8)</span>
+            </button>
+
+            <button type="button" onclick="renderSalesImpactDashboard()" class="p-2 bg-white/10 hover:bg-white/20 text-white rounded-xl text-xs transition cursor-pointer" title="รีเฟรชวิเคราะห์">
+              <i class="fa-solid fa-arrows-rotate"></i>
+            </button>
+          </div>
+        </div>
+
+        <!-- 4 SUMMARY KPI CARDS -->
+        <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 pt-2 text-center text-xs">
+          <!-- Total -->
+          <div class="bg-white/5 p-3.5 rounded-2xl border border-white/10">
+            <span class="text-[11px] text-slate-400 block">โรงเรียนในโครงการ</span>
+            <span id="kpiSalesTotalSchools" class="text-2xl font-black text-white font-mono mt-0.5 block">0</span>
+            <span class="text-[10px] text-slate-400">โรงเรียน (รายชื่อทั้งหมด)</span>
+          </div>
+
+          <!-- Churn Risk Watchlist (High Priority) -->
+          <div class="bg-rose-950/40 p-3.5 rounded-2xl border-2 border-rose-500/60 shadow-lg">
+            <span class="text-[11px] text-rose-300 block font-bold flex items-center justify-center gap-1">
+              <i class="fa-solid fa-triangle-exclamation text-rose-400"></i> เสี่ยงออเดอร์หลุด (No-Show)
+            </span>
+            <span id="kpiSalesChurnRiskSchools" class="text-2xl font-black text-rose-400 font-mono mt-0.5 block">0</span>
+            <span id="kpiSalesChurnValueAtRisk" class="text-[10px] text-rose-300 font-bold">มูลค่าเสี่ยง ~0 บาท</span>
+          </div>
+
+          <!-- Hot Prospects -->
+          <div class="bg-emerald-950/40 p-3.5 rounded-2xl border-2 border-emerald-500/60 shadow-lg">
+            <span class="text-[11px] text-emerald-300 block font-bold flex items-center justify-center gap-1">
+              <i class="fa-solid fa-fire text-amber-400"></i> โอกาสปิดดีลใหม่ (มาจริง)
+            </span>
+            <span id="kpiSalesHotProspects" class="text-2xl font-black text-emerald-400 font-mono mt-0.5 block">0</span>
+            <span class="text-[10px] text-emerald-300 font-bold">กลุ่มเป้าหมายความสนใจสูง</span>
+          </div>
+
+          <!-- High Loyalty -->
+          <div class="bg-blue-950/40 p-3.5 rounded-2xl border border-blue-400/40">
+            <span class="text-[11px] text-blue-300 block font-bold flex items-center justify-center gap-1">
+              <i class="fa-solid fa-star text-amber-300"></i> ลูกค้าเดิมสัมพันธ์แน่น
+            </span>
+            <span id="kpiSalesHighLoyalty" class="text-2xl font-black text-blue-300 font-mono mt-0.5 block">0</span>
+            <span class="text-[10px] text-blue-200">มาอบรมจริง / เสนอขยายสื่อ</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- 4-QUADRANT ACCOUNT MATRIX VISUAL CARDS -->
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+
+        <!-- QUADRANT 2: CHURN RISK EARLY WARNING (เตือนภัยออเดอร์หาย) -->
+        <div class="bg-white rounded-3xl p-5 sm:p-6 border-2 border-rose-400 shadow-md space-y-4 flex flex-col justify-between">
+          <div class="space-y-3">
+            <div class="flex items-center justify-between pb-3 border-b border-rose-100">
+              <div class="flex items-center gap-2.5">
+                <div class="w-9 h-9 rounded-2xl bg-rose-100 text-rose-700 flex items-center justify-center text-lg font-black">
+                  <i class="fa-solid fa-shield-virus"></i>
+                </div>
+                <div>
+                  <div class="flex items-center gap-1.5">
+                    <span class="text-[10px] bg-rose-600 text-white font-black px-2 py-0.5 rounded-full uppercase">Quadrant 2</span>
+                    <span class="text-xs font-black text-rose-900">⚠️ สัญญาณเตือนออเดอร์หาย (Churn Risk Watchlist)</span>
+                  </div>
+                  <p class="text-[11px] text-slate-500 mt-0.5">โรงเรียนคู่ค้าเดิมที่ใช้สินค้าเราอยู่แล้ว แต่ครู "ลงชื่อแล้วไม่มาอบรม"</p>
+                </div>
+              </div>
+              <span id="badgeCountChurn" class="text-xs font-mono font-bold bg-rose-100 text-rose-800 px-2.5 py-0.5 rounded-full">0 โรงเรียน</span>
+            </div>
+
+            <!-- Strategic Advice Box -->
+            <div class="bg-rose-50/80 border border-rose-200 rounded-2xl p-3 text-xs text-rose-950 space-y-1">
+              <div class="font-bold flex items-center gap-1.5 text-rose-900">
+                <i class="fa-solid fa-lightbulb text-amber-500"></i>
+                <span>แผนปฏิบัติการสำหรับฝ่ายขาย (Sales Action Directive):</span>
+              </div>
+              <p class="text-[11px] text-rose-900 leading-relaxed">
+                <strong>ห้ามโทรตำหนิเรื่องไม่มาอบรม</strong> แต่ให้ใช้กลยุทธ์บริการเชิงรุก: <em>"ทราบว่าอาจารย์ติดภารกิจ จึงนำคู่มือสรุปพิเศษและสื่อดิจิทัลมามอบให้ถึงโรงเรียน"</em> เพื่อเข้าไปเช็คสภาพการใช้หนังสือในห้องเรียน และล็อกคำสั่งซื้อปีการศึกษาหน้าก่อนคู่แข่งแย่งตลาด!
+              </p>
+            </div>
+
+            <!-- Churn Schools Table -->
+            <div class="max-h-72 overflow-y-auto custom-scrollbar border border-slate-200 rounded-2xl">
+              <table class="w-full text-left text-xs text-slate-700">
+                <thead class="bg-rose-100/50 text-[10px] text-rose-900 uppercase sticky top-0 font-bold">
+                  <tr>
+                    <th class="py-2.5 px-3">โรงเรียนคู่ค้า</th>
+                    <th class="py-2.5 px-2 text-center">ครูที่ No-Show</th>
+                    <th class="py-2.5 px-2 text-center">มูลค่าเสี่ยง</th>
+                    <th class="py-2.5 px-3">คำแนะนำฝ่ายขาย</th>
+                  </tr>
+                </thead>
+                <tbody id="tbodyChurnWatchlist" class="divide-y divide-slate-100 text-[11px]">
+                  <!-- Populated dynamically -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <div class="pt-2 border-t border-slate-100 flex items-center justify-between text-xs">
+            <span class="text-slate-400 text-[11px]">กลุ่มเฝ้าระวังสูงสุดเทอม 1/2569</span>
+            <button type="button" onclick="exportSalesActionPlanToExcel('CHURN')" class="px-3 py-1.5 bg-rose-600 hover:bg-rose-700 text-white rounded-xl font-bold shadow-xs transition flex items-center gap-1 cursor-pointer">
+              <i class="fa-solid fa-download text-xs"></i>
+              <span>โหลดเฉพาะรายชื่อกลุ่มเสี่ยง (Excel)</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- QUADRANT 3: HOT PROSPECT OPPORTUNITY (โอกาสปิดยอดขายใหม่) -->
+        <div class="bg-white rounded-3xl p-5 sm:p-6 border-2 border-emerald-400 shadow-md space-y-4 flex flex-col justify-between">
+          <div class="space-y-3">
+            <div class="flex items-center justify-between pb-3 border-b border-emerald-100">
+              <div class="flex items-center gap-2.5">
+                <div class="w-9 h-9 rounded-2xl bg-emerald-100 text-emerald-700 flex items-center justify-center text-lg font-black">
+                  <i class="fa-solid fa-crosshairs"></i>
+                </div>
+                <div>
+                  <div class="flex items-center gap-1.5">
+                    <span class="text-[10px] bg-emerald-600 text-white font-black px-2 py-0.5 rounded-full uppercase">Quadrant 3</span>
+                    <span class="text-xs font-black text-emerald-950">🎯 โอกาสปิดยอดขายใหม่ (Hot Prospects มาจริง)</span>
+                  </div>
+                  <p class="text-[11px] text-slate-500 mt-0.5">โรงเรียนใหม่ที่ยังไม่เคยใช้สินค้า แต่ครูเดินทางมาอบรมในวันหยุด</p>
+                </div>
+              </div>
+              <span id="badgeCountProspects" class="text-xs font-mono font-bold bg-emerald-100 text-emerald-800 px-2.5 py-0.5 rounded-full">0 โรงเรียน</span>
+            </div>
+
+            <!-- Strategic Advice Box -->
+            <div class="bg-emerald-50/80 border border-emerald-200 rounded-2xl p-3 text-xs text-emerald-950 space-y-1">
+              <div class="font-bold flex items-center gap-1.5 text-emerald-900">
+                <i class="fa-solid fa-bolt text-amber-500"></i>
+                <span>แผนปฏิบัติการสำหรับฝ่ายขาย (Sales Action Directive):</span>
+              </div>
+              <p class="text-[11px] text-emerald-900 leading-relaxed">
+                ครูที่สละเวลามาวันเสาร์มีแรงจูงใจสูงมาก (High Intent) <strong>ทีมขายต้องจัดส่งชุดตัวอย่าง Beyond the Textbook พร้อมใบเสนอราคาโปรโมชั่นพิเศษ</strong> เข้าพบหัวหน้าหมวดภาษาอังกฤษภายใน 7 วัน โอกาสปิดการขายสูงถึง 70-80%!
+              </p>
+            </div>
+
+            <!-- Prospect Schools Table -->
+            <div class="max-h-72 overflow-y-auto custom-scrollbar border border-slate-200 rounded-2xl">
+              <table class="w-full text-left text-xs text-slate-700">
+                <thead class="bg-emerald-100/50 text-[10px] text-emerald-900 uppercase sticky top-0 font-bold">
+                  <tr>
+                    <th class="py-2.5 px-3">โรงเรียนเป้าหมาย</th>
+                    <th class="py-2.5 px-2 text-center">ครูที่มาอบรม</th>
+                    <th class="py-2.5 px-3">ผู้เข้าร่วมจริง</th>
+                    <th class="py-2.5 px-3">แผนติดตามฝ่ายขาย</th>
+                  </tr>
+                </thead>
+                <tbody id="tbodyHotProspects" class="divide-y divide-slate-100 text-[11px]">
+                  <!-- Populated dynamically -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <div class="pt-2 border-t border-slate-100 flex items-center justify-between text-xs">
+            <span class="text-slate-400 text-[11px]">กลุ่มเป้าหมายความพร้อมสูง</span>
+            <button type="button" onclick="exportSalesActionPlanToExcel('PROSPECT')" class="px-3 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl font-bold shadow-xs transition flex items-center gap-1 cursor-pointer">
+              <i class="fa-solid fa-download text-xs"></i>
+              <span>โหลดรายชื่อกลุ่มโอกาสใหม่ (Excel)</span>
+            </button>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- ROW 2: QUADRANT 1 (HIGH LOYALTY) & QUADRANT 4 (COLD LEADS) -->
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+
+        <!-- QUADRANT 1: HIGH LOYALTY & RETENTION -->
+        <div class="bg-white rounded-3xl p-5 border border-slate-200 shadow-sm space-y-3">
+          <div class="flex items-center justify-between pb-2 border-b border-slate-100">
+            <div class="flex items-center gap-2">
+              <span class="text-[10px] bg-blue-600 text-white font-black px-2 py-0.5 rounded-full uppercase">Quadrant 1</span>
+              <h3 class="text-xs font-black text-slate-900">⭐ ขยายยอดขาย & ลูกค้าสัมพันธ์ (High Loyalty)</h3>
+            </div>
+            <span id="badgeCountLoyal" class="text-xs font-mono font-bold bg-blue-100 text-blue-800 px-2 py-0.5 rounded-full">0 โรงเรียน</span>
+          </div>
+          <p class="text-[11px] text-slate-500">โรงเรียนลูกค้าเดิมที่ใช้สินค้าและครูมาร่วมงาน: <strong>แผนงาน:</strong> เชิญเป็นโรงเรียนแกนนำ (Model School) และนำเสนอแบบฝึกหัดเสริม/สื่อดิจิทัลเพิ่มเติม</p>
+          <div class="max-h-48 overflow-y-auto custom-scrollbar border border-slate-200 rounded-xl">
+            <tbody id="tbodyHighLoyalty" class="divide-y divide-slate-100 text-[11px] w-full table">
+              <!-- Populated dynamically -->
+            </tbody>
+          </div>
+        </div>
+
+        <!-- QUADRANT 4: COLD LEADS -->
+        <div class="bg-white rounded-3xl p-5 border border-slate-200 shadow-sm space-y-3">
+          <div class="flex items-center justify-between pb-2 border-b border-slate-100">
+            <div class="flex items-center gap-2">
+              <span class="text-[10px] bg-slate-600 text-white font-black px-2 py-0.5 rounded-full uppercase">Quadrant 4</span>
+              <h3 class="text-xs font-black text-slate-900">❄️ กลุ่มรอดูท่าที (Cold Leads ที่ No-Show)</h3>
+            </div>
+            <span id="badgeCountCold" class="text-xs font-mono font-bold bg-slate-100 text-slate-700 px-2 py-0.5 rounded-full">0 โรงเรียน</span>
+          </div>
+          <p class="text-[11px] text-slate-500">โรงเรียนใหม่ที่ลงชื่อแต่ไม่มา: <strong>แผนงาน:</strong> ส่งอีเมลสรุปเนื้อหาและคลิปบรรยายอัตโนมัติ (Automated Email Nurturing) ยังไม่ต้องใช้แรงพนักงานขายเข้าพบ</p>
+          <div class="max-h-48 overflow-y-auto custom-scrollbar border border-slate-200 rounded-xl">
+            <tbody id="tbodyColdLeads" class="divide-y divide-slate-100 text-[11px] w-full table">
+              <!-- Populated dynamically -->
+            </tbody>
+          </div>
+        </div>
+
+      </div>
+
+    </section>
+
   </main>
 
       <!-- Main Footer -->
@@ -3646,10 +3900,10 @@
               <i class="fa-solid fa-code-compare text-amber-300"></i>
               <span class="text-xs font-bold uppercase tracking-wider">รายละเอียดการปรับปรุงเวอร์ชัน (Version Release Notes)</span>
             </div>
-            <span class="text-[10px] bg-amber-400 text-slate-950 font-black px-2 py-0.5 rounded-full">v1.22.49 Live</span>
+            <span class="text-[10px] bg-amber-400 text-slate-950 font-black px-2 py-0.5 rounded-full">v1.22.50 Live</span>
           </div>
           <p class="text-xs text-blue-100 leading-relaxed">
-            <strong>v1.22.49 (Enterprise Compact QR & Drive Standard):</strong> ปรับขนาดหน้าต่างแท่นแสดงผล QR Code ให้กะทัดรัด (Compact Responsive) รองรับโน้ตบุ๊กทุกขนาดหน้าจอ, เพิ่มปุ่มปิดหน้าต่างทั้งบน ล่าง และกด Esc/คลิกนอกกรอบเพื่อปิดได้ทันที, พร้อมกำหนด Google Drive โฟลเดอร์กลางสำหรับเก็บเอกสารโครงการ
+            <strong>v1.22.50 (Enterprise Compact QR & Drive Standard):</strong> ปรับขนาดหน้าต่างแท่นแสดงผล QR Code ให้กะทัดรัด (Compact Responsive) รองรับโน้ตบุ๊กทุกขนาดหน้าจอ, เพิ่มปุ่มปิดหน้าต่างทั้งบน ล่าง และกด Esc/คลิกนอกกรอบเพื่อปิดได้ทันที, พร้อมกำหนด Google Drive โฟลเดอร์กลางสำหรับเก็บเอกสารโครงการ
           </p>
           <div class="pt-1 flex items-center justify-between text-[11px] text-blue-200">
             <span>ฐานข้อมูล: Google Sheets + Local Offline Cache</span>
@@ -4637,7 +4891,7 @@
   <!-- MODAL: SWITCH OPERATOR PROFILE (เลือกโปรไฟล์) -->
   <!-- ========================================== -->
   <!-- ======================================================== -->
-  <!-- MODAL: ENTERPRISE TEAM AUTHENTICATION & LOGIN HUB (v1.22.49) -->
+  <!-- MODAL: ENTERPRISE TEAM AUTHENTICATION & LOGIN HUB (v1.22.50) -->
   <!-- ======================================================== -->
   <div id="switchProfileModal" class="hidden fixed inset-0 z-[9990] bg-slate-900/80 backdrop-blur-md flex items-center justify-center p-4 animate-fadeIn">
     <div class="bg-white rounded-3xl max-w-lg w-full overflow-hidden shadow-2xl border border-slate-200 space-y-0">
@@ -4651,7 +4905,7 @@
           <div>
             <div class="flex items-center space-x-2">
               <span class="text-xs bg-emerald-500/30 text-emerald-300 border border-emerald-400/40 px-2 py-0.5 rounded-full font-mono font-bold">Authentication Gate</span>
-              <span class="text-xs text-slate-300">v1.22.49</span>
+              <span class="text-xs text-slate-300">v1.22.50</span>
             </div>
             <h3 class="font-black text-white text-base sm:text-lg mt-0.5">เข้าสู่ระบบประจำทีม (Team Sign-In)</h3>
           </div>
@@ -5526,7 +5780,7 @@ function normalizeAndDeduplicateAttendees(rawList, eventId) {
 
     // Landing Page Navigation & Authentication Gate
     
-    // ------------------- ENTERPRISE TEAM AUTHENTICATION HANDLERS (v1.22.49) -------------------
+    // ------------------- ENTERPRISE TEAM AUTHENTICATION HANDLERS (v1.22.50) -------------------
     
     
 
@@ -6678,7 +6932,7 @@ function normalizeAndDeduplicateAttendees(rawList, eventId) {
         if (epInput) epInput.value = AppState.gasEndpoint;
       }
 
-      // 1.1 Check Release Notes Popup (v1.22.49) and Mandatory Login Gate on System Enter
+      // 1.1 Check Release Notes Popup (v1.22.50) and Mandatory Login Gate on System Enter
       checkAndShowWhatsNewOnEnter();
       
       // 2. Fetch latest cloud updates asynchronously in background without blocking UI
@@ -7477,7 +7731,7 @@ function normalizeAndDeduplicateAttendees(rawList, eventId) {
               </div>
             </div>
 
-            <!-- 6-Pillar Operation Readiness Checklist (v1.22.49) -->
+            <!-- 6-Pillar Operation Readiness Checklist (v1.22.50) -->
             <div class="bg-white/95 backdrop-blur-sm rounded-2xl p-4 border border-indigo-100 shadow-xs space-y-3">
               <div class="flex items-center justify-between">
                 <span class="text-xs font-bold text-slate-800 flex items-center gap-1.5">
@@ -7517,7 +7771,7 @@ function normalizeAndDeduplicateAttendees(rawList, eventId) {
               </div>
             </div>
 
-            <!-- On-Site Incident & Obstacle Logger Collapsible (v1.22.49) -->
+            <!-- On-Site Incident & Obstacle Logger Collapsible (v1.22.50) -->
             <div class="bg-amber-50/60 rounded-2xl p-4 border border-amber-200/80 space-y-3">
               <div class="flex items-center justify-between cursor-pointer" onclick="document.getElementById('incBox_${req.eventId}').classList.toggle('hidden')">
                 <div class="flex items-center space-x-2 text-xs font-bold text-amber-900">
@@ -8778,7 +9032,7 @@ function normalizeAndDeduplicateAttendees(rawList, eventId) {
         toggleSidebar(false);
       }
 
-      ['dashboard', 'annualPlan', 'teamA', 'teamB', 'exec', 'evaluation', 'teamBExpenses', 'fy2569Tu', 'registration'].forEach(id => {
+      ['dashboard', 'annualPlan', 'teamA', 'teamB', 'exec', 'evaluation', 'teamBExpenses', 'fy2569Tu', 'registration', 'salesImpact'].forEach(id => {
         const view = document.getElementById('view-' + id);
         if (view) {
           if (id === tabId) view.classList.remove('hidden');
@@ -8818,7 +9072,8 @@ function normalizeAndDeduplicateAttendees(rawList, eventId) {
         renderFy2569TuView();
       } else if (tabId === 'registration') {
         renderRegistrationView();
-      } else if (tabId === 'dashboard') {
+      } else if (tabId === 'salesImpact') { renderSalesImpactDashboard(); }
+      if (tabId === 'dashboard') {
         renderDashboard();
       }
     }
@@ -10135,7 +10390,7 @@ function normalizeAndDeduplicateAttendees(rawList, eventId) {
         '</style></head><body>' +
         '<div class="header">' +
         '<div><h2 style="margin:0; color:#08539E; font-size:16pt;">บริษัท ไทยวัฒนาพานิช จำกัด (TWP)</h2><div style="font-size:11pt; color:#475569;">รายงานสรุปการกระทบยอดงบประมาณจัดอบรมกับยอดขายจริง ประจำปี 2569</div></div>' +
-        '<div style="text-align:right; font-size:9pt; color:#64748b;">ออกโดยระบบ EMS Enterprise v1.22.49<br>วันที่พิมพ์: ' + new Date().toLocaleDateString('th-TH') + '</div>' +
+        '<div style="text-align:right; font-size:9pt; color:#64748b;">ออกโดยระบบ EMS Enterprise v1.22.50<br>วันที่พิมพ์: ' + new Date().toLocaleDateString('th-TH') + '</div>' +
         '</div>' +
         '<div style="display:flex; justify-content:space-between; background:#f8fafc; padding:8px 12px; border-radius:6px; margin-bottom:10px; font-size:10pt;">' +
         '<div>โครงการทั้งหมด: <strong>' + projects.length + ' โครงการ</strong></div>' +
@@ -13462,7 +13717,7 @@ function renderA4EvalReportHtmlClient(d) {
           <div style="border-top:1px dashed #cbd5e1; margin-top:10px; padding-top:4px; display:flex; justify-content:space-between; align-items:center; font-size:8.5pt; color:#64748b;">
             <div>
               <i class="fa-solid fa-file-contract mr-1 text-[#08539E]"></i>
-              รายงานประเมินและวิเคราะห์ต้นทุนการจัดอบรม A4 • ออกโดย TWP Training Enterprise Platform (v1.22.49)
+              รายงานประเมินและวิเคราะห์ต้นทุนการจัดอบรม A4 • ออกโดย TWP Training Enterprise Platform (v1.22.50)
             </div>
             <div>
               หน้า 1/1 • ${d.eventId}
@@ -13641,7 +13896,7 @@ function renderA4EvalReportHtmlClient(d) {
           <div style="border-top:1px dashed #cbd5e1; margin-top:14px; padding-top:6px; display:flex; justify-content:space-between; align-items:center; font-size:8.5pt; color:#64748b;">
             <div>
               <i class="fa-solid fa-shield-halved" style="color:#08539E; margin-right:4px;"></i>
-              เอกสารอิเล็กทรอนิกส์มาตรฐาน A4 ออกโดย TWP Training Enterprise Management System (EMS v1.22.49)
+              เอกสารอิเล็กทรอนิกส์มาตรฐาน A4 ออกโดย TWP Training Enterprise Management System (EMS v1.22.50)
             </div>
             <div>
               รหัสอ้างอิง: <span style="font-family:monospace; font-weight:700; color:#0f172a;">${d.eventId}</span> | หน้า 1/1
@@ -13814,7 +14069,7 @@ function renderA4EvalReportHtmlClient(d) {
           </table>
 
           <div style="margin-top:14px; padding-top:4px; border-top:1px solid #e2e8f0; font-size:8.5pt; color:#94a3b8; text-align:center;">
-            เอกสารฉบับนี้สร้างโดยระบบ Training Center TWP (EMS Enterprise Platform v1.22.49) • ใช้สำหรับติดตามและควบคุมผลการปฏิบัติงานภายใน (PPC Standard)
+            เอกสารฉบับนี้สร้างโดยระบบ Training Center TWP (EMS Enterprise Platform v1.22.50) • ใช้สำหรับติดตามและควบคุมผลการปฏิบัติงานภายใน (PPC Standard)
           </div>
         </div>
       `;
@@ -14096,7 +14351,7 @@ function renderA4EvalReportHtmlClient(d) {
       }
       if (opInput) opInput.value = currentProfile.name;
 
-      // Update Sidebar Profile (v1.17.0 / v1.22.49)
+      // Update Sidebar Profile (v1.17.0 / v1.22.50)
       const sideName = document.getElementById('sideUserName');
       const sideRole = document.getElementById('sideUserRole');
       const sideAvatar = document.getElementById('sideUserAvatar');
@@ -14766,6 +15021,359 @@ function renderA4EvalReportHtmlClient(d) {
       });
     }
 
+    
+    // =========================================================================
+    // SALES OPPORTUNITY & CHURN THREAT INTELLIGENCE CONTROLLER (v1.22.50)
+    // =========================================================================
+
+    let currentSalesImpactEventId = 'EVT-20261116-5111';
+
+    // List of known existing key partner schools for TWP English curriculum
+    const KNOWN_EXISTING_PARTNER_SCHOOLS = [
+      'สารวิทยา', 'โรงเรียนสารวิทยา',
+      'หอวัง', 'โรงเรียนหอวัง',
+      'มัธยมวัดหนองแขม', 'โรงเรียนมัธยมวัดหนองแขม',
+      'พูลเจริญวิทยาคม', 'โรงเรียนพูลเจริญวิทยาคม',
+      'Wat Khien Khet School', 'Wat Khian Khet School',
+      'Pathum Thani Nanthamuni Bamrung School',
+      'สาธิตมหาวิทยาลัยรามคำแหง', 'โรงเรียนสาธิตมหาวิทยาลัยรามคำแหง (ฝ่ายมัธยม)',
+      'แอ๊ดเวนตีสเอกมัย', 'โรงเรียนแอ๊ดเวนตีสเอกมัย',
+      'โคราชพิทยาคม', 'โรงเรียนโคราชพิทยาคม',
+      'ฤทธิยะวรรณาลัย', 'โรงเรียนฤทธิยะวรรณาลัย',
+      'เตรียมอุดมศึกษาพัฒนาการ', 'โรงเรียนเตรียมอุดมศึกษาพัฒนาการ'
+    ];
+
+    function isExistingPartnerSchool(schoolName) {
+      if (!schoolName) return false;
+      const s = String(schoolName).trim().toLowerCase();
+      return KNOWN_EXISTING_PARTNER_SCHOOLS.some(k => s.includes(k.toLowerCase()) || k.toLowerCase().includes(s));
+    }
+
+    function onSalesImpactEventSelected(eventId) {
+      currentSalesImpactEventId = eventId;
+      renderSalesImpactDashboard();
+    }
+
+    function openLandingRsvpModal() {
+      const eid = currentLandingRegEventId || currentRegEventId || 'EVT-20261116-5111';
+      const rsvpUrl = getRegisterFullUrl(eid, 'rsvp');
+      window.open(rsvpUrl, '_blank');
+    }
+
+    function renderSalesImpactDashboard() {
+      const eventId = currentSalesImpactEventId || currentRegEventId || 'EVT-20261116-5111';
+
+      // 1. Populate Event Select Dropdown
+      const sel = document.getElementById('salesImpactEventSelect');
+      if (sel) {
+        const events = (AppState.requests && AppState.requests.length > 0) ? AppState.requests : [{ eventId: 'EVT-20261116-5111', courseTopic: 'Beyond the Textbook' }];
+        sel.innerHTML = events.map(e => `<option value="${e.eventId}" ${e.eventId === eventId ? 'selected' : ''}>${e.eventId} - ${(e.courseTopic || 'หลักสูตรอบรม').slice(0, 35)}</option>`).join('');
+      }
+
+      // 2. Load Attendee Data
+      let attendeesList = [];
+      const cacheKey = 'twp_onsite_attendees_' + eventId;
+      const cached = localStorage.getItem(cacheKey);
+      if (cached) {
+        try { attendeesList = JSON.parse(cached); } catch(e) {}
+      }
+      if ((!attendeesList || attendeesList.length === 0) && eventId === 'EVT-20261116-5111' && typeof TWP_OFFICIAL_ROSTER_5111 !== 'undefined') {
+        attendeesList = JSON.parse(JSON.stringify(TWP_OFFICIAL_ROSTER_5111));
+      }
+
+      // 3. Aggregate Data by School
+      const schoolMap = new Map();
+      attendeesList.forEach(a => {
+        const sName = String(a.school || a.schoolName || 'ไม่ระบุโรงเรียน').trim();
+        if (!schoolMap.has(sName)) {
+          schoolMap.set(sName, {
+            schoolName: sName,
+            province: a.province || '',
+            attendees: [],
+            totalCount: 0,
+            attendedCount: 0,
+            noShowCount: 0,
+            isPartner: isExistingPartnerSchool(sName)
+          });
+        }
+        const item = schoolMap.get(sName);
+        item.attendees.push(a);
+        item.totalCount++;
+        if (a.checkinStatus === 'CHECKED_IN') item.attendedCount++;
+        else item.noShowCount++;
+      });
+
+      const schoolList = Array.from(schoolMap.values());
+      const totalSchools = schoolList.length;
+
+      // Group into 4 Quadrants
+      const q2ChurnRisk = []; // Existing + No-Show
+      const q3HotProspects = []; // Prospect + Attended
+      const q1HighLoyalty = []; // Existing + Attended
+      const q4ColdLeads = []; // Prospect + No-Show
+
+      schoolList.forEach(s => {
+        if (s.isPartner) {
+          if (s.attendedCount > 0) q1HighLoyalty.push(s);
+          else q2ChurnRisk.push(s);
+        } else {
+          if (s.attendedCount > 0) q3HotProspects.push(s);
+          else q4ColdLeads.push(s);
+        }
+      });
+
+      // Calculate Value at Risk (~45,000 - 65,000 THB average order per secondary school)
+      const estimatedValueAtRisk = q2ChurnRisk.length * 52000;
+
+      // 4. Update KPI Cards
+      const elTotal = document.getElementById('kpiSalesTotalSchools');
+      const elChurn = document.getElementById('kpiSalesChurnRiskSchools');
+      const elChurnVal = document.getElementById('kpiSalesChurnValueAtRisk');
+      const elHot = document.getElementById('kpiSalesHotProspects');
+      const elLoyal = document.getElementById('kpiSalesHighLoyalty');
+
+      if (elTotal) elTotal.innerText = totalSchools;
+      if (elChurn) elChurn.innerText = q2ChurnRisk.length;
+      if (elChurnVal) elChurnVal.innerText = 'มูลค่าเสี่ยง ~' + estimatedValueAtRisk.toLocaleString() + ' บาท';
+      if (elHot) elHot.innerText = q3HotProspects.length;
+      if (elLoyal) elLoyal.innerText = q1HighLoyalty.length;
+
+      // Badges
+      if (document.getElementById('badgeCountChurn')) document.getElementById('badgeCountChurn').innerText = q2ChurnRisk.length + ' โรงเรียน';
+      if (document.getElementById('badgeCountProspects')) document.getElementById('badgeCountProspects').innerText = q3HotProspects.length + ' โรงเรียน';
+      if (document.getElementById('badgeCountLoyal')) document.getElementById('badgeCountLoyal').innerText = q1HighLoyalty.length + ' โรงเรียน';
+      if (document.getElementById('badgeCountCold')) document.getElementById('badgeCountCold').innerText = q4ColdLeads.length + ' โรงเรียน';
+
+      // 5. Populate Tables
+      // Q2: Churn Watchlist
+      const tbodyChurn = document.getElementById('tbodyChurnWatchlist');
+      if (tbodyChurn) {
+        if (q2ChurnRisk.length === 0) {
+          tbodyChurn.innerHTML = '<tr><td colspan="4" class="py-4 text-center text-slate-400">ไม่พบโรงเรียนในกลุ่มเสี่ยงออเดอร์หลุด</td></tr>';
+        } else {
+          tbodyChurn.innerHTML = q2ChurnRisk.map((s, idx) => {
+            const teachers = s.attendees.map(a => a.nameTh || a.nameEn).filter(Boolean).join(', ');
+            const phones = s.attendees.map(a => a.phone).filter(Boolean).map(maskPhone).join(', ');
+            return `
+              <tr class="hover:bg-rose-50/50 transition">
+                <td class="py-2.5 px-3">
+                  <span class="font-bold text-slate-900 block">${s.schoolName}</span>
+                  <span class="text-[10px] text-slate-400">ครูผู้ลงชื่อ: ${teachers.slice(0, 45) || '-'}</span>
+                </td>
+                <td class="py-2.5 px-2 text-center font-bold font-mono text-rose-600">${s.noShowCount} ท่าน</td>
+                <td class="py-2.5 px-2 text-center font-mono text-slate-700">~52,000 บ.</td>
+                <td class="py-2.5 px-3">
+                  <span class="text-[10px] bg-rose-100 text-rose-800 font-bold px-2 py-0.5 rounded-full block text-center mb-0.5">เข้าพบด่วน 48 ชม.</span>
+                  <span class="text-[10px] text-slate-400 block truncate">${phones ? '📞 ' + phones : 'มอบคู่มือสรุปพิเศษ'}</span>
+                </td>
+              </tr>
+            `;
+          }).join('');
+        }
+      }
+
+      // Q3: Hot Prospects
+      const tbodyHot = document.getElementById('tbodyHotProspects');
+      if (tbodyHot) {
+        if (q3HotProspects.length === 0) {
+          tbodyHot.innerHTML = '<tr><td colspan="4" class="py-4 text-center text-slate-400">ไม่พบข้อมูลในกลุ่มนี้</td></tr>';
+        } else {
+          tbodyHot.innerHTML = q3HotProspects.map((s, idx) => {
+            const teachers = s.attendees.filter(a => a.checkinStatus === 'CHECKED_IN').map(a => a.nameTh || a.nameEn).join(', ');
+            return `
+              <tr class="hover:bg-emerald-50/50 transition">
+                <td class="py-2.5 px-3">
+                  <span class="font-bold text-slate-900 block">${s.schoolName}</span>
+                  <span class="text-[10px] text-slate-400">ครูที่มา: ${teachers.slice(0, 45) || '-'}</span>
+                </td>
+                <td class="py-2.5 px-2 text-center font-bold font-mono text-emerald-600">${s.attendedCount} ท่าน</td>
+                <td class="py-2.5 px-3 text-slate-600 text-[10px] truncate">${teachers || '-'}</td>
+                <td class="py-2.5 px-3">
+                  <span class="text-[10px] bg-emerald-100 text-emerald-800 font-bold px-2 py-0.5 rounded-full inline-block">ส่งเล่มตัวอย่าง + เสนอราคา</span>
+                </td>
+              </tr>
+            `;
+          }).join('');
+        }
+      }
+
+      // Q1: High Loyalty
+      const tbodyLoyal = document.getElementById('tbodyHighLoyalty');
+      if (tbodyLoyal) {
+        tbodyLoyal.innerHTML = q1HighLoyalty.map(s => `
+          <tr class="hover:bg-blue-50/50 transition">
+            <td class="py-2 px-3 font-bold text-slate-800">${s.schoolName}</td>
+            <td class="py-2 px-2 text-center text-blue-700 font-bold font-mono">${s.attendedCount} ท่าน</td>
+            <td class="py-2 px-3 text-right"><span class="text-[10px] bg-blue-100 text-blue-800 px-2 py-0.5 rounded-full font-bold">เชิญเป็น Model School</span></td>
+          </tr>
+        `).join('') || '<tr><td class="py-3 text-center text-slate-400">ไม่มีข้อมูล</td></tr>';
+      }
+
+      // Q4: Cold Leads
+      const tbodyCold = document.getElementById('tbodyColdLeads');
+      if (tbodyCold) {
+        tbodyCold.innerHTML = q4ColdLeads.slice(0, 10).map(s => `
+          <tr class="hover:bg-slate-50 transition">
+            <td class="py-2 px-3 text-slate-700 font-medium">${s.schoolName}</td>
+            <td class="py-2 px-2 text-center text-slate-400 font-mono">${s.noShowCount} ท่าน</td>
+            <td class="py-2 px-3 text-right"><span class="text-[10px] bg-slate-100 text-slate-600 px-2 py-0.5 rounded-full font-medium">ส่งอีเมลสรุปอัตโนมัติ</span></td>
+          </tr>
+        `).join('') || '<tr><td class="py-3 text-center text-slate-400">ไม่มีข้อมูล</td></tr>';
+      }
+    }
+
+    // ------------------- EXCEL EXPORT ENGINE (UTF-8 BOM) -------------------
+
+    function exportSalesActionPlanToExcel(filterQuadrant) {
+      const eventId = currentSalesImpactEventId || currentRegEventId || 'EVT-20261116-5111';
+      let attendeesList = [];
+      const cacheKey = 'twp_onsite_attendees_' + eventId;
+      const cached = localStorage.getItem(cacheKey);
+      if (cached) {
+        try { attendeesList = JSON.parse(cached); } catch(e) {}
+      }
+      if ((!attendeesList || attendeesList.length === 0) && eventId === 'EVT-20261116-5111' && typeof TWP_OFFICIAL_ROSTER_5111 !== 'undefined') {
+        attendeesList = JSON.parse(JSON.stringify(TWP_OFFICIAL_ROSTER_5111));
+      }
+
+      const schoolMap = new Map();
+      attendeesList.forEach(a => {
+        const sName = String(a.school || a.schoolName || 'ไม่ระบุโรงเรียน').trim();
+        if (!schoolMap.has(sName)) {
+          schoolMap.set(sName, {
+            schoolName: sName,
+            province: a.province || '',
+            attendees: [],
+            totalCount: 0,
+            attendedCount: 0,
+            noShowCount: 0,
+            isPartner: isExistingPartnerSchool(sName)
+          });
+        }
+        const item = schoolMap.get(sName);
+        item.attendees.push(a);
+        item.totalCount++;
+        if (a.checkinStatus === 'CHECKED_IN') item.attendedCount++;
+        else item.noShowCount++;
+      });
+
+      let rows = Array.from(schoolMap.values()).map(s => {
+        let quad = '';
+        let quadName = '';
+        let riskLevel = '';
+        let estimatedVal = 0;
+        let actionDirective = '';
+
+        if (s.isPartner) {
+          if (s.attendedCount > 0) {
+            quad = 'Q1';
+            quadName = 'ลูกค้าเดิมที่มาอบรม (High Loyalty)';
+            riskLevel = 'ต่ำ (รักษาความสัมพันธ์)';
+            estimatedVal = s.totalCount * 50000;
+            actionDirective = 'เชิญเป็นโรงเรียนแกนนำ (Model School) และนำเสนอแบบฝึกหัดเสริม/สื่อดิจิทัล';
+          } else {
+            quad = 'Q2';
+            quadName = '⚠️ เสี่ยงออเดอร์หาย (Churn Threat)';
+            riskLevel = 'เฝ้าระวังสูงสุด (High Risk)';
+            estimatedVal = s.totalCount * 52000;
+            actionDirective = 'ฝ่ายขายเข้าพบใน 48 ชม. มอบคู่มือสรุปพิเศษ เช็คการใช้สื่อ และล็อกออเดอร์ปี 2569 ด่วน';
+          }
+        } else {
+          if (s.attendedCount > 0) {
+            quad = 'Q3';
+            quadName = '🎯 โอกาสปิดการขายใหม่ (Hot Prospect)';
+            riskLevel = 'โอกาสสูง (High Opportunity)';
+            estimatedVal = 65000;
+            actionDirective = 'จัดส่งชุดตัวอย่าง Beyond the Textbook พร้อมใบเสนอราคาโปรโมชั่นถึงหัวหน้าหมวดใน 7 วัน';
+          } else {
+            quad = 'Q4';
+            quadName = 'กลุ่มทั่วไปที่ No-Show (Cold Lead)';
+            riskLevel = 'ต่ำ (ยังไม่ต้องเข้าพบ)';
+            estimatedVal = 0;
+            actionDirective = 'ส่งอีเมลสรุปเนื้อหาและคลิปบรรยายอัตโนมัติ ยังไม่ต้องใช้แรงพนักงานขายเข้าพบ';
+          }
+        }
+
+        const teacherNames = s.attendees.map(a => a.nameTh || a.nameEn).filter(Boolean).join('; ');
+        const phones = s.attendees.map(a => a.phone).filter(Boolean).join('; ');
+        const emails = s.attendees.map(a => a.email).filter(Boolean).join('; ');
+
+        return {
+          schoolName: s.schoolName,
+          province: s.province,
+          customerType: s.isPartner ? 'ลูกค้าปัจจุบัน (Existing Partner)' : 'กลุ่มเป้าหมายใหม่ (Prospect)',
+          attendanceStatus: s.attendedCount > 0 ? `มาอบรมจริง (${s.attendedCount}/${s.totalCount})` : `ไม่มาอบรม No-Show (${s.noShowCount}/${s.totalCount})`,
+          quadrant: quad,
+          quadrantName: quadName,
+          riskLevel: riskLevel,
+          estimatedVal: estimatedVal,
+          teachers: teacherNames,
+          phones: phones,
+          emails: emails,
+          actionDirective: actionDirective
+        };
+      });
+
+      if (filterQuadrant === 'CHURN') {
+        rows = rows.filter(r => r.quadrant === 'Q2');
+      } else if (filterQuadrant === 'PROSPECT') {
+        rows = rows.filter(r => r.quadrant === 'Q3');
+      }
+
+      // Sort by quadrant priority: Q2 first, then Q3, then Q1, then Q4
+      const pMap = { Q2: 1, Q3: 2, Q1: 3, Q4: 4 };
+      rows.sort((a, b) => (pMap[a.quadrant] || 99) - (pMap[b.quadrant] || 99));
+
+      const headers = [
+        'ลำดับ',
+        'โรงเรียน',
+        'จังหวัด',
+        'สถานะลูกค้า',
+        'ผลการอบรม',
+        'มิติ (Quadrant)',
+        'ชื่อกลุ่มวิเคราะห์',
+        'ระดับความเสี่ยง/โอกาส',
+        'มูลค่าประเมิน (บาท)',
+        'รายชื่อครูที่ลงทะเบียน',
+        'เบอร์โทรติดต่อ',
+        'อีเมล',
+        'แผนปฏิบัติการฝ่ายขาย (Sales Action Directive)'
+      ];
+
+      const csvRows = [headers.join(',')];
+      rows.forEach((r, idx) => {
+        const line = [
+          idx + 1,
+          `"${(r.schoolName || '').replace(/"/g, '""')}"`,
+          `"${(r.province || '').replace(/"/g, '""')}"`,
+          `"${(r.customerType || '').replace(/"/g, '""')}"`,
+          `"${(r.attendanceStatus || '').replace(/"/g, '""')}"`,
+          `"${r.quadrant}"`,
+          `"${(r.quadrantName || '').replace(/"/g, '""')}"`,
+          `"${(r.riskLevel || '').replace(/"/g, '""')}"`,
+          r.estimatedVal,
+          `"${(r.teachers || '').replace(/"/g, '""')}"`,
+          `"${(r.phones || '').replace(/"/g, '""')}"`,
+          `"${(r.emails || '').replace(/"/g, '""')}"`,
+          `"${(r.actionDirective || '').replace(/"/g, '""')}"`
+        ];
+        csvRows.push(line.join(','));
+      });
+
+      // UTF-8 BOM (﻿) ensures Thai renders with 100% accuracy in MS Excel
+      const blob = new Blob(['\uFEFF' + csvRows.join('\r\n')], { type: 'text/csv;charset=utf-8;' });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.setAttribute('href', url);
+      link.setAttribute('download', `TWP_Sales_Action_Plan_${eventId}_${filterQuadrant || 'ALL'}.csv`);
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      URL.revokeObjectURL(url);
+      showAlert('ส่งออกใบงานฝ่ายขาย (Excel UTF-8) เรียบร้อยแล้ว พร้อมนำไปมอบหมายงานได้ทันที', 'success');
+    }
+
+
     // ------------------- NOTIFICATION ALERT -------------------
 
     function showAlert(msg, type = 'info') {
@@ -15090,7 +15698,7 @@ function renderA4EvalReportHtmlClient(d) {
 
 
     // ========================================================
-    // ONSITE REGISTRATION & CHECK-IN MODULE (v1.22.49)
+    // ONSITE REGISTRATION & CHECK-IN MODULE (v1.22.50)
     // ========================================================
     let currentRegEventId = null;
     
@@ -15690,7 +16298,7 @@ function renderA4EvalReportHtmlClient(d) {
     }
     
     // ============================================================================
-    // AI ATTENDANCE & NO-SHOW SCREENING / VENUE SIZING FORECASTER (v1.22.49)
+    // AI ATTENDANCE & NO-SHOW SCREENING / VENUE SIZING FORECASTER (v1.22.50)
     // ============================================================================
     function toggleSchoolReliabilityList() {
       const container = document.getElementById('containerSchoolReliabilityList');
@@ -16938,7 +17546,7 @@ function updateRegKpis() {
           <div>
             <div class="flex items-center space-x-2">
               <h3 class="font-bold text-slate-900 text-lg">ประวัติและการปรับปรุงระบบเวอร์ชัน (Release Notes)</h3>
-              <span class="bg-blue-100 text-[#08539E] text-xs font-bold font-mono px-2 py-0.5 rounded-full">v1.22.49 Current</span>
+              <span class="bg-blue-100 text-[#08539E] text-xs font-bold font-mono px-2 py-0.5 rounded-full">v1.22.50 Current</span>
             </div>
             <p class="text-xs text-slate-500">บันทึกประวัติการปรับปรุงสถาปัตยกรรมและฟังก์ชันการทำงานอย่างละเอียด</p>
           </div>
@@ -16951,11 +17559,11 @@ function updateRegKpis() {
       <!-- Release Timeline List -->
       <div class="space-y-4">
         
-        <!-- v1.22.49 (Current Major Release) -->
+        <!-- v1.22.50 (Current Major Release) -->
         <div class="p-5 bg-gradient-to-br from-emerald-50 via-white to-teal-50/70 border-2 border-emerald-400 rounded-3xl space-y-3 shadow-sm">
           <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-1">
             <div class="flex items-center space-x-2">
-              <span class="bg-emerald-600 text-white text-xs font-black px-2.5 py-0.5 rounded-lg font-mono">v1.22.49</span>
+              <span class="bg-emerald-600 text-white text-xs font-black px-2.5 py-0.5 rounded-lg font-mono">v1.22.50</span>
               <span class="font-bold text-slate-900 text-sm">Annual Principle Plans Cloud Sync & Top Team A Ledger</span>
             </div>
             <span class="text-[11px] text-emerald-700 font-bold font-mono">2026-11-16 &bull; Current Release</span>
@@ -16968,11 +17576,11 @@ function updateRegKpis() {
           </ul>
         </div>
 
-        <!-- v1.22.49 -->
+        <!-- v1.22.50 -->
         <div class="p-5 bg-gradient-to-br from-slate-50 via-white to-slate-100/70 border border-slate-200 rounded-3xl space-y-3 shadow-xs">
           <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-1">
             <div class="flex items-center space-x-2">
-              <span class="bg-slate-700 text-white text-xs font-black px-2.5 py-0.5 rounded-lg font-mono">v1.22.49</span>
+              <span class="bg-slate-700 text-white text-xs font-black px-2.5 py-0.5 rounded-lg font-mono">v1.22.50</span>
               <span class="font-bold text-slate-900 text-sm">Landing Page Login Gate, Release Notes Popup & Attendee Individual Edit/Delete</span>
             </div>
             <span class="text-[11px] text-slate-500 font-bold font-mono">2026-11-14</span>
@@ -16986,11 +17594,11 @@ function updateRegKpis() {
           </ul>
         </div>
 
-        <!-- v1.22.49 (Major Milestone) -->
+        <!-- v1.22.50 (Major Milestone) -->
         <div class="p-5 bg-gradient-to-br from-blue-50 via-white to-indigo-50/70 border-2 border-blue-300 rounded-3xl space-y-3 shadow-xs">
           <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-1">
             <div class="flex items-center space-x-2">
-              <span class="bg-blue-700 text-white text-xs font-black px-2.5 py-0.5 rounded-lg font-mono">v1.22.49</span>
+              <span class="bg-blue-700 text-white text-xs font-black px-2.5 py-0.5 rounded-lg font-mono">v1.22.50</span>
               <span class="font-bold text-slate-900 text-sm">แท่น QR กะทัดรัด (Compact Responsive), มาตรฐานคลังไฟล์ Google Drive & ยกระดับการปิด Modal</span>
             </div>
             <span class="text-[11px] text-blue-700 font-bold font-mono">2026-11-11 &bull; Latest Release</span>
@@ -17003,11 +17611,11 @@ function updateRegKpis() {
           </ul>
         </div>
 
-        <!-- v1.22.49 (Major Milestone) -->
+        <!-- v1.22.50 (Major Milestone) -->
         <div class="p-5 bg-gradient-to-br from-indigo-50/80 via-white to-sky-50/60 border border-slate-200 rounded-3xl space-y-3 shadow-xs">
           <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-1">
             <div class="flex items-center space-x-2">
-              <span class="bg-indigo-600 text-white text-xs font-black px-2.5 py-0.5 rounded-lg font-mono">v1.22.49</span>
+              <span class="bg-indigo-600 text-white text-xs font-black px-2.5 py-0.5 rounded-lg font-mono">v1.22.50</span>
               <span class="font-bold text-slate-900 text-sm">ระบบประเมิน 2 ขั้นตอน (Evaluation-First), รวมศูนย์ QR Code & Smart Expense Engine</span>
             </div>
             <span class="text-[11px] text-slate-400 font-mono">2026-11-11</span>
@@ -17145,7 +17753,7 @@ function updateRegKpis() {
 
 
 
-<!-- Modal: Audit Revision Request (Strict Post-Approval Freeze - v1.22.49) -->
+<!-- Modal: Audit Revision Request (Strict Post-Approval Freeze - v1.22.50) -->
   <div id="auditRevisionModal" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 animate-fadeIn">
     <div class="bg-white rounded-3xl max-w-lg w-full p-6 shadow-2xl border border-slate-200 space-y-4">
       <div class="flex items-center justify-between border-b border-slate-100 pb-3">
@@ -17205,7 +17813,7 @@ function updateRegKpis() {
 
 
 
-  <!-- Modal: What's New Release Notes (v1.22.49) -->
+  <!-- Modal: What's New Release Notes (v1.22.50) -->
   <div id="whatsNewModal" class="hidden fixed inset-0 z-[9999] flex items-center justify-center bg-black/75 backdrop-blur-md p-4 animate-fadeIn">
     <div class="bg-white rounded-3xl max-w-2xl w-full max-h-[90vh] flex flex-col shadow-2xl border border-slate-200 overflow-hidden">
       
@@ -17220,10 +17828,10 @@ function updateRegKpis() {
               <span class="text-xs bg-emerald-500/30 text-emerald-300 border border-emerald-400/40 px-2 py-0.5 rounded-full font-mono font-bold">Release Note</span>
               <span class="text-xs text-slate-300">อัปเดตระบบเวอร์ชัน 1.22.32</span>
             </div>
-            <h2 class="text-lg sm:text-xl font-black text-white mt-1">ประกาศอัปเดตระบบ Training Center TWP v1.22.49</h2>
+            <h2 class="text-lg sm:text-xl font-black text-white mt-1">ประกาศอัปเดตระบบ Training Center TWP v1.22.50</h2>
             <div class="bg-gradient-to-r from-amber-500/20 to-blue-500/20 border border-amber-400/40 rounded-2xl p-4 text-xs space-y-2 mb-3">
               <div class="flex items-center gap-2">
-                <span class="bg-amber-400 text-slate-950 font-black px-2 py-0.5 rounded-full text-[10px]">ใหม่ v1.22.49</span>
+                <span class="bg-amber-400 text-slate-950 font-black px-2 py-0.5 rounded-full text-[10px]">ใหม่ v1.22.50</span>
                 <span class="text-white font-bold">สตูดิโอดิจิทัลลายเซ็น E-Cer & คลังกลาง (Vault) สำหรับทีม B</span>
               </div>
               <ul class="list-disc list-inside text-slate-200 space-y-1 text-[11px] leading-relaxed">
@@ -17245,7 +17853,7 @@ function updateRegKpis() {
       <div class="p-6 overflow-y-auto custom-scrollbar space-y-3.5 text-xs">
         <div class="p-3.5 bg-gradient-to-r from-emerald-50 to-teal-50 border-2 border-emerald-400 rounded-2xl space-y-2 mb-3 shadow-xs">
           <div class="flex items-center space-x-2">
-            <span class="px-2 py-0.5 rounded-full text-[10px] font-black bg-emerald-700 text-white">ไฮไลต์ v1.22.49</span>
+            <span class="px-2 py-0.5 rounded-full text-[10px] font-black bg-emerald-700 text-white">ไฮไลต์ v1.22.50</span>
             <span class="font-bold text-slate-900 text-xs sm:text-sm">ซิงค์โครงการอนุมัติหลักการประจำปี (Annual Plans) ตรงจาก Google Sheets เข้าสู่ระบบแบบอัตโนมัติ</span>
           </div>
           <p class="text-slate-700 leading-relaxed font-medium">
@@ -17255,7 +17863,7 @@ function updateRegKpis() {
           </p>
         </div>
         <p class="text-slate-600 font-medium leading-relaxed">
-          สรุปรายละเอียดการพัฒนาต่อเนื่องของระบบ <strong>Enterprise Governance & Cross-Team Real-time Sync Edition (v1.22.49)</strong>:
+          สรุปรายละเอียดการพัฒนาต่อเนื่องของระบบ <strong>Enterprise Governance & Cross-Team Real-time Sync Edition (v1.22.50)</strong>:
         </p>
 
         <!-- Feature 1 -->
@@ -17350,7 +17958,7 @@ function updateRegKpis() {
 
 
 
-  <!-- Modal: Team Accounts & Member QR Onboarding (v1.22.49) -->
+  <!-- Modal: Team Accounts & Member QR Onboarding (v1.22.50) -->
   <div id="teamAccountsModal" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 animate-fadeIn">
     <div class="bg-white rounded-3xl max-w-2xl w-full max-h-[90vh] flex flex-col shadow-2xl border border-slate-200 overflow-hidden">
       
@@ -17486,7 +18094,7 @@ function updateRegKpis() {
 
 
 
-  <!-- Modal: Edit Individual Attendee (v1.22.49) -->
+  <!-- Modal: Edit Individual Attendee (v1.22.50) -->
   <div id="editAttendeeModal" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 animate-fadeIn">
     <div class="bg-white rounded-3xl max-w-md w-full p-6 shadow-2xl border border-slate-200 space-y-4">
       <div class="flex items-center justify-between border-b border-slate-100 pb-3">
