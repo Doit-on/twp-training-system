@@ -8,7 +8,7 @@
  * ============================================================================
  */
 
-const SYSTEM_VERSION = 'v1.22.45';
+const SYSTEM_VERSION = 'v1.22.46';
 const DEFAULT_ADMIN_PASS = 'admin0000';
 // =============================================================================
 // MULTI-ACCOUNT GOOGLE SHEETS CONNECTIVITY (Cross-Account Shared Editor Access)
@@ -651,6 +651,16 @@ function getInitialData() {
       } catch (e) {
         actualExp = null;
       }
+    }
+
+    const isEvt5111 = (eventId === 'EVT-20261116-5111' || eventId.includes('5111'));
+    let speakerVal = r[16] || '';
+    if (isEvt5111 && (!speakerVal || speakerVal.includes('ประสาน'))) {
+      speakerVal = '黎艳玲 Elaine Li';
+    }
+    let sigVal = r[40] || '';
+    if (isEvt5111 && !sigVal) {
+      sigVal = 'assets/speaker_elaine_li_sig.png';
     }
 
     requests.push({
