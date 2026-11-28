@@ -8,7 +8,7 @@
  * ============================================================================
  */
 
-const SYSTEM_VERSION = 'v1.22.44';
+const SYSTEM_VERSION = 'v1.22.45';
 const DEFAULT_ADMIN_PASS = 'admin0000';
 // =============================================================================
 // MULTI-ACCOUNT GOOGLE SHEETS CONNECTIVITY (Cross-Account Shared Editor Access)
@@ -2080,8 +2080,38 @@ function handleGetEventRegistrations(payload) {
   };
 }
 
+function cleanThaiNameBackend(name) {
+  if (!name) return '';
+  return String(name)
+    .replace(/^(นาย|นางสาว|นาง|ดร\.|อาจารย์|อ\.|ผศ\.|รศ\.|ศ\.|ว่าที่\s*ร\.ต\.|ครู)\s*/i, '')
+    .replace(/\s+/g, '')
+    .trim()
+    .toLowerCase();
+}
+
+function cleanPhoneBackend(ph) {
+  if (!ph) return '';
+  let d = String(ph).replace(/\D/g, '');
+  if (d.length === 9 && !d.startsWith('0')) d = '0' + d;
+  return d;
+}
+
+function cleanEmailBackend(em) {
+  if (!em) return '';
+  return String(em).trim().toLowerCase();
+}
+
 function handleCheckinParticipant(payload) {
-  const { regId, eventId } = payload;
+  const targetRegId = String(payload.regId || '').trim();
+  const eventId = String(payload.eventId || 'EVT-20261116-5111').trim();
+  const nameTh = String(payload.nameTh || payload.name || '').trim();
+  const nameEn = String(payload.nameEn || '').trim();
+  const phone = String(payload.phone || '').trim();
+  const email = String(payload.email || '').trim();
+  const schoolName = String(payload.schoolName || payload.school || '').trim();
+  const checkinStatus = String(payload.checkinStatus || 'CHECKED_IN').toUpperCase();
+  const checkinTime = payload.checkinTime || (checkinStatus === 'CHECKED_IN' ? (new Date().toLocaleTimeString('th-TH', { hour: '2-digit', minute: '2-digit' }) + ' น.') : '');
+
   const ss = getSpreadsheet();
   ensureRequiredSheets(ss);
   const sheet = ss.getSheetByName('Onsite_Registrations');
@@ -2090,44 +2120,90 @@ function handleCheckinParticipant(payload) {
   const data = sheet.getDataRange().getValues();
   const now = new Date().toISOString();
   let found = false;
+  let targetRow = -1;
 
+  const targetCleanName = cleanThaiNameBackend(nameTh);
+  const targetCleanPhone = cleanPhoneBackend(phone);
+  const targetCleanEmail = cleanEmailBackend(email);
+
+  // Match Priority:
+  // 1. Direct regId match
+  // 2. Thai name clean match
+  // 3. Phone digits match (>= 8 digits)
+  // 4. Email match (>= 4 chars)
   for (let i = 1; i < data.length; i++) {
-    if (data[i][0] === regId) {
-      sheet.getRange(i + 1, 9).setValue('CHECKED_IN');
-      sheet.getRange(i + 1, 10).setValue(now);
+    const rowRegId = String(data[i][0] || '').trim();
+    const rowNameTh = cleanThaiNameBackend(data[i][3]);
+    const rowPhone = cleanPhoneBackend(data[i][7]);
+    const rowEmail = cleanEmailBackend(data[i][6]);
+
+    const isMatch = (
+      (targetRegId && rowRegId === targetRegId) ||
+      (targetCleanName && rowNameTh && targetCleanName === rowNameTh) ||
+      (targetCleanPhone && targetCleanPhone.length >= 8 && rowPhone === targetCleanPhone) ||
+      (targetCleanEmail && targetCleanEmail.length >= 4 && rowEmail === targetCleanEmail)
+    );
+
+    if (isMatch) {
+      targetRow = i + 1;
+      sheet.getRange(targetRow, 9).setValue(checkinStatus);
+      sheet.getRange(targetRow, 10).setValue(checkinStatus === 'CHECKED_IN' ? (checkinTime || now) : '');
+      if (phone && (!data[i][7] || String(data[i][7]).length < 5)) sheet.getRange(targetRow, 8).setValue(phone);
+      if (schoolName && !data[i][5]) sheet.getRange(targetRow, 6).setValue(schoolName);
       found = true;
       break;
     }
   }
 
-  if (!found) throw new Error('ไม่พบรหัสผู้ลงทะเบียน: ' + regId);
-  return { success: true, regId: regId, checkinTime: now };
+  // Fallback: If not found in existing rows (e.g. brand new attendee), append row directly!
+  if (!found) {
+    const finalRegId = targetRegId || ('REG-' + Date.now().toString().slice(-6) + '-' + Math.floor(100 + Math.random() * 900));
+    const isWalkin = finalRegId.includes('WALKIN') || (payload.regType === 'WALK_IN' || payload.regType === 'WALKIN');
+    const newRow = [
+      finalRegId,
+      eventId || 'EVT-20261116-5111',
+      now,
+      nameTh || '',
+      nameEn || '',
+      schoolName || '',
+      email || '',
+      phone || '',
+      checkinStatus,
+      checkinStatus === 'CHECKED_IN' ? (checkinTime || now) : '',
+      isWalkin ? 'WALK_IN' : 'PRE_REGISTERED'
+    ];
+    sheet.appendRow(newRow);
+    return { success: true, regId: finalRegId, appended: true, checkinStatus: checkinStatus, checkinTime: checkinTime || now };
+  }
+
+  return { success: true, regId: targetRegId || data[targetRow - 1][0], checkinStatus: checkinStatus, checkinTime: checkinTime || now };
 }
 
 function handleRegisterWalkin(payload) {
-  const { eventId, nameTh, nameEn, schoolName, email, phone } = payload;
+  const { eventId, nameTh, nameEn, schoolName, school, email, phone, checkinStatus, checkinTime } = payload || {};
   const ss = getSpreadsheet();
   ensureRequiredSheets(ss);
   const sheet = ss.getSheetByName('Onsite_Registrations');
   const now = new Date().toISOString();
-  const regId = 'REG-' + Date.now().toString().slice(-6) + '-' + Math.floor(100 + Math.random() * 900);
+  const timeStr = checkinTime || (new Date().toLocaleTimeString('th-TH', { hour: '2-digit', minute: '2-digit' }) + ' น.');
+  const regId = (payload && payload.regId) || ('REG-' + Date.now().toString().slice(-6) + '-' + Math.floor(100 + Math.random() * 900));
 
   const row = [
     regId,
-    eventId || 'GENERAL',
+    eventId || 'EVT-20261116-5111',
     now,
     nameTh || '',
     nameEn || '',
-    schoolName || '',
+    schoolName || school || '',
     email || '',
     phone || '',
-    'CHECKED_IN',
-    now,
+    checkinStatus || 'CHECKED_IN',
+    (checkinStatus === 'PENDING' ? '' : timeStr),
     'WALK_IN'
   ];
 
   sheet.appendRow(row);
-  return { success: true, regId: regId, checkinTime: now, nameTh: nameTh };
+  return { success: true, regId: regId, checkinTime: timeStr, nameTh: nameTh, checkinStatus: checkinStatus || 'CHECKED_IN' };
 }
 
 function handleBatchImportRegistrations(payload) {
@@ -2207,24 +2283,11 @@ function authorizeMail() {
 
 
 function handleCancelCheckin(payload) {
-  const regId = payload ? payload.regId : '';
-  const eventId = payload ? payload.eventId : '';
-  if (!regId) throw new Error('กรุณาระบุ regId ที่ต้องการยกเลิก');
-
-  const ss = getSpreadsheet();
-  ensureRequiredSheets(ss);
-  const sheet = ss.getSheetByName('Onsite_Registrations');
-  if (!sheet) throw new Error('ไม่พบชีต Onsite_Registrations');
-
-  const rows = sheet.getDataRange().getValues();
-  for (let i = 1; i < rows.length; i++) {
-    if (String(rows[i][0]).trim() === String(regId).trim()) {
-      sheet.getRange(i + 1, 9).setValue('PENDING'); // checkinStatus
-      sheet.getRange(i + 1, 10).setValue('');        // checkinTime
-      return { success: true, regId: regId, status: 'PENDING', message: 'ยกเลิกการเช็กชื่อเรียบร้อยแล้ว' };
-    }
-  }
-  return { success: false, message: 'ไม่พบรหัสผู้ลงทะเบียน: ' + regId };
+  const pl = Object.assign({}, payload || {}, {
+    checkinStatus: 'PENDING',
+    checkinTime: ''
+  });
+  return handleCheckinParticipant(pl);
 }
 
 

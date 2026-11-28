@@ -50,7 +50,7 @@
         <button type="button" onclick="loadAttendees(true)" class="p-1 bg-white/10 hover:bg-white/20 active:bg-white/30 rounded-lg text-white text-xs transition" title="รีเฟรชข้อมูลล่าสุด">
           <i id="btnRefreshIcon" class="fa-solid fa-arrows-rotate"></i>
         </button>
-        <span class="text-[10px] bg-white/20 text-blue-100 font-mono font-bold px-2 py-0.5 rounded-full border border-emerald-300/40 bg-emerald-500 text-white font-black px-2.5 py-0.5 shadow-sm">v1.22.44 (ล่าสุด)</span>
+        <span class="text-[10px] bg-white/20 text-blue-100 font-mono font-bold px-2 py-0.5 rounded-full border border-emerald-300/40 bg-emerald-500 text-white font-black px-2.5 py-0.5 shadow-sm">v1.22.45 (ล่าสุด)</span>
       </div>
     </div>
   </header>
@@ -349,7 +349,7 @@
   <!-- FOOTER -->
   <footer class="bg-white border-t border-slate-200 py-3 text-center text-slate-400 text-xs">
     <p>สำนักพิมพ์ไทยวัฒนาพานิช จำกัด • Thai Watana Panich Publishing House</p>
-    <p class="text-[10px] text-slate-400 mt-0.5">ระบบเช็กชื่อผู้เข้าอบรมมาตรฐานสากล (TWP Enterprise Onsite Check-in v1.22.44)</p>
+    <p class="text-[10px] text-slate-400 mt-0.5">ระบบเช็กชื่อผู้เข้าอบรมมาตรฐานสากล (TWP Enterprise Onsite Check-in v1.22.45)</p>
   </footer>
 
   <!-- SCRIPT LOGIC -->
@@ -452,9 +452,24 @@
              a.isWalkIn === true;
     }
 
-    function safePhoneClean(p) { return String(p || '').replace(/[^0-9]/g, ''); }
+    function safePhoneClean(p) {
+      if (!p) return '';
+      let d = String(p).replace(/\D/g, '');
+      if (d.length === 9 && !d.startsWith('0')) d = '0' + d;
+      return d;
+    }
+
     function safeEmailClean(e) { return String(e || '').toLowerCase().trim(); }
     function safeStrClean(s) { return String(s || '').trim(); }
+
+    function safeThaiNameClean(s) {
+      if (!s) return '';
+      return String(s)
+        .replace(/^(นาย|นางสาว|นาง|ดร\.|อาจารย์|อ\.|ผศ\.|รศ\.|ศ\.|ว่าที่\s*ร\.ต\.|ครู)\s*/i, '')
+        .replace(/\s+/g, '')
+        .trim()
+        .toLowerCase();
+    }
 
     function normalizeAndDeduplicateAttendees(rawList, eventId) {
       if (!Array.isArray(rawList) || rawList.length === 0) {
@@ -471,10 +486,12 @@
           if (a && a.checkinStatus === 'CHECKED_IN') {
             const kPhone = safePhoneClean(a.phone);
             const kEmail = safeEmailClean(a.email);
-            const kName = safeStrClean(a.nameTh || a.nameEn).toLowerCase();
+            const kName = safeThaiNameClean(a.nameTh || a.nameEn);
+            const kRegId = String(a.regId || '').trim();
             if (kPhone) checkinMap.set(kPhone, a.checkinTime || '');
             if (kEmail) checkinMap.set(kEmail, a.checkinTime || '');
             if (kName) checkinMap.set(kName, a.checkinTime || '');
+            if (kRegId) checkinMap.set(kRegId, a.checkinTime || '');
           }
         });
 
@@ -484,11 +501,12 @@
           att.fileRowIndex = idx + 1;
           const kPhone = safePhoneClean(att.phone);
           const kEmail = safeEmailClean(att.email);
-          const kName = safeStrClean(att.nameTh).toLowerCase();
+          const kName = safeThaiNameClean(att.nameTh);
+          const kRegId = String(att.regId || '').trim();
 
-          if ((kPhone && checkinMap.has(kPhone)) || (kEmail && checkinMap.has(kEmail)) || (kName && checkinMap.has(kName))) {
+          if ((kRegId && checkinMap.has(kRegId)) || (kPhone && checkinMap.has(kPhone)) || (kEmail && checkinMap.has(kEmail)) || (kName && checkinMap.has(kName))) {
             att.checkinStatus = 'CHECKED_IN';
-            att.checkinTime = checkinMap.get(kPhone) || checkinMap.get(kEmail) || checkinMap.get(kName) || '';
+            att.checkinTime = checkinMap.get(kRegId) || checkinMap.get(kPhone) || checkinMap.get(kEmail) || checkinMap.get(kName) || '';
           }
           return att;
         });
@@ -498,11 +516,13 @@
         walkins.forEach(w => {
           const wPhone = safePhoneClean(w.phone);
           const wEmail = safeEmailClean(w.email);
+          const wName = safeThaiNameClean(w.nameTh || w.nameEn);
           const wId = String(w.regId || ('REG-WALKIN-' + (wPhone || wEmail || safeStrClean(w.nameTh) || Math.random())));
           const alreadyExists = cleanList.some(c => 
             c.regId === wId ||
             (wPhone && safePhoneClean(c.phone) && safePhoneClean(c.phone) === wPhone) ||
-            (wEmail && safeEmailClean(c.email) && safeEmailClean(c.email) === wEmail)
+            (wEmail && safeEmailClean(c.email) && safeEmailClean(c.email) === wEmail) ||
+            (wName && safeThaiNameClean(c.nameTh) && safeThaiNameClean(c.nameTh) === wName)
           );
           if (!alreadyExists) {
             cleanList.push({
@@ -593,7 +613,38 @@
           }
 
           if (serverList.length > 0) {
-            attendees = normalizeAndDeduplicateAttendees(serverList, currentEvent.eventId);
+            // MERGE: Preserve local checked-in attendees even if server is slightly behind
+            const localCheckedIn = (attendees || []).filter(a => a.checkinStatus === 'CHECKED_IN');
+            const mergedList = serverList.map(s => {
+              const sPhone = safePhoneClean(s.phone);
+              const sEmail = safeEmailClean(s.email);
+              const sName = safeThaiNameClean(s.nameTh || s.nameEn);
+              const sId = String(s.regId || '').trim();
+              const localMatch = localCheckedIn.find(l => 
+                (sId && l.regId && sId === l.regId) ||
+                (sPhone && safePhoneClean(l.phone) === sPhone) ||
+                (sEmail && safeEmailClean(l.email) === sEmail) ||
+                (sName && safeThaiNameClean(l.nameTh || l.nameEn) === sName)
+              );
+              if (localMatch && s.checkinStatus !== 'CHECKED_IN') {
+                return { ...s, checkinStatus: 'CHECKED_IN', checkinTime: localMatch.checkinTime || s.checkinTime };
+              }
+              return s;
+            });
+
+            // Also keep any local walkins that are not yet reflected on server
+            localCheckedIn.filter(isWalkInAttendee).forEach(lw => {
+              const existsOnServer = mergedList.some(s => 
+                s.regId === lw.regId || 
+                (safePhoneClean(s.phone) && safePhoneClean(s.phone) === safePhoneClean(lw.phone)) ||
+                (safeThaiNameClean(s.nameTh) && safeThaiNameClean(s.nameTh) === safeThaiNameClean(lw.nameTh))
+              );
+              if (!existsOnServer) {
+                mergedList.push(lw);
+              }
+            });
+
+            attendees = normalizeAndDeduplicateAttendees(mergedList, currentEvent.eventId);
             localStorage.setItem(localStoreKey, JSON.stringify(attendees));
           }
 
@@ -916,7 +967,13 @@
           action: 'CHECKIN_PARTICIPANT',
           payload: {
             regId: att.regId,
-            eventId: currentEvent.eventId,
+            nameTh: att.nameTh || '',
+            nameEn: att.nameEn || '',
+            schoolName: att.school || att.schoolName || '',
+            email: att.email || '',
+            phone: att.phone || '',
+            eventId: currentEvent.eventId || 'EVT-20261116-5111',
+            checkinStatus: 'CHECKED_IN',
             checkinTime: nowStr
           }
         })
@@ -974,7 +1031,12 @@
           action: 'CANCEL_CHECKIN',
           payload: {
             regId: att.regId,
-            eventId: currentEvent.eventId
+            nameTh: att.nameTh || '',
+            phone: att.phone || '',
+            email: att.email || '',
+            eventId: currentEvent.eventId || 'EVT-20261116-5111',
+            checkinStatus: 'PENDING',
+            checkinTime: ''
           }
         })
       })
@@ -1048,10 +1110,11 @@
 
       const newWalkin = {
         regId: 'REG-WALKIN-' + Date.now().toString().slice(-6),
-        eventId: currentEvent.eventId,
+        eventId: currentEvent.eventId || 'EVT-20261116-5111',
         nameTh: nameTh,
         nameEn: nameEn,
         school: school,
+        schoolName: school,
         email: email,
         phone: phone,
         checkinStatus: 'CHECKED_IN',
@@ -1190,7 +1253,7 @@
 </script>
 
 
-  <!-- Modal: Edit Individual Attendee (v1.22.44) -->
+  <!-- Modal: Edit Individual Attendee (v1.22.45) -->
   <div id="editAttendeeModal" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 animate-fadeIn">
     <div class="bg-white rounded-3xl max-w-md w-full p-6 shadow-2xl border border-slate-200 space-y-4">
       <div class="flex items-center justify-between border-b border-slate-100 pb-3">
