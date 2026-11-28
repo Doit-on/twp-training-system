@@ -29,6 +29,44 @@
       border-radius: 9999px;
     }
   </style>
+
+  <!-- WEB AUDIO API CHIME & AUDIO UNLOCKER (v1.22.49) -->
+  <script>
+    let audioCtx = null;
+    function unlockAudio() {
+      if (!audioCtx) {
+        const AudioContext = window.AudioContext || window.webkitAudioContext;
+        if (AudioContext) audioCtx = new AudioContext();
+      }
+      if (audioCtx && audioCtx.state === 'suspended') {
+        audioCtx.resume();
+      }
+    }
+    window.addEventListener('touchstart', unlockAudio, { once: true, passive: true });
+    window.addEventListener('click', unlockAudio, { once: true, passive: true });
+
+    function playCheckinSuccessSound() {
+      try {
+        unlockAudio();
+        if (!audioCtx) return;
+        const now = audioCtx.currentTime;
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(587.33, now); // D5
+        osc.frequency.exponentialRampToValueAtTime(880.00, now + 0.12); // A5
+        gain.gain.setValueAtTime(0.35, now);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.5);
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        osc.start(now);
+        osc.stop(now + 0.5);
+      } catch(e) {
+        console.log('Audio chime note:', e);
+      }
+    }
+  </script>
+
 </head>
 <body class="min-h-screen text-slate-800 flex flex-col justify-between">
 
@@ -50,7 +88,7 @@
         <button type="button" onclick="loadAttendees(true)" class="p-1 bg-white/10 hover:bg-white/20 active:bg-white/30 rounded-lg text-white text-xs transition" title="รีเฟรชข้อมูลล่าสุด">
           <i id="btnRefreshIcon" class="fa-solid fa-arrows-rotate"></i>
         </button>
-        <span class="text-[10px] bg-white/20 text-blue-100 font-mono font-bold px-2 py-0.5 rounded-full border border-emerald-300/40 bg-emerald-500 text-white font-black px-2.5 py-0.5 shadow-sm">v1.22.48 (ล่าสุด)</span>
+        <span class="text-[10px] bg-white/20 text-blue-100 font-mono font-bold px-2 py-0.5 rounded-full border border-emerald-300/40 bg-emerald-500 text-white font-black px-2.5 py-0.5 shadow-sm">v1.22.49 (ล่าสุด)</span>
       </div>
     </div>
   </header>
@@ -123,7 +161,109 @@
       </div>
     </div>
 
-    <!-- LIVE SEARCH & CHECK-IN CARD -->
+    
+    <!-- MODE SELECTOR TABS (v1.22.49) -->
+    <div class="grid grid-cols-3 gap-1.5 p-1 bg-slate-200/80 rounded-2xl text-xs font-bold shadow-inner">
+      <button type="button" onclick="switchRegMode('self_checkin')" id="btnTabSelfCheckin" class="py-2.5 px-1.5 rounded-xl transition flex items-center justify-center gap-1.5 bg-[#08539E] text-white shadow-sm cursor-pointer">
+        <i class="fa-solid fa-bolt text-amber-300 text-xs"></i>
+        <span>สแกนเอง (ด่วน)</span>
+      </button>
+      <button type="button" onclick="switchRegMode('search')" id="btnTabSearch" class="py-2.5 px-1.5 rounded-xl transition flex items-center justify-center gap-1.5 text-slate-700 hover:text-slate-900 cursor-pointer">
+        <i class="fa-solid fa-users text-blue-600 text-xs"></i>
+        <span>รายชื่อทั้งหมด</span>
+      </button>
+      <button type="button" onclick="switchRegMode('rsvp')" id="btnTabRsvp" class="py-2.5 px-1.5 rounded-xl transition flex items-center justify-center gap-1.5 text-slate-700 hover:text-slate-900 cursor-pointer">
+        <i class="fa-solid fa-calendar-check text-purple-600 text-xs"></i>
+        <span>ยืนยันสิทธิ์ 48ชม.</span>
+      </button>
+    </div>
+
+    <!-- MODE 1: SELF CHECK-IN VIEW (Frictionless Standee Mobile Flow) -->
+    <div id="sectionSelfCheckin" class="bg-gradient-to-br from-white to-blue-50/50 rounded-3xl p-5 shadow-sm border-2 border-blue-200 space-y-4">
+      <div class="flex items-center justify-between pb-3 border-b border-blue-100">
+        <div class="flex items-center gap-2.5">
+          <div class="w-10 h-10 rounded-2xl bg-amber-400 text-slate-950 flex items-center justify-center text-lg font-black shadow-xs">
+            <i class="fa-solid fa-qrcode"></i>
+          </div>
+          <div>
+            <span class="text-[10px] bg-blue-100 text-[#08539E] font-black px-2 py-0.5 rounded-full uppercase">Fast Self-Checkin</span>
+            <h3 class="text-base font-black text-slate-900 leading-tight mt-0.5">เช็กชื่อเข้าห้องอบรมด้วยตนเอง</h3>
+          </div>
+        </div>
+        <span class="text-[11px] font-bold text-emerald-800 bg-emerald-100 px-2.5 py-1 rounded-full flex items-center gap-1">
+          <i class="fa-solid fa-shield-check"></i> 1 คลิกเสร็จ
+        </span>
+      </div>
+
+      <div class="space-y-2">
+        <label class="block text-xs font-bold text-slate-700">
+          <i class="fa-solid fa-mobile-screen text-blue-600 mr-1"></i>
+          กรอกเบอร์โทรศัพท์ 4 ตัวท้าย (หรือพิมพ์ชื่อ-สกุล):
+        </label>
+        <div class="relative">
+          <input type="text" id="selfCheckinInput" oninput="handleSelfCheckinInput(this.value)" placeholder="เช่น 0812, 1234 หรือชื่อ..." class="w-full text-center text-xl font-bold font-mono tracking-widest py-3 px-4 bg-white border-2 border-blue-300 focus:border-blue-600 focus:ring-4 focus:ring-blue-100 rounded-2xl outline-none shadow-inner text-slate-900 placeholder:text-slate-300 placeholder:text-sm placeholder:font-normal placeholder:tracking-normal transition">
+          <button type="button" onclick="clearSelfCheckinInput()" id="btnClearSelfInput" class="hidden absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 p-2">
+            <i class="fa-solid fa-circle-xmark text-base"></i>
+          </button>
+        </div>
+        <p class="text-[11px] text-slate-500 text-center">พิมพ์เลข 4 ตัวท้ายของเบอร์โทรศัพท์ที่ท่านลงทะเบียนไว้ เพื่อเช็กชื่อทันที</p>
+      </div>
+
+      <!-- Live Matched Card Container -->
+      <div id="selfCheckinMatchResult" class="space-y-3 pt-1">
+        <div class="text-center py-6 text-slate-400 text-xs bg-slate-50 rounded-2xl border border-dashed border-slate-200">
+          <i class="fa-solid fa-keyboard text-2xl text-slate-300 mb-1.5 block"></i>
+          <span>พิมพ์เบอร์โทร 4 ตัวท้ายในช่องด้านบนเพื่อเช็กชื่อทันที</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- MODE 3: PRE-EVENT RSVP CONFIRMATION (48 Hours Prior) -->
+    <div id="sectionRsvp" class="hidden bg-gradient-to-br from-white to-purple-50/50 rounded-3xl p-5 shadow-sm border-2 border-purple-200 space-y-4">
+      <div class="flex items-center justify-between pb-3 border-b border-purple-100">
+        <div class="flex items-center gap-2.5">
+          <div class="w-10 h-10 rounded-2xl bg-purple-600 text-white flex items-center justify-center text-lg font-black shadow-xs">
+            <i class="fa-solid fa-calendar-check text-amber-300"></i>
+          </div>
+          <div>
+            <span class="text-[10px] bg-purple-100 text-purple-800 font-black px-2 py-0.5 rounded-full uppercase">RSVP 48 Hours Window</span>
+            <h3 class="text-base font-black text-slate-900 leading-tight mt-0.5">ยืนยันสิทธิ์เข้าร่วมอบรมล่วงหน้า</h3>
+          </div>
+        </div>
+        <span class="text-[11px] font-bold text-purple-700 bg-purple-100 px-2.5 py-1 rounded-full">
+          ล็อกที่นั่ง 100%
+        </span>
+      </div>
+
+      <div class="bg-purple-100/60 border border-purple-200/80 rounded-2xl p-3 text-xs text-purple-950 space-y-1">
+        <div class="font-bold flex items-center gap-1.5">
+          <i class="fa-solid fa-bell text-amber-600"></i>
+          <span>ทำไมต้องยืนยันสิทธิ์ล่วงหน้า?</span>
+        </div>
+        <p class="text-[11px] text-purple-900 leading-relaxed">
+          เพื่อยืนยันที่นั่งในห้องอบรม การจัดเตรียมเอกสาร สื่อการสอน และอาหารว่างระดับโรงแรม หากยืนยันแล้ว ท่านจะได้รับ <strong>บัตรเข้างานดิจิทัล (Digital E-Pass)</strong> สำหรับสแกนเข้างานทันที
+        </p>
+      </div>
+
+      <div class="space-y-2">
+        <label class="block text-xs font-bold text-slate-700">
+          ค้นหาชื่อ หรือเบอร์โทร เพื่อยืนยันสิทธิ์:
+        </label>
+        <div class="relative">
+          <input type="text" id="rsvpSearchInput" oninput="handleRsvpSearch(this.value)" placeholder="พิมพ์ชื่อ-นามสกุล หรือเบอร์โทร..." class="w-full text-sm font-medium py-3 pl-10 pr-4 bg-white border border-purple-200 focus:border-purple-600 focus:ring-2 focus:ring-purple-100 rounded-2xl outline-none shadow-xs">
+          <i class="fa-solid fa-search absolute left-3.5 top-1/2 -translate-y-1/2 text-purple-400"></i>
+        </div>
+      </div>
+
+      <!-- RSVP Attendee List -->
+      <div id="rsvpAttendeesContainer" class="space-y-2.5 max-h-[380px] overflow-y-auto custom-scrollbar pr-0.5">
+        <!-- Rendered dynamically -->
+      </div>
+    </div>
+
+
+    <!-- LIVE SEARCH & CHECK-IN CARD (MODE 2: SEARCH) -->
+    <div id="sectionSearch" class="hidden
     <div class="bg-white rounded-3xl p-5 shadow-sm border border-slate-200 space-y-4">
       
       <div class="flex items-center justify-between pb-2 border-b border-slate-100">
@@ -349,7 +489,7 @@
   <!-- FOOTER -->
   <footer class="bg-white border-t border-slate-200 py-3 text-center text-slate-400 text-xs">
     <p>สำนักพิมพ์ไทยวัฒนาพานิช จำกัด • Thai Watana Panich Publishing House</p>
-    <p class="text-[10px] text-slate-400 mt-0.5">ระบบเช็กชื่อผู้เข้าอบรมมาตรฐานสากล (TWP Enterprise Onsite Check-in v1.22.48)</p>
+    <p class="text-[10px] text-slate-400 mt-0.5">ระบบเช็กชื่อผู้เข้าอบรมมาตรฐานสากล (TWP Enterprise Onsite Check-in v1.22.49)</p>
   </footer>
 
   <!-- SCRIPT LOGIC -->
@@ -379,6 +519,11 @@
     let pendingConfirmAttendee = null;
 
     window.addEventListener('DOMContentLoaded', () => {
+
+      // Mode URL handling (self_checkin, rsvp, search)
+      const initialMode = urlParams.get('mode') || (urlParams.get('rsvp') ? 'rsvp' : 'self_checkin');
+      switchRegMode(initialMode);
+
       resolveEventMetadata();
       loadAttendees(false);
 
@@ -1253,7 +1398,7 @@
 </script>
 
 
-  <!-- Modal: Edit Individual Attendee (v1.22.48) -->
+  <!-- Modal: Edit Individual Attendee (v1.22.49) -->
   <div id="editAttendeeModal" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 animate-fadeIn">
     <div class="bg-white rounded-3xl max-w-md w-full p-6 shadow-2xl border border-slate-200 space-y-4">
       <div class="flex items-center justify-between border-b border-slate-100 pb-3">
@@ -1304,6 +1449,94 @@
           <span>บันทึกการแก้ไข</span>
         </button>
       </div>
+    </div>
+  </div>
+
+
+  <!-- MODAL: DIGITAL E-TICKET PASS & BADGE (v1.22.49) -->
+  <div id="digitalPassModal" class="hidden fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm flex items-center justify-center p-4 overflow-y-auto">
+    <div class="bg-white rounded-3xl max-w-sm sm:max-w-md w-full p-6 space-y-4 shadow-2xl text-center border-4 border-[#08539E] outline outline-2 outline-[#C5A059] relative my-auto animate-fadeIn">
+      
+      <!-- Close Button -->
+      <button type="button" onclick="closeDigitalPassModal()" class="absolute top-4 right-4 text-slate-400 hover:text-slate-600 p-1 cursor-pointer">
+        <i class="fa-solid fa-xmark text-xl"></i>
+      </button>
+
+      <!-- Badge Header -->
+      <div class="flex items-center justify-center space-x-2.5 pt-2">
+        <div class="w-10 h-10 rounded-xl bg-white p-1 flex items-center justify-center shadow-xs border border-slate-200 shrink-0">
+          <img src="assets/logo.png" alt="TWP Logo" class="max-h-full max-w-full object-contain">
+        </div>
+        <div class="text-left leading-tight">
+          <div class="font-extrabold text-[#08539E] text-xs">สำนักพิมพ์ไทยวัฒนาพานิช จำกัด</div>
+          <div class="text-[9px] text-slate-400 font-serif">OFFICIAL DIGITAL EVENT PASS</div>
+        </div>
+      </div>
+
+      <div class="pt-1">
+        <span class="text-[10px] bg-gradient-to-r from-amber-500 to-amber-600 text-slate-950 font-black px-3 py-1 rounded-full uppercase tracking-wider shadow-xs">
+          ★ บัตรเข้าร่วมการอบรมดิจิทัล ★
+        </span>
+      </div>
+
+      <!-- Attendee Details Box -->
+      <div class="bg-gradient-to-b from-blue-50 to-slate-50 border border-blue-200/80 rounded-2xl p-4 text-left space-y-2">
+        <div>
+          <span class="text-[10px] text-slate-400 block font-semibold">ชื่อ-นามสกุล (ผู้เข้าร่วมอบรม):</span>
+          <div id="passAttendeeNameTh" class="text-lg font-black text-[#08539E] leading-snug">-</div>
+          <div id="passAttendeeNameEn" class="text-xs font-serif italic text-slate-600 mt-0.5">-</div>
+        </div>
+
+        <div>
+          <span class="text-[10px] text-slate-400 block font-semibold">โรงเรียน / สังกัด:</span>
+          <div id="passAttendeeSchool" class="text-xs font-bold text-slate-800 leading-tight">-</div>
+        </div>
+
+        <div class="pt-2 border-t border-blue-200/60 grid grid-cols-2 gap-2 text-[11px]">
+          <div>
+            <span class="text-[10px] text-slate-400 block">สถานะบัตร:</span>
+            <span id="passStatusBadge" class="font-bold text-emerald-700 bg-emerald-100 px-2 py-0.5 rounded-md inline-block">เช็กชื่อเข้างานแล้ว</span>
+          </div>
+          <div>
+            <span class="text-[10px] text-slate-400 block">เวลาบันทึก:</span>
+            <span id="passTimestamp" class="font-mono text-slate-700 font-bold">-</span>
+          </div>
+        </div>
+
+        <div class="pt-1 text-[10px] text-slate-500 border-t border-slate-200/60">
+          <span class="font-semibold text-slate-700">หลักสูตร: </span>
+          <span id="passEventTopic" class="text-slate-600">-</span>
+        </div>
+      </div>
+
+      <!-- QR Code Display Box -->
+      <div class="p-3 bg-white rounded-2xl border-2 border-dashed border-amber-300 inline-block shadow-inner mx-auto">
+        <div id="passQrCodeWrapper" class="flex items-center justify-center min-w-[140px] min-h-[140px]"></div>
+        <p class="text-[9px] text-slate-400 font-mono mt-1" id="passRegIdCode">REG-5111-PASS</p>
+      </div>
+
+      <p class="text-[11px] text-slate-500">
+        💡 บันทึกภาพบัตรนี้เก็บไว้ในโทรศัพท์ เพื่อใช้ยืนยันสิทธิ์หรือทำแบบประเมินรับวุฒิบัตร
+      </p>
+
+      <!-- Action Buttons -->
+      <div class="pt-2 space-y-2">
+        <button type="button" onclick="downloadPassAsImage()" class="btn-touch w-full py-3 bg-gradient-to-r from-emerald-600 to-teal-700 hover:from-emerald-700 hover:to-teal-800 text-white rounded-xl text-xs font-bold shadow-md transition flex items-center justify-center gap-2 cursor-pointer">
+          <i class="fa-solid fa-download text-amber-300 text-sm"></i>
+          <span>บันทึกภาพบัตรลงเครื่อง (Save to Photos)</span>
+        </button>
+
+        <div class="grid grid-cols-2 gap-2">
+          <a id="btnPassGoSurvey" href="survey.html" class="btn-touch py-2.5 bg-[#08539E] hover:bg-[#07488a] text-white rounded-xl text-xs font-bold transition flex items-center justify-center gap-1.5 shadow-xs">
+            <i class="fa-solid fa-award text-amber-300"></i>
+            <span>รับวุฒิบัตร</span>
+          </a>
+          <button type="button" onclick="closeDigitalPassModal()" class="btn-touch py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl text-xs font-bold transition">
+            เสร็จสิ้น / ปิด
+          </button>
+        </div>
+      </div>
+
     </div>
   </div>
 
